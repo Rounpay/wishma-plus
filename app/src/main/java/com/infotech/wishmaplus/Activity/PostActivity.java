@@ -170,19 +170,19 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
         });
 
         findViewById(R.id.postBTn).setOnClickListener(view -> {
-            if (packageSetting != null) {
-                if (!packageSetting.isDailyPostLimitExceed()) {
+//            if (packageSetting != null) {
+//                if (!packageSetting.isDailyPostLimitExceed()) {
 
-                    if (mediaType == UtilMethods.INSTANCE.TEXT_TYPE && !packageSetting.isTextCanPost()) {
+                    if (mediaType == UtilMethods.INSTANCE.TEXT_TYPE && false/*!packageSetting.isTextCanPost()*/) {
                         CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
                         customAlertDialog.Warning("Upgrade Package", "You can't post text, upgrade your package to post text", "Upgrade", this);
-                    } else if (textInputEt.getText().toString().trim().length() > 0 && !packageSetting.isTextCanPost()) {
+                    } else if (textInputEt.getText().toString().trim().length() > 0 && false/*!packageSetting.isTextCanPost()*/) {
                         CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
                         customAlertDialog.Warning("Upgrade Package", "You can't post text, upgrade your package to post text", "Upgrade", this);
-                    } else if (mediaType == UtilMethods.INSTANCE.IMAGE_TYPE && !packageSetting.isImageCanPost()) {
+                    } else if (mediaType == UtilMethods.INSTANCE.IMAGE_TYPE && false/*!packageSetting.isImageCanPost()*/) {
                         CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
                         customAlertDialog.Warning("Upgrade Package", "You can't post image, upgrade your package to post image", "Upgrade", this);
-                    } else if (mediaType == UtilMethods.INSTANCE.VIDEO_TYPE && !packageSetting.isVideoCanPost()) {
+                    } else if (mediaType == UtilMethods.INSTANCE.VIDEO_TYPE && false/*!packageSetting.isVideoCanPost()*/) {
                         CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
                         customAlertDialog.Warning("Upgrade Package", "You can't post video, upgrade your package to post video", "Upgrade", this);
                     } else {
@@ -195,13 +195,13 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
                             postContent(mediaType, textInputEt.getText().toString().trim(), textInputEt.getText().toString().trim(), selectedFile);
                         }
                     }
-                } else {
-                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
-                    customAlertDialog.Warning("Limit exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
-                }
-            } else {
-                getPackageSetting();
-            }
+//                } else {
+//                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
+//                    customAlertDialog.Warning("Limit exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
+//                }
+//            } else {
+//                getPackageSetting();
+//            }
 
         });
 
@@ -209,49 +209,49 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
             finish();
         });
         image.setOnClickListener(view -> {
-            if (packageSetting != null) {
-                if (!packageSetting.isDailyPostLimitExceed()) {
-                    if (packageSetting.isMixingAllowed()) {
+//            if (packageSetting != null) {
+//                if (!packageSetting.isDailyPostLimitExceed()) {
+//                    if (packageSetting.isMixingAllowed()) {
                         /* ContentResolver cR = getContentResolver();
             String type = cR.getType(Uri.fromFile(selectedFile));*/
                         String type = URLConnection.guessContentTypeFromName(selectedFile.getPath());
                         if (type != null) {
                             if (type.toLowerCase().contains("video")) {
                                 videoEditResultLauncher.launch(new Intent(this, VideoEditActivity.class)
-                                        .putExtra("MusicFromSystemOnly", packageSetting.isMusicFromSystemOnly())
+                                        .putExtra("MusicFromSystemOnly", false/*packageSetting.isMusicFromSystemOnly()*/)
                                         .putExtra("postType", postType)
                                         .putExtra("VideoPath", selectedFile.getPath()));
                             } else {
                                 videoEditResultLauncher.launch(new Intent(this, ImageEditActivity.class)
-                                        .putExtra("MusicFromSystemOnly", packageSetting.isMusicFromSystemOnly())
+                                        .putExtra("MusicFromSystemOnly", false/*packageSetting.isMusicFromSystemOnly()*/)
                                         .putExtra("postType", postType)
                                         .putExtra("ImagePath", selectedFile.getPath()));
                             }
                         } else {
                             if (mediaType == UtilMethods.INSTANCE.VIDEO_TYPE) {
                                 videoEditResultLauncher.launch(new Intent(this, VideoEditActivity.class)
-                                        .putExtra("MusicFromSystemOnly", packageSetting.isMusicFromSystemOnly())
+                                        .putExtra("MusicFromSystemOnly", false/*packageSetting.isMusicFromSystemOnly()*/)
                                         .putExtra("postType", postType)
                                         .putExtra("VideoPath", selectedFile.getPath()));
                             } else if (mediaType == UtilMethods.INSTANCE.IMAGE_TYPE) {
                                 videoEditResultLauncher.launch(new Intent(this, ImageEditActivity.class)
-                                        .putExtra("MusicFromSystemOnly", packageSetting.isMusicFromSystemOnly())
+                                        .putExtra("MusicFromSystemOnly", false/*packageSetting.isMusicFromSystemOnly()*/)
                                         .putExtra("postType", postType)
                                         .putExtra("ImagePath", selectedFile.getPath()));
                             }
                         }
 
-                    } else {
-                        CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
-                        customAlertDialog.Warning("Upgrade Package", "You can't edit post, upgrade your package to edit post", "Upgrade", this);
-                    }
-                } else {
-                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
-                    customAlertDialog.Warning("Limit Exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
-                }
-            } else {
-                getPackageSetting();
-            }
+//                    } else {
+//                        CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
+//                        customAlertDialog.Warning("Upgrade Package", "You can't edit post, upgrade your package to edit post", "Upgrade", this);
+//                    }
+//                } else {
+//                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
+//                    customAlertDialog.Warning("Limit Exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
+//                }
+//            } else {
+//                getPackageSetting();
+//            }
 
         });
 
@@ -272,9 +272,9 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
         });
 
         findViewById(R.id.camera).setOnClickListener(view -> {
-            if (packageSetting != null) {
-                if (!packageSetting.isDailyPostLimitExceed()) {
-                    if (packageSetting.isImageCanPost()) {
+//            if (packageSetting != null) {
+//                if (!packageSetting.isDailyPostLimitExceed()) {
+//                    if (packageSetting.isImageCanPost()) {
                         mediaType = UtilMethods.INSTANCE.IMAGE_TYPE;
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
@@ -289,24 +289,24 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
                         } else {
                             selectCamera();
                         }
-                    } else {
-                        CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
-                        customAlertDialog.Warning("Upgrade Package", "You can't post image, upgrade your package to post image", "Upgrade", this);
-                    }
-                } else {
-                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
-                    customAlertDialog.Warning("Limit Exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
-                }
-            } else {
-                getPackageSetting();
-            }
+//                    } else {
+//                        CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
+//                        customAlertDialog.Warning("Upgrade Package", "You can't post image, upgrade your package to post image", "Upgrade", this);
+//                    }
+//                } else {
+//                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
+//                    customAlertDialog.Warning("Limit Exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
+//                }
+//            } else {
+//                getPackageSetting();
+//            }
 
 
         });
         findViewById(R.id.gallery).setOnClickListener(view -> {
-            if (packageSetting != null) {
-                if (!packageSetting.isDailyPostLimitExceed()) {
-                    if (packageSetting.isImageCanPost()) {
+//            if (packageSetting != null) {
+//                if (!packageSetting.isDailyPostLimitExceed()) {
+//                    if (packageSetting.isImageCanPost()) {
                         mediaType = UtilMethods.INSTANCE.IMAGE_TYPE;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_MEDIA_IMAGES}, REQUEST_PERMISSIONS_GALLERY);
@@ -316,24 +316,24 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
                         } else {
                             selectMedia();
                         }
-                    } else {
-                        CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
-                        customAlertDialog.Warning("Upgrade Package", "You can't post image, upgrade your package to post image", "Upgrade", this);
-                    }
-                } else {
-                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
-                    customAlertDialog.Warning("Limit Exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
-                }
-            } else {
-                getPackageSetting();
-            }
+//                    } else {
+//                        CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
+//                        customAlertDialog.Warning("Upgrade Package", "You can't post image, upgrade your package to post image", "Upgrade", this);
+//                    }
+//                } else {
+//                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
+//                    customAlertDialog.Warning("Limit Exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
+//                }
+//            } else {
+//                getPackageSetting();
+//            }
 
         });
 
         findViewById(R.id.video).setOnClickListener(view -> {
-            if (packageSetting != null) {
-                if (!packageSetting.isDailyPostLimitExceed()) {
-                    if (packageSetting.isVideoCanPost()) {
+//            if (packageSetting != null) {
+//                if (!packageSetting.isDailyPostLimitExceed()) {
+//                    if (packageSetting.isVideoCanPost()) {
                         mediaType = UtilMethods.INSTANCE.VIDEO_TYPE;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
                                 (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
@@ -347,25 +347,25 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
                         } else {
                             selectCamera();
                         }
-                    } else {
-                        CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
-                        customAlertDialog.Warning("Upgrade Package", "You can't post video, upgrade your package to post video", "Upgrade", this);
-                    }
-                } else {
-                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
-                    customAlertDialog.Warning("Limit Exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
-                }
-            } else {
-                getPackageSetting();
-            }
+//                    } else {
+//                        CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
+//                        customAlertDialog.Warning("Upgrade Package", "You can't post video, upgrade your package to post video", "Upgrade", this);
+//                    }
+//                } else {
+//                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
+//                    customAlertDialog.Warning("Limit Exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
+//                }
+//            } else {
+//                getPackageSetting();
+//            }
 
 
         });
 
         findViewById(R.id.videoGallery).setOnClickListener(view -> {
-            if (packageSetting != null) {
-                if (!packageSetting.isDailyPostLimitExceed()) {
-                    if (packageSetting.isVideoCanPost()) {
+//            if (packageSetting != null) {
+//                if (!packageSetting.isDailyPostLimitExceed()) {
+//                    if (packageSetting.isVideoCanPost()) {
                         mediaType = UtilMethods.INSTANCE.VIDEO_TYPE;
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
                             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_MEDIA_VIDEO}, REQUEST_PERMISSIONS_GALLERY);
@@ -375,17 +375,17 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
                         } else {
                             selectMedia();
                         }
-                    } else {
-                        CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
-                        customAlertDialog.Warning("Upgrade Package", "You can't post video, upgrade your package to post video", "Upgrade", this);
-                    }
-                } else {
-                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
-                    customAlertDialog.Warning("Limit Exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
-                }
-            } else {
-                getPackageSetting();
-            }
+//                    } else {
+//                        CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
+//                        customAlertDialog.Warning("Upgrade Package", "You can't post video, upgrade your package to post video", "Upgrade", this);
+//                    }
+//                } else {
+//                    CustomAlertDialog customAlertDialog = new CustomAlertDialog(this, true);
+//                    customAlertDialog.Warning("Limit Exceed", "Your daily limit has been exceeded, upgrade your package to increase daily limit", "Upgrade", this);
+//                }
+//            } else {
+//                getPackageSetting();
+//            }
 
         });
 
@@ -422,7 +422,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
             }
         }).setWithImageCrop();
 
-        getPackageSetting();
+//        getPackageSetting();
     }
 
 
@@ -878,7 +878,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
     ActivityResultLauncher<Intent> upgradePackage = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
         if (result.getResultCode() == Activity.RESULT_OK) {
-            getPackageSetting();
+//            getPackageSetting();
         }
 
     });
