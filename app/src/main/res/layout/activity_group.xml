@@ -110,6 +110,7 @@
                     android:layout_height="45dp"
                     android:background="@drawable/bg_edittext"
                     android:hint="Search your groups by name"
+                    android:textSize="14sp"
                     android:paddingHorizontal="12dp" />
 
                 <!-- Sort Section -->
@@ -221,7 +222,18 @@
                             android:layout_height="@dimen/_15sdp"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
+                            android:visibility="gone"
                             app:srcCompat="@drawable/ic_arrow_forward" />
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/groupBottom"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:rotation="90"
+                            android:visibility="visible"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            app:srcCompat="@drawable/ic_arrow_forward" />
+
                     </LinearLayout>
 
 

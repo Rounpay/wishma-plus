@@ -27,6 +27,7 @@ import com.infotech.wishmaplus.Activity.ProfileActivity;
 import com.infotech.wishmaplus.Activity.ReferralActivity;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomAlertDialog;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 import com.infotech.wishmaplus.Utils.Utility;
@@ -107,6 +108,9 @@ public class MoreFragment extends Fragment {
         v.findViewById(R.id.incomeView).setOnClickListener(view -> {
             startActivity(new Intent(requireActivity(), IncomeReportActivity.class));
         });
+        v.findViewById(R.id.logoutView).setOnClickListener(view -> {
+            signOut();
+        });
         return v;
     }
 
@@ -118,6 +122,16 @@ public class MoreFragment extends Fragment {
         });
     }
 
+
+    private void signOut() {
+        CustomAlertDialog customAlertDialog = new CustomAlertDialog(requireActivity(), true);
+        customAlertDialog.Successfullogout("Do you really want to Logout?", requireActivity(), tokenManager);
+       /* mGoogleSignInClient.signOut().addOnCompleteListener(this, task -> {
+
+            // Toast.makeText(ProfileActivity.this, "Signed out successfully", Toast.LENGTH_SHORT).show();
+
+        });*/
+    }
     private void setUserData() {
         nameTv.setText(userDetailResponse.getFisrtName()+" "+userDetailResponse.getLastName());
         if(userDetailResponse.getPackageDetail()!=null) {
