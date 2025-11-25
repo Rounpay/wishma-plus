@@ -181,7 +181,7 @@ public class VideoFragment extends Fragment {
     private void showContent(boolean isFromRefresh) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", pageNumber, 20, false, 2);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "","",pageNumber, 20, false, 2);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {

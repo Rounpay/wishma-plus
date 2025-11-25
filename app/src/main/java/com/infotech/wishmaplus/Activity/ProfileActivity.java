@@ -108,7 +108,8 @@ public class ProfileActivity extends AppCompatActivity {
         back_button = findViewById(R.id.back_button);
         logout = findViewById(R.id.logout);
         balance = findViewById(R.id.balance);
-        if(getIntent().getStringExtra("id")!=null && !Objects.equals(getIntent().getStringExtra("id"), "0")){
+        if(getIntent().getStringExtra("id")!=null &&
+                !Objects.equals(getIntent().getStringExtra("id"), "0")){
             userId = getIntent().getStringExtra("id");
             balance.setVisibility(View.GONE);
             logout.setVisibility(View.GONE);
@@ -632,7 +633,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void showContent(boolean isFromRefresh) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", pageNumber, 20, true, buttonContentTypeId);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "",userId, pageNumber, 20, true, buttonContentTypeId);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {

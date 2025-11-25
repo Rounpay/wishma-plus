@@ -428,7 +428,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             });
 
-            if (!content.getUserDetail().getUserId().equals("0")) {
+            if (!content.getUserDetail().getUserId().equals(userId)) {
                 edit_public_details.setVisibility(GONE);
                 line_1.setVisibility(GONE);
                 addPostTitle.setVisibility(GONE);

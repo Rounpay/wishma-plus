@@ -1,7 +1,5 @@
 package com.infotech.wishmaplus.Utils;
 
-import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -26,7 +24,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -40,10 +37,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.infotech.wishmaplus.Activity.CreateNewProfilePage;
-import com.infotech.wishmaplus.Activity.PersonalProfileActivity;
 import com.infotech.wishmaplus.Adapter.DialogListBottomSheetAdapter;
 import com.infotech.wishmaplus.Adapter.DialogReportBottomSheetAdapter;
-import com.infotech.wishmaplus.Adapter.MultiContentAdapter;
 import com.infotech.wishmaplus.Api.Object.CommentResult;
 import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
 import com.infotech.wishmaplus.Api.Request.CommentRequest;
@@ -87,8 +82,8 @@ public enum UtilMethods {
     private PreferencesManager tokenManager;
     private Gson gson;
     public DownloadManager downloadManager;
-    public BottomSheetDialog bottomSheetDialogList,personalInformation;
-    public BottomSheetDialog bottomSheetDialogReport,followDialog;
+    public BottomSheetDialog bottomSheetDialogList, personalInformation;
+    public BottomSheetDialog bottomSheetDialogReport, followDialog;
     public static BottomSheetDialog bottomSheetUser;
 
     //public HashMap<Long, String> downloadIdMap= new HashMap<>();
@@ -262,11 +257,11 @@ public enum UtilMethods {
         customAlertDialog.NetworkError("Network Error!", "Slow or No Internet Connection.");
     }
 
-    public void userDetail(Activity activity,String userID,final CustomLoader loader, PreferencesManager mAppPreferences, ApiCallBack apiCallBack) {
+    public void userDetail(Activity activity, String userID, final CustomLoader loader, PreferencesManager mAppPreferences, ApiCallBack apiCallBack) {
         try {
             tokenManager = new PreferencesManager(activity, 1);
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<UserDetailResponse> call = git.getUserDetail("Bearer " + tokenManager.getAccessToken(),userID);
+            Call<UserDetailResponse> call = git.getUserDetail("Bearer " + tokenManager.getAccessToken(), userID);
             call.enqueue(new Callback<UserDetailResponse>() {
                 @Override
                 public void onResponse(Call<UserDetailResponse> call, Response<UserDetailResponse> response) {
@@ -579,11 +574,11 @@ public enum UtilMethods {
         Objects.requireNonNull(bottomSheetUser.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View sheetView = inflater.inflate(R.layout.dialog_create_user, null);
-        LinearLayout createUser= sheetView.findViewById(R.id.createUser);
-        AppCompatTextView userName= sheetView.findViewById(R.id.userName);
-        AppCompatImageView userImage= sheetView.findViewById(R.id.userImage);
+        LinearLayout createUser = sheetView.findViewById(R.id.createUser);
+        AppCompatTextView userName = sheetView.findViewById(R.id.userName);
+        AppCompatImageView userImage = sheetView.findViewById(R.id.userImage);
         if (userDetailResponse != null) {
-            userName.setText(userDetailResponse.getFisrtName()+userDetailResponse.getLastName());
+            userName.setText(userDetailResponse.getFisrtName() + userDetailResponse.getLastName());
             Glide.with(activity)
                     .load(userDetailResponse.getProfilePictureUrl())
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
@@ -613,7 +608,7 @@ public enum UtilMethods {
         personalInformation = new BottomSheetDialog(context, R.style.DialogStyle);
         Objects.requireNonNull(personalInformation.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams") View sheetView = inflater.inflate(R.layout.personal_information_dialog ,null);
+        @SuppressLint("InflateParams") View sheetView = inflater.inflate(R.layout.personal_information_dialog, null);
 
         ImageButton closeBtn = sheetView.findViewById(R.id.closeBtn);
         AppCompatTextView nextButton = sheetView.findViewById(R.id.nextButton);
@@ -635,7 +630,7 @@ public enum UtilMethods {
         personalInformation = new BottomSheetDialog(context, R.style.DialogStyle);
         Objects.requireNonNull(personalInformation.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams") View sheetView = inflater.inflate(R.layout.professional_information_dialog ,null);
+        @SuppressLint("InflateParams") View sheetView = inflater.inflate(R.layout.professional_information_dialog, null);
 
         ImageButton closeBtn = sheetView.findViewById(R.id.closeBtn);
         closeBtn.setOnClickListener(v -> personalInformation.dismiss());
@@ -648,7 +643,7 @@ public enum UtilMethods {
 
     }
 
-    public void openFollowBottomSheetDialog(Activity context, String userId,ApiCallBackMulti apiCallBack) {
+    public void openFollowBottomSheetDialog(Activity context, String userId, ApiCallBackMulti apiCallBack) {
 
         if (followDialog != null && followDialog.isShowing())
             return;
@@ -663,7 +658,7 @@ public enum UtilMethods {
         MaterialButton cancelBtn = sheetView.findViewById(R.id.cancelBtn);
 
         unfollowBtn.setOnClickListener(v -> {
-            doFollow(context,userId,apiCallBack);
+            doFollow(context, userId, apiCallBack);
             followDialog.dismiss();
         });
 
@@ -680,8 +675,6 @@ public enum UtilMethods {
     }
 
 
-
-
     public void doFollow(Activity context, String userId, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
@@ -690,7 +683,7 @@ public enum UtilMethods {
                 @Override
                 public void onResponse(@NonNull Call<LikeResponse> call, @NonNull Response<LikeResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        if (response.body().getStatusCode() == 1||response.body().getStatusCode() == -1) {
+                        if (response.body().getStatusCode() == 1 || response.body().getStatusCode() == -1) {
                             if (apiCallBack != null) {
                                 apiCallBack.onSuccess(response.body().getStatusCode());
                             }

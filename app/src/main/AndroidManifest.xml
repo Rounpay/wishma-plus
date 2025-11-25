@@ -37,9 +37,13 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
+            android:name=".Activity.WebViewInformationActivity"
+            android:theme="@style/Appnew"
+            android:exported="false" />
+        <activity
             android:name=".Activity.CreateGroupActivity"
             android:exported="false"
-            android:theme="@style/Appnew"/>
+            android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.GroupActivity"
             android:exported="false"
@@ -66,8 +70,8 @@
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.CreatePersonalProfileActivity"
-            android:theme="@style/Appnew"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.ProfessionalProfileActivity"
             android:exported="false"

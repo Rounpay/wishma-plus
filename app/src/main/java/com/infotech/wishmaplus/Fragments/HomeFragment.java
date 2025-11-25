@@ -3,6 +3,10 @@ package com.infotech.wishmaplus.Fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -10,11 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.infotech.wishmaplus.Activity.MainActivity;
 import com.infotech.wishmaplus.Activity.PostActivity;
@@ -29,11 +28,11 @@ import com.infotech.wishmaplus.Api.Response.ContentResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.ApiClient;
-import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.CustomRecyclerView;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.EndPointInterface;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
+import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.CustomRecyclerView;
 import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.DownloadManagerService;
 import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.VideoUtils;
 
@@ -60,26 +59,26 @@ public class HomeFragment extends Fragment {
     int pageNumber = 1;
     int totalPost = 0;
     public boolean isScreenPause;
-    ArrayList<StoryResult> storyList=new ArrayList<>();
+    ArrayList<StoryResult> storyList = new ArrayList<>();
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        loader = ((MainActivity)requireActivity()).loader;
-        if(loader==null) {
+        loader = ((MainActivity) requireActivity()).loader;
+        if (loader == null) {
             loader = new CustomLoader(requireActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         }
-        tokenManager = ((MainActivity)requireActivity()).tokenManager;
-        if(tokenManager==null) {
-            tokenManager = new PreferencesManager(requireActivity(),1);
+        tokenManager = ((MainActivity) requireActivity()).tokenManager;
+        if (tokenManager == null) {
+            tokenManager = new PreferencesManager(requireActivity(), 1);
         }
-        userDetailResponse= UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+        userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
         final SwipeRefreshLayout pullToRefresh = v.findViewById(R.id.pullToRefresh);
         pullToRefresh.setOnRefreshListener(() -> {
-           refresh();
-           getStory(true);
+            refresh();
+            getStory(true);
             getUserDetail();
             ((MainActivity) requireActivity()).getBalance();
             pullToRefresh.setRefreshing(false);
@@ -91,7 +90,6 @@ public class HomeFragment extends Fragment {
         recyclerView = v.findViewById(R.id.recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(requireActivity());
         recyclerView.setLayoutManager(layoutManager);
-
 
 
         recyclerView.setActivity(getActivity());
@@ -110,7 +108,7 @@ public class HomeFragment extends Fragment {
         // percentage of View that needs to be visible to start playing
 
         storyList.add(new StoryResult(StoryAdapter.VIEW_TYPE_CREATE));
-        contentlist.add(new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse,storyList));
+        contentlist.add(new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
         setAdapter();
         /*//call this functions when u want to start autoplay on loading async lists (eg firebase)
         recyclerView.smoothScrollBy(0, 1);
@@ -124,7 +122,7 @@ public class HomeFragment extends Fragment {
 
                 // If we are at the end of the list and more data is available, load more data
                 if ((visibleItemCount + lastVisibleItemPosition) >= totalItemCount) {
-                    contentlist.add(new ContentResult(MultiContentAdapter.VIEW_TYPE_LOADING, null,null));
+                    contentlist.add(new ContentResult(MultiContentAdapter.VIEW_TYPE_LOADING, null, null));
                     adapter.notifyItemInserted(contentlist.size());
                     pageNumber = pageNumber + 1;
                     showContent(false);
@@ -195,11 +193,13 @@ public class HomeFragment extends Fragment {
                 intent.putExtra("postType", 2);
                 storyActivityResultLauncher.launch(intent);
             }
+
             @Override
             public void onClickProfile(String userId) {
                 profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)
                         .putExtra("userData", userDetailResponse));
             }
+
             @Override
             public void onOpenStory(ArrayList<StoryResult> list, int position, StoryResult result) {
                 storyActivityResultLauncher.launch(new Intent(requireActivity(), StoryViewActivity.class)
@@ -212,8 +212,8 @@ public class HomeFragment extends Fragment {
             public void onDelete(int position) {
                 contentlist.remove(position);
                 adapter.notifyItemRemoved(position);
-                adapter.notifyItemRangeRemoved(position,contentlist.size());
-                totalPost=totalPost-1;
+                adapter.notifyItemRangeRemoved(position, contentlist.size());
+                totalPost = totalPost - 1;
 
             }
         });
@@ -222,9 +222,9 @@ public class HomeFragment extends Fragment {
 
 
     private void getUserDetail() {
-        UtilMethods.INSTANCE.userDetail(requireActivity(),"0",loader, tokenManager, object -> {
+        UtilMethods.INSTANCE.userDetail(requireActivity(), "0", loader, tokenManager, object -> {
             userDetailResponse = (UserDetailResponse) object;
-            contentlist.set(0, new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse,storyList));
+            contentlist.set(0, new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
 
             adapter.notifyItemChanged(0);
 
@@ -315,7 +315,7 @@ public class HomeFragment extends Fragment {
     private void showContent(boolean isFromRefresh) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", pageNumber, 20, false, 0);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", "",pageNumber, 20, false, 0);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {
@@ -338,38 +338,38 @@ public class HomeFragment extends Fragment {
 
 
                             if (pageNumber == 1) {
-                                if(isFromRefresh){
+                                if (isFromRefresh) {
                                     recyclerView.pauseVideo();
                                     recyclerView.destroyVideo();
                                 }
-                                contentlist= new ArrayList<>();
-                                contentlist.add(new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse,storyList));
+                                contentlist = new ArrayList<>();
+                                contentlist.add(new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
                                 contentlist.addAll(resultList);
-                               // adapter.notifyItemRangeChanged(0, contentlist.size());
+                                // adapter.notifyItemRangeChanged(0, contentlist.size());
                                 setAdapter();
                                 //if(pageNumber==1){
-                                    //call this functions when u want to start autoplay on loading async lists (eg firebase)
-                                    recyclerView.smoothScrollBy(0, 1);
-                                    recyclerView.smoothScrollBy(0, -1);
-                              //  }
+                                //call this functions when u want to start autoplay on loading async lists (eg firebase)
+                                recyclerView.smoothScrollBy(0, 1);
+                                recyclerView.smoothScrollBy(0, -1);
+                                //  }
                             } else {
                                 contentlist.remove(contentlist.size() - 1);
                                 adapter.notifyItemRemoved(contentlist.size() - 1);
-                                int size =contentlist.size();
+                                int size = contentlist.size();
                                 contentlist.addAll(resultList);
                                 adapter.notifyItemRangeChanged(size, contentlist.size());
                             }
 
                         }
                     } else {
-                        UtilMethods.INSTANCE.apiErrorHandle(requireActivity(),response.code(), response.message());
+                        UtilMethods.INSTANCE.apiErrorHandle(requireActivity(), response.code(), response.message());
                         // Toast.makeText(requireActivity(), "Failed to fetch content", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<ContentResponse> call, @NonNull Throwable t) {
-                    UtilMethods.INSTANCE.apiFailureError(requireActivity(),t);
+                    UtilMethods.INSTANCE.apiFailureError(requireActivity(), t);
                     //Toast.makeText(requireActivity(), "API call failed: " + t.getMessage()+"", Toast.LENGTH_SHORT).show();
                     if (loader != null) {
                         if (loader.isShowing())
@@ -379,13 +379,14 @@ public class HomeFragment extends Fragment {
             });
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(requireActivity(), "API call failed: " + e.getMessage()+"", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "API call failed: " + e.getMessage() + "", Toast.LENGTH_SHORT).show();
             if (loader != null) {
                 if (loader.isShowing())
                     loader.dismiss();
             }
         }
     }
+
     private void getStory(boolean isFromRefresh) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
@@ -404,14 +405,14 @@ public class HomeFragment extends Fragment {
                             storyList.clear();
                             storyList.add(new StoryResult(StoryAdapter.VIEW_TYPE_CREATE));
                             storyList.addAll(storyResponse.getResult());
-                            contentlist.set(0,new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse,storyList));
+                            contentlist.set(0, new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
                             adapter.notifyItemChanged(0);
 
-                            for(StoryResult item :storyResponse.getResult()){
-                                for (ContentResult content : item.getStories()){
-                                    if(content.getContentTypeId()==UtilMethods.INSTANCE.VIDEO_TYPE){
+                            for (StoryResult item : storyResponse.getResult()) {
+                                for (ContentResult content : item.getStories()) {
+                                    if (content.getContentTypeId() == UtilMethods.INSTANCE.VIDEO_TYPE) {
                                         String savePath = VideoUtils.getString(requireActivity(), content.getPostContent());
-                                        if (savePath == null || !new File(savePath).exists() ) {
+                                        if (savePath == null || !new File(savePath).exists()) {
                                             Intent serviceIntent = new Intent(requireActivity(), DownloadManagerService.class);
                                             requireActivity().startService(serviceIntent);
                                             new VideoUtils().startDownloadInBackground(requireActivity(), content.getPostContent(), requireActivity().getExternalCacheDir() + "/MyVideo/");
@@ -456,14 +457,14 @@ public class HomeFragment extends Fragment {
 
                         }
                     } else {
-                        UtilMethods.INSTANCE.apiErrorHandle(requireActivity(),response.code(), response.message());
+                        UtilMethods.INSTANCE.apiErrorHandle(requireActivity(), response.code(), response.message());
                         // Toast.makeText(requireActivity(), "Failed to fetch content", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(@NonNull Call<BasicListResponse<StoryResult>> call, @NonNull Throwable t) {
-                    UtilMethods.INSTANCE.apiFailureError(requireActivity(),t);
+                    UtilMethods.INSTANCE.apiFailureError(requireActivity(), t);
                     //Toast.makeText(requireActivity(), "API call failed: " + t.getMessage()+"", Toast.LENGTH_SHORT).show();
                     if (loader != null) {
                         if (loader.isShowing())
@@ -473,7 +474,7 @@ public class HomeFragment extends Fragment {
             });
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(requireActivity(), "API call failed: " + e.getMessage()+"", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireActivity(), "API call failed: " + e.getMessage() + "", Toast.LENGTH_SHORT).show();
             if (loader != null) {
                 if (loader.isShowing())
                     loader.dismiss();
@@ -579,24 +580,24 @@ public class HomeFragment extends Fragment {
     ActivityResultLauncher<Intent> profileActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData()!=null) {
-                    int refreshType =  result.getData().getIntExtra("RefreshType", 0);
-                    if(refreshType==1){
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    int refreshType = result.getData().getIntExtra("RefreshType", 0);
+                    if (refreshType == 1) {
                         //UserDetails
                         getUserDetail();
-                    }else if(refreshType==2){
+                    } else if (refreshType == 2) {
                         //Story
                         refreshStory();
-                    }else {
+                    } else {
                         //Post
                         refresh();
                     }
 
 
-
                 }
             });
-   public void refresh(){
+
+    public void refresh() {
        /*recyclerView.pauseVideo();
         recyclerView.destroyVideo();*/
         pageNumber = 1;
@@ -617,6 +618,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onResume() {
+        getUserDetail();
         recyclerView.playVideo();
         super.onResume();
     }

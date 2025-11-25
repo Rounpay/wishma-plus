@@ -148,7 +148,8 @@
     <string name="profile_name">Profile Name</string>
     <string name="groups">Groups</string>
     <string name="you_can_view_and_manage_your_groups_here">You can view and manage your groups here!</string>
-
+    <string name="back">Back</string>
+    <string name="information">Information</string>
 
 
 </resources>

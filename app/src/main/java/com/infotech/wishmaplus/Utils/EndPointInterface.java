@@ -93,6 +93,7 @@ public interface EndPointInterface {
     @GET("api/Content")
     Call<ContentResponse> getContent(@Header("Authorization") String token,
                                      @Query("PostId") String postId,
+                                     @Query("UserId") String userId,
                                      @Query("pageNumber") int pageNumber,
                                      @Query("pageSize") int pageSize,
                                      @Query("IsSelf") boolean IsSelf,

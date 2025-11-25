@@ -118,7 +118,7 @@
                         android:layout_marginStart="@dimen/_8sdp"
                         android:text="Control your settings"
                         android:textColor="@android:color/black"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12sdp"
                         android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -126,7 +126,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_8sdp"
                         android:text="This new profile will reset to default setting once created.You'all be able to review and male changes shortly."
-                        android:textSize="@dimen/_14sdp" />
+                        android:textSize="@dimen/_12sdp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -161,15 +161,16 @@
                         android:layout_marginStart="@dimen/_8sdp"
                         android:text="Be mindful of your activity"
                         android:textColor="@android:color/black"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12sdp"
                         android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvLearnMore1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_8sdp"
                         android:text="People may learn the profiles you create are connected based on what you say or do. Learn more."
-                        android:textSize="@dimen/_14sdp" />
+                        android:textSize="@dimen/_12sdp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -204,15 +205,16 @@
                         android:layout_marginStart="@dimen/_8sdp"
                         android:text="Accessing your profiles"
                         android:textColor="@android:color/black"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12sdp"
                         android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvLearnMore2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_8sdp"
                         android:text="All of your profiles are under one Facebook account. Your main profile is the first profile created on Facebook. Learn more."
-                        android:textSize="@dimen/_14sdp" />
+                        android:textSize="@dimen/_12sdp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -247,18 +249,61 @@
                         android:layout_marginStart="@dimen/_8sdp"
                         android:text="How your info is used"
                         android:textColor="@android:color/black"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="@dimen/_12sdp"
                         android:textStyle="bold" />
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tvLearnMore3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_8sdp"
-                        android:text="Profile information is used to personalise your experience, recommendations and ads across your profiles and Meta Products."
-                        android:textSize="@dimen/_14sdp" />
+                        android:text=""
+                        android:textSize="@dimen/_12sdp" />
                 </LinearLayout>
             </LinearLayout>
-            <!-- Row Three -->
+            <LinearLayout
+                android:id="@+id/stepLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:orientation="vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- Steps -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/progress_filled"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:background="@drawable/progress_filled"/>
+                </LinearLayout>
+
+                <!-- Step Text -->
+                <TextView
+                    android:id="@+id/stepText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 of 2"
+                    android:layout_marginRight="@dimen/_15sdp"
+                    android:textColor="#6A6A6A"
+                    android:textSize="13sp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_gravity="end"/>
+            </LinearLayout>
 
 
         </LinearLayout>
@@ -277,8 +322,24 @@
         android:textColor="@color/color_white"
         android:layout_margin="@dimen/_8sdp"
         android:background="@drawable/text_button_border"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvViewInfo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="@style/TextAppearance.AppCompat.Small"
+        android:id="@+id/tvViewInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Facebook's policies for additional profiles."
+        android:textColor="@android:color/black"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
