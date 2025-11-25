@@ -112,10 +112,12 @@
 
         <!-- Privacy Info Text -->
         <TextView
+            android:id="@+id/privacyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Only members can see who’s in the group and what they post. You might be able to change this group to public later."
             android:textSize="14sp"
+            android:visibility="gone"
             android:layout_marginTop="12dp"
             android:padding="4dp"/>
 
@@ -126,55 +128,63 @@
             android:text="Learn more"
             android:textColor="#1877F2"
             android:textSize="15sp"
+            android:visibility="gone"
             android:layout_marginTop="4dp"/>
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/visibilitySpinner"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Visibility"
-            android:textColor="#000"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <!-- Privacy Spinner -->
-        <!--        <Spinner-->
-        <!--            android:id="@+id/visibility"-->
-        <!--            android:layout_marginTop="@dimen/_10sdp"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="55dp"-->
-        <!--            android:background="@drawable/bg_edittext"-->
-        <!--            android:padding="15dp"-->
-        <!--            android:spinnerMode="dropdown" />-->
-        <RelativeLayout
-            android:id="@+id/visibility"
-            android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_edittext"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp">
-
-            <!-- Selected text -->
+            android:orientation="vertical">
             <TextView
-                android:id="@+id/tvSelectedVisibility"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="Select"
-                android:textSize="16dp"
-                android:paddingRight="32dp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Visibility"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <!-- Arrow Icon -->
-            <ImageView
-                android:id="@+id/ivArrowVisibility"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/ic_arrow_drop_down" />
+            <!-- Privacy Spinner -->
+            <!--        <Spinner-->
+            <!--            android:id="@+id/visibility"-->
+            <!--            android:layout_marginTop="@dimen/_10sdp"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="55dp"-->
+            <!--            android:background="@drawable/bg_edittext"-->
+            <!--            android:padding="15dp"-->
+            <!--            android:spinnerMode="dropdown" />-->
+            <RelativeLayout
+                android:id="@+id/visibility"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_edittext"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
 
-        </RelativeLayout>
+                <!-- Selected text -->
+                <TextView
+                    android:id="@+id/tvSelectedVisibility"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="Select"
+                    android:textSize="16dp"
+                    android:paddingRight="32dp" />
+
+                <!-- Arrow Icon -->
+                <ImageView
+                    android:id="@+id/ivArrowVisibility"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_arrow_drop_down" />
+
+            </RelativeLayout>
+        </LinearLayout>
 
 
     </LinearLayout>

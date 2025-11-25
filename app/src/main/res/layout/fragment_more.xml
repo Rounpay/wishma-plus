@@ -358,7 +358,8 @@
             android:id="@+id/incomeView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/_10sdp">
+            android:padding="@dimen/_10sdp"
+             android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/incomeIcon"
@@ -407,6 +408,16 @@
                 android:layout_centerVertical="true"
                 app:srcCompat="@drawable/ic_arrow_forward" />
         </RelativeLayout>
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2sdp"
+            android:background="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/likeBtn" />
+
         <RelativeLayout
             android:id="@+id/groupView"
             android:layout_width="match_parent"
@@ -460,6 +471,71 @@
                 android:layout_centerVertical="true"
                 app:srcCompat="@drawable/ic_arrow_forward" />
         </RelativeLayout>
+
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2sdp"
+            android:background="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/likeBtn" />
+        <RelativeLayout
+            android:id="@+id/logoutView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/logoutIcon"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_centerVertical="true"
+                app:layout_constraintEnd_toStartOf="@id/logoutTv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_logout" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/logoutTv"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_toStartOf="@id/logoutArrow"
+                android:layout_toEndOf="@id/logoutIcon"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:text="@string/log_out"
+                android:textColor="@color/red" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/logoutTvDes"
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/logoutTv"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_toStartOf="@id/logoutArrow"
+                android:layout_toEndOf="@id/logoutIcon"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:text="@string/log_out_from_this_device"
+                android:textColor="@color/red_text" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/logoutArrow"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:tint="@color/red"
+                app:srcCompat="@drawable/ic_arrow_forward" />
+        </RelativeLayout>
+
         <View
 
             android:layout_width="match_parent"

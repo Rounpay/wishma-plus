@@ -148,6 +148,10 @@
     <string name="profile_name">Profile Name</string>
     <string name="groups">Groups</string>
     <string name="you_can_view_and_manage_your_groups_here">You can view and manage your groups here!</string>
+    <string name="log_out">Log out</string>
+    <string name="log_out_from_this_device">Tap to log out from your account</string>
+    <string name="public_text">Anyone can see who\'s in the group and what they post. Depending on your group\'s size and age, you might be able to change to private later.</string>
+    <string name="private_group_text">Only members can see who\'s in the group and what they post. You might be able to change this group to public later.</string>
 
 
 
