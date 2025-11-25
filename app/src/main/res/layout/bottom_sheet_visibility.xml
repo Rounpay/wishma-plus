@@ -43,6 +43,7 @@
 
     <!-- Visible Option -->
     <LinearLayout
+        android:id="@+id/visibleOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -94,6 +95,7 @@
 
     <!-- Hidden Option -->
     <LinearLayout
+        android:id="@+id/hiddenOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

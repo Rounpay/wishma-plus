@@ -179,6 +179,8 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         RadioButton rbVisible = view.findViewById(R.id.rbVisible);
         RadioButton rbHidden = view.findViewById(R.id.rbHidden);
+        View vHidden = view.findViewById(R.id.hiddenOption);
+        View vVisible = view.findViewById(R.id.visibleOption);
 
         // Handle pre-selected state
         if (selectedVisibility == 1) {
@@ -188,6 +190,8 @@ public class CreateGroupActivity extends AppCompatActivity {
         }
 
         // Click Listeners
+        vVisible.setOnClickListener(v -> updateVisibility(1, "Visible"));
+        vHidden.setOnClickListener(v -> updateVisibility(2, "Hidden"));
         rbVisible.setOnClickListener(v -> updateVisibility(1, "Visible"));
         rbHidden.setOnClickListener(v -> updateVisibility(2, "Hidden"));
 
