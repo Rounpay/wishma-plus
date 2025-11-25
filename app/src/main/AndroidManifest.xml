@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PICK" />
+
+            <data android:mimeType="*/*" />
+        </intent>
+    </queries>
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.providers.media.MediaProvider" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+
+    <application
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:descendantFocusability="blocksDescendants"
+        android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.App"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:icon,theme">
+        <activity
+            android:name=".Activity.CreateGroupActivity"
+            android:exported="false"
+            android:theme="@style/Appnew"/>
+        <activity
+            android:name=".Activity.GroupActivity"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.DeleteAccountReasonActivity"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.DeactivateOrDeleteAccount"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.DeleteAccount"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.OtpActivity"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.TermAndCondition"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.CreatePersonalProfileActivity"
+            android:theme="@style/Appnew"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.ProfessionalProfileActivity"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.PersonalProfileActivity"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.CreateNewProfilePage"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.IncomeReportActivity"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.ShareRedirectActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="wishmaplus.com"
+                    android:pathPrefix="/post"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activity.PostActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.VideoViewActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.ImageZoomViewActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.StoryViewActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.VideoEditActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.ImageEditActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.SignUpActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.ProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.ReferralActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.EditProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.PackageActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.TermPrivacyActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.LevelCountActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.ContactUsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.LevelIncomeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.LoginActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Notification.NotificationActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.MainActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.WelcomeActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" /> <!-- Add your app's Google app ID (this will be added automatically with google-services.json) -->
+        <meta-data
+            android:name="com.google.android.gms.appid"
+            android:value="wishma-plus" />
+
+        <service
+            android:name=".Utils.VideoEdit.AutoPlayVideo.DownloadService"
+            android:exported="false" />
+
+        <receiver
+            android:name=".Utils.VideoEdit.AutoPlayVideo.DownloadManagerReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher_foreground" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+
+        <service
+            android:name=".Notification.service.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".Utils.VideoEdit.AutoPlayVideo.DownloadManagerService"
+            android:exported="false" /> <!-- android:foregroundServiceType="dataSync" /> -->
+        <receiver
+            android:name=".Utils.Receiver.InstallReferrerReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.vending.INSTALL_REFERRER" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#001832</color>
+    <color name="colorPrimaryDark">#001832</color>
+    <color name="colorPrimaryLight">#014982</color>
+    <color name="colorPrimary_alpha25">#40001832</color>
+    <color name="colorAccent">#F6A400</color>
+    <color name="colorAccentLight">#FDB31E</color>
+    <color name="colorFwd">#4E86C2</color>
+    <color name="phonePe">#5F259F</color>
+    <color name="bgColor">#EEF6FF</color>
+    <color name="comment_bg">#70C5DEFA</color>
+    <color name="red">#F33434</color>
+    <color name="red_text">#EE5162</color>
+    <color name="grey_1">#E4E4E4</color>
+    <color name="grey_2">#D3D3D3</color>
+    <color name="grey_3">#A8A7A7</color>
+    <color name="grey_4">#979696</color>
+    <color name="grey_5">#837F7F</color>
+    <color name="grey_6">#665f5f</color>
+    <color name="light_blue">#D8EEFF</color>
+    <color name="black_alpha_55">#8C000000</color>
+    <color name="color_green">#4caf50</color>
+
+    <color name="progress_secondary">#8affffff</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="main_blue_color">#2469df</color>
+    <color name="dark_blue">#0000FF</color>
+</resources>

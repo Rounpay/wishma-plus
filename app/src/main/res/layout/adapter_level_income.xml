@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/userId"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="sans-serif-medium"
+        android:text="User Id : "
+        android:textColor="@color/grey_6"
+        app:layout_constraintEnd_toStartOf="@id/userIdTv"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/userIdTv"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/colorPrimaryLight"
+        android:textStyle="bold"
+        android:layout_marginEnd="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="@id/userId"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/userId"
+        app:layout_constraintTop_toTopOf="@id/userId" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/level"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="Level : "
+        android:textColor="@color/grey_6"
+        app:layout_constraintEnd_toStartOf="@id/levelCount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/levelCount"
+        app:layout_constraintTop_toTopOf="@id/levelCount" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/levelCount"
+        style="@style/TextAppearance.AppCompat.Body2"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="@color/colorPrimaryLight"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toEndOf="@id/level"
+        app:layout_constraintTop_toBottomOf="@id/userId" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/userNameLabel"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:fontFamily="sans-serif-medium"
+        android:text="User Name : "
+        android:textColor="@color/grey_6"
+        app:layout_constraintEnd_toStartOf="@id/userNameValue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/levelCount" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/userNameValue"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/colorPrimaryLight"
+        android:layout_marginEnd="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="@id/userNameLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/userNameLabel"
+        app:layout_constraintTop_toTopOf="@id/userNameLabel" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/packageLabel"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_7sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:fontFamily="sans-serif-medium"
+        android:text="Package Cost : "
+        android:textColor="@color/grey_6"
+        app:layout_constraintEnd_toStartOf="@id/packageValue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userNameLabel" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/packageValue"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryLight"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/packageLabel"
+        app:layout_constraintBottom_toBottomOf="@id/packageLabel"
+        app:layout_constraintTop_toTopOf="@id/packageLabel" />
+
+
+
+    
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:background="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/packageValue" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Define a custom style to hide text labels -->
+    <style name="BottomNavigationViewStyle" parent="Widget.Design.BottomNavigationView">
+        <item name="itemTextAppearance">@style/BottomNavigationViewTextAppearance</item>
+    </style>
+
+    <style name="BottomNavigationViewTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">0sp</item> <!-- Hide text by setting size to 0sp -->
+    </style>
+
+</resources>

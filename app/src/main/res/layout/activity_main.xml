@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:stateListAnimator="@null">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:statusBarScrim="?attr/colorPrimaryDark">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/main"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".Activity.MainActivity">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/logo"
+                    android:layout_width="@dimen/_130sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_7sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:layout_marginBottom="@dimen/_2sdp"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/full_logo_color"
+                    app:layout_constraintBottom_toTopOf="@id/homeTab"
+                    app:layout_constraintEnd_toStartOf="@id/search"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_chainStyle="packed" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/addPost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/_10sdp"
+                    android:paddingVertical="@dimen/_5sdp"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_add_circle"
+                    app:layout_constraintBottom_toBottomOf="@id/logo"
+                    app:layout_constraintEnd_toStartOf="@id/search"
+                    app:layout_constraintTop_toTopOf="@id/logo" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/search"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/_10sdp"
+                    android:paddingVertical="@dimen/_5sdp"
+                    android:src="@drawable/ic_search"
+                    android:visibility="gone"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:layout_constraintBottom_toBottomOf="@id/logo"
+                    app:layout_constraintEnd_toStartOf="@id/balance"
+                    app:layout_constraintTop_toTopOf="@id/logo" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/balance"
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:background="@drawable/rounded_corners"
+                    android:backgroundTint="@color/colorAccent"
+                    android:fontFamily="sans-serif-medium"
+                    android:minWidth="@dimen/_40sdp"
+                    android:minHeight="@dimen/_25sdp"
+                    android:paddingHorizontal="@dimen/_5sdp"
+                    android:paddingVertical="0dp"
+                    android:text="\u20B9 0"
+                    android:textColor="@android:color/white"
+                    app:backgroundTint="@color/colorAccent"
+                    app:icon="@drawable/ic_add_circle"
+                    app:iconPadding="@dimen/_4sdp"
+                    app:iconSize="@dimen/_13sdp"
+                    app:iconGravity="end"
+                    app:iconTint="@android:color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/logo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/logo" />
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/homeTab"
+                    android:layout_width="0dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/_8sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/videoTab"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/logo"
+                    app:srcCompat="@drawable/ic_home" />
+
+                <View
+                    android:id="@+id/homeLine"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="@color/colorAccent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/homeTab"
+                    app:layout_constraintStart_toStartOf="@id/homeTab"
+                    app:layout_constraintTop_toBottomOf="@id/homeTab" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/videoTab"
+                    android:layout_width="0dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/_8sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/homeTab"
+                    app:layout_constraintEnd_toStartOf="@id/usersTab"
+                    app:layout_constraintStart_toEndOf="@id/homeTab"
+                    app:layout_constraintTop_toTopOf="@id/homeTab"
+                    app:srcCompat="@drawable/ic_video" />
+
+                <View
+                    android:id="@+id/videoLine"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="@android:color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/homeLine"
+                    app:layout_constraintEnd_toEndOf="@id/videoTab"
+                    app:layout_constraintStart_toStartOf="@id/videoTab"
+                    app:layout_constraintTop_toTopOf="@id/homeLine" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/usersTab"
+                    android:layout_width="0dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/_8sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/homeTab"
+                    app:layout_constraintEnd_toStartOf="@id/notificationTab"
+                    app:layout_constraintStart_toEndOf="@id/videoTab"
+                    app:layout_constraintTop_toTopOf="@id/homeTab"
+                    app:srcCompat="@drawable/ic_users" />
+
+                <View
+                    android:id="@+id/usersLine"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="@android:color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/homeLine"
+                    app:layout_constraintEnd_toEndOf="@id/usersTab"
+                    app:layout_constraintStart_toStartOf="@id/usersTab"
+                    app:layout_constraintTop_toTopOf="@id/homeLine" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/notificationTab"
+                    android:layout_width="0dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/_8sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/homeTab"
+                    app:layout_constraintEnd_toStartOf="@id/menuTab"
+                    app:layout_constraintStart_toEndOf="@id/usersTab"
+                    app:layout_constraintTop_toTopOf="@id/homeTab"
+                    app:srcCompat="@drawable/ic_bell" />
+
+                <View
+                    android:id="@+id/notificationLine"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="@android:color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/homeLine"
+                    app:layout_constraintEnd_toEndOf="@id/notificationTab"
+                    app:layout_constraintStart_toStartOf="@id/notificationTab"
+                    app:layout_constraintTop_toTopOf="@id/homeLine" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/menuTab"
+                    android:layout_width="0dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="@dimen/_8sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/homeTab"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/notificationTab"
+                    app:layout_constraintTop_toTopOf="@id/homeTab"
+                    app:srcCompat="@drawable/ic_menu" />
+
+                <View
+                    android:id="@+id/menuLine"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_2sdp"
+                    android:background="@android:color/white"
+                    app:layout_constraintBottom_toBottomOf="@id/homeLine"
+                    app:layout_constraintEnd_toEndOf="@id/menuTab"
+                    app:layout_constraintStart_toStartOf="@id/menuTab"
+                    app:layout_constraintTop_toTopOf="@id/homeLine" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:id="@+id/flFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/homeLine" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+    <!--
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".Activity.MainActivity">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:adjustViewBounds="true"
+            android:src="@drawable/full_logo"
+            app:layout_constraintBottom_toTopOf="@id/homeTab"
+            app:layout_constraintEnd_toStartOf="@id/search"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <ImageView
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:paddingVertical="@dimen/_5sdp"
+            android:src="@drawable/ic_search"
+            app:layout_constraintBottom_toBottomOf="@id/logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/logo" />
+
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/homeTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_8sdp"
+            app:layout_constraintBottom_toTopOf="@id/flFragment"
+            app:layout_constraintEnd_toStartOf="@id/videoTab"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logo"
+            app:srcCompat="@drawable/ic_home" />
+        <View
+            android:id="@+id/homeLine"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_2sdp"
+            android:background="@color/colorAccent"
+            app:layout_constraintBottom_toTopOf="@id/flFragment"
+            app:layout_constraintTop_toBottomOf="@id/homeTab"
+            app:layout_constraintEnd_toEndOf="@id/homeTab"
+            app:layout_constraintStart_toStartOf="@id/homeTab"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/videoTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="@id/homeTab"
+            app:layout_constraintEnd_toStartOf="@id/usersTab"
+            app:layout_constraintStart_toEndOf="@id/homeTab"
+            app:layout_constraintTop_toTopOf="@id/homeTab"
+            app:srcCompat="@drawable/ic_video" />
+        <View
+            android:id="@+id/videoLine"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_2sdp"
+            android:background="@android:color/white"
+            app:layout_constraintTop_toTopOf="@id/homeLine"
+            app:layout_constraintBottom_toBottomOf="@id/homeLine"
+            app:layout_constraintEnd_toEndOf="@id/videoTab"
+            app:layout_constraintStart_toStartOf="@id/videoTab"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/usersTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="@id/homeTab"
+            app:layout_constraintEnd_toStartOf="@id/notificationTab"
+            app:layout_constraintStart_toEndOf="@id/videoTab"
+            app:layout_constraintTop_toTopOf="@id/homeTab"
+            app:srcCompat="@drawable/ic_users" />
+        <View
+            android:id="@+id/usersLine"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_2sdp"
+            android:background="@android:color/white"
+            app:layout_constraintTop_toTopOf="@id/homeLine"
+            app:layout_constraintBottom_toBottomOf="@id/homeLine"
+            app:layout_constraintEnd_toEndOf="@id/usersTab"
+            app:layout_constraintStart_toStartOf="@id/usersTab"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/notificationTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="@id/homeTab"
+            app:layout_constraintEnd_toStartOf="@id/menuTab"
+            app:layout_constraintStart_toEndOf="@id/usersTab"
+            app:layout_constraintTop_toTopOf="@id/homeTab"
+            app:srcCompat="@drawable/ic_bell" />
+        <View
+            android:id="@+id/notificationLine"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_2sdp"
+            android:background="@android:color/white"
+            app:layout_constraintTop_toTopOf="@id/homeLine"
+            app:layout_constraintBottom_toBottomOf="@id/homeLine"
+            app:layout_constraintEnd_toEndOf="@id/notificationTab"
+            app:layout_constraintStart_toStartOf="@id/notificationTab"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/menuTab"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/_8sdp"
+            app:layout_constraintBottom_toBottomOf="@id/homeTab"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/notificationTab"
+            app:layout_constraintTop_toTopOf="@id/homeTab"
+            app:srcCompat="@drawable/ic_menu" />
+        <View
+            android:id="@+id/menuLine"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_2sdp"
+            android:background="@android:color/white"
+            app:layout_constraintTop_toTopOf="@id/homeLine"
+            app:layout_constraintBottom_toBottomOf="@id/homeLine"
+            app:layout_constraintEnd_toEndOf="@id/menuTab"
+            app:layout_constraintStart_toStartOf="@id/menuTab"/>
+
+        <FrameLayout
+            android:id="@+id/flFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/homeLine" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    -->

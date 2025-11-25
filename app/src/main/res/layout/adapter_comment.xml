@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="@dimen/_10sdp"
+    android:paddingTop="@dimen/_10sdp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/profile"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/_7sdp"
+        android:src="@drawable/user_icon"
+        app:layout_constraintEnd_toStartOf="@id/materialCardView"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/materialCardView" />
+
+    <LinearLayout
+        android:id="@+id/materialCardView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corners_frame"
+        android:backgroundTint="@color/comment_bg"
+        android:orientation="vertical"
+        android:padding="@dimen/_10sdp"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profile"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewUserName"
+            style="@style/TextAppearance.Material3.TitleMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/timeTv"
+            style="@style/TextAppearance.AppCompat.Caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/grey_5"
+            app:layout_constraintBottom_toBottomOf="@id/likeBtn"
+            app:layout_constraintStart_toStartOf="@id/materialCardView"
+            app:layout_constraintTop_toTopOf="@id/likeBtn" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewComment"
+            style="@style/TextAppearance.Material3.TitleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_7sdp" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/likeBtn"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fontFamily="sans-serif-medium"
+        android:minWidth="@dimen/_65sdp"
+        android:minHeight="@dimen/_20sdp"
+        android:paddingHorizontal="0dp"
+        android:paddingVertical="@dimen/_5sdp"
+        android:text="@string/like"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/grey_5"
+        app:icon="@drawable/ic_liked_thumbs"
+        app:iconPadding="@dimen/_5sdp"
+        app:iconSize="@dimen/_12sdp"
+        app:iconTint="@color/grey_5"
+        app:layout_constraintStart_toStartOf="@id/materialCardView"
+        app:layout_constraintTop_toBottomOf="@id/materialCardView" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/replyBtn"
+        style="@style/TextAppearance.Compat.Notification.Info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fontFamily="sans-serif-medium"
+        android:minWidth="@dimen/_65sdp"
+        android:minHeight="@dimen/_20sdp"
+        android:paddingHorizontal="0dp"
+        android:paddingVertical="@dimen/_5sdp"
+        android:text="@string/reply"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@color/grey_5"
+        app:layout_constraintBottom_toBottomOf="@id/likeBtn"
+        app:layout_constraintStart_toEndOf="@id/likeBtn"
+        app:layout_constraintTop_toTopOf="@id/likeBtn" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/like_count"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:drawablePadding="@dimen/_5sdp"
+        android:fontFamily="sans-serif-medium"
+        android:includeFontPadding="false"
+        android:text="0"
+        android:textColor="@color/red_text"
+        app:drawableStartCompat="@drawable/ic_like"
+        app:layout_constraintBottom_toBottomOf="@id/likeBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/likeBtn" />
+
+    <!--<androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/profileReply"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_3sdp"
+
+        android:src="@drawable/user_icon"
+        app:layout_constraintStart_toStartOf="@id/likeBtn"
+        app:layout_constraintTop_toBottomOf="@id/likeBtn" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/replyTv"
+        style="@style/TextAppearance.AppCompat.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="1"
+        android:textColor="@android:color/black"
+        android:text="User Name Parent Name Comment"
+        app:layout_constraintBottom_toBottomOf="@id/profileReply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profileReply"
+        app:layout_constraintTop_toTopOf="@id/profileReply" />-->
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/replyExpendTv"
+        style="@style/TextAppearance.AppCompat.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif-medium"
+        android:maxLines="1"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:gravity="center_vertical"
+        android:background="@drawable/rounded_grey_border"
+        app:drawableEndCompat="@drawable/ic_arrow_drop_down"
+        android:padding="@dimen/_5sdp"
+        android:text="View 0 replies..."
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:includeFontPadding="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@id/likeBtn"
+        app:layout_constraintTop_toBottomOf="@id/likeBtn" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:layout_width="@dimen/_24sdp"
+        android:layout_height="@dimen/_24sdp"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:indeterminateDrawable="@drawable/progess_effect"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="@id/likeBtn"
+        app:layout_constraintTop_toBottomOf="@id/likeBtn" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/replyRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/likeBtn"
+        app:layout_constraintTop_toBottomOf="@id/likeBtn" />
+</androidx.constraintlayout.widget.ConstraintLayout>

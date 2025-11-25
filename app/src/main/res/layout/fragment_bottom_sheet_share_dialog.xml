@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_corners_top"
+        android:paddingBottom="@dimen/_10sdp">
+
+        <View
+            android:id="@+id/topLine"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_3sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/rounded_corners"
+            android:backgroundTint="@color/comment_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/postView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:background="@drawable/rounded_corners"
+            android:backgroundTint="@color/comment_bg"
+            android:padding="@dimen/_10sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topLine">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/profile"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:src="@drawable/user_icon"
+                app:layout_constraintBottom_toTopOf="@id/textInputEt"
+                app:layout_constraintEnd_toStartOf="@id/nameTv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/nameTv"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@android:color/black"
+                app:layout_constraintBottom_toBottomOf="@id/profile"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/profile"
+                app:layout_constraintTop_toTopOf="@id/profile" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/textInputEt"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:maxHeight="@dimen/_300sdp"
+                android:background="@android:color/transparent"
+                android:fontFamily="sans-serif"
+                android:hint="@string/say_something_about_this"
+                android:paddingVertical="@dimen/_10sdp"
+                android:textColor="@android:color/black"
+                app:layout_constraintBottom_toTopOf="@id/postBTn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/profile" />
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/postBTn"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:backgroundTint="@color/colorAccent"
+                android:fontFamily="sans-serif-medium"
+                android:paddingVertical="@dimen/_5sdp"
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:text="@string/post_now"
+                android:textColor="@android:color/white"
+                app:cornerRadius="@dimen/_10sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textInputEt"
+                app:strokeColor="@color/colorPrimary_alpha25"
+                app:strokeWidth="@dimen/_1sdp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/shareToTitle"
+            style="@style/TextAppearance.AppCompat.Title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:fontFamily="sans-serif-medium"
+            android:text="Share to"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/postView" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:scrollbars="none"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/shareToTitle">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/whatsappIv"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/comment_bg"
+                    android:padding="@dimen/_8sdp"
+                    app:layout_constraintEnd_toEndOf="@id/whatsappTv"
+                    app:layout_constraintStart_toStartOf="@id/whatsappTv"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_whatsapp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/whatsappTv"
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="@string/whatsapp"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/facebookTv"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/whatsappIv" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/facebookIv"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/comment_bg"
+                    android:padding="@dimen/_9sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/whatsappIv"
+                    app:layout_constraintEnd_toEndOf="@id/facebookTv"
+                    app:layout_constraintStart_toStartOf="@id/facebookTv"
+                    app:layout_constraintTop_toTopOf="@id/whatsappIv"
+                    app:srcCompat="@drawable/ic_facebook" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/facebookTv"
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="@string/facebook"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/messengerTv"
+                    app:layout_constraintStart_toEndOf="@id/whatsappTv"
+                    app:layout_constraintTop_toBottomOf="@id/facebookIv" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/messengerIv"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/comment_bg"
+                    android:padding="@dimen/_8sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/whatsappIv"
+                    app:layout_constraintEnd_toEndOf="@id/messengerTv"
+                    app:layout_constraintStart_toStartOf="@id/messengerTv"
+                    app:layout_constraintTop_toTopOf="@id/whatsappIv"
+                    app:srcCompat="@drawable/ic_messenger" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/messengerTv"
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="@string/messenger"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/instagramTv"
+                    app:layout_constraintStart_toEndOf="@id/facebookTv"
+                    app:layout_constraintTop_toBottomOf="@id/messengerIv" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/instagramIv"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/comment_bg"
+                    android:padding="@dimen/_8sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/whatsappIv"
+                    app:layout_constraintEnd_toEndOf="@id/instagramTv"
+                    app:layout_constraintStart_toStartOf="@id/instagramTv"
+                    app:layout_constraintTop_toTopOf="@id/whatsappIv"
+                    app:srcCompat="@drawable/ic_instagram" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/instagramTv"
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="@string/instagram"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/twitterTv"
+                    app:layout_constraintStart_toEndOf="@id/messengerTv"
+                    app:layout_constraintTop_toBottomOf="@id/instagramIv" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/twitterIv"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/comment_bg"
+                    android:padding="@dimen/_9sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/whatsappIv"
+                    app:layout_constraintEnd_toEndOf="@id/twitterTv"
+                    app:layout_constraintStart_toStartOf="@id/twitterTv"
+                    app:layout_constraintTop_toTopOf="@id/whatsappIv"
+                    app:srcCompat="@drawable/ic_twitter_x" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/twitterTv"
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="@string/twitter"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/copyTv"
+                    app:layout_constraintStart_toEndOf="@id/instagramTv"
+                    app:layout_constraintTop_toBottomOf="@id/twitterIv" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/copyIv"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/comment_bg"
+                    android:padding="@dimen/_9sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/whatsappIv"
+                    app:layout_constraintEnd_toEndOf="@id/copyTv"
+                    app:layout_constraintStart_toStartOf="@id/copyTv"
+                    app:layout_constraintTop_toTopOf="@id/whatsappIv"
+                    app:srcCompat="@drawable/ic_copylink" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/copyTv"
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="@string/copy_link"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/moreTv"
+                    app:layout_constraintStart_toEndOf="@id/twitterTv"
+                    app:layout_constraintTop_toBottomOf="@id/copyIv" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/moreIv"
+                    android:layout_width="@dimen/_40sdp"
+                    android:layout_height="@dimen/_40sdp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="@color/comment_bg"
+                    android:padding="@dimen/_8sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/whatsappIv"
+                    app:layout_constraintEnd_toEndOf="@id/moreTv"
+                    app:layout_constraintStart_toStartOf="@id/moreTv"
+                    app:layout_constraintTop_toTopOf="@id/whatsappIv"
+                    app:srcCompat="@drawable/ic_more" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/moreTv"
+                    style="@style/TextAppearance.AppCompat.Body2"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:text="@string/more"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/copyTv"
+                    app:layout_constraintTop_toBottomOf="@id/moreIv" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </HorizontalScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+

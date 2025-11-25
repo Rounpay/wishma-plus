@@ -1,0 +1,17 @@
+apply plugin: 'com.android.library'
+android {
+    compileSdk 34
+    namespace 'cn.pedant.SweetAlert'
+    defaultConfig {
+        minSdk = 9
+        targetSdk = 34
+    }
+    lint {
+        abortOnError false
+    }
+
+}
+dependencies {
+    implementation 'com.pnikosis:materialish-progress:1.7'
+    implementation 'com.google.android.material:material:1.12.0'
+}

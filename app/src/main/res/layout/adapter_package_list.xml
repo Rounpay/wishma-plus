@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/packageTv"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/_7sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_7sdp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@id/packageAmt"
+        app:layout_constraintEnd_toStartOf="@id/packageIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/packageAmt"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/packageTv"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@id/expireIn"
+        app:layout_constraintEnd_toStartOf="@id/packageTime"
+        app:layout_constraintStart_toStartOf="@id/packageTv"
+        app:layout_constraintTop_toBottomOf="@id/packageTv" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/packageTime"
+        style="@style/TextAppearance.AppCompat.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/packageTv"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toTopOf="@id/packageAmt"
+        app:layout_constraintBottom_toBottomOf="@id/packageAmt"
+        app:layout_constraintEnd_toEndOf="@id/packageTv"
+        app:layout_constraintStart_toEndOf="@id/packageAmt" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/packageIcon"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="@id/packageAmt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/packageTv"
+        app:srcCompat="@drawable/ic_package" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/expireIn"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:fontFamily="sans-serif-medium"
+        android:textStyle="bold"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/holo_red_dark"
+        app:layout_constraintEnd_toEndOf="@id/packageIcon"
+        app:layout_constraintStart_toStartOf="@id/packageTv"
+        app:layout_constraintTop_toBottomOf="@id/packageAmt" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/packageNoteTv"
+        style="@style/TextAppearance.AppCompat.Body2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/packageTv"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="@id/packageIcon"
+        app:layout_constraintStart_toStartOf="@id/packageTv"
+        app:layout_constraintTop_toBottomOf="@id/expireIn" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/activeStatus"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@drawable/rounded_corners"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:minHeight="@dimen/_20sdp"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="0dp"
+        android:text="@string/subscribed"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@android:color/holo_green_dark"
+        app:layout_constraintBottom_toBottomOf="@id/featureBtn"
+        app:layout_constraintStart_toStartOf="@id/packageNoteTv"
+        app:layout_constraintTop_toTopOf="@id/featureBtn" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/upgradeBtn"
+        style="@style/TextAppearance.AppCompat.Caption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@drawable/rounded_corners"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:minWidth="@dimen/_68sdp"
+        android:minHeight="@dimen/_24sdp"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="0dp"
+        android:text="@string/upgrade"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:visibility="gone"
+        app:backgroundTint="@android:color/holo_red_dark"
+        app:layout_constraintBottom_toBottomOf="@id/featureBtn"
+        app:layout_constraintStart_toStartOf="@id/packageNoteTv"
+        app:layout_constraintTop_toTopOf="@id/featureBtn" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/featureBtn"
+        style="@style/TextAppearance.AppCompat.Body2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="@dimen/_7sdp"
+        android:fontFamily="sans-serif-medium"
+        android:padding="@dimen/_10sdp"
+        android:text="@string/all_features"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        app:drawableEndCompat="@drawable/ic_arrow_next"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/packageNoteTv" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_2sdp"
+        android:background="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/featureBtn" />
+</androidx.constraintlayout.widget.ConstraintLayout>

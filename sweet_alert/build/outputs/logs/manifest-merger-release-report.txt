@@ -1,0 +1,24 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml:1:1-9:12
+INJECTED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml:1:1-9:12
+	package
+		ADDED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml:2:5-35
+		INJECTED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml
+	android:versionName
+		ADDED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml:4:5-32
+	xmlns:android
+		ADDED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml:1:11-69
+	android:versionCode
+		ADDED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml:3:5-29
+uses-sdk
+ADDED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml:6:5-47
+INJECTED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml:6:5-47
+INJECTED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml:6:5-47
+	android:targetSdkVersion
+		ADDED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml:6:15-44
+		INJECTED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml
+application
+ADDED from D:\KotlinProjects\wishma-plus\sweet_alert\src\main\AndroidManifest.xml:7:5-20

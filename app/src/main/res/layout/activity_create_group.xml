@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.CreateGroupActivity">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/user_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Create group"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:paddingVertical="@dimen/_10sdp" />
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:padding="@dimen/_10sdp"
+            android:src="@drawable/ic_arrow_back" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/_16sdp">
+
+        <!-- Name Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Name"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Name Input -->
+        <EditText
+            android:id="@+id/etGroupName"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_height="55dp"
+            android:background="@drawable/bg_edittext"
+            android:hint="Name your group"
+            android:padding="15dp"
+            android:textSize="16sp" />
+
+        <!-- Privacy Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Privacy"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Privacy Spinner -->
+        <!--        <Spinner-->
+        <!--            android:id="@+id/spinnerPrivacy"-->
+        <!--            android:layout_marginTop="@dimen/_10sdp"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="55dp"-->
+        <!--            android:background="@drawable/bg_spinner"-->
+        <!--            android:padding="15dp"-->
+        <!--            android:spinnerMode="dropdown" />-->
+        <RelativeLayout
+            android:id="@+id/spinnerPrivacy"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_edittext"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <!-- Selected text -->
+            <TextView
+                android:id="@+id/tvSelected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="Select"
+                android:textSize="16dp"
+                android:paddingRight="32dp" />
+
+            <!-- Arrow Icon -->
+            <ImageView
+                android:id="@+id/ivArrow"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_arrow_drop_down" />
+
+        </RelativeLayout>
+
+        <!-- Privacy Info Text -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Only members can see who’s in the group and what they post. You might be able to change this group to public later."
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"
+            android:padding="4dp"/>
+
+        <TextView
+            android:id="@+id/learnMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Learn more"
+            android:textColor="#1877F2"
+            android:textSize="15sp"
+            android:layout_marginTop="4dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="Visibility"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Privacy Spinner -->
+        <!--        <Spinner-->
+        <!--            android:id="@+id/visibility"-->
+        <!--            android:layout_marginTop="@dimen/_10sdp"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="55dp"-->
+        <!--            android:background="@drawable/bg_edittext"-->
+        <!--            android:padding="15dp"-->
+        <!--            android:spinnerMode="dropdown" />-->
+        <RelativeLayout
+            android:id="@+id/visibility"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_height="50dp"
+            android:background="@drawable/bg_edittext"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <!-- Selected text -->
+            <TextView
+                android:id="@+id/tvSelectedVisibility"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="Select"
+                android:textSize="16dp"
+                android:paddingRight="32dp" />
+
+            <!-- Arrow Icon -->
+            <ImageView
+                android:id="@+id/ivArrowVisibility"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_arrow_drop_down" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+    <!-- Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCreateGroup"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/colorAccent"
+        android:fontFamily="sans-serif-medium"
+        android:text="Create group"
+        android:textColor="@color/color_white"
+        app:cornerRadius="@dimen/_40sdp"
+        android:layout_marginVertical="10dp"
+        android:layout_marginHorizontal="@dimen/_16sdp"
+        app:strokeColor="@color/colorPrimary_alpha25"
+        app:strokeWidth="@dimen/_1sdp" />
+
+</LinearLayout>

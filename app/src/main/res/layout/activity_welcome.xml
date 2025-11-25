@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:id="@+id/welcomeAc"
+    android:layout_height="match_parent"
+    android:background="@drawable/start">
+
+    <TextView
+        android:id="@+id/shortTxt"
+        style="@style/TextAppearance.AppCompat.Display1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:gravity="center"
+        android:text="@string/welcome"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/fullTxt" />
+
+    <TextView
+        android:id="@+id/fullTxt"
+        style="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_25sdp"
+        android:layout_marginEnd="@dimen/_25sdp"
+        android:layout_marginBottom="@dimen/_30sdp"
+        android:gravity="center"
+        android:maxLines="3"
+        android:text="@string/welcome_note"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/slideToNext" />
+
+
+    <com.ncorti.slidetoact.SlideToActView
+        android:id="@+id/slideToNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/_25sdp"
+        android:elevation="6dp"
+        app:animation_duration="250"
+        app:area_margin="4dp"
+        app:border_radius="40dp"
+        app:bounce_on_start="true"
+        app:inner_color="@color/colorAccent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:outer_color="@color/grey_1"
+        app:slider_height="64dp"
+        app:slider_icon_color="@android:color/white"
+        app:slider_locked="false"
+        app:text="@string/get_started"
+        app:text_color="@color/grey_3"
+        app:text_size="@dimen/_17ssp"
+        app:text_style="bold" />
+</androidx.constraintlayout.widget.ConstraintLayout>
