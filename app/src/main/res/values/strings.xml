@@ -155,6 +155,18 @@
 
     <string name="back">Back</string>
     <string name="information">Information</string>
+    <string name="what_you_ll_get_with_a_page">What you\'ll get with a Page</string>
+    <string name="access_professional_tools">Access professional tools</string>
+    <string name="create_ads_earn_money_with_your_content_if_eligible_and_grow_your_public_presence_with_new_tools">Create ads, earn money with your content (if eligible) and grow your public presence with new tools.</string>
+    <string name="get_actionable_insights">Get actionable insights</string>
+    <string name="learn_more_about_your_audience_and_how_your_ads_and_other_content_are_performing">Learn more about your audience and how your ads and other content are performing.</string>
+    <string name="reach_more_people_and_grow_your_public_presence">Reach more people and grow your public presence</string>
+    <string name="instead_of_just_friends_you_can_get_followers_anyone_will_be_able_to_follow_you_and_see_your_content_in_their_feed">Instead of just friends, you can get followers. Anyone will be able to follow you and see your content in their Feed.</string>
+    <string name="you_can_have_multiple_owners">You can have multiple owners</string>
+    <string name="you_have_the_option_to_add_people_to_help_manage_your_content_insights_and_more">You have the option to add people to help manage your content, insights and more.</string>
+    <string name="got_it">Got it</string>
+    <string name="all_option">See all option</string>
+    <string name="page_name">Page Name</string>
 
 
 </resources>

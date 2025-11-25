@@ -43,13 +43,13 @@ public class PersonalProfileActivity extends AppCompatActivity {
 
     AppCompatImageView cameraIcon, profileImage;
     private AutoCompleteTextView profileName;
-    private AppCompatTextView continueBtn, seeAll;
+    private AppCompatTextView continueBtn;
 
     private ImagePicker imagePicker;
     private String imagePath;
     private Snackbar mSnackBar;
-    private int REQUEST_PERMISSIONS_CAMERA = 9090;
-    private int REQUEST_PERMISSIONS_GALLERY = 7654;
+    private final int REQUEST_PERMISSIONS_CAMERA = 9090;
+    private final int REQUEST_PERMISSIONS_GALLERY = 7654;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,8 +88,6 @@ public class PersonalProfileActivity extends AppCompatActivity {
                 }
             }
         }).setWithImageCrop();
-
-        seeAll = findViewById(R.id.seeAll);
         continueBtn = findViewById(R.id.continueBtn);
         continueBtn.setEnabled(false);
         continueBtn.setAlpha(0.5f);

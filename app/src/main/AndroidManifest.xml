@@ -39,54 +39,67 @@
         <activity
             android:name=".Activity.WebViewInformationActivity"
             android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".Activity.CreateGroupActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.GroupActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.DeleteAccountReasonActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.DeactivateOrDeleteAccount"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.DeleteAccount"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.OtpActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.TermAndCondition"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.CreatePersonalProfileActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.ProfessionalProfileActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.PersonalProfileActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.CreateNewProfilePage"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.IncomeReportActivity"
             android:exported="false"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.ShareRedirectActivity"

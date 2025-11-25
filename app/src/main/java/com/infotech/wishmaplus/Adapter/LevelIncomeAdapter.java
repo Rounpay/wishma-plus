@@ -24,7 +24,7 @@ import com.infotech.wishmaplus.Utils.Utility;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LevelIncomeAdapter extends RecyclerView.Adapter<LevelIncomeAdapter.ViewHolder> implements Filterable {
+public class  LevelIncomeAdapter extends RecyclerView.Adapter<LevelIncomeAdapter.ViewHolder> implements Filterable {
 
     /*private final RequestOptions requestOptionsPlaceHolder;*/
     private List<LevelCountResult> listItem;

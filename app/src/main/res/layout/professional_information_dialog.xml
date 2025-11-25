@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@drawable/rounded_corners_top"
     android:paddingBottom="@dimen/_10sdp">
 
@@ -11,8 +11,8 @@
         android:id="@+id/topLine"
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_3sdp"
-        android:layout_marginTop="@dimen/_10sdp"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_10sdp"
         android:background="@drawable/rounded_corners"
         android:backgroundTint="@color/comment_bg" />
 
@@ -22,12 +22,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/topLine"
+        android:layout_alignParentStart="true"
         android:layout_marginTop="@dimen/_5sdp"
         android:backgroundTint="@android:color/transparent"
         android:padding="@dimen/_10sdp"
         android:tint="@android:color/black"
-        app:srcCompat="@drawable/ic_clear"
-        android:layout_alignParentStart="true" />
+        app:srcCompat="@drawable/ic_clear" />
 
     <!-- Title -->
     <androidx.appcompat.widget.AppCompatTextView
@@ -35,242 +35,236 @@
         style="@style/TextAppearance.AppCompat.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Professional Information"
-        android:textColor="@android:color/black"
-        android:layout_centerHorizontal="true"
         android:layout_alignTop="@id/closeBtn"
-        android:layout_alignBottom="@id/closeBtn" />
+        android:layout_alignBottom="@id/closeBtn"
+        android:layout_centerHorizontal="true"
+        android:text="Professional Information"
+        android:textColor="@android:color/black" />
 
     <!-- Line Under Title -->
     <View
         android:id="@+id/line1"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
-        android:background="@android:color/white"
-        android:layout_below="@id/closeBtn" />
+        android:layout_below="@+id/title"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="@android:color/white" />
 
+    <!-- Scrollable Content -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@id/nextButton"
         android:layout_below="@id/line1"
-        android:orientation="vertical">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
-            <!-- Image just below the line -->
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header Image -->
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/headerImage"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_70sdp"
                 android:layout_margin="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:src="@drawable/user_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/line1" />
+                android:src="@drawable/user_icon" />
 
-            <LinearLayout
+            <!-- All Info Rows -->
+
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:text="@string/what_you_ll_get_with_a_page"
+                android:textAlignment="center"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:text="What you'll get with a Page"
-                    android:textColor="@android:color/black"
-                    android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold" />
+            <LinearLayout
+                android:id="@+id/rowOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:orientation="horizontal"
+                android:padding="@dimen/_10sdp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/globe" />
 
                 <LinearLayout
-                    android:id="@+id/rowOne"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_10sdp">
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/_8sdp">
 
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:src="@drawable/globe" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:text="@string/access_professional_tools"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_8sdp"
-                            android:text="Access professional tools"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/_14sdp"
-                            android:textStyle="bold" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_8sdp"
-                            android:text="Create ads, earn money with your content (if eligible) and grow your public presence with new tools."
-                            android:textSize="@dimen/_14sdp" />
-                    </LinearLayout>
-
-
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/create_ads_earn_money_with_your_content_if_eligible_and_grow_your_public_presence_with_new_tools"
+                        android:textSize="@dimen/_14sdp" />
                 </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_2sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:background="@android:color/white"
-                    />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@android:color/white" />
+
+
+            <LinearLayout
+                android:id="@+id/rowTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:orientation="horizontal"
+                android:padding="@dimen/_10sdp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/addperson" />
+
                 <LinearLayout
-                    android:id="@+id/rowTwo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_10sdp">
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/_8sdp">
 
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:src="@drawable/addperson" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:text="@string/get_actionable_insights"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_8sdp"
-                            android:text="Get actionable insights"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/_14sdp"
-                            android:textStyle="bold" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_8sdp"
-                            android:text="Learn more about your audience and how your ads and other content are performing."
-                            android:textSize="@dimen/_14sdp" />
-                    </LinearLayout>
-
-
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/learn_more_about_your_audience_and_how_your_ads_and_other_content_are_performing"
+                        android:textSize="@dimen/_14sdp" />
                 </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_2sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:background="@android:color/white"
-                    />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@android:color/white" />
+
+
+            <LinearLayout
+                android:id="@+id/rowThree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:orientation="horizontal"
+                android:padding="@dimen/_10sdp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/tools" />
+
                 <LinearLayout
-                    android:id="@+id/rowThree"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_10sdp">
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/_8sdp">
 
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:src="@drawable/tools" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:text="@string/reach_more_people_and_grow_your_public_presence"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_8sdp"
-                            android:text="Reach more people and grow your public presence"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/_14sdp"
-                            android:textStyle="bold" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_8sdp"
-                            android:text="Instead of just friends, you can get followers. Anyone will be able to follow you and see your content in their Feed."
-                            android:textSize="@dimen/_14sdp" />
-                    </LinearLayout>
-
-
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/instead_of_just_friends_you_can_get_followers_anyone_will_be_able_to_follow_you_and_see_your_content_in_their_feed"
+                        android:textSize="@dimen/_14sdp" />
                 </LinearLayout>
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_2sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:background="@android:color/white"
-                    />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@android:color/white" />
+
+
+            <LinearLayout
+                android:id="@+id/rowfour"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_5sdp"
+                android:orientation="horizontal"
+                android:padding="@dimen/_10sdp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/user_profile" />
+
                 <LinearLayout
-                    android:id="@+id/rowfour"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_5sdp"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_10sdp">
+                    android:orientation="vertical"
+                    android:layout_marginStart="@dimen/_8sdp">
 
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:src="@drawable/user_profile" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                        android:text="@string/you_can_have_multiple_owners"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold" />
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_8sdp"
-                            android:text="You can have multiple owners"
-                            android:textColor="@android:color/black"
-                            android:textSize="@dimen/_14sdp"
-                            android:textStyle="bold" />
-
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_8sdp"
-                            android:text="You have the option to add people to help manage your content, insights and more."
-                            android:textSize="@dimen/_14sdp" />
-                    </LinearLayout>
-
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/you_have_the_option_to_add_people_to_help_manage_your_content_insights_and_more"
+                        android:textSize="@dimen/_14sdp" />
                 </LinearLayout>
-                <Button
-                    android:id="@+id/continueBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/_15sdp"
-                    android:text="Continue"
-                    android:textAllCaps="false"
-                    android:background="@color/phonePe"
-                    android:textColor="@android:color/white" />
 
             </LinearLayout>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-
+    <!-- Fixed Bottom Button -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/nextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:background="@drawable/text_button_border"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="@string/got_it"
+        android:textColor="@color/color_white"
+        android:textStyle="bold" />
 
 </RelativeLayout>

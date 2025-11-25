@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    tools:context=".Activity.ProfessionalProfileActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Back Button -->
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
@@ -17,11 +20,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Title -->
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/user_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:text="Professional Profile"
         android:textColor="#000000"
         android:textSize="18sp"
@@ -31,47 +34,117 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/back_button" />
 
+    <!-- Top Line -->
     <View
         android:id="@+id/line1"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
         android:background="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@id/mainview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/back_button" />
 
-    <LinearLayout
-        android:id="@+id/mainview"
+    <!-- Scrollable Main Content -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:fillViewport="true"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/line1">
+        android:isScrollContainer="true"
+        app:layout_constraintTop_toBottomOf="@id/line1"
+        app:layout_constraintBottom_toTopOf="@id/bottom_buttons">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/headingView"
-            style="@style/TextAppearance.AppCompat.Body1"
+        <LinearLayout
+            android:id="@+id/mainview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/get_started_with_page"
-            android:textColor="#000"
-            android:textSize="@dimen/_20sdp"
-            android:textStyle="bold" />
+            android:padding="16dp"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/headingView"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/get_started_with_page"
+                android:textColor="#000"
+                android:textSize="@dimen/_20sdp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/optionOneTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:textColor="#000"
+                android:textSize="@dimen/_16sdp"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <AutoCompleteTextView
+                android:id="@+id/pageName"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_bg_new"
+                android:fontFamily="sans-serif-medium"
+                android:hint="@string/page_name"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:padding="@dimen/_14sdp"
+                android:singleLine="true"
+                android:textColor="@color/colorPrimary"
+                android:textColorHint="@android:color/darker_gray" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Buttons (Fixed) -->
+    <LinearLayout
+        android:id="@+id/bottom_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/optionOneTitle"
-            android:layout_width="wrap_content"
+            android:id="@+id/continueBtn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:textColor="#000"
-            android:textSize="@dimen/_16sdp"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/color_white"
+            android:padding="15dp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:text="@string/next"
+            android:background="@drawable/text_button_border"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/seeAll"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:backgroundTint="@color/grey_2"
+            android:padding="15dp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:text="@string/all_option"
+            android:background="@drawable/text_button_border"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </LinearLayout>
 
