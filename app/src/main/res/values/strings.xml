@@ -168,6 +168,20 @@
     <string name="all_option">See all option</string>
     <string name="page_name">Page Name</string>
     <string name="search">Search</string>
+    <string name="last_14_days">Last 14 days</string>
+    <string name="last_28_days">Last 28 days</string>
+    <string name="last_90_days">Last 90 days</string>
+    <string name="last_7_days">Last 7 days</string>
+    <string name="today">Today</string>
+    <string name="date_range">Date Range</string>
+    <string name="see_all">See All</string>
+    <string name="how_long_viewers">How long viewers continue watching your reel. Higher retention helps content reach more people.</string>
+    <string name="retention">Retention</string>
+    <string name="number_of_times">Number of times your reels were viewed for at least 3 seconds or nearly full length if shorter than 3 seconds.</string>
+    <string name="the_number_of_times_your_content">The number of times your content was viewed. Content includes reels, posts, stories and ads. Learn More</string>
+    <string name="views">Views</string>
+    <string name="insights_information">Insights Information</string>
+    <string name="from_previous_90_days">--from previous 90 days</string>
 
 
 </resources>

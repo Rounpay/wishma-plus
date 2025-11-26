@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pullToRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".Fragments.InsightsProfessionalFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:fillViewport="true"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/_10sdp">
+
+            <!-- Dropdown TextView -->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/dropdownText"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="@color/color_1a8f9dbd"
+                android:drawableEnd="@drawable/ic_arrow_drop_down"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:minWidth="@dimen/_120sdp"
+                android:padding="@dimen/_10sdp"
+                android:paddingHorizontal="16dp"
+                android:text="Last 28 days"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <!-- Horizontal Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Start: Total Views -->
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvTotalView"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Views: 1200"
+                    android:textColor="@android:color/black"
+                    tools:ignore="HardcodedText" />
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivInfo"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/info_circle" />
+
+                <!-- End: See All -->
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvSeeAll"
+                    style="@style/TextAppearance.AppCompat.Subhead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/see_all"
+                    android:textColor="@color/main_blue_color" />
+
+            </LinearLayout>
+
+
+            <!-- Percentage Change -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                tools:ignore="UseCompoundDrawables">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivArrow"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@drawable/arrow_up"
+                    app:tint="@color/color_green" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvPercentageChange"
+                    style="@style/TextAppearance.AppCompat.Subhead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="500% from previous 28 days"
+                    android:textColor="@android:color/black" />
+            </LinearLayout>
+            <!-- Selected Range (Example: Last 28 Days) -->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvSelectedRange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Last 28 days"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Current Period Progress -->
+            <LinearLayout
+                android:id="@+id/layoutCurrent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ProgressBar
+                    android:id="@+id/progressCurrent"
+                    style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/color_1a8f9dbd"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressTint="@color/main_blue_color" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvCurrentValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <!-- Previous Period Text -->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvPreviousRange"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Previous 28 days"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Previous Progress -->
+            <LinearLayout
+                android:id="@+id/layoutPrevious"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ProgressBar
+                    android:id="@+id/progressPrevious"
+                    style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Horizontal"
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/color_1a8f9dbd"
+                    android:max="100"
+                    android:progress="0"
+                    android:progressTint="@color/color_green" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvPreviousValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="0"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/likeBtn" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Start: Total Views -->
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/totalEarning"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$0.00 in approximate\n earnings"
+                    android:textColor="@android:color/black"
+                    tools:ignore="HardcodedText" />
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/earningInfo"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/info_circle" />
+
+                <!-- End: See All -->
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/seeAllEarning"
+                    style="@style/TextAppearance.AppCompat.Subhead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/see_all"
+                    android:textColor="@color/main_blue_color" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/previousDaysEarning"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="@string/from_previous_90_days" />
+            <!--Ui component for our bar chart-->
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/likeBtn" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Start: Total Views -->
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/totalInteractions"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$0.00 in approximate\n earnings"
+                    android:textColor="@android:color/black"
+                    tools:ignore="HardcodedText" />
+
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/interactionInfo"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginEnd="8dp"
+                    android:src="@drawable/info_circle" />
+
+                <!-- End: See All -->
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/seeAllInteractions"
+                    style="@style/TextAppearance.AppCompat.Subhead"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:text="@string/see_all"
+                    android:textColor="@color/main_blue_color" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/emptyView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/_16sdp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imgEmpty"
+                    android:layout_width="@dimen/_150sdp"
+                    android:layout_height="@dimen/_150sdp"
+                    android:src="@drawable/empty_folder"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:contentDescription="@string/app_name"
+                    android:adjustViewBounds="true" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvNoContent"
+                    style="@style/TextAppearance.AppCompat.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Content unavailable"
+                    android:textColor="@color/new_gray"
+                    android:textSize="16sp"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

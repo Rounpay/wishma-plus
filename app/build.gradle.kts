@@ -90,4 +90,5 @@ dependencies {
     implementation (libs.firebase.messaging)
     implementation (libs.payu.checkout.pro)
     implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

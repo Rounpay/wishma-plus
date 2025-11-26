@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corners_top"
+    android:paddingBottom="@dimen/_15sdp">
+
+    <!-- Top Drag Handle -->
+    <View
+        android:id="@+id/topLine"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/comment_bg"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Title -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/insights_information"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginTop="@dimen/_12sdp"
+        app:layout_constraintTop_toBottomOf="@id/topLine"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Close Button -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/closeBtn"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:background="@android:color/transparent"
+        android:tint="@android:color/black"
+        android:padding="@dimen/_8sdp"
+        app:srcCompat="@drawable/ic_clear"
+        app:layout_constraintTop_toTopOf="@id/title"
+        app:layout_constraintBottom_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="@dimen/_10sdp" />
+
+    <!-- Divider 1 -->
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/comment_bg"
+        android:layout_marginTop="@dimen/_12sdp"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <!-- Heading 1 -->
+    <TextView
+        android:id="@+id/headingView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:text="@string/views"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:textSize="17sp"
+        app:layout_constraintTop_toBottomOf="@id/line1" />
+
+    <!-- Description 1 -->
+    <TextView
+        android:id="@+id/description1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:textSize="14sp"
+        android:textColor="@color/new_gray"
+        app:layout_constraintTop_toBottomOf="@id/headingView" />
+
+    <!-- Divider 2 -->
+    <View
+        android:id="@+id/line2"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/comment_bg"
+        app:layout_constraintTop_toBottomOf="@id/description1" />
+
+    <!-- Heading 2 -->
+    <TextView
+        android:id="@+id/headingView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:text="3-Second Views"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/line2" />
+
+    <!-- Description 2 -->
+    <TextView
+        android:id="@+id/description2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:text="@string/number_of_times"
+        android:textSize="14sp"
+        android:textColor="@color/new_gray"
+        app:layout_constraintTop_toBottomOf="@id/headingView2" />
+
+    <!-- Divider 3 -->
+    <View
+        android:layout_marginTop="@dimen/_5sdp"
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/comment_bg"
+        app:layout_constraintTop_toBottomOf="@id/description2" />
+
+    <!-- Heading 3 -->
+    <TextView
+        android:id="@+id/headingView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_12sdp"
+        android:text="@string/retention"
+        android:textStyle="bold"
+        android:textSize="17sp"
+        android:textColor="@android:color/black"
+        app:layout_constraintTop_toBottomOf="@id/line3" />
+
+    <!-- Description 3 -->
+    <TextView
+        android:id="@+id/description3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:text="@string/how_long_viewers"
+        android:textSize="14sp"
+        android:textColor="@color/new_gray"
+        app:layout_constraintTop_toBottomOf="@id/headingView3" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

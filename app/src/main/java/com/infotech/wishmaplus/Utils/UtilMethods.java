@@ -1,15 +1,20 @@
 package com.infotech.wishmaplus.Utils;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +30,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -82,9 +89,12 @@ public enum UtilMethods {
     private PreferencesManager tokenManager;
     private Gson gson;
     public DownloadManager downloadManager;
-    public BottomSheetDialog bottomSheetDialogList, personalInformation;
+    public BottomSheetDialog bottomSheetDialogList,
+            personalInformation,bottomDateDialogDateRange,bottomSheetInsights;
     public BottomSheetDialog bottomSheetDialogReport, followDialog;
     public static BottomSheetDialog bottomSheetUser;
+    int selectedDateRange = 28;
+
 
     //public HashMap<Long, String> downloadIdMap= new HashMap<>();
     public Gson getGson() {
@@ -718,7 +728,139 @@ public enum UtilMethods {
         }
     }
 
+    public void selectDateRangeBottomSheet(Activity context,AppCompatTextView tvDropdownText, OnDateRangeSelected callback) {
 
+        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
+            return;
+
+        bottomDateDialogDateRange = new BottomSheetDialog(context, R.style.DialogStyle);
+        View sheetView = LayoutInflater.from(context)
+                .inflate(R.layout.bottom_sheet_date_range, null);
+
+        RadioButton rToday = sheetView.findViewById(R.id.rbToday);
+        RadioButton r7 = sheetView.findViewById(R.id.rbLast7);
+        RadioButton r14 = sheetView.findViewById(R.id.rbLast14);
+        RadioButton r28 = sheetView.findViewById(R.id.rbLast28);
+        RadioButton r90 = sheetView.findViewById(R.id.rbLast90);
+        switch (selectedDateRange) {
+            case 1:
+                rToday.setChecked(true);
+                break;
+            case 7:
+                r7.setChecked(true);
+                break;
+            case 14:
+                r14.setChecked(true);
+                break;
+            case 28:
+                r28.setChecked(true);
+                break;
+            case 90:
+                r90.setChecked(true);
+                break;
+        }
+
+        bottomDateDialogDateRange.setContentView(sheetView);
+
+        @SuppressLint("SetTextI18n") View.OnClickListener listener = v -> {
+            int id = v.getId();
+
+            rToday.setChecked(id == R.id.option_today);
+            r7.setChecked(id == R.id.rbLast7);
+            r14.setChecked(id == R.id.rbLast14);
+            r28.setChecked(id == R.id.rbLast28);
+            r90.setChecked(id == R.id.rbLast90);
+
+            int idSelected = 28;
+            if (id == R.id.option_today) {
+                idSelected = 1;
+                selectedDateRange = 1;
+                tvDropdownText.setText("Today");
+            } else if (id == R.id.rbLast7) {
+                idSelected = 7;
+                selectedDateRange = 7;
+                tvDropdownText.setText("Last 7 days");
+            } else if (id == R.id.rbLast14) {
+                idSelected = 14;
+                selectedDateRange = 14;
+                tvDropdownText.setText("Last 14 days");
+            } else if (id == R.id.rbLast28) {
+                idSelected = 28;
+                selectedDateRange = 28;
+                tvDropdownText.setText("Last 28 days");
+            } else if (id == R.id.rbLast90) {
+                idSelected = 90;
+                selectedDateRange = 90;
+                tvDropdownText.setText("Last 90 days");
+            }
+
+            bottomDateDialogDateRange.dismiss();
+            if (callback != null) {
+                callback.onSelected(idSelected);
+            }
+        };
+
+        sheetView.findViewById(R.id.option_today).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast7).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast14).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast28).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast90).setOnClickListener(listener);
+        bottomDateDialogDateRange.show();
+    }
+
+    public void InsightsBottomSheetDialog(Activity context) {
+        if (bottomSheetInsights != null && bottomSheetInsights.isShowing())
+            return;
+        bottomSheetInsights = new BottomSheetDialog(context, R.style.DialogStyle);
+        View sheetView = LayoutInflater.from(context)
+                .inflate(R.layout.dialog_insights_bottom_sheet, null);
+        ImageButton closeBtn = sheetView.findViewById(R.id.closeBtn);
+        closeBtn.setOnClickListener(v -> bottomSheetInsights.dismiss());
+        AppCompatTextView description =sheetView.findViewById(R.id.description1);
+
+        SpannableString spannableString = getInsightsViewsDescription(context);
+
+        description.setText(spannableString);
+        description.setMovementMethod(LinkMovementMethod.getInstance());
+        description.setHighlightColor(Color.TRANSPARENT);
+
+        bottomSheetInsights.setCancelable(true);
+        bottomSheetInsights.setContentView(sheetView);
+        BottomSheetBehavior
+                .from(Objects.requireNonNull(bottomSheetInsights.findViewById(com.google.android.material.R.id.design_bottom_sheet)))
+                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        bottomSheetInsights.show();
+    }
+
+    @NonNull
+    private static SpannableString getInsightsViewsDescription(Activity context) {
+        String fullText = "The number of times your content was viewed. Content includes reels, posts, stories and ads. Learn More";
+        SpannableString spannableString = new SpannableString(fullText);
+
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(@NonNull View widget) {
+                Toast.makeText(context, "Learn More Clicked!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setColor(Color.parseColor("#0066FF"));
+                ds.setUnderlineText(false);
+            }
+        };
+
+        int start = fullText.indexOf("Learn More");
+        int end = start + "Learn More".length();
+
+        spannableString.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        return spannableString;
+    }
+
+    public interface OnDateRangeSelected {
+        void onSelected(int selectedId);
+    }
     public interface ApiCallBackMulti {
         void onSuccess(Object object);
 
