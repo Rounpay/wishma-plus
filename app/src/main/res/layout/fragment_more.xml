@@ -481,6 +481,70 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/likeBtn" />
+
+        <RelativeLayout
+            android:id="@+id/professionalView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_10sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/professionalIcon"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_centerVertical="true"
+                app:layout_constraintEnd_toStartOf="@id/professionalTv"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/tools" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/professionalTv"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_toStartOf="@id/professionalArrow"
+                android:layout_toEndOf="@id/professionalIcon"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:text="Professional Dashboard"
+                android:textColor="@android:color/black" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/professionalTvDes"
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/professionalTv"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_toStartOf="@id/professionalArrow"
+                android:layout_toEndOf="@id/professionalIcon"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center_vertical"
+                android:text="You can view and manage your professional dashboard from here."
+                android:textColor="@color/grey_4" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/professionalArrow"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                app:srcCompat="@drawable/ic_arrow_forward" />
+        </RelativeLayout>
+
+        <View
+
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_2sdp"
+            android:background="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/likeBtn" />
         <RelativeLayout
             android:id="@+id/logoutView"
             android:layout_width="match_parent"

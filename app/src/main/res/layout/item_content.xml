@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+
+    <ImageView
+        android:id="@+id/imageThumb"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_launcher_background"
+        android:layout_marginEnd="10dp" />
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No text content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textStats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="27 reactions • 5 comments"
+            android:textSize="13sp"
+            android:textColor="@color/colorPrimary"
+            android:paddingTop="2dp" />
+
+
+       <LinearLayout
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+           <ImageView
+               android:layout_width="12sp"
+               android:layout_height="12sp"
+               android:layout_gravity="center_vertical"
+               android:scaleType="centerCrop"
+               android:src="@drawable/globe"
+               android:layout_marginTop="2dp"/>
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text=" • "
+               android:textSize="12sp"
+               android:paddingTop="2dp" />
+           <TextView
+               android:id="@+id/textDate"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="28 Jun 2020"
+               android:textSize="12sp"
+               android:paddingTop="2dp" />
+       </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
