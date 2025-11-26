@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_top"
+    android:padding="16dp"
+    android:orientation="vertical">
+    <View
+        android:id="@+id/topLine"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_3sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/comment_bg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <!-- Title: Views -->
+        <TextView
+            android:id="@+id/title_views"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Views"
+            android:textSize="18sp"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold"
+            android:paddingBottom="4dp"/>
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/desc_views"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="The number of times that your content was played or displayed. Content includes reels, posts, stories and ads."
+            android:textSize="14sp"/>
+        <TextView
+            android:id="@+id/learn_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Learn more"
+            android:textColor="#1877F2"
+            android:textStyle="bold"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EEEEEE"
+            android:layout_marginVertical="10dp"/>
+
+        <!-- 3-second views -->
+        <TextView
+            android:id="@+id/title_3sec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="3-second views"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/desc_3sec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="The number of times that your reels played for at least 3 seconds..."
+            android:textSize="14sp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#EEEEEE"
+            android:layout_marginVertical="10dp"/>
+
+        <!-- 1-minute views -->
+        <TextView
+            android:id="@+id/title_1min"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1-minute views"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/desc_1min"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="The number of times that your reels played for at least 1 minute..."
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -10,8 +10,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.infotech.wishmaplus.Fragments.HomeFragment;
 import com.infotech.wishmaplus.Fragments.HomeFragmentProfessional;
 import com.infotech.wishmaplus.Fragments.InsightsProfessionalFragment;
+import com.infotech.wishmaplus.Fragments.ProfessionalDashboard.Engagement;
+import com.infotech.wishmaplus.Fragments.ProfessionalDashboard.ProfessionalHome;
 import com.infotech.wishmaplus.R;
 
 public class ProfessionalDashboardActivity extends AppCompatActivity {
@@ -53,13 +56,13 @@ public class ProfessionalDashboardActivity extends AppCompatActivity {
         selectedTab = newTab;
         int id = newTab.getId();
         if (id == R.id.home) {
-            loadFragment(new HomeFragmentProfessional());
+            loadFragment(new ProfessionalHome());
         } else if (id == R.id.insights) {
             loadFragment(new InsightsProfessionalFragment());
         } else if (id == R.id.content) {
             loadFragment(new HomeFragmentProfessional());
         } else if (id == R.id.engagement) {
-            loadFragment(new HomeFragmentProfessional());
+            loadFragment(new Engagement());
         } else if (id == R.id.monetization) {
             loadFragment(new HomeFragmentProfessional());
         }

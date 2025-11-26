@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="200dp"
+    android:layout_height="120dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/card_border"
+    android:gravity="center_vertical"
+    android:layout_marginEnd="12dp">
+
+    <LinearLayout
+        android:id="@+id/featureLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/imgIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/user_profile"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="People to invite"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#000"/>
+
+        <TextView
+            android:id="@+id/txtSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Grow your following"
+            android:textSize="14sp"
+            android:textColor="#777" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/moreLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/imgToolMore"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_more"
+            android:tint="#B8C7D3"
+            android:layout_gravity="center"
+            android:padding="4dp" />
+
+        <!-- Text -->
+        <TextView
+            android:id="@+id/txtToolMore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="More tools"
+            android:textColor="#000000"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+</LinearLayout>

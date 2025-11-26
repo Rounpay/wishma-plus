@@ -81,7 +81,7 @@ public class MoreFragment extends Fragment {
             setUserData();
         }
         v.findViewById(R.id.groupView).setOnClickListener(view -> {
-            startActivity(new Intent(requireActivity(), /*groupView*/ ProfessionalDashboardActivity.class));
+            startActivity(new Intent(requireActivity(), ProfessionalDashboardActivity.class));
         });
         v.findViewById(R.id.profileIcon).setOnClickListener(view -> {
             profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)
