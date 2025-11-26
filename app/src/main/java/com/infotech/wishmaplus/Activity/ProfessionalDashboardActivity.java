@@ -14,6 +14,7 @@ import com.infotech.wishmaplus.Fragments.HomeFragment;
 import com.infotech.wishmaplus.Fragments.HomeFragmentProfessional;
 import com.infotech.wishmaplus.Fragments.InsightsProfessionalFragment;
 import com.infotech.wishmaplus.Fragments.ProfessionalDashboard.Engagement;
+import com.infotech.wishmaplus.Fragments.ProfessionalDashboard.MonetisationFragment;
 import com.infotech.wishmaplus.Fragments.ProfessionalDashboard.ProfessionalHome;
 import com.infotech.wishmaplus.R;
 
@@ -64,7 +65,7 @@ public class ProfessionalDashboardActivity extends AppCompatActivity {
         } else if (id == R.id.engagement) {
             loadFragment(new Engagement());
         } else if (id == R.id.monetization) {
-            loadFragment(new HomeFragmentProfessional());
+            loadFragment(new MonetisationFragment());
         }
     }
 
