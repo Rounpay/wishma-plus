@@ -26,4 +26,5 @@
     <color name="color_white">#FFFFFF</color>
     <color name="main_blue_color">#2469df</color>
     <color name="dark_blue">#0000FF</color>
+    <color name="new_gray">#888</color>
 </resources>
