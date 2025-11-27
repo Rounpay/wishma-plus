@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "789309115643",
     "project_id": "wishma-plus",
-    "storage_bucket": "wishma-plus.appspot.com"
+    "storage_bucket": "wishma-plus.firebasestorage.app"
   },
   "client": [
     {
@@ -12,15 +12,25 @@
           "package_name": "com.infotech.wishmaplus"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "789309115643-j7brbm5rttmun7m2jbshl9p2o5gpc0n5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCtuT23U09w45kK685GrIXE6fwvTeni3og"
+          "current_key": "AIzaSyCbpGvIkTns6LBn3BV5LxaeebX3Rpq_kMs"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "789309115643-j7brbm5rttmun7m2jbshl9p2o5gpc0n5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

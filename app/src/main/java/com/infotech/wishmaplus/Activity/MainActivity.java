@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,8 +25,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.infotech.wishmaplus.Api.Object.BalanceResult;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
+import com.infotech.wishmaplus.Fragments.FriendListFragment;
 import com.infotech.wishmaplus.Fragments.HomeFragment;
 import com.infotech.wishmaplus.Fragments.MoreFragment;
 import com.infotech.wishmaplus.Fragments.NotificationFragment;
@@ -33,6 +36,7 @@ import com.infotech.wishmaplus.Fragments.UsersFragment;
 import com.infotech.wishmaplus.Fragments.VideoFragment;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.ApiClient;
+import com.infotech.wishmaplus.Utils.ApplicationConstant;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.EndPointInterface;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
@@ -63,6 +67,19 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("FCM", "Fetching FCM token failed", task.getException());
+                        return;
+                    }
+
+                    String token = task.getResult();
+                    Log.d("FCM_TOKEN", "Token: " + token);
+
+                    PreferencesManager mAppPreferences = new PreferencesManager(this,2);
+                    mAppPreferences.setNonRemoval(ApplicationConstant.INSTANCE.regFCMKeyPref, token);
+                });
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         tokenManager = new PreferencesManager(this,1);
         Intent intent = getIntent();
@@ -109,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 usersLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = usersLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new UsersFragment(), "User").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new /*UsersFragment()*/FriendListFragment(), "User").commit();
             }
         });
 
