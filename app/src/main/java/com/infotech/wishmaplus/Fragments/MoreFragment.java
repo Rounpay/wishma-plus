@@ -26,6 +26,7 @@ import com.infotech.wishmaplus.Activity.PackageActivity;
 import com.infotech.wishmaplus.Activity.ProfessionalDashboardActivity;
 import com.infotech.wishmaplus.Activity.ProfileActivity;
 import com.infotech.wishmaplus.Activity.ReferralActivity;
+import com.infotech.wishmaplus.Activity.SettingsAndPrivacy;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomAlertDialog;
@@ -114,6 +115,9 @@ public class MoreFragment extends Fragment {
         });
         v.findViewById(R.id.logoutView).setOnClickListener(view -> {
             signOut();
+        });
+        v.findViewById(R.id.settingView).setOnClickListener(view -> {
+            startActivity(new Intent(requireActivity(), SettingsAndPrivacy.class));
         });
         return v;
     }

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="20dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Unblock User?"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:paddingBottom="10dp" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/txtDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="If you unblock User he/she may be able to see your Timeline or contact you, depending on your settings."
+        android:textSize="15sp"
+        android:textColor="#444444" />
+    <TextView
+        android:id="@+id/textTag"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tags you and User previously added to each other may be restored."
+        android:textSize="15sp"
+        android:textColor="#444444" />
+    <TextView
+        android:id="@+id/textWait"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:text="You'll have to wait 48 hours if you want to block User again."
+        android:textSize="15sp"
+        android:textColor="#444444" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="20dp">
+
+        <!-- CANCEL -->
+        <TextView
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="CANCEL"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textColor="#6E6E6E"
+            android:paddingVertical="12dp" />
+
+        <!-- UNBLOCK -->
+        <TextView
+            android:id="@+id/btnUnblock"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:layout_height="wrap_content"
+            android:text="UNBLOCK"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textColor="#1877F2"
+            android:paddingVertical="12dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

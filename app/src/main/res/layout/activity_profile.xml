@@ -76,13 +76,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"
-        android:layout_marginEnd="@dimen/_5sdp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="@dimen/_10sdp"
         android:src="@drawable/ic_logout"
         app:layout_constraintBottom_toBottomOf="@id/back_button"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/moreBTn"
         app:layout_constraintTop_toTopOf="@id/back_button" />
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/moreBTn"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toBottomOf="@id/back_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/back_button"
+        app:srcCompat="@drawable/ic_more_vert" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/pullToRefresh"

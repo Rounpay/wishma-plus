@@ -1,20 +1,33 @@
 package com.infotech.wishmaplus.Activity;
 
+import static android.view.View.GONE;
+
 import android.Manifest;
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,11 +37,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -44,6 +59,7 @@ import com.infotech.wishmaplus.Api.Response.SignUpResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.ApiClient;
+import com.infotech.wishmaplus.Utils.ApplicationConstant;
 import com.infotech.wishmaplus.Utils.CustomAlertDialog;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.EndPointInterface;
@@ -77,6 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
     List<ContentResult> contentList = new ArrayList<>();
     MultiContentAdapter adapter;
     ImageButton logout;
+    AppCompatImageView moreBtn;
     UserDetailResponse userDetailResponse;
     private int pageNumber = 1;
     private int totalPost;
@@ -107,12 +124,17 @@ public class ProfileActivity extends AppCompatActivity {
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         back_button = findViewById(R.id.back_button);
         logout = findViewById(R.id.logout);
+        moreBtn = findViewById(R.id.moreBTn);
         balance = findViewById(R.id.balance);
+        moreBtn.setOnClickListener(view ->{
+            showPopupMenu(view,this);
+        });
         if(getIntent().getStringExtra("id")!=null &&
                 !Objects.equals(getIntent().getStringExtra("id"), "0")){
             userId = getIntent().getStringExtra("id");
             balance.setVisibility(View.GONE);
             logout.setVisibility(View.GONE);
+            moreBtn.setVisibility(View.VISIBLE);
         }
         final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
         pullToRefresh.setOnRefreshListener(() -> {
@@ -234,7 +256,71 @@ public class ProfileActivity extends AppCompatActivity {
         getBalance();
 
     }
+    private void showPopupMenu(View view,Context context) {
 
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.dailog_action_button_pop_up, null);
+
+        // Initialize the PopupWindow
+        PopupWindow popupWindow = new PopupWindow(popupView, (int) context.getResources().getDimension(com.intuit.sdp.R.dimen._160sdp), ViewGroup.LayoutParams.WRAP_CONTENT, true);
+
+        // Set up views in popup layout
+        TextView block = popupView.findViewById(R.id.block);
+        block.setOnClickListener(view1 -> {
+            popupWindow.dismiss();
+            openBlockDialog();
+        });
+
+        int[] location = new int[2];
+        view.getLocationOnScreen(location);
+        popupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
+
+    }
+
+    private void openBlockDialog() {
+        View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
+        blurBackground(rootView);
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_block_user);
+
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView btnCancel = dialog.findViewById(R.id.btnCancel);
+        TextView btnBlock = dialog.findViewById(R.id.btnBlock);
+        TextView txtTitle = dialog.findViewById(R.id.txtTitle);
+        TextView txtDesc = dialog.findViewById(R.id.txtDesc);
+        TextView friendUnfriend = dialog.findViewById(R.id.friendUnfriend);
+        TextView takeABreak = dialog.findViewById(R.id.takeABreak);
+
+        txtTitle.setText("Are you sure you want to block "+userDetailResponse.getFisrtName()+" "+userDetailResponse.getLastName()+"?");
+        txtDesc.setText(userDetailResponse.getFisrtName()+" "+userDetailResponse.getLastName()+" will no longer be able to:");
+        friendUnfriend.setText("If you're friends, blocking "+userDetailResponse.getFisrtName()+" "+userDetailResponse.getLastName()+" will also unfriend him/her.");
+        takeABreak.setText("If you just want to limit what you share with "+userDetailResponse.getFisrtName()+" or see less of him, you can take a break instead. ");
+
+        dialog.setOnDismissListener(dialogInterface -> removeBlur(rootView));
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnBlock.setOnClickListener(v -> {
+            Toast.makeText(this, "User Blocked", Toast.LENGTH_SHORT).show();
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+    private void blurBackground(View rootView) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            RenderEffect blurEffect = RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.CLAMP);
+            rootView.setRenderEffect(blurEffect);
+        }
+    }
+    private void removeBlur(View rootView) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            rootView.setRenderEffect(null);
+        }
+    }
     private void setAdapter() {
         adapter = new MultiContentAdapter(userId,contentList, selfRecyclerView, tokenManager, this, new MultiContentAdapter.ClickCallBack() {
             @Override
