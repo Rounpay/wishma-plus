@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.infotech.wishmaplus.Fragments.HomeFragment;
 import com.infotech.wishmaplus.Fragments.HomeFragmentProfessional;
 import com.infotech.wishmaplus.Fragments.InsightsProfessionalFragment;
+import com.infotech.wishmaplus.Fragments.ProfessionalDashboard.ContentLibrary;
 import com.infotech.wishmaplus.Fragments.ProfessionalDashboard.Engagement;
 import com.infotech.wishmaplus.Fragments.ProfessionalDashboard.MonetisationFragment;
 import com.infotech.wishmaplus.Fragments.ProfessionalDashboard.ProfessionalHome;
@@ -61,7 +62,7 @@ public class ProfessionalDashboardActivity extends AppCompatActivity {
         } else if (id == R.id.insights) {
             loadFragment(new InsightsProfessionalFragment());
         } else if (id == R.id.content) {
-            loadFragment(new HomeFragmentProfessional());
+            loadFragment(new ContentLibrary());
         } else if (id == R.id.engagement) {
             loadFragment(new Engagement());
         } else if (id == R.id.monetization) {
