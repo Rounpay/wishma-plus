@@ -10,6 +10,7 @@ import com.infotech.wishmaplus.Api.Object.PackageResult;
 import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
 import com.infotech.wishmaplus.Api.Object.StateResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
+import com.infotech.wishmaplus.Api.Request.BasicRequest;
 import com.infotech.wishmaplus.Api.Request.CommentRequest;
 import com.infotech.wishmaplus.Api.Request.LikeRequest;
 import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
@@ -218,4 +219,8 @@ public interface EndPointInterface {
     @POST("api/UserProfile/RemoveRequest/{ToUserId}")
     Call<BasicResponse> removeRequest(@Header("Authorization") String authorization,
                                       @Path("ToUserId") String ToUserId);
+
+    @POST("api/UserProfile/AcceptOrRejectRequest")
+    Call<BasicResponse> AcceptOrRejectRequest(@Header("Authorization") String authorization,
+                                      @Body BasicRequest request);
 }

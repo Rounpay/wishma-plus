@@ -38,10 +38,15 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
-            android:name=".Activity.BlockedUser"
+            android:name=".Activity.FriendRequest"
             android:exported="false"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".Activity.BlockedUser"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SettingsAndPrivacy"
             android:exported="false"
