@@ -26,10 +26,13 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     Context context;
     List<UserListFriends> list;
     UtilMethods.FriendActionListener listener;
-    public FriendListAdapter(Context context, List<UserListFriends> list, UtilMethods.FriendActionListener listener) {
+
+    boolean isFriendRequest;
+    public FriendListAdapter(Context context, List<UserListFriends> list, UtilMethods.FriendActionListener listener,boolean isFriendRequest) {
         this.context = context;
         this.list = list;
         this.listener = listener;
+        this.isFriendRequest = isFriendRequest;
     }
 
     @NonNull
@@ -52,6 +55,10 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
                 .error(R.drawable.app_logo)
                 .centerCrop()
                 .into(holder.profileImage);
+        if(isFriendRequest) {
+            holder.btnAddFriend.setText("Confirm");
+            holder.removeUserBtn.setText("Cancel");
+        }
 
         holder.btnAddFriend.setOnClickListener(v -> {
             if (listener != null) {

@@ -1,10 +1,14 @@
 package com.infotech.wishmaplus.Adapter;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,9 +23,11 @@ import java.util.List;
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder> {
 
     private List<FriendRequestResponse> list;
+    private int sent;
 
-    public FriendAdapter(List<FriendRequestResponse> list) {
+    public FriendAdapter(List<FriendRequestResponse> list,int sent) {
         this.list = list;
+        this.sent = sent;
     }
 
     @NonNull
@@ -35,8 +41,28 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FriendRequestResponse req = list.get(position);
-        holder.btnConfirm.setText("Confirm");
-        holder.btnDelete.setText("Delete");
+        if(sent==1){
+            holder.btnConfirm.setVisibility(GONE);
+            holder.btnDelete.setText("Cancel Request");
+            LinearLayout.LayoutParams params =
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+            holder.btnDelete.setLayoutParams(params);
+        }
+        else {
+            holder.btnConfirm.setVisibility(VISIBLE);
+            holder.btnConfirm.setText("Confirm");
+            LinearLayout.LayoutParams params =
+                    new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                    );
+            holder.btnDelete.setLayoutParams(params);
+            holder.btnDelete.setText("Delete");
+        }
+
         holder.name.setText(req.getName());
         holder.profileImage.setImageResource(req.getImageRes());
     }

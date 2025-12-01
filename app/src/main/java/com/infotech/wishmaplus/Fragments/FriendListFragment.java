@@ -3,6 +3,7 @@ package com.infotech.wishmaplus.Fragments;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.infotech.wishmaplus.Activity.FriendRequest;
 import com.infotech.wishmaplus.Activity.MainActivity;
+import com.infotech.wishmaplus.Activity.SentRequests;
 import com.infotech.wishmaplus.Activity.SettingsAndPrivacy;
 import com.infotech.wishmaplus.Adapter.FriendListAdapter;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
@@ -57,7 +59,7 @@ public class FriendListFragment extends Fragment {
             public void onRemoveClicked(UserListFriends user, int position) {
                 callRemoveFriendApi(user, position);
             }
-        });
+        },false);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(adapter);
         updateEmptyView();
@@ -77,7 +79,7 @@ public class FriendListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        hitApi();
+//        hitApi();
     }
 
     private void callAddFriendApi(UserListFriends user, int position) {
@@ -122,7 +124,7 @@ public class FriendListFragment extends Fragment {
 
     private void hitApi() {
         if (!isAdded()) return;
-        UtilMethods.INSTANCE.getFriendRequest(requireActivity(), new UtilMethods.ApiCallBack() {
+        UtilMethods.INSTANCE.getFriendRequest(requireActivity(), new UtilMethods.ApiCallBackMulti() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onSuccess(Object object) {
@@ -130,7 +132,14 @@ public class FriendListFragment extends Fragment {
                 if (object instanceof List) {
                     List<UserListFriends> apiList = (List<UserListFriends>) object;
                     list.addAll(apiList);
+//                    adapter.notifyDataSetChanged();
+//                    updateEmptyView();
                 }
+            }
+
+            @Override
+            public void onError(String msg) {
+
             }
         });
     }

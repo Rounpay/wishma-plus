@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp"
+    android:background="@drawable/rounded_top">
+    <View
+        android:id="@+id/topLine"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_3sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/comment_bg" />
+
+    <LinearLayout
+        android:id="@+id/sentRequest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:visibility="gone"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/user_profile" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View sent requests"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:layout_marginStart="10dp"
+        android:paddingVertical="5dp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/defaultOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_menu" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Default"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"
+        android:layout_marginStart="10dp"
+        android:paddingVertical="5dp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/viewOne"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0" />
+
+    <LinearLayout
+        android:id="@+id/newestOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/arrow_up" />
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Newest request first"
+        android:layout_marginStart="10dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:paddingVertical="5dp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/viewTwo"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#E0E0E0" />
+
+    <LinearLayout
+        android:id="@+id/oldestOption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/arrow_downward" />
+
+    <TextView
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Oldest request first"
+        android:layout_marginStart="10dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
+        android:paddingVertical="5dp" />
+    </LinearLayout>
+
+</LinearLayout>

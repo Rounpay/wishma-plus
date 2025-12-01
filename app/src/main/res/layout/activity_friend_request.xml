@@ -35,6 +35,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/back_button" />
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/moreBTn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_10sdp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintBottom_toBottomOf="@id/back_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/back_button"
+        app:srcCompat="@drawable/ic_more" />
+
     <!-- Line -->
     <View
         android:id="@+id/line1"
@@ -45,7 +58,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/back_button" />
 
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/heading"
+        style="@style/TextAppearance.AppCompat.SearchResult.Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:text="Friend requests"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line1" />
+
     <!-- RecyclerView -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/count"
+        style="@style/TextAppearance.AppCompat.SearchResult.Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="10dp"
+        android:text="378"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/heading"
+        app:layout_constraintTop_toBottomOf="@+id/line1" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/sort"
+        style="@style/TextAppearance.AppCompat.SearchResult.Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Sort"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="10dp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line1" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/friendRecycler"
         android:layout_width="0dp"
@@ -54,9 +109,39 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/line1"
+        app:layout_constraintTop_toBottomOf="@id/heading"
         tools:itemCount="3"
         tools:listitem="@layout/add_remove_friend_layout" />
+    <LinearLayout
+        android:id="@+id/noDataLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/heading">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/noDataImage"
+            android:layout_width="@dimen/_150sdp"
+            android:layout_height="@dimen/_150sdp"
+            android:contentDescription="no data"
+            android:src="@drawable/no_data_found" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/noDataText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="No Data Found"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -530,7 +530,7 @@ public enum UtilMethods {
         void onRemoveClicked(UserListFriends user, int position);
     }
 
-    public void getFriendRequest(Activity activity, ApiCallBack apiCallBack) {
+    public void getFriendRequest(Activity activity, ApiCallBackMulti apiCallBack) {
         EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
         Call<List<UserListFriends>> call = git.getFriendRequest("Bearer " + tokenManager.getAccessToken());
         call.enqueue(new Callback<List<UserListFriends>>() {
