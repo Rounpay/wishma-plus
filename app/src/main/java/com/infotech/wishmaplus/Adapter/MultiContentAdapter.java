@@ -596,7 +596,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         UtilMethods.INSTANCE.createRequest(context, userId, new UtilMethods.ApiCallBackMulti() {
             @Override
             public void onSuccess(Object object) {
-                updateFollowUnfollowState(0, addFriend, position);
+                BasicResponse basicResponse = (BasicResponse) object;
+                if(basicResponse.getStatusCode()==1){
+                    updateFollowUnfollowState(0, addFriend, position);
+                }else{
+                    UtilMethods.INSTANCE.Error(context,basicResponse.getResponseText());
+                }
 
             }
 
