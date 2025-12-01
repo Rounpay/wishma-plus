@@ -286,6 +286,15 @@ public class UserDetailResponse implements Parcelable {
     public boolean isActive() {
         return isActive;
     }
+    public boolean isSelfProfile() {
+        return isSelfProfile;
+    }
+    public boolean isProfessional() {
+        return isProfessional;
+    }
+    public boolean isRequestPending() {
+        return isRequestPending;
+    }
 
 
     public int getId() {
@@ -358,6 +367,9 @@ public class UserDetailResponse implements Parcelable {
 
     public int getStateId() {
         return stateId;
+    }
+    public int getRequestSentStatus() {
+        return requestSentStatus;
     }
 
     public String getCityName() {
