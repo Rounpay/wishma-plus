@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    android:backgroundTint="@color/bgColor"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:backgroundTint="@color/bgColor">
 
-    <!-- Title -->
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/user_title"
         style="@style/TextAppearance.AppCompat.SearchResult.Title"
@@ -18,31 +18,34 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:text="Friends"
         android:textColor="@android:color/black"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Search Icon (Right of Title) -->
     <ImageButton
         android:id="@+id/search_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignTop="@id/user_title"
         android:layout_marginEnd="@dimen/_10sdp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/search"
         android:padding="@dimen/_8sdp"
-        android:src="@drawable/ic_search" />
+        android:src="@drawable/ic_search"
+        app:layout_constraintBottom_toBottomOf="@id/user_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/user_title" />
 
-    <!-- Horizontal Tabs -->
     <HorizontalScrollView
         android:id="@+id/horizontalTabs"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/user_title"
         android:layout_marginTop="@dimen/_10sdp"
         android:paddingHorizontal="@dimen/_10sdp"
         android:paddingVertical="@dimen/_5sdp"
-        android:scrollbars="none">
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_title">
 
         <LinearLayout
             android:id="@+id/tabsContainer"
@@ -50,7 +53,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <!-- Tab: Online -->
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/home"
                 style="@style/TextAppearance.AppCompat.Subhead"
@@ -66,7 +68,6 @@
                 android:text="Online"
                 android:textColor="@color/colorPrimaryLight" />
 
-            <!-- Tab: Friend Request -->
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/insights"
                 style="@style/TextAppearance.AppCompat.Subhead"
@@ -83,7 +84,6 @@
                 android:text="Friend Request"
                 android:textColor="@color/colorPrimaryLight" />
 
-            <!-- Tab: Your Friends -->
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/content"
                 style="@style/TextAppearance.AppCompat.Subhead"
@@ -103,41 +103,93 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- Line Below Tabs -->
     <View
         android:id="@+id/line1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_below="@id/horizontalTabs"
         android:layout_marginTop="@dimen/_5sdp"
-        android:background="#E0E0E0" />
+        android:background="#E0E0E0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/horizontalTabs" />
 
-    <!-- Heading Under Line -->
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/heading"
-        style="@style/TextAppearance.AppCompat.SearchResult.Title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/line1"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:layout_marginEnd="@dimen/_10sdp"
-        android:text="People you may know"
-        android:textColor="@android:color/black"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/line1">
 
-    <!-- RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/heading"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:clipToPadding="false"
-        tools:itemCount="1"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:paddingBottom="@dimen/_10sdp"
-        tools:listitem="@layout/add_remove_friend_layout" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-</RelativeLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/heading"
+                style="@style/TextAppearance.AppCompat.SearchResult.Title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:text="People you may know"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:clipToPadding="false"
+                android:paddingBottom="@dimen/_10sdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/heading"
+                tools:itemCount="3"
+                tools:listitem="@layout/add_remove_friend_layout" />
+
+            <LinearLayout
+                android:id="@+id/noDataLayout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="20dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/heading">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/noDataImage"
+                    android:layout_width="@dimen/_150sdp"
+                    android:layout_height="@dimen/_150sdp"
+                    android:contentDescription="no data"
+                    android:src="@drawable/no_data_found" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/noDataText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="No Data Found"
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

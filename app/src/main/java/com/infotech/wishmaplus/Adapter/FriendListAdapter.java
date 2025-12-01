@@ -15,18 +15,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.button.MaterialButton;
 import com.infotech.wishmaplus.Api.Object.FriendModel;
+import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.List;
 
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
 
     Context context;
-    List<FriendModel> list;
-
-    public FriendListAdapter(Context context, List<FriendModel> list) {
+    List<UserListFriends> list;
+    UtilMethods.FriendActionListener listener;
+    public FriendListAdapter(Context context, List<UserListFriends> list, UtilMethods.FriendActionListener listener) {
         this.context = context;
         this.list = list;
+        this.listener = listener;
     }
 
     @NonNull
@@ -38,26 +41,30 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FriendModel model = list.get(position);
-        holder.userName.setText(model.getName());
+        UserListFriends model = list.get(position);
+        String fullName = (model.getFirstName() != null ? model.getFirstName() : "") +
+                " " +
+                (model.getLastName() != null ? model.getLastName() : "");
+        holder.userName.setText(fullName.trim());
         Glide.with(context)
-                .load(model.getImageUrl())
+                .load(model.getProfilePictureUrl())
                 .placeholder(R.drawable.app_logo)
+                .error(R.drawable.app_logo)
+                .centerCrop()
                 .into(holder.profileImage);
 
         holder.btnAddFriend.setOnClickListener(v -> {
-            model.setFriend(!model.isFriend());
-            notifyItemChanged(position);
-            if (model.isFriend()) {
-                Toast.makeText(context, "Friend Added ✔", Toast.LENGTH_SHORT).show();
+            if (listener != null) {
+                listener.onAddClicked(model, position);
             }
         });
+
         holder.removeUserBtn.setOnClickListener(v -> {
-            list.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, list.size());
-            Toast.makeText(context, model.getName() + " removed", Toast.LENGTH_SHORT).show();
+            if (listener != null) {
+                listener.onRemoveClicked(model, position);
+            }
         });
+
     }
 
 
@@ -67,7 +74,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
         return list.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView profileImage;
         TextView userName;

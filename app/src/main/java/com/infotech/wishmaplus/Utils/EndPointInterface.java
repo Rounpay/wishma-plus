@@ -3,6 +3,7 @@ package com.infotech.wishmaplus.Utils;
 import com.infotech.wishmaplus.Api.Object.BalanceResult;
 import com.infotech.wishmaplus.Api.Object.BankResult;
 import com.infotech.wishmaplus.Api.Object.CityResult;
+import com.infotech.wishmaplus.Api.Object.CommentResult;
 import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Object.LevelCountResult;
 import com.infotech.wishmaplus.Api.Object.PackageResult;
@@ -17,7 +18,6 @@ import com.infotech.wishmaplus.Api.Request.SignUpRequest;
 import com.infotech.wishmaplus.Api.Request.UpdateUserRequest;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
-import com.infotech.wishmaplus.Api.Object.CommentResult;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.CompanyDetailResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
@@ -28,8 +28,10 @@ import com.infotech.wishmaplus.Api.Response.LoginResponse;
 import com.infotech.wishmaplus.Api.Response.SignUpResponse;
 import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
+import com.infotech.wishmaplus.Api.Response.UserListFriends;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -42,6 +44,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface EndPointInterface {
@@ -98,6 +101,7 @@ public interface EndPointInterface {
                                      @Query("pageSize") int pageSize,
                                      @Query("IsSelf") boolean IsSelf,
                                      @Query("ContentTypeID") int contentTypeID);
+
     @GET("api/Content/GetStory")
     Call<BasicListResponse<StoryResult>> getStory(@Header("Authorization") String token);
 
@@ -118,14 +122,14 @@ public interface EndPointInterface {
 
     @DELETE("api/Content")
     Call<BasicResponse> deleteComment(@Header("Authorization") String token,
-                                       @Query("PostId") String postId);
+                                      @Query("PostId") String postId);
 
     @DELETE("api/Content/DeleteStory")
     Call<BasicResponse> deleteStory(@Header("Authorization") String token,
-                                       @Query("StoryId") String storyId);
+                                    @Query("StoryId") String storyId);
 
     @GET("api/GetUserDetails")
-    Call<UserDetailResponse> getUserDetail(@Header("Authorization") String token,@Query("UserId") String UserId);
+    Call<UserDetailResponse> getUserDetail(@Header("Authorization") String token, @Query("UserId") String UserId);
 
     @POST("api/DoFollow")
     Call<LikeResponse> DoFollow(@Header("Authorization") String token,
@@ -147,6 +151,7 @@ public interface EndPointInterface {
     @POST("api/GetCity")
     Call<BasicListResponse<CityResult>> getCity(@Header("Authorization") String authorization,
                                                 @Query("StateId") int stateId);
+
     @POST("api/GetBank")
     Call<BasicListResponse<BankResult>> getBank(@Header("Authorization") String authorization,
                                                 @Query("bankId") int bankId);
@@ -186,7 +191,7 @@ public interface EndPointInterface {
 
     @POST("api/PGCallback/PayUTransactionUpdate")
     Call<UpgradePackageResponse> payUTransactionUpdate(@Header("Authorization") String authorization,
-                                                       @Query ("TID") String tid);
+                                                       @Query("TID") String tid);
 
     @GET("api/Content/ReportReason")
     Call<BasicListResponse<ReportReasonResult>> getReportReason(@Header("Authorization") String authorization);
@@ -194,10 +199,23 @@ public interface EndPointInterface {
     @POST("api/Content/ReportPost")
     Call<BasicResponse> reportPost(@Header("Authorization") String authorization,
                                    @Body ReportPostRequest request);
+
     @GET("api/CompanyDetails")
     Call<CompanyDetailResponse> getCompanyDetails(@Header("Authorization") String authorization);
 
     @GET("api/IncomeReport")
     Call<BasicListResponse<Income>> getIncomeResponse(@Header("Authorization") String authorization);
 
+
+    @GET("api/UserProfile/GetFriendRequest")
+    Call<List<UserListFriends>> getFriendRequest(@Header("Authorization") String authorization);
+
+
+    @POST("api/UserProfile/CreateRequest/{ToUserId}")
+    Call<BasicResponse> createRequest(@Header("Authorization") String authorization,
+                                      @Path("ToUserId") String ToUserId);
+
+    @POST("api/UserProfile/RemoveRequest/{ToUserId}")
+    Call<BasicResponse> removeRequest(@Header("Authorization") String authorization,
+                                      @Path("ToUserId") String ToUserId);
 }

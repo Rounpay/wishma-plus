@@ -57,6 +57,7 @@ import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
+import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
 
 import java.io.IOException;
@@ -66,6 +67,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -522,6 +524,86 @@ public enum UtilMethods {
             e.printStackTrace();
         }
     }
+
+    public interface FriendActionListener {
+        void onAddClicked(UserListFriends user, int position);
+        void onRemoveClicked(UserListFriends user, int position);
+    }
+
+    public void getFriendRequest(Activity activity, ApiCallBack apiCallBack) {
+        EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+        Call<List<UserListFriends>> call = git.getFriendRequest("Bearer " + tokenManager.getAccessToken());
+        call.enqueue(new Callback<List<UserListFriends>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<UserListFriends>> call, @NonNull Response<List<UserListFriends>> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    apiCallBack.onSuccess(response.body());
+                } else {
+                    apiCallBack.onSuccess(new ArrayList<UserListFriends>());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<List<UserListFriends>> call, @NonNull Throwable t) {
+                apiCallBack.onSuccess(new ArrayList<UserListFriends>());
+            }
+        });
+    }
+
+    public void createRequest(Activity activity, String userId, ApiCallBackMulti apiCallBack) {
+
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+
+            Call<BasicResponse> call = git.createRequest("Bearer " + tokenManager.getAccessToken(), userId);
+
+            call.enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+    public void removeRequest(Activity activity, String userId, ApiCallBackMulti apiCallBack) {
+
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+
+            Call<BasicResponse> call = git.removeRequest("Bearer " + tokenManager.getAccessToken(), userId);
+
+            call.enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+                @Override
+                public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
 
     public void submitReportReason(Activity activity, String postId, int reasonId, ApiCallBack apiCallBack) {
         try {
