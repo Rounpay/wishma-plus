@@ -361,6 +361,8 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getUserId(), new UtilMethods.ApiCallBackMulti() {
                             @Override
                             public void onSuccess(Object object) {
+                                BasicResponse basicResponse =(BasicResponse) object;
+                                UtilMethods.INSTANCE.Success(context,basicResponse.getResponseText());
                                 updateFollowUnfollowState(0, friendUnfriend, position);
                                 if (context instanceof ProfileActivity) {
                                     ((ProfileActivity) context).refresh();
