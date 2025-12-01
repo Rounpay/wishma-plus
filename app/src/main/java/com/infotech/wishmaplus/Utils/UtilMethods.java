@@ -806,16 +806,23 @@ public enum UtilMethods {
             if (type == 1) {
                 doFollow(context, userId, apiCallBack);
             } else if (type == 3) {
-                AcceptOrRejectRequest(context, userId, 1, apiCallBack);
-            } else if (type == 4) {
-                AcceptOrRejectRequest(context, userId, -1, apiCallBack);
-            } else {
+                AcceptOrRejectRequest(context, userId, 2, apiCallBack);
+            }else {
                 removeRequest(context, userId, apiCallBack);
             }
             AcceptRequestDialog.dismiss();
         });
 
-        cancelBtn.setOnClickListener(v -> AcceptRequestDialog.dismiss());
+        cancelBtn.setOnClickListener(v -> {
+            if (type == 3) {
+                AcceptOrRejectRequest(context, userId, 3, apiCallBack);
+            }
+            if (AcceptRequestDialog != null && AcceptRequestDialog.isShowing()) {
+                AcceptRequestDialog.dismiss();
+            }
+        });
+
+
 
         AcceptRequestDialog.setCancelable(true);
         AcceptRequestDialog.setContentView(sheetView);

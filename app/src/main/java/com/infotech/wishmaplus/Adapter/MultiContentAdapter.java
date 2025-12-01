@@ -361,6 +361,8 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getUserId(), new UtilMethods.ApiCallBackMulti() {
                             @Override
                             public void onSuccess(Object object) {
+                                BasicResponse basicResponse =(BasicResponse) object;
+                                UtilMethods.INSTANCE.Success(context,basicResponse.getResponseText());
                                 updateFollowUnfollowState(0, friendUnfriend, position);
                                 if (context instanceof ProfileActivity) {
                                     ((ProfileActivity) context).refresh();
@@ -373,9 +375,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                             }
                         }, 0);
-                    } else if (requestSentStatus == 0 || requestSentStatus == 3) {
-                        addFriend(content.getUserDetail().getUserId(), friendUnfriend, position);
-                    } else if (requestSentStatus == 0 && isRequestPending) {
+                    }else if (requestSentStatus == 0 && isRequestPending) {
                         UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getFisrtName(), new UtilMethods.ApiCallBackMulti() {
                             @Override
                             public void onSuccess(Object object) {
@@ -391,6 +391,8 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                             }
                         }, 3);
+                    }  else if (requestSentStatus == 3 || requestSentStatus == 0) {
+                        addFriend(content.getUserDetail().getUserId(), friendUnfriend, position);
                     } else if (requestSentStatus ==2) {
                         UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getFisrtName(), new UtilMethods.ApiCallBackMulti() {
                             @Override
