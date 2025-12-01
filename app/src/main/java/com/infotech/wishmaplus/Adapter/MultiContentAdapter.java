@@ -373,8 +373,6 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                             }
                         }, 0);
-                    } else if (requestSentStatus == 0 || requestSentStatus == 3) {
-                        addFriend(content.getUserDetail().getUserId(), friendUnfriend, position);
                     } else if (requestSentStatus == 0 && isRequestPending) {
                         UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getFisrtName(), new UtilMethods.ApiCallBackMulti() {
                             @Override
@@ -391,7 +389,9 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                             }
                         }, 3);
-                    } else if (requestSentStatus ==2) {
+                    } else if (requestSentStatus == 0 || requestSentStatus == 3){
+                        addFriend(content.getUserDetail().getUserId(), friendUnfriend, position);
+                    }else if (requestSentStatus ==2) {
                         UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getFisrtName(), new UtilMethods.ApiCallBackMulti() {
                             @Override
                             public void onSuccess(Object object) {
