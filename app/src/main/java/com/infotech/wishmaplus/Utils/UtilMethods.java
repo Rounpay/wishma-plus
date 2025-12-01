@@ -1,4 +1,7 @@
 package com.infotech.wishmaplus.Utils;
+
+import static android.view.View.GONE;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -30,7 +33,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -48,6 +50,7 @@ import com.infotech.wishmaplus.Adapter.DialogListBottomSheetAdapter;
 import com.infotech.wishmaplus.Adapter.DialogReportBottomSheetAdapter;
 import com.infotech.wishmaplus.Api.Object.CommentResult;
 import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
+import com.infotech.wishmaplus.Api.Request.BasicRequest;
 import com.infotech.wishmaplus.Api.Request.CommentRequest;
 import com.infotech.wishmaplus.Api.Request.LikeRequest;
 import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
@@ -92,8 +95,8 @@ public enum UtilMethods {
     private Gson gson;
     public DownloadManager downloadManager;
     public BottomSheetDialog bottomSheetDialogList,
-            personalInformation,bottomDateDialogDateRange,bottomSheetInsights;
-    public BottomSheetDialog bottomSheetDialogReport, followDialog;
+            personalInformation, bottomDateDialogDateRange, bottomSheetInsights;
+    public BottomSheetDialog bottomSheetDialogReport, AcceptRequestDialog;
     public static BottomSheetDialog bottomSheetUser;
     int selectedDateRange = 28;
 
@@ -463,13 +466,13 @@ public enum UtilMethods {
                                 apiCallBack.onSuccess(response.body().getResult());
                             }
                         } else {
-                            progress.setVisibility(View.GONE);
+                            progress.setVisibility(GONE);
                             Error(activity, response.body().getResponseText());
 
                         }
 
                     } else {
-                        progress.setVisibility(View.GONE);
+                        progress.setVisibility(GONE);
                         apiErrorHandle(activity, response.code(), response.message());
                     }
 
@@ -478,12 +481,12 @@ public enum UtilMethods {
                 @Override
                 public void onFailure(Call<BasicListResponse<ReportReasonResult>> call, Throwable t) {
                     apiFailureError(activity, t);
-                    progress.setVisibility(View.GONE);
+                    progress.setVisibility(GONE);
                 }
             });
         } catch (Exception e) {
             Error(activity, e.getMessage());
-            progress.setVisibility(View.GONE);
+            progress.setVisibility(GONE);
             e.printStackTrace();
         }
     }
@@ -525,8 +528,10 @@ public enum UtilMethods {
         }
     }
 
+
     public interface FriendActionListener {
         void onAddClicked(UserListFriends user, int position);
+
         void onRemoveClicked(UserListFriends user, int position);
     }
 
@@ -567,6 +572,7 @@ public enum UtilMethods {
                         apiCallBack.onError("Server returned error: " + response.code());
                     }
                 }
+
                 @Override
                 public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
@@ -577,6 +583,7 @@ public enum UtilMethods {
             apiCallBack.onError(e.getMessage());
         }
     }
+
     public void removeRequest(Activity activity, String userId, ApiCallBackMulti apiCallBack) {
 
         try {
@@ -593,6 +600,33 @@ public enum UtilMethods {
                         apiCallBack.onError("Server returned error: " + response.code());
                     }
                 }
+
+                @Override
+                public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void AcceptOrRejectRequest(Activity activity, String userId, int statusCode, ApiCallBackMulti apiCallBack) {
+
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BasicResponse> call = git.AcceptOrRejectRequest("Bearer " + tokenManager.getAccessToken(), new BasicRequest(userId, statusCode));
+            call.enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
                 @Override
                 public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
@@ -735,13 +769,14 @@ public enum UtilMethods {
 
     }
 
-    public void openFollowBottomSheetDialog(Activity context, String userId, ApiCallBackMulti apiCallBack,int type) {
+    @SuppressLint("SetTextI18n")
+    public void openAcceptRequestBottomSheetDialog(Activity context, String userId, String name, ApiCallBackMulti apiCallBack, int type) {
 
-        if (followDialog != null && followDialog.isShowing())
+        if (AcceptRequestDialog != null && AcceptRequestDialog.isShowing())
             return;
 
-        followDialog = new BottomSheetDialog(context, R.style.DialogStyle);
-        followDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        AcceptRequestDialog = new BottomSheetDialog(context, R.style.DialogStyle);
+        Objects.requireNonNull(AcceptRequestDialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View sheetView = inflater.inflate(R.layout.dialog_follow_unfollow, null);
@@ -749,37 +784,47 @@ public enum UtilMethods {
         TextView confirmMessage = sheetView.findViewById(R.id.confirmMessage);
         MaterialButton unfollowBtn = sheetView.findViewById(R.id.unfollowBtn);
         MaterialButton cancelBtn = sheetView.findViewById(R.id.cancelBtn);
-        if(type==1){
+        if (type == 1) {
             confirmMessage.setText("Are you sure want to unfollow this user?");
             unfollowBtn.setText("Unfollow");
             cancelBtn.setText("Cancel");
-        }
-        else {
+        } else if (type == 3) {
+            confirmMessage.setText(name + "sent you a friend request");
+            unfollowBtn.setText("Confirm");
+            cancelBtn.setText("Delete");
+        } else if (type == 4) {
+            confirmMessage.setVisibility(GONE);
+            unfollowBtn.setText("Cancel Request");
+            cancelBtn.setText("Edit friend list");
+        } else {
             confirmMessage.setText("Are you sure want to cancel this friend request?");
             unfollowBtn.setText("Cancel friend request");
             cancelBtn.setText("Cancel");
         }
 
         unfollowBtn.setOnClickListener(v -> {
-            if (type==1) {
+            if (type == 1) {
                 doFollow(context, userId, apiCallBack);
-            }
-            else {
+            } else if (type == 3) {
+                AcceptOrRejectRequest(context, userId, 1, apiCallBack);
+            } else if (type == 4) {
+                AcceptOrRejectRequest(context, userId, -1, apiCallBack);
+            } else {
                 removeRequest(context, userId, apiCallBack);
             }
-            followDialog.dismiss();
+            AcceptRequestDialog.dismiss();
         });
 
-        cancelBtn.setOnClickListener(v -> followDialog.dismiss());
+        cancelBtn.setOnClickListener(v -> AcceptRequestDialog.dismiss());
 
-        followDialog.setCancelable(true);
-        followDialog.setContentView(sheetView);
+        AcceptRequestDialog.setCancelable(true);
+        AcceptRequestDialog.setContentView(sheetView);
 
         BottomSheetBehavior.from(
-                followDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet)
+                AcceptRequestDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet)
         ).setState(BottomSheetBehavior.STATE_EXPANDED);
 
-        followDialog.show();
+        AcceptRequestDialog.show();
     }
 
 
@@ -802,12 +847,7 @@ public enum UtilMethods {
                             Toast.makeText(context, response.body().getResponseText(), Toast.LENGTH_SHORT).show();
                         }
 
-                    }/* else {
-                        if (apiCallBack != null) {
-                            apiCallBack.onError("Failed to like " + (commentId.length() > 0 ? "Comment" : "post"));
-                        }
-                        Toast.makeText(context, "Failed to like " + (commentId.length() > 0 ? "Comment" : "post"), Toast.LENGTH_SHORT).show();
-                    }*/
+                    }
                 }
 
                 @Override
@@ -826,7 +866,7 @@ public enum UtilMethods {
         }
     }
 
-    public void selectDateRangeBottomSheet(Activity context,AppCompatTextView tvDropdownText, OnDateRangeSelected callback) {
+    public void selectDateRangeBottomSheet(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback) {
 
         if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
             return;
@@ -914,7 +954,7 @@ public enum UtilMethods {
                 .inflate(R.layout.dialog_insights_bottom_sheet, null);
         ImageButton closeBtn = sheetView.findViewById(R.id.closeBtn);
         closeBtn.setOnClickListener(v -> bottomSheetInsights.dismiss());
-        AppCompatTextView description =sheetView.findViewById(R.id.description1);
+        AppCompatTextView description = sheetView.findViewById(R.id.description1);
 
         SpannableString spannableString = getInsightsViewsDescription(context);
 
@@ -959,6 +999,7 @@ public enum UtilMethods {
     public interface OnDateRangeSelected {
         void onSelected(int selectedId);
     }
+
     public interface ApiCallBackMulti {
         void onSuccess(Object object);
 
@@ -1037,7 +1078,7 @@ public enum UtilMethods {
         recyclerView.setAdapter(adapter);
         title.setText(titleValue);
         if (list.size() < 16) {
-            searchEt.setVisibility(View.GONE);
+            searchEt.setVisibility(GONE);
         }
         back_button.setOnClickListener(v -> bottomSheetDialogList.dismiss());
 
@@ -1103,7 +1144,7 @@ public enum UtilMethods {
         if (reportReasonResultList != null && reportReasonResultList.size() > 0) {
             recyclerView.setVisibility(View.VISIBLE);
             submitBtn.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.GONE);
+            progress.setVisibility(GONE);
             DialogReportBottomSheetAdapter adapter = new DialogReportBottomSheetAdapter(reportReasonResultList, id -> {
                 submitBtn.setTag(id);
             });
@@ -1112,7 +1153,7 @@ public enum UtilMethods {
             getReportReason(context, progress, object -> {
                 recyclerView.setVisibility(View.VISIBLE);
                 submitBtn.setVisibility(View.VISIBLE);
-                progress.setVisibility(View.GONE);
+                progress.setVisibility(GONE);
 
                 reportReasonResultList = (ArrayList<ReportReasonResult>) object;
                 DialogReportBottomSheetAdapter adapter = new DialogReportBottomSheetAdapter(reportReasonResultList, id -> {

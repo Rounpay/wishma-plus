@@ -113,10 +113,10 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private CommentDialog commentDialog;
     private String isFollowed;
-    private int isAddFriend;
+    private int requestSentStatus;
+    private boolean isRequestPending;
 
-    public MultiContentAdapter(String UserUnikID, List<ContentResult> contentList, CustomRecyclerView recyclerView, PreferencesManager tokenManager, FragmentActivity context,
-                               ClickCallBack clickCallBack) {
+    public MultiContentAdapter(String UserUnikID, List<ContentResult> contentList, CustomRecyclerView recyclerView, PreferencesManager tokenManager, FragmentActivity context, ClickCallBack clickCallBack) {
         if (requestOptionsUserImage == null) {
             requestOptionsUserImage = UtilMethods.INSTANCE.getRequestOption_With_UserIcon();
         }
@@ -227,9 +227,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageButton editCoverIcon;
 
         View line_1;
-        /*MaterialButtonadd_story_button,edit_profile_button;*/
-        AppCompatTextView addPostTitle,user_name, storyAddBtn, packageTitle, packageName, bioTv, location, posts_tab, photos_tab, videos_tab, noDataTv, searchBar,
-                edit_public_details, joiningDate, followers, subscribers, followersView, followingView, friendUnfriend,addFriend;
+        /*MaterialButtonadd_story_button,edit_profile_button;*/ AppCompatTextView addPostTitle, user_name, storyAddBtn, packageTitle, packageName, bioTv, location, posts_tab, photos_tab, videos_tab, noDataTv, searchBar, edit_public_details, joiningDate, followers, subscribers, followersView, followingView, friendUnfriend, addFriend;
 
         public ProfileViewHolder(View itemView) {
             super(itemView);
@@ -283,94 +281,84 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 noDataTv.setVisibility(VISIBLE);
             }
+            boolean isProfessional = content.getUserDetail().isProfessional();
+            if (isProfessional) {
+                friendUnfriend.setVisibility(VISIBLE);
+            } else {
+                friendUnfriend.setVisibility(GONE);
+            }
             if (content.getUserDetail() != null) {
-                Glide.with(context)
-                        .load(content.getUserDetail().getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profile_picture);
-                Glide.with(context)
-                        .load(content.getUserDetail().getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profile);
+                Glide.with(context).load(content.getUserDetail().getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile_picture);
+                Glide.with(context).load(content.getUserDetail().getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile);
 
-                Glide.with(context)
-                        .load(content.getUserDetail().getCoverPictureUrl())
-                        .apply(requestOptionsCoverImage)
-                        .into(cover_photo);
+                Glide.with(context).load(content.getUserDetail().getCoverPictureUrl()).apply(requestOptionsCoverImage).into(cover_photo);
                 user_name.setText(content.getUserDetail().getFisrtName() + " " + content.getUserDetail().getLastName());
 
 
-
                 // FOLLOWERS
-                if (content.getUserDetail().getFollower() != null
-                        && !content.getUserDetail().getFollower().isEmpty()) {
+                if (content.getUserDetail().getFollower() != null && !content.getUserDetail().getFollower().isEmpty()) {
                     String count = content.getUserDetail().getFollower();
                     String label = " followers";
                     SpannableString ss = new SpannableString(count + label);
                     ss.setSpan(new StyleSpan(Typeface.BOLD), 0, count.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    ss.setSpan(new AbsoluteSizeSpan(16, true),
-                            0, count.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    ss.setSpan(new ForegroundColorSpan(Color.BLACK),
-                            0, count.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    ss.setSpan(new AbsoluteSizeSpan(16, true), 0, count.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    ss.setSpan(new ForegroundColorSpan(Color.BLACK), 0, count.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     followersView.setText(ss);
                 }
-
                 // FOLLOWING
-                if (content.getUserDetail().getFollowing() != null
-                        && !content.getUserDetail().getFollowing().isEmpty()) {
+                if (content.getUserDetail().getFollowing() != null && !content.getUserDetail().getFollowing().isEmpty()) {
 
                     String count = content.getUserDetail().getFollowing();
                     String label = " following";
 
                     SpannableString ss = new SpannableString(count + label);
                     ss.setSpan(new StyleSpan(Typeface.BOLD), 0, count.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    ss.setSpan(new AbsoluteSizeSpan(16, true),
-                            0, count.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    ss.setSpan(new ForegroundColorSpan(Color.BLACK),
-                            0, count.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    ss.setSpan(new AbsoluteSizeSpan(16, true), 0, count.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    ss.setSpan(new ForegroundColorSpan(Color.BLACK), 0, count.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     followingView.setText(ss);
                 }
-
-
                 isFollowed = content.getUserDetail().getIsFollowed();
-                isAddFriend = content.getUserDetail().getRequestSentStatus();
+                requestSentStatus = content.getUserDetail().getRequestSentStatus();
+                isRequestPending = content.getUserDetail().isRequestPending();
 
-                if(isAddFriend==0 || isAddFriend==3)
-                {
-                    addFriend.setText("Add Friend");
+                /* Showing requestSentStatus  */
+                if (isRequestPending && requestSentStatus == 0) {
+                    addFriend.setText("Respond"); /* showing Respond */
                     addFriend.setBackgroundResource(R.drawable.bg_blue_rounded);
                     addFriend.setTextColor(ContextCompat.getColor(context, R.color.color_white));
-                    addFriend.setBackgroundTintList(
-                            ContextCompat.getColorStateList(context, R.color.main_blue_color)
-                    );
-                } else if (isAddFriend==1) {
-                    addFriend.setText("Cancel Request");
+                    addFriend.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.main_blue_color));
+                } else if (requestSentStatus == 0 || requestSentStatus == 3) {
+                    addFriend.setText("Add Friend");  /* showing Add Friend */
+                    addFriend.setBackgroundResource(R.drawable.bg_blue_rounded);
+                    addFriend.setTextColor(ContextCompat.getColor(context, R.color.color_white));
+                    addFriend.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.main_blue_color));
+                } else if (requestSentStatus == 1) {
+                    addFriend.setText("Cancel Request");/* showing Cancel Request */
                     addFriend.setBackgroundResource(R.drawable.rounded_corners);
                     addFriend.setTextColor(ContextCompat.getColor(context, R.color.black_alpha_55));
-                    addFriend.setBackgroundTintList(
-                            ContextCompat.getColorStateList(context, R.color.grey_1)
-                    );
+                    addFriend.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.grey_1));
+                } else if (requestSentStatus == 2) {
+                    addFriend.setText("Friends");/* showing Friends */
+                    addFriend.setBackgroundResource(R.drawable.bg_blue_rounded);
+                    addFriend.setTextColor(ContextCompat.getColor(context, R.color.color_white));
+                    addFriend.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.main_blue_color));
                 }
+                /* Showing requestSentStatus  */
 
                 if ("0".equals(isFollowed)) {
                     friendUnfriend.setText("Follow");
                     friendUnfriend.setBackgroundResource(R.drawable.bg_blue_rounded);
                     friendUnfriend.setTextColor(ContextCompat.getColor(context, R.color.color_white));
-                    friendUnfriend.setBackgroundTintList(
-                            ContextCompat.getColorStateList(context, R.color.main_blue_color)
-                    );
+                    friendUnfriend.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.main_blue_color));
                 } else {
                     friendUnfriend.setText("Following");
                     friendUnfriend.setBackgroundResource(R.drawable.rounded_corners);
                     friendUnfriend.setTextColor(ContextCompat.getColor(context, R.color.black_alpha_55));
-                    friendUnfriend.setBackgroundTintList(
-                            ContextCompat.getColorStateList(context, R.color.grey_1)
-                    );
+                    friendUnfriend.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.grey_1));
                 }
-
                 addFriend.setOnClickListener(v -> {
-                    if (isAddFriend==1) {
-                        UtilMethods.INSTANCE.openFollowBottomSheetDialog(context, content.getUserDetail().getUserId(), new UtilMethods.ApiCallBackMulti() {
+                    if (requestSentStatus == 1) {
+                        UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getUserId(), new UtilMethods.ApiCallBackMulti() {
                             @Override
                             public void onSuccess(Object object) {
                                 updateFollowUnfollowState(0, friendUnfriend, position);
@@ -384,16 +372,48 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             public void onError(String msg) {
 
                             }
-                        },0);
-                    } else if (isAddFriend==0 || isAddFriend==3) {
+                        }, 0);
+                    } else if (requestSentStatus == 0 || requestSentStatus == 3) {
                         addFriend(content.getUserDetail().getUserId(), friendUnfriend, position);
+                    } else if (requestSentStatus == 0 && isRequestPending) {
+                        UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getFisrtName(), new UtilMethods.ApiCallBackMulti() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                updateFollowUnfollowState(0, friendUnfriend, position);
+                                if (context instanceof ProfileActivity) {
+                                    ((ProfileActivity) context).refresh();
+
+                                }
+                            }
+
+                            @Override
+                            public void onError(String msg) {
+
+                            }
+                        }, 3);
+                    } else if (requestSentStatus ==2) {
+                        UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getFisrtName(), new UtilMethods.ApiCallBackMulti() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                updateFollowUnfollowState(0, friendUnfriend, position);
+                                if (context instanceof ProfileActivity) {
+                                    ((ProfileActivity) context).refresh();
+
+                                }
+                            }
+
+                            @Override
+                            public void onError(String msg) {
+
+                            }
+                        }, 4);
                     }
 
                 });
 
                 friendUnfriend.setOnClickListener(v -> {
                     if ("1".equals(isFollowed)) {
-                        UtilMethods.INSTANCE.openFollowBottomSheetDialog(context, content.getUserDetail().getUserId(), new UtilMethods.ApiCallBackMulti() {
+                        UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(), content.getUserDetail().getUserId(),new UtilMethods.ApiCallBackMulti() {
                             @Override
                             public void onSuccess(Object object) {
                                 int statusCode = (int) object;
@@ -408,7 +428,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             public void onError(String msg) {
 
                             }
-                        },1);
+                        }, 1);
                     } else {
                         followUser(content.getUserDetail().getUserId(), friendUnfriend, position);
                     }
@@ -448,10 +468,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     packageImage.setVisibility(VISIBLE);
                     packageName.setVisibility(VISIBLE);
                     packageTitle.setVisibility(VISIBLE);
-                    Glide.with(context)
-                            .load(content.getUserDetail().getPackageDetail().getImageUrl())
-                            .apply(requestOptionsImage)
-                            .into(packageImage);
+                    Glide.with(context).load(content.getUserDetail().getPackageDetail().getImageUrl()).apply(requestOptionsImage).into(packageImage);
                     packageName.setText(content.getUserDetail().getPackageDetail().getPackageName() + " (" + Utility.INSTANCE.formattedAmountWithRupees(content.getUserDetail().getPackageDetail().getPackageCost()) + ")");
                 } else {
                     packageImage.setVisibility(GONE);
@@ -479,7 +496,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 storyAddBtn.setVisibility(GONE);
                 profile.setVisibility(GONE);
                 searchBar.setVisibility(GONE);
-                friendUnfriend.setVisibility(VISIBLE);
+                // friendUnfriend.setVisibility(VISIBLE);
                 addFriend.setVisibility(VISIBLE);
 
             }
@@ -555,6 +572,8 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+
+
     private void followUser(String userId, AppCompatTextView friendUnfriend, int position) {
         UtilMethods.INSTANCE.doFollow(context, userId, new UtilMethods.ApiCallBackMulti() {
             @Override
@@ -577,7 +596,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         UtilMethods.INSTANCE.createRequest(context, userId, new UtilMethods.ApiCallBackMulti() {
             @Override
             public void onSuccess(Object object) {
-                updateFollowUnfollowState(0, addFriend, position);
+                BasicResponse basicResponse = (BasicResponse) object;
+                if(basicResponse.getStatusCode()==1){
+                    updateFollowUnfollowState(0, addFriend, position);
+                }else{
+                    UtilMethods.INSTANCE.Error(context,basicResponse.getResponseText());
+                }
 
             }
 
@@ -591,32 +615,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @SuppressLint("SetTextI18n")
-    private void updateFollowUnfollowState(int statusCode,
-                                           AppCompatTextView friendUnfriend,
-                                           int position) {
-
-  /*      if (statusCode == 1) {
-            isFollowed = "1";
-            contentList.get(position).getUserDetail().setIsFollowed("1");
-            friendUnfriend.setText("Following");
-            friendUnfriend.setBackgroundResource(R.drawable.rounded_corners);
-            friendUnfriend.setTextColor(ContextCompat.getColor(context, R.color.black_alpha_55));
-            friendUnfriend.setBackgroundTintList(
-                    ContextCompat.getColorStateList(context, R.color.grey_1)
-            );
-
-
-        } else if (statusCode == -1) {
-            isFollowed = "0";
-            contentList.get(position).getUserDetail().setIsFollowed("0");
-            friendUnfriend.setText("Follow");
-            friendUnfriend.setBackgroundResource(R.drawable.bg_blue_rounded);
-            friendUnfriend.setTextColor(ContextCompat.getColor(context, R.color.color_white));
-            friendUnfriend.setBackgroundTintList(
-                    ContextCompat.getColorStateList(context, R.color.main_blue_color)
-            );
-        }*/
-
+    private void updateFollowUnfollowState(int statusCode, AppCompatTextView friendUnfriend, int position) {
         notifyItemChanged(position);
         if (context instanceof ProfileActivity) {
             ((ProfileActivity) context).refresh();
@@ -647,10 +646,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 videoHolder = null;
             }*/
             if (content.getUserDetail() != null) {
-                Glide.with(context)
-                        .load(content.getUserDetail().getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profile);
+                Glide.with(context).load(content.getUserDetail().getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile);
 
             }
             if (content.getStoryList() != null && content.getStoryList().size() > 0) {
@@ -761,10 +757,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else {
                     textView.setVisibility(GONE);
                 }
-                Glide.with(context)
-                        .load(content.getParsedSharedData().getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profile);
+                Glide.with(context).load(content.getParsedSharedData().getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile);
 
                 nameParentTv.setText(content.getFisrtName() + " " + content.getLastName());
                 timeParentTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
@@ -774,19 +767,13 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else {
                     postParentTxt.setVisibility(GONE);
                 }
-                Glide.with(context)
-                        .load(content.getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profileParent);
+                Glide.with(context).load(content.getProfilePictureUrl()).apply(requestOptionsUserImage).into(profileParent);
             } else {
                 ownerView.setVisibility(GONE);
                 nameTv.setText(content.getFisrtName() + " " + content.getLastName());
                 timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
 
-                Glide.with(context)
-                        .load(content.getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profile);
+                Glide.with(context).load(content.getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile);
                 textView.setText((content.getPostContent() + "").trim());
             }
 
@@ -867,8 +854,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             });
             whatsAppBtn.setOnClickListener(view -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW)
-                        .setData(Uri.parse("https://api.whatsapp.com/send?text=" + ApplicationConstant.INSTANCE.postUrl + content.getPostId()));
+                Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://api.whatsapp.com/send?text=" + ApplicationConstant.INSTANCE.postUrl + content.getPostId()));
                 context.startActivity(intent);
             });
             profile.setOnClickListener(v -> {
@@ -892,23 +878,18 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         /*public boolean isPause = false;*/
         // MediaPlayer mediaPlayer;
         ProgressBar progress;
-        DefaultLoadControl loadControl = new DefaultLoadControl.Builder()
-                .setBufferDurationsMs(
-                        /* minBufferMs= */ 2000,   // 2 seconds
-                        /* maxBufferMs= */ 4000,   // 4 seconds
-                        /* bufferForPlaybackMs= */ 1000,  // 1 second for playback start
-                        /* bufferForPlaybackAfterRebufferMs= */ 2000  // 2 seconds after rebuffering
-                ).build();
+        DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(
+                /* minBufferMs= */ 2000,   // 2 seconds
+                /* maxBufferMs= */ 4000,   // 4 seconds
+                /* bufferForPlaybackMs= */ 1000,  // 1 second for playback start
+                /* bufferForPlaybackAfterRebufferMs= */ 2000  // 2 seconds after rebuffering
+        ).build();
 
-        DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(context)
-                .setEnableDecoderFallback(true)
-                .setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
+        DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(context).setEnableDecoderFallback(true).setExtensionRendererMode(DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF);
 
         private AudioManager.OnAudioFocusChangeListener focusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
             public void onAudioFocusChange(int focusChange) {
-                if (focusChange == AudioManager.AUDIOFOCUS_LOSS ||
-                        focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
-                        focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                if (focusChange == AudioManager.AUDIOFOCUS_LOSS || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT || focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
                     if (videoView != null && videoView.getPlayer() != null) {
                         thumbnail.setVisibility(VISIBLE);
                         playBtn.setVisibility(VISIBLE);
@@ -965,44 +946,36 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     params.height = (int) showImageHeight;
                 }
                 container.setLayoutParams(params);
-                Glide.with(context)
-                        .load(content.getPostContent())
-                        .apply(requestOptionsVideo)
-                        .into(thumbnail);
+                Glide.with(context).load(content.getPostContent()).apply(requestOptionsVideo).into(thumbnail);
 
             } else {
-                Glide.with(context)
-                        .asBitmap()
-                        .load(content.getPostContent())
-                        .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                        .apply(requestOptionsVideo)
-                        .listener(new RequestListener<Bitmap>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                // Handle error if loading fails
-                                return false;
-                            }
+                Glide.with(context).asBitmap().load(content.getPostContent()).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).apply(requestOptionsVideo).listener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        // Handle error if loading fails
+                        return false;
+                    }
 
-                            @Override
-                            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                // Get the height of the loaded image
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        // Get the height of the loaded image
 
-                                double imageHeight = resource.getHeight();
-                                double imageWidth = resource.getWidth();
-                                // Log.d("ImageSize", "Width: " + imageWidth + ", Height: " + imageHeight);
-                                double aspectRatio = imageWidth / imageHeight;
-                                double showImageHeight = screenWidth / aspectRatio;
-                                ViewGroup.LayoutParams params = container.getLayoutParams();
-                                if (showImageHeight > videoMaxHeight) {
-                                    params.height = videoMaxHeight; // Set the height in pixels
-                                } else {
-                                    params.height = (int) showImageHeight;
-                                }
-                                container.setLayoutParams(params);
-                                // thumbnail.setImageBitmap(resource);
-                                return false;
-                            }
-                        }).into(thumbnail);
+                        double imageHeight = resource.getHeight();
+                        double imageWidth = resource.getWidth();
+                        // Log.d("ImageSize", "Width: " + imageWidth + ", Height: " + imageHeight);
+                        double aspectRatio = imageWidth / imageHeight;
+                        double showImageHeight = screenWidth / aspectRatio;
+                        ViewGroup.LayoutParams params = container.getLayoutParams();
+                        if (showImageHeight > videoMaxHeight) {
+                            params.height = videoMaxHeight; // Set the height in pixels
+                        } else {
+                            params.height = (int) showImageHeight;
+                        }
+                        container.setLayoutParams(params);
+                        // thumbnail.setImageBitmap(resource);
+                        return false;
+                    }
+                }).into(thumbnail);
             }
 
 
@@ -1167,9 +1140,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
                 };
 
-                context.startActivity(new Intent(context, VideoViewActivity.class)
-                        .putExtra("Position", position)
-                        .putExtra("VideoData", content));
+                context.startActivity(new Intent(context, VideoViewActivity.class).putExtra("Position", position).putExtra("VideoData", content));
 
             });
 
@@ -1229,10 +1200,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else {
                     postTxt.setVisibility(GONE);
                 }
-                Glide.with(context)
-                        .load(content.getParsedSharedData().getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profile);
+                Glide.with(context).load(content.getParsedSharedData().getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile);
 
                 nameParentTv.setText(content.getFisrtName() + " " + content.getLastName());
                 timeParentTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
@@ -1242,10 +1210,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else {
                     postParentTxt.setVisibility(GONE);
                 }
-                Glide.with(context)
-                        .load(content.getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profileParent);
+                Glide.with(context).load(content.getProfilePictureUrl()).apply(requestOptionsUserImage).into(profileParent);
             } else {
                 ownerView.setVisibility(GONE);
                 nameTv.setText(content.getFisrtName() + " " + content.getLastName());
@@ -1256,10 +1221,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else {
                     postTxt.setVisibility(GONE);
                 }
-                Glide.with(context)
-                        .load(content.getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profile);
+                Glide.with(context).load(content.getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile);
             }
 
 
@@ -1339,8 +1301,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
 
             whatsAppBtn.setOnClickListener(view -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW)
-                        .setData(Uri.parse("https://api.whatsapp.com/send?text=" + ApplicationConstant.INSTANCE.postUrl + content.getPostId()));
+                Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://api.whatsapp.com/send?text=" + ApplicationConstant.INSTANCE.postUrl + content.getPostId()));
                 context.startActivity(intent);
             });
             profile.setOnClickListener(v -> {
@@ -1395,43 +1356,35 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     params.height = (int) showImageHeight;
                 }
                 imageView.setLayoutParams(params);
-                Glide.with(context)
-                        .load(content.getPostContent())
-                        .apply(requestOptionsImage)
-                        .into(imageView);
+                Glide.with(context).load(content.getPostContent()).apply(requestOptionsImage).into(imageView);
             } else {
-                Glide.with(context)
-                        .asBitmap()
-                        .load(content.getPostContent())
-                        .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                        .apply(requestOptionsVideo)
-                        .listener(new RequestListener<Bitmap>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                // Handle error if loading fails
-                                return false;
-                            }
+                Glide.with(context).asBitmap().load(content.getPostContent()).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).apply(requestOptionsVideo).listener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        // Handle error if loading fails
+                        return false;
+                    }
 
-                            @Override
-                            public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                // Get the height of the loaded image
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        // Get the height of the loaded image
 
-                                double imageHeight = resource.getHeight();
-                                double imageWidth = resource.getWidth();
-                                // Log.d("ImageSize", "Width: " + imageWidth + ", Height: " + imageHeight);
-                                double aspectRatio = imageWidth / imageHeight;
-                                double showImageHeight = screenWidth / aspectRatio;
-                                ViewGroup.LayoutParams params = imageView.getLayoutParams();
-                                if (showImageHeight > videoMaxHeight) {
-                                    params.height = videoMaxHeight; // Set the height in pixels
-                                } else {
-                                    params.height = (int) showImageHeight;
-                                }
-                                imageView.setLayoutParams(params);
-                                // thumbnail.setImageBitmap(resource);
-                                return false;
-                            }
-                        }).into(imageView);
+                        double imageHeight = resource.getHeight();
+                        double imageWidth = resource.getWidth();
+                        // Log.d("ImageSize", "Width: " + imageWidth + ", Height: " + imageHeight);
+                        double aspectRatio = imageWidth / imageHeight;
+                        double showImageHeight = screenWidth / aspectRatio;
+                        ViewGroup.LayoutParams params = imageView.getLayoutParams();
+                        if (showImageHeight > videoMaxHeight) {
+                            params.height = videoMaxHeight; // Set the height in pixels
+                        } else {
+                            params.height = (int) showImageHeight;
+                        }
+                        imageView.setLayoutParams(params);
+                        // thumbnail.setImageBitmap(resource);
+                        return false;
+                    }
+                }).into(imageView);
             }
             /*if (content.getUserId().equalsIgnoreCase(userId)) {
                 moreBTn.setVisibility(View.VISIBLE);
@@ -1450,10 +1403,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else {
                     postTxt.setVisibility(GONE);
                 }
-                Glide.with(context)
-                        .load(content.getParsedSharedData().getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profile);
+                Glide.with(context).load(content.getParsedSharedData().getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile);
 
                 nameParentTv.setText(content.getFisrtName() + " " + content.getLastName());
                 timeParentTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
@@ -1463,10 +1413,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else {
                     postParentTxt.setVisibility(GONE);
                 }
-                Glide.with(context)
-                        .load(content.getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profileParent);
+                Glide.with(context).load(content.getProfilePictureUrl()).apply(requestOptionsUserImage).into(profileParent);
             } else {
                 ownerView.setVisibility(GONE);
                 nameTv.setText(content.getFisrtName() + " " + content.getLastName());
@@ -1477,10 +1424,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 } else {
                     postTxt.setVisibility(GONE);
                 }
-                Glide.with(context)
-                        .load(content.getProfilePictureUrl())
-                        .apply(requestOptionsUserImage)
-                        .into(profile);
+                Glide.with(context).load(content.getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile);
             }
 
 
@@ -1588,9 +1532,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     }
                 };
-                context.startActivity(new Intent(context, ImageZoomViewActivity.class)
-                        .putExtra("Position", position)
-                        .putExtra("ImageData", content));
+                context.startActivity(new Intent(context, ImageZoomViewActivity.class).putExtra("Position", position).putExtra("ImageData", content));
 
                 //videoHolder=null;
             });
@@ -1630,8 +1572,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
 
             whatsAppBtn.setOnClickListener(view -> {
-                Intent intent = new Intent(Intent.ACTION_VIEW)
-                        .setData(Uri.parse("https://api.whatsapp.com/send?text=" + ApplicationConstant.INSTANCE.postUrl + content.getPostId()));
+                Intent intent = new Intent(Intent.ACTION_VIEW).setData(Uri.parse("https://api.whatsapp.com/send?text=" + ApplicationConstant.INSTANCE.postUrl + content.getPostId()));
                 context.startActivity(intent);
             });
 
@@ -1661,9 +1602,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         View deleteLine = popupView.findViewById(R.id.deleteLine);
         View copyLinkLine = popupView.findViewById(R.id.copyLinkLine);
 
-        if (content.getUserId().equalsIgnoreCase(userId)
-                || content.getParsedSharedData() != null &&
-                content.getParsedSharedData().getUserId().equalsIgnoreCase(userId)) {
+        if (content.getUserId().equalsIgnoreCase(userId) || content.getParsedSharedData() != null && content.getParsedSharedData().getUserId().equalsIgnoreCase(userId)) {
             report.setVisibility(GONE);
             copyLinkLine.setVisibility(GONE);
         } else {
@@ -1712,14 +1651,9 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private void showDeleteConfirmationDialog(ContentResult content, int position, PlayerView playerView) {
-        new AlertDialog.Builder(context)
-                .setTitle("Delete Content")
-                .setMessage("Are you sure you want to delete this content?")
-                .setPositiveButton("Delete", (dialog, which) -> {
-                    deleteContentFromServer(content.getPostId(), position, playerView);  // Call API to delete content
-                })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                .show();
+        new AlertDialog.Builder(context).setTitle("Delete Content").setMessage("Are you sure you want to delete this content?").setPositiveButton("Delete", (dialog, which) -> {
+            deleteContentFromServer(content.getPostId(), position, playerView);  // Call API to delete content
+        }).setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss()).show();
     }
 
 

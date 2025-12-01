@@ -151,6 +151,8 @@ public class UserDetailResponse implements Parcelable {
     public String accountHolder;
 
 
+
+
     protected UserDetailResponse(Parcel in) {
         balance = in.readDouble();
         refreshToken = in.readString();
@@ -198,6 +200,7 @@ public class UserDetailResponse implements Parcelable {
         accountNumber =in.readString();
         ifsc =in.readString();
         accountHolder =in.readString();
+
     }
 
     @Override
@@ -248,6 +251,7 @@ public class UserDetailResponse implements Parcelable {
         dest.writeString(accountNumber);
         dest.writeString(ifsc);
         dest.writeString(accountHolder);
+
     }
 
     @Override
@@ -282,15 +286,8 @@ public class UserDetailResponse implements Parcelable {
     public boolean isActive() {
         return isActive;
     }
-    public boolean isSelfProfile() {
-        return isSelfProfile;
-    }
-    public boolean isProfessional() {
-        return isProfessional;
-    }
-    public boolean isRequestPending() {
-        return isRequestPending;
-    }
+
+
 
     public int getId() {
         return id;
@@ -363,9 +360,7 @@ public class UserDetailResponse implements Parcelable {
     public int getStateId() {
         return stateId;
     }
-    public int getRequestSentStatus() {
-        return requestSentStatus;
-    }
+
 
     public String getCityName() {
         return cityName;
@@ -464,5 +459,37 @@ public class UserDetailResponse implements Parcelable {
 
     public void setIsFollowed(String isFollowed) {
         this.isFollowed = isFollowed;
+    }
+
+    public int getRequestSentStatus() {
+        return requestSentStatus;
+    }
+
+    public void setRequestSentStatus(int requestSentStatus) {
+        this.requestSentStatus = requestSentStatus;
+    }
+
+    public boolean isRequestPending() {
+        return isRequestPending;
+    }
+
+    public void setRequestPending(boolean requestPending) {
+        isRequestPending = requestPending;
+    }
+
+    public boolean isProfessional() {
+        return isProfessional;
+    }
+
+    public void setProfessional(boolean professional) {
+        isProfessional = professional;
+    }
+
+    public boolean isSelfProfile() {
+        return isSelfProfile;
+    }
+
+    public void setSelfProfile(boolean selfProfile) {
+        isSelfProfile = selfProfile;
     }
 }

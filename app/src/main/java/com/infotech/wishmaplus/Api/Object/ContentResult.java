@@ -84,6 +84,22 @@ public class ContentResult implements Parcelable {
     @Expose
     private ArrayList<StoryResult> storyList;
 
+    @SerializedName("isSelfProfile")
+    @Expose
+    private boolean isSelfProfile;
+
+    @SerializedName("isProfessional")
+    @Expose
+    private boolean isProfessional;
+    @SerializedName("isRequestPending")
+    @Expose
+    private boolean isRequestPending;
+
+    @SerializedName("requestSentStatus")
+    @Expose
+    private int requestSentStatus;
+
+
     public ContentResult(int contentTypeId, UserDetailResponse userDetail,ArrayList<StoryResult> storyList) {
         this.contentTypeId = contentTypeId;
         this.userDetail = userDetail;
@@ -116,6 +132,10 @@ public class ContentResult implements Parcelable {
         userDetail = in.readParcelable(UserDetailResponse.class.getClassLoader());
         parsedSharedData = in.readParcelable(SharedData.class.getClassLoader());
         storyList = in.createTypedArrayList(StoryResult.CREATOR);
+        isSelfProfile = in.readByte() != 0;
+        isProfessional = in.readByte() != 0;
+        isRequestPending = in.readByte() != 0;
+        requestSentStatus = in.readInt();
     }
 
     @Override
@@ -144,6 +164,11 @@ public class ContentResult implements Parcelable {
         dest.writeParcelable(userDetail, flags);
         dest.writeParcelable(parsedSharedData, flags);
         dest.writeTypedList(storyList);
+        dest.writeByte((byte) (isSelfProfile ? 1 : 0));
+        dest.writeByte((byte) (isProfessional ? 1 : 0));
+        dest.writeByte((byte) (isRequestPending ? 1 : 0));
+        dest.writeInt(requestSentStatus);
+
     }
 
     @Override
@@ -279,5 +304,35 @@ public class ContentResult implements Parcelable {
         return storyList;
     }
 
+    public int getRequestSentStatus() {
+        return requestSentStatus;
+    }
 
+    public void setRequestSentStatus(int requestSentStatus) {
+        this.requestSentStatus = requestSentStatus;
+    }
+
+    public boolean isRequestPending() {
+        return isRequestPending;
+    }
+
+    public void setRequestPending(boolean requestPending) {
+        isRequestPending = requestPending;
+    }
+
+    public boolean isProfessional() {
+        return isProfessional;
+    }
+
+    public void setProfessional(boolean professional) {
+        isProfessional = professional;
+    }
+
+    public boolean isSelfProfile() {
+        return isSelfProfile;
+    }
+
+    public void setSelfProfile(boolean selfProfile) {
+        isSelfProfile = selfProfile;
+    }
 }
