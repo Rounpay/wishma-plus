@@ -735,7 +735,7 @@ public enum UtilMethods {
 
     }
 
-    public void openFollowBottomSheetDialog(Activity context, String userId, ApiCallBackMulti apiCallBack) {
+    public void openFollowBottomSheetDialog(Activity context, String userId, ApiCallBackMulti apiCallBack,int type) {
 
         if (followDialog != null && followDialog.isShowing())
             return;
@@ -746,11 +746,27 @@ public enum UtilMethods {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View sheetView = inflater.inflate(R.layout.dialog_follow_unfollow, null);
 
+        TextView confirmMessage = sheetView.findViewById(R.id.confirmMessage);
         MaterialButton unfollowBtn = sheetView.findViewById(R.id.unfollowBtn);
         MaterialButton cancelBtn = sheetView.findViewById(R.id.cancelBtn);
+        if(type==1){
+            confirmMessage.setText("Are you sure want to unfollow this user?");
+            unfollowBtn.setText("Unfollow");
+            cancelBtn.setText("Cancel");
+        }
+        else {
+            confirmMessage.setText("Are you sure want to cancel this friend request?");
+            unfollowBtn.setText("Cancel friend request");
+            cancelBtn.setText("Cancel");
+        }
 
         unfollowBtn.setOnClickListener(v -> {
-            doFollow(context, userId, apiCallBack);
+            if (type==1) {
+                doFollow(context, userId, apiCallBack);
+            }
+            else {
+                removeRequest(context, userId, apiCallBack);
+            }
             followDialog.dismiss();
         });
 

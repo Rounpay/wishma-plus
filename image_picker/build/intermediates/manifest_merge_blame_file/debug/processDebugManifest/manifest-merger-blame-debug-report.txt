@@ -6,49 +6,49 @@
 6    <uses-sdk android:minSdkVersion="14" />
 7    <!-- package="com.wishmaplus.image" -->
 8    <uses-permission android:name="android.permission.CAMERA" />
-8-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:4:5-65
-8-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:4:22-62
+8-->D:\wishma\image_picker\src\main\AndroidManifest.xml:4:5-65
+8-->D:\wishma\image_picker\src\main\AndroidManifest.xml:4:22-62
 9    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-9-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:5:5-80
-9-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:5:22-77
+9-->D:\wishma\image_picker\src\main\AndroidManifest.xml:5:5-80
+9-->D:\wishma\image_picker\src\main\AndroidManifest.xml:5:22-77
 10
 11    <application
-11-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:7:5-28:19
+11-->D:\wishma\image_picker\src\main\AndroidManifest.xml:7:5-28:19
 12        android:allowBackup="false"
-12-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:8:9-36
+12-->D:\wishma\image_picker\src\main\AndroidManifest.xml:8:9-36
 13        android:label="@string/app_name"
-13-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:9:9-41
+13-->D:\wishma\image_picker\src\main\AndroidManifest.xml:9:9-41
 14        android:supportsRtl="true" >
-14-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:10:9-35
+14-->D:\wishma\image_picker\src\main\AndroidManifest.xml:10:9-35
 15        <activity
-15-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:12:9-15:47
+15-->D:\wishma\image_picker\src\main\AndroidManifest.xml:12:9-15:47
 16            android:name="com.wishmaplus.image.cropper.CropImageActivity"
-16-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:13:13-74
+16-->D:\wishma\image_picker\src\main\AndroidManifest.xml:13:13-74
 17            android:screenOrientation="portrait"
-17-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:14:13-49
+17-->D:\wishma\image_picker\src\main\AndroidManifest.xml:14:13-49
 18            android:theme="@style/AppTheme" />
-18-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:15:13-44
+18-->D:\wishma\image_picker\src\main\AndroidManifest.xml:15:13-44
 19
 20        <provider
-20-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:17:9-27:20
+20-->D:\wishma\image_picker\src\main\AndroidManifest.xml:17:9-27:20
 21            android:name="androidx.core.content.FileProvider"
-21-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:18:13-62
+21-->D:\wishma\image_picker\src\main\AndroidManifest.xml:18:13-62
 22            android:authorities="${applicationId}.provider_smart_image_picker"
-22-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:19:13-79
+22-->D:\wishma\image_picker\src\main\AndroidManifest.xml:19:13-79
 23            android:exported="false"
-23-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:20:13-37
+23-->D:\wishma\image_picker\src\main\AndroidManifest.xml:20:13-37
 24            android:grantUriPermissions="true"
-24-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:22:13-47
+24-->D:\wishma\image_picker\src\main\AndroidManifest.xml:22:13-47
 25            tools:replace="android:authorities" >
-25-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:21:13-48
+25-->D:\wishma\image_picker\src\main\AndroidManifest.xml:21:13-48
 26            <meta-data
-26-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:23:13-26:58
+26-->D:\wishma\image_picker\src\main\AndroidManifest.xml:23:13-26:58
 27                android:name="android.support.FILE_PROVIDER_PATHS"
-27-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:25:17-67
+27-->D:\wishma\image_picker\src\main\AndroidManifest.xml:25:17-67
 28                android:resource="@xml/provider_paths"
-28-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:26:17-55
+28-->D:\wishma\image_picker\src\main\AndroidManifest.xml:26:17-55
 29                tools:replace="android:resource" />
-29-->D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:24:17-49
+29-->D:\wishma\image_picker\src\main\AndroidManifest.xml:24:17-49
 30        </provider>
 31    </application>
 32

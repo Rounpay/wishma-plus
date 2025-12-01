@@ -1,6 +1,7 @@
 package com.infotech.wishmaplus.Fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.infotech.wishmaplus.Activity.FriendRequest;
 import com.infotech.wishmaplus.Activity.MainActivity;
+import com.infotech.wishmaplus.Activity.SettingsAndPrivacy;
 import com.infotech.wishmaplus.Adapter.FriendListAdapter;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
@@ -41,6 +44,9 @@ public class FriendListFragment extends Fragment {
         });
         recyclerView = view.findViewById(R.id.recyclerView);
         noDataLayout = view.findViewById(R.id.noDataLayout);
+        view.findViewById(R.id.insights).setOnClickListener(view1 -> {
+            startActivity(new Intent(requireActivity(), FriendRequest.class));
+        });
         adapter = new FriendListAdapter(getContext(), list, new UtilMethods.FriendActionListener() {
             @Override
             public void onAddClicked(UserListFriends user, int position) {

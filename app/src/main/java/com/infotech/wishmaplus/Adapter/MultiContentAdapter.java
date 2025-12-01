@@ -1,6 +1,7 @@
 package com.infotech.wishmaplus.Adapter;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -112,6 +113,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private CommentDialog commentDialog;
     private String isFollowed;
+    private int isAddFriend;
 
     public MultiContentAdapter(String UserUnikID, List<ContentResult> contentList, CustomRecyclerView recyclerView, PreferencesManager tokenManager, FragmentActivity context,
                                ClickCallBack clickCallBack) {
@@ -227,7 +229,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         View line_1;
         /*MaterialButtonadd_story_button,edit_profile_button;*/
         AppCompatTextView addPostTitle,user_name, storyAddBtn, packageTitle, packageName, bioTv, location, posts_tab, photos_tab, videos_tab, noDataTv, searchBar,
-                edit_public_details, joiningDate, followers, subscribers, followersView, followingView, friendUnfriend;
+                edit_public_details, joiningDate, followers, subscribers, followersView, followingView, friendUnfriend,addFriend;
 
         public ProfileViewHolder(View itemView) {
             super(itemView);
@@ -242,6 +244,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             followersView = itemView.findViewById(R.id.followersView);
             followingView = itemView.findViewById(R.id.followingView);
             friendUnfriend = itemView.findViewById(R.id.friendUnfriend);
+            addFriend = itemView.findViewById(R.id.addFriend);
             user_name = itemView.findViewById(R.id.user_name);
             addPostTitle = itemView.findViewById(R.id.addPostTitle);
             line_1 = itemView.findViewById(R.id.line_1);
@@ -278,7 +281,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     noDataTv.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_post_add_big, 0, 0);
                     noDataTv.setText(R.string.post_is_not_available);
                 }
-                noDataTv.setVisibility(View.VISIBLE);
+                noDataTv.setVisibility(VISIBLE);
             }
             if (content.getUserDetail() != null) {
                 Glide.with(context)
@@ -330,6 +333,24 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
                 isFollowed = content.getUserDetail().getIsFollowed();
+                isAddFriend = content.getUserDetail().getRequestSentStatus();
+
+                if(isAddFriend==0 || isAddFriend==3)
+                {
+                    addFriend.setText("Add Friend");
+                    addFriend.setBackgroundResource(R.drawable.bg_blue_rounded);
+                    addFriend.setTextColor(ContextCompat.getColor(context, R.color.color_white));
+                    addFriend.setBackgroundTintList(
+                            ContextCompat.getColorStateList(context, R.color.main_blue_color)
+                    );
+                } else if (isAddFriend==1) {
+                    addFriend.setText("Cancel Request");
+                    addFriend.setBackgroundResource(R.drawable.rounded_corners);
+                    addFriend.setTextColor(ContextCompat.getColor(context, R.color.black_alpha_55));
+                    addFriend.setBackgroundTintList(
+                            ContextCompat.getColorStateList(context, R.color.grey_1)
+                    );
+                }
 
                 if ("0".equals(isFollowed)) {
                     friendUnfriend.setText("Follow");
@@ -346,6 +367,29 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             ContextCompat.getColorStateList(context, R.color.grey_1)
                     );
                 }
+
+                addFriend.setOnClickListener(v -> {
+                    if (isAddFriend==1) {
+                        UtilMethods.INSTANCE.openFollowBottomSheetDialog(context, content.getUserDetail().getUserId(), new UtilMethods.ApiCallBackMulti() {
+                            @Override
+                            public void onSuccess(Object object) {
+                                updateFollowUnfollowState(0, friendUnfriend, position);
+                                if (context instanceof ProfileActivity) {
+                                    ((ProfileActivity) context).refresh();
+
+                                }
+                            }
+
+                            @Override
+                            public void onError(String msg) {
+
+                            }
+                        },0);
+                    } else if (isAddFriend==0 || isAddFriend==3) {
+                        addFriend(content.getUserDetail().getUserId(), friendUnfriend, position);
+                    }
+
+                });
 
                 friendUnfriend.setOnClickListener(v -> {
                     if ("1".equals(isFollowed)) {
@@ -364,7 +408,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             public void onError(String msg) {
 
                             }
-                        });
+                        },1);
                     } else {
                         followUser(content.getUserDetail().getUserId(), friendUnfriend, position);
                     }
@@ -372,14 +416,14 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 });
 
                 if (content.getUserDetail().getBio() != null && !content.getUserDetail().getBio().isEmpty()) {
-                    bioTv.setVisibility(View.VISIBLE);
+                    bioTv.setVisibility(VISIBLE);
                     bioTv.setText(content.getUserDetail().getBio());
                 } else {
                     bioTv.setVisibility(GONE);
                 }
 
                 if (content.getUserDetail().getCityName() != null && !content.getUserDetail().getCityName().isEmpty()) {
-                    location.setVisibility(View.VISIBLE);
+                    location.setVisibility(VISIBLE);
                     location.setText(Html.fromHtml(context.getResources().getString(R.string.lives_in, content.getUserDetail().getCityName(), content.getUserDetail().getStateName()), Html.FROM_HTML_MODE_LEGACY));
                 } else {
                     location.setVisibility(GONE);
@@ -387,23 +431,23 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 joiningDate.setText("Joined on " + Utility.INSTANCE.formatedDateMonthYear(content.getUserDetail().getJoiningDate()));
                 if (content.getUserDetail().getTotalDownline() > 0) {
-                    followers.setVisibility(View.VISIBLE);
+                    followers.setVisibility(VISIBLE);
                     followers.setText("Followed by " + content.getUserDetail().getTotalDownline() + " people");
                 } else {
                     followers.setVisibility(GONE);
                 }
 
                 if (content.getUserDetail().getPaidDownline() > 0) {
-                    subscribers.setVisibility(View.VISIBLE);
+                    subscribers.setVisibility(VISIBLE);
                     subscribers.setText("Subscribed by " + content.getUserDetail().getPaidDownline() + " people");
                 } else {
                     subscribers.setVisibility(GONE);
                 }
 
                 if (content.getUserDetail().getPackageDetail() != null) {
-                    packageImage.setVisibility(View.VISIBLE);
-                    packageName.setVisibility(View.VISIBLE);
-                    packageTitle.setVisibility(View.VISIBLE);
+                    packageImage.setVisibility(VISIBLE);
+                    packageName.setVisibility(VISIBLE);
+                    packageTitle.setVisibility(VISIBLE);
                     Glide.with(context)
                             .load(content.getUserDetail().getPackageDetail().getImageUrl())
                             .apply(requestOptionsImage)
@@ -435,6 +479,8 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 storyAddBtn.setVisibility(GONE);
                 profile.setVisibility(GONE);
                 searchBar.setVisibility(GONE);
+                friendUnfriend.setVisibility(VISIBLE);
+                addFriend.setVisibility(VISIBLE);
 
             }
             edit_public_details.setOnClickListener(view -> {
@@ -527,6 +573,23 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
+    private void addFriend(String userId, AppCompatTextView addFriend, int position) {
+        UtilMethods.INSTANCE.createRequest(context, userId, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                updateFollowUnfollowState(0, addFriend, position);
+
+            }
+
+            @Override
+            public void onError(String msg) {
+
+            }
+        });
+
+
+    }
+
     @SuppressLint("SetTextI18n")
     private void updateFollowUnfollowState(int statusCode,
                                            AppCompatTextView friendUnfriend,
@@ -591,8 +654,8 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             }
             if (content.getStoryList() != null && content.getStoryList().size() > 0) {
-                storyRecyclerView.setVisibility(View.VISIBLE);
-                line2.setVisibility(View.VISIBLE);
+                storyRecyclerView.setVisibility(VISIBLE);
+                line2.setVisibility(VISIBLE);
                 /*
                  */
                 storyRecyclerView.setAdapter(new StoryAdapter(content.getStoryList(), context, content.getUserDetail(), new StoryAdapter.ClickCallBack() {
@@ -689,12 +752,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
             if (content.getParsedSharedData() != null) {
-                ownerView.setVisibility(View.VISIBLE);
+                ownerView.setVisibility(VISIBLE);
                 nameTv.setText(content.getParsedSharedData().getFisrtName() + " " + content.getParsedSharedData().getLastName());
                 timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getParsedSharedData().getEntryAt()));
                 if (content.getParsedSharedData().getCaption() != null && !content.getParsedSharedData().getCaption().trim().isEmpty()) {
                     textView.setText(content.getParsedSharedData().getCaption().trim());
-                    textView.setVisibility(View.VISIBLE);
+                    textView.setVisibility(VISIBLE);
                 } else {
                     textView.setVisibility(GONE);
                 }
@@ -707,7 +770,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 timeParentTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
                 if (content.getCaption() != null && !content.getCaption().trim().isEmpty()) {
                     postParentTxt.setText(content.getCaption().trim());
-                    postParentTxt.setVisibility(View.VISIBLE);
+                    postParentTxt.setVisibility(VISIBLE);
                 } else {
                     postParentTxt.setVisibility(GONE);
                 }
@@ -729,19 +792,19 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
             if (content.getTotalLikes() > 0) {
-                like_count.setVisibility(View.VISIBLE);
+                like_count.setVisibility(VISIBLE);
                 like_count.setText(content.getTotalLikes() + "");
             } else {
                 like_count.setVisibility(GONE);
             }
             if (content.getTotalComments() > 0) {
-                comment_count.setVisibility(View.VISIBLE);
+                comment_count.setVisibility(VISIBLE);
                 comment_count.setText(content.getTotalComments() + " Comments");
             } else {
                 comment_count.setVisibility(GONE);
             }
             if (content.getTotalShares() > 0) {
-                share_count.setVisibility(View.VISIBLE);
+                share_count.setVisibility(VISIBLE);
                 share_count.setText(content.getTotalShares() + " Share");
             } else {
                 share_count.setVisibility(GONE);
@@ -749,13 +812,13 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             commentBtn.setOnClickListener(v -> commentDialog.showCommentsDialog(content.getPostId(), size -> {
                 comment_count.setText(size + " Comments");
-                comment_count.setVisibility(View.VISIBLE);
+                comment_count.setVisibility(VISIBLE);
                 contentList.get(position).setTotalComments(size);
 
             }/*position, comment_count*/));
             comment_count.setOnClickListener(v -> commentDialog.showCommentsDialog(content.getPostId(), size -> {
                 comment_count.setText(size + " Comments");
-                comment_count.setVisibility(View.VISIBLE);
+                comment_count.setVisibility(VISIBLE);
                 contentList.get(position).setTotalComments(size);
 
             }/*position, comment_count*/));
@@ -847,8 +910,8 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT ||
                         focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
                     if (videoView != null && videoView.getPlayer() != null) {
-                        thumbnail.setVisibility(View.VISIBLE);
-                        playBtn.setVisibility(View.VISIBLE);
+                        thumbnail.setVisibility(VISIBLE);
+                        playBtn.setVisibility(VISIBLE);
                         videoView.getPlayer().pause();
                     }
                 } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
@@ -991,15 +1054,15 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         mRecyclerView.thumbnail = thumbnail;
                         mRecyclerView.playBtn = playBtn;
                     } else if (playbackState == ExoPlayer.STATE_BUFFERING) {
-                        progress.setVisibility(View.VISIBLE);
+                        progress.setVisibility(VISIBLE);
                     } else if (playbackState == ExoPlayer.STATE_READY) {
                         if (mRecyclerView.isScreenPaused() || mRecyclerView.playingPauseMap.containsKey(videoView) && mRecyclerView.playingPauseMap.get(videoView) == true) {
                             if (videoView.getPlayer().getCurrentPosition() > 0) {
                                 mRecyclerView.playingTimeMap.put(videoView, videoView.getPlayer().getCurrentPosition());
                             }
                             videoView.getPlayer().pause();
-                            thumbnail.setVisibility(View.VISIBLE);
-                            playBtn.setVisibility(View.VISIBLE);
+                            thumbnail.setVisibility(VISIBLE);
+                            playBtn.setVisibility(VISIBLE);
 
                         } /*else if (videoView.getPlayer().isPlaying()) {
                             isPause = false;
@@ -1077,7 +1140,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (likeCount != -1) {
                             contentList.get(changePosition).setTotalLikes(likeCount);
                             if (likeCount > 0) {
-                                like_count.setVisibility(View.VISIBLE);
+                                like_count.setVisibility(VISIBLE);
                                 like_count.setText(likeCount + "");
                             } else {
                                 like_count.setVisibility(GONE);
@@ -1086,7 +1149,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (commentCount != -1) {
                             contentList.get(changePosition).setTotalComments(commentCount);
                             if (commentCount > 0) {
-                                comment_count.setVisibility(View.VISIBLE);
+                                comment_count.setVisibility(VISIBLE);
                                 comment_count.setText(commentCount + " Comments");
                             } else {
                                 comment_count.setVisibility(GONE);
@@ -1095,7 +1158,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (shareCount != -1) {
                             contentList.get(changePosition).setTotalShares(shareCount);
                             if (shareCount > 0) {
-                                share_count.setVisibility(View.VISIBLE);
+                                share_count.setVisibility(VISIBLE);
                                 share_count.setText(shareCount + " Share");
                             } else {
                                 share_count.setVisibility(GONE);
@@ -1157,12 +1220,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }*/
 
             if (content.getParsedSharedData() != null) {
-                ownerView.setVisibility(View.VISIBLE);
+                ownerView.setVisibility(VISIBLE);
                 nameTv.setText(content.getParsedSharedData().getFisrtName() + " " + content.getParsedSharedData().getLastName());
                 timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getParsedSharedData().getEntryAt()));
                 if (content.getParsedSharedData().getCaption() != null && !content.getParsedSharedData().getCaption().trim().isEmpty()) {
                     postTxt.setText(content.getParsedSharedData().getCaption().trim());
-                    postTxt.setVisibility(View.VISIBLE);
+                    postTxt.setVisibility(VISIBLE);
                 } else {
                     postTxt.setVisibility(GONE);
                 }
@@ -1175,7 +1238,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 timeParentTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
                 if (content.getCaption() != null && !content.getCaption().trim().isEmpty()) {
                     postParentTxt.setText(content.getCaption().trim());
-                    postParentTxt.setVisibility(View.VISIBLE);
+                    postParentTxt.setVisibility(VISIBLE);
                 } else {
                     postParentTxt.setVisibility(GONE);
                 }
@@ -1189,7 +1252,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
                 if (content.getCaption() != null && !content.getCaption().trim().isEmpty()) {
                     postTxt.setText(content.getCaption().trim());
-                    postTxt.setVisibility(View.VISIBLE);
+                    postTxt.setVisibility(VISIBLE);
                 } else {
                     postTxt.setVisibility(GONE);
                 }
@@ -1201,19 +1264,19 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
             if (content.getTotalLikes() > 0) {
-                like_count.setVisibility(View.VISIBLE);
+                like_count.setVisibility(VISIBLE);
                 like_count.setText(content.getTotalLikes() + "");
             } else {
                 like_count.setVisibility(GONE);
             }
             if (content.getTotalComments() > 0) {
-                comment_count.setVisibility(View.VISIBLE);
+                comment_count.setVisibility(VISIBLE);
                 comment_count.setText(content.getTotalComments() + " Comments");
             } else {
                 comment_count.setVisibility(GONE);
             }
             if (content.getTotalShares() > 0) {
-                share_count.setVisibility(View.VISIBLE);
+                share_count.setVisibility(VISIBLE);
                 share_count.setText(content.getTotalShares() + " Share");
             } else {
                 share_count.setVisibility(GONE);
@@ -1221,13 +1284,13 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             commentBtn.setOnClickListener(v -> commentDialog.showCommentsDialog(content.getPostId(), size -> {
                 comment_count.setText(size + " Comments");
-                comment_count.setVisibility(View.VISIBLE);
+                comment_count.setVisibility(VISIBLE);
                 contentList.get(position).setTotalComments(size);
 
             }/*position, comment_count*/));
             comment_count.setOnClickListener(v -> commentDialog.showCommentsDialog(content.getPostId(), size -> {
                 comment_count.setText(size + " Comments");
-                comment_count.setVisibility(View.VISIBLE);
+                comment_count.setVisibility(VISIBLE);
                 contentList.get(position).setTotalComments(size);
 
             }/*position, comment_count*/));
@@ -1378,12 +1441,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
             if (content.getParsedSharedData() != null) {
-                ownerView.setVisibility(View.VISIBLE);
+                ownerView.setVisibility(VISIBLE);
                 nameTv.setText(content.getParsedSharedData().getFisrtName() + " " + content.getParsedSharedData().getLastName());
                 timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getParsedSharedData().getEntryAt()));
                 if (content.getParsedSharedData().getCaption() != null && !content.getParsedSharedData().getCaption().trim().isEmpty()) {
                     postTxt.setText(content.getParsedSharedData().getCaption().trim());
-                    postTxt.setVisibility(View.VISIBLE);
+                    postTxt.setVisibility(VISIBLE);
                 } else {
                     postTxt.setVisibility(GONE);
                 }
@@ -1396,7 +1459,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 timeParentTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
                 if (content.getCaption() != null && !content.getCaption().trim().isEmpty()) {
                     postParentTxt.setText(content.getCaption().trim());
-                    postParentTxt.setVisibility(View.VISIBLE);
+                    postParentTxt.setVisibility(VISIBLE);
                 } else {
                     postParentTxt.setVisibility(GONE);
                 }
@@ -1410,7 +1473,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
                 if (content.getCaption() != null && !content.getCaption().trim().isEmpty()) {
                     postTxt.setText(content.getCaption().trim());
-                    postTxt.setVisibility(View.VISIBLE);
+                    postTxt.setVisibility(VISIBLE);
                 } else {
                     postTxt.setVisibility(GONE);
                 }
@@ -1422,19 +1485,19 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
             if (content.getTotalLikes() > 0) {
-                like_count.setVisibility(View.VISIBLE);
+                like_count.setVisibility(VISIBLE);
                 like_count.setText(content.getTotalLikes() + "");
             } else {
                 like_count.setVisibility(GONE);
             }
             if (content.getTotalComments() > 0) {
-                comment_count.setVisibility(View.VISIBLE);
+                comment_count.setVisibility(VISIBLE);
                 comment_count.setText(content.getTotalComments() + " Comments");
             } else {
                 comment_count.setVisibility(GONE);
             }
             if (content.getTotalShares() > 0) {
-                share_count.setVisibility(View.VISIBLE);
+                share_count.setVisibility(VISIBLE);
                 share_count.setText(content.getTotalShares() + " Share");
             } else {
                 share_count.setVisibility(GONE);
@@ -1448,13 +1511,13 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             commentBtn.setOnClickListener(v -> commentDialog.showCommentsDialog(content.getPostId(), size -> {
                 comment_count.setText(size + " Comments");
-                comment_count.setVisibility(View.VISIBLE);
+                comment_count.setVisibility(VISIBLE);
                 contentList.get(position).setTotalComments(size);
 
             }/*position, comment_count*/));
             comment_count.setOnClickListener(v -> commentDialog.showCommentsDialog(content.getPostId(), size -> {
                 comment_count.setText(size + " Comments");
-                comment_count.setVisibility(View.VISIBLE);
+                comment_count.setVisibility(VISIBLE);
                 contentList.get(position).setTotalComments(size);
 
             }/*position, comment_count*/));
@@ -1499,7 +1562,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (likeCount != -1) {
                             contentList.get(changePosition).setTotalLikes(likeCount);
                             if (likeCount > 0) {
-                                like_count.setVisibility(View.VISIBLE);
+                                like_count.setVisibility(VISIBLE);
                                 like_count.setText(likeCount + "");
                             } else {
                                 like_count.setVisibility(GONE);
@@ -1508,7 +1571,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (commentCount != -1) {
                             contentList.get(changePosition).setTotalComments(commentCount);
                             if (commentCount > 0) {
-                                comment_count.setVisibility(View.VISIBLE);
+                                comment_count.setVisibility(VISIBLE);
                                 comment_count.setText(commentCount + " Comments");
                             } else {
                                 comment_count.setVisibility(GONE);
@@ -1517,7 +1580,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         if (shareCount != -1) {
                             contentList.get(changePosition).setTotalShares(shareCount);
                             if (shareCount > 0) {
-                                share_count.setVisibility(View.VISIBLE);
+                                share_count.setVisibility(VISIBLE);
                                 share_count.setText(shareCount + " Share");
                             } else {
                                 share_count.setVisibility(GONE);
@@ -1670,7 +1733,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
         if (newLikesCount > 0) {
-            likeCount.setVisibility(View.VISIBLE);
+            likeCount.setVisibility(VISIBLE);
             likeCount.setText(newLikesCount + "");
         } else {
             likeCount.setVisibility(GONE);

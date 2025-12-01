@@ -21,6 +21,15 @@ public class UserDetailResponse implements Parcelable {
     @SerializedName("isActive")
     @Expose
     private boolean isActive;
+    @SerializedName("isSelfProfile")
+    @Expose
+    private boolean isSelfProfile;
+    @SerializedName("isProfessional")
+    @Expose
+    private boolean isProfessional;
+    @SerializedName("isRequestPending")
+    @Expose
+    private boolean isRequestPending;
     @SerializedName("id")
     @Expose
     private int id;
@@ -84,6 +93,9 @@ public class UserDetailResponse implements Parcelable {
     @SerializedName("stateId")
     @Expose
     private int stateId;
+    @SerializedName("requestSentStatus")
+    @Expose
+    private int requestSentStatus;
     @SerializedName("cityName")
     @Expose
     private String cityName;
@@ -144,6 +156,9 @@ public class UserDetailResponse implements Parcelable {
         refreshToken = in.readString();
         refreshTokenExpiryTime = in.readString();
         isActive = in.readByte() != 0;
+        isSelfProfile = in.readByte() != 0;
+        isProfessional = in.readByte() != 0;
+        isRequestPending = in.readByte() != 0;
         id = in.readInt();
         referralID = in.readInt();
         prefix = in.readString();
@@ -165,6 +180,7 @@ public class UserDetailResponse implements Parcelable {
         gender = in.readString();
         cityId = in.readInt();
         stateId = in.readInt();
+        requestSentStatus = in.readInt();
         cityName = in.readString();
         stateName = in.readString();
         bio = in.readString();
@@ -190,6 +206,9 @@ public class UserDetailResponse implements Parcelable {
         dest.writeString(refreshToken);
         dest.writeString(refreshTokenExpiryTime);
         dest.writeByte((byte) (isActive ? 1 : 0));
+        dest.writeByte((byte) (isSelfProfile ? 1 : 0));
+        dest.writeByte((byte) (isProfessional ? 1 : 0));
+        dest.writeByte((byte) (isRequestPending ? 1 : 0));
         dest.writeInt(id);
         dest.writeInt(referralID);
         dest.writeString(prefix);
@@ -211,6 +230,7 @@ public class UserDetailResponse implements Parcelable {
         dest.writeString(gender);
         dest.writeInt(cityId);
         dest.writeInt(stateId);
+        dest.writeInt(requestSentStatus);
         dest.writeString(cityName);
         dest.writeString(stateName);
         dest.writeString(bio);
@@ -261,6 +281,15 @@ public class UserDetailResponse implements Parcelable {
 
     public boolean isActive() {
         return isActive;
+    }
+    public boolean isSelfProfile() {
+        return isSelfProfile;
+    }
+    public boolean isProfessional() {
+        return isProfessional;
+    }
+    public boolean isRequestPending() {
+        return isRequestPending;
     }
 
     public int getId() {
@@ -333,6 +362,9 @@ public class UserDetailResponse implements Parcelable {
 
     public int getStateId() {
         return stateId;
+    }
+    public int getRequestSentStatus() {
+        return requestSentStatus;
     }
 
     public String getCityName() {
