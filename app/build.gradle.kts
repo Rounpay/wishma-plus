@@ -93,4 +93,5 @@ dependencies {
     implementation("androidx.localbroadcastmanager:localbroadcastmanager:1.1.0")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+    implementation("androidx.fragment:fragment:1.8.9")
 }

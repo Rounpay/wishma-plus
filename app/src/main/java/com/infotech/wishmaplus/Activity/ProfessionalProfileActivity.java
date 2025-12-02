@@ -65,7 +65,8 @@ public class ProfessionalProfileActivity extends AppCompatActivity {
             }
         });
         continueBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(this, CreatePersonalProfileActivity.class);
+            Intent intent = new Intent(this, CreateProfessionalPage.class);
+            intent.putExtra("pageName",pageName.getText().toString());
             startActivity(intent);
             intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
         });

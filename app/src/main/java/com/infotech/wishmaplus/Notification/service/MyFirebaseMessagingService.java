@@ -22,7 +22,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.infotech.wishmaplus.Notification.NotificationActivity;
+import com.infotech.wishmaplus.Activity.MainActivity;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.ApplicationConstant;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
@@ -30,237 +30,364 @@ import com.infotech.wishmaplus.Utils.PreferencesManager;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = MyFirebaseMessagingService.class.getSimpleName();
+    private static final String CHANNEL_ID = "wishmaplus_notification_channel";
+    private static final String CHANNEL_NAME = "WishmaPlus Notifications";
 
     private Bitmap bitmap;
     private String image;
 
-
     @Override
-    public void onNewToken(String s) {
-        super.onNewToken(s);
-        PreferencesManager mAppPreferences = new PreferencesManager(this,2);
-        mAppPreferences.setNonRemoval(ApplicationConstant.INSTANCE.regFCMKeyPref, s);
-        //LoginResponse mLoginDataResponse = ApiFintechUtilMethods.INSTANCE.getLoginResponse(mAppPreferences);
-        if(!mAppPreferences.getString(mAppPreferences.LoginPref).isEmpty()){
-            //ApiFintechUtilMethods.INSTANCE.updateFcm(this, mLoginDataResponse, mAppPreferences);
+    public void onNewToken(String token) {
+        super.onNewToken(token);
+        Log.d(TAG, "FCM Token: " + token);
+        PreferencesManager mAppPreferences = new PreferencesManager(this, 2);
+        mAppPreferences.setNonRemoval(ApplicationConstant.INSTANCE.regFCMKeyPref, token);
+
+        // Update token to server if user is logged in
+        if (!mAppPreferences.getString(mAppPreferences.LoginPref).isEmpty()) {
+            // Update FCM token to your server
+            // ApiFintechUtilMethods.INSTANCE.updateFcm(this, mLoginDataResponse, mAppPreferences);
         }
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
-        // Check if message contains a data payload.
+        // Check for both data payload and notification payload
         if (remoteMessage.getData().size() > 0) {
-
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            handleDataPayload(remoteMessage);
         }
 
-        // Check if message contains a notification payload.
+        // Handle notification payload (sent from Firebase Console or Google APIs)
         if (remoteMessage.getNotification() != null) {
+            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
 
-
+            // IMPORTANT: When notification payload is present and app is in background/killed,
+            // FCM automatically displays notification and custom PendingIntent is ignored.
+            // We need to manually show notification with custom intent.
+            handleNotificationPayload(remoteMessage);
         }
 
-
-        //message will contain the Push Message
-        final String message = remoteMessage.getData().get("Message");
-        image = remoteMessage.getData().get("Image");
-        if (image != null && !image.isEmpty()) {
-            image = ApplicationConstant.INSTANCE.baseUrl + "/Image/Notification/" + image;
-        }
-        final String url = remoteMessage.getData().get("Url");
-        final String title = remoteMessage.getData().get("Title");
-        final String key = remoteMessage.getData().get("Key");
-        final String postDate = remoteMessage.getData().get("PostDate");
-        final String type = remoteMessage.getData().get("Type");
-        /*final String sessionId = remoteMessage.getData().get("SessionId");
-        final String isValidate = remoteMessage.getData().get("IsValidate");
-        final String userId = remoteMessage.getData().get("UserId");*/
-        if (type.equalsIgnoreCase("order_key")) {
-            final String orderkey = remoteMessage.getData().get("orderkey");
-            sendUPIOrderNotificationBrodcast(orderkey);
-
-        } else {
-            int notification_id = 1;
-            try {
-                notification_id = Integer.parseInt(key);
-            } catch (NumberFormatException nfe) {
-                notification_id = 1;
-            }
-
-
-            // if (type != null && !type.isEmpty() && type.equalsIgnoreCase("Browsable_Notification")) {
-            sendNewNotificationBrodcast();
-            bitmap = getBitmapfromUrl(image);
-
-            if (bitmap != null) {
-                // showNotification(message, bitmap, url, title, key, postDate, type, notification_id);
-                showNotification(message, image, type, postDate, bitmap, url, title, notification_id);
-            } else {
-
-                final int finalNotification_id = notification_id;
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        new generatePictureStyleNotification(message, image, url, title, key, postDate, type, finalNotification_id).execute();
-
-                    }
-                });
-            }
-            // }
-
+        // If no notification or data, just log
+        if (remoteMessage.getData().size() == 0 && remoteMessage.getNotification() == null) {
+            Log.d(TAG, "Empty notification received");
         }
     }
-
 
     /**
-     * Showing notification with text only
+     * Handle data payload from Firebase or custom API
      */
+    private void handleDataPayload(RemoteMessage remoteMessage) {
+        try {
+            // Extract data from payload
+            String message = remoteMessage.getData().get("Message");
+            String imageUrl = remoteMessage.getData().get("Image");
+            String url = remoteMessage.getData().get("Url");
+            String title = remoteMessage.getData().get("Title");
+            String key = remoteMessage.getData().get("Key");
+            String postDate = remoteMessage.getData().get("PostDate");
+            String type = remoteMessage.getData().get("Type");
 
-    private void showNotification(String messageBody, String imageUrl, String type, String postDate, Bitmap image, String url, String contentTitle, int notification_id) {
-        String CHANNEL_ID = getPackageName();
+            // Handle image URL
+            if (imageUrl != null && !imageUrl.isEmpty() && !imageUrl.startsWith("http")) {
+                imageUrl = ApplicationConstant.INSTANCE.baseUrl + "/Image/Notification/" + imageUrl;
+            }
 
-        Intent intent = new Intent(this, NotificationActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("Title", contentTitle);
-        intent.putExtra("Message", messageBody);
-        intent.putExtra("Image", imageUrl);
-        intent.putExtra("Url", url);
-        intent.putExtra("Time", postDate);
+            // Handle special notification types
+            if (type != null && type.equalsIgnoreCase("order_key")) {
+                String orderkey = remoteMessage.getData().get("orderkey");
+                sendUPIOrderNotificationBroadcast(orderkey);
+                return;
+            }
+
+            // Generate notification ID
+            int notificationId = generateNotificationId(key);
+
+            // Send broadcast for new notification
+            sendNewNotificationBroadcast();
+
+            // Load image and show notification
+            loadImageAndShowNotification(message, imageUrl, url, title, key, postDate, type, notificationId);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error handling data payload: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Handle notification payload (from Firebase Console/Google APIs)
+     */
+    private void handleNotificationPayload(RemoteMessage remoteMessage) {
+        try {
+            Map<String, String> data = remoteMessage.getData();
+
+            // --- Title ---
+            String title = null;
+            if (remoteMessage.getNotification() != null &&
+                    remoteMessage.getNotification().getTitle() != null &&
+                    !remoteMessage.getNotification().getTitle().isEmpty()) {
+                title = remoteMessage.getNotification().getTitle();
+            } else {
+                title = getValueIgnoreCase(data, "Title","title");
+            }
+
+            // --- Message ---
+            String message = null;
+            if (remoteMessage.getNotification() != null &&
+                    remoteMessage.getNotification().getBody() != null &&
+                    !remoteMessage.getNotification().getBody().isEmpty()) {
+                message = remoteMessage.getNotification().getBody();
+            } else {
+                message = getValueIgnoreCase(data, "Message", "Body","body","message");
+            }
+
+            // --- Image ---
+            String image = null;
+            if (remoteMessage.getNotification() != null &&
+                    remoteMessage.getNotification().getImageUrl() != null) {
+                image = remoteMessage.getNotification().getImageUrl().toString();
+            } else {
+                image = getValueIgnoreCase(data, "Image", "imageUrl", "image");
+                if (image != null && !image.isEmpty()) {
+                    image = ApplicationConstant.INSTANCE.baseUrl + "/Image/Notification/" + image;
+                }
+            }
+
+            // --- Other fields ---
+            String url = getValueIgnoreCase(data, "Url", "url", "imageUrl");
+            String key = getValueIgnoreCase(data, "Key", "key");
+            String postDate = getValueIgnoreCase(data, "PostDate", "postDate");
+            String type = getValueIgnoreCase(data, "Type", "type");
+
+            int notificationId = generateNotificationId(key);
+
+            // Send broadcast for new notification
+            sendNewNotificationBroadcast();
+
+            // Load image and show notification
+            loadImageAndShowNotification(message, image, url, title, key, postDate, type, notificationId);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error handling notification payload: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private String getValueIgnoreCase(Map<String, String> map, String... possibleKeys) {
+        for (String key : possibleKeys) {
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                if (entry.getKey().equalsIgnoreCase(key)) {
+                    return entry.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Load image asynchronously and show notification
+     */
+    private void loadImageAndShowNotification(String message, String imageUrl, String url,
+                                              String title, String key, String postDate,
+                                              String type, int notificationId) {
+
+        // Try to load image synchronously first (for quick display)
+        bitmap = getBitmapFromUrl(imageUrl);
+
+        if (bitmap != null) {
+            // Show notification immediately with image
+            showNotification(message, imageUrl, type, postDate, bitmap, url, title, notificationId);
+        } else if (imageUrl != null && !imageUrl.isEmpty()) {
+            // Load image asynchronously if not loaded
+            new Handler(Looper.getMainLooper()).post(() ->
+                    new GeneratePictureStyleNotification(message, imageUrl, url, title, key,
+                            postDate, type, notificationId).execute()
+            );
+        } else {
+            // Show notification without image
+            showNotification(message, imageUrl, type, postDate, null, url, title, notificationId);
+        }
+    }
+
+    /**
+     * Generate notification ID from key
+     */
+    private int generateNotificationId(String key) {
+        int notificationId = 1;
+        try {
+            if (key != null && !key.isEmpty()) {
+                notificationId = Integer.parseInt(key);
+            }
+        } catch (NumberFormatException e) {
+            notificationId = (int) System.currentTimeMillis();
+        }
+        return notificationId;
+    }
+
+    /**
+     * Show notification with optional image
+     */
+    private void showNotification(String messageBody, String imageUrl, String type,
+                                  String postDate, Bitmap image, String url,
+                                  String contentTitle, int notificationId) {
+
+        // Create notification channel for Android O and above
+        createNotificationChannel();
+
+        // Create intent to open NotificationFragment
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        intent.setAction("OPEN_NOTIFICATION_FRAGMENT");
+
+        // Add all notification data as extras
+        intent.putExtra("Title", contentTitle != null ? contentTitle : "");
+        intent.putExtra("Message", messageBody != null ? messageBody : "");
+        intent.putExtra("Image", imageUrl != null ? imageUrl : "");
+        intent.putExtra("Url", url != null ? url : "");
+        intent.putExtra("Time", postDate != null ? postDate : "");
+        intent.putExtra("Type", type != null ? type : "");
+        intent.putExtra("NotificationId", notificationId);
+
+        // Create pending intent with unique request code
         PendingIntent pendingIntent;
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.R) {
-            pendingIntent = PendingIntent.getActivity(this, notification_id + 2 /* Request code */,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
 
-        }else {
-            pendingIntent = PendingIntent.getActivity(this, notification_id + 2 /* Request code */,
-                    intent,  PendingIntent.FLAG_IMMUTABLE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
         }
 
+        pendingIntent = PendingIntent.getActivity(this, notificationId, intent, flags);
+
+        // Default notification sound
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+
+        // Build notification
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_foreground)
-                .setContentTitle(contentTitle)
+                .setContentTitle(contentTitle != null ? contentTitle : "New Notification")
+                .setContentText(messageBody != null ? messageBody : "")
                 .setAutoCancel(true)
-                .setContentText(messageBody)
-                .setTicker(messageBody)
                 .setSound(defaultSoundUri)
                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                .setDefaults(Notification.DEFAULT_SOUND)
-                .setGroup(this.getPackageName() + "." + type)
-                .setChannelId(CHANNEL_ID)
-                .setGroupSummary(true)
-                .setSilent(false)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(pendingIntent);
+
+        // Add large icon and big picture style if image is available
         if (image != null) {
-            notification.setLargeIcon(image);
-            notification.setStyle(new NotificationCompat.BigPictureStyle()
+            notificationBuilder.setLargeIcon(image);
+            notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle()
                     .bigPicture(image)
+                    .bigLargeIcon(image)
                     .setSummaryText(messageBody)
                     .setBigContentTitle(contentTitle));
+        } else {
+            // Use big text style if no image
+            notificationBuilder.setStyle(new NotificationCompat.BigTextStyle()
+                    .bigText(messageBody));
         }
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, getPackageName() + " BBPS_Service", importance);
-            notificationManager.createNotificationChannel(mChannel);
+        // Show notification
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (notificationManager != null) {
+            notificationManager.notify(notificationId, notificationBuilder.build());
         }
-        notificationManager.notify(notification_id + 2, notification.build());
     }
 
-    /*private void showNotification(String messageBody, String imageUrl, String type, String postDate, Bitmap image, String url, String contentTitle, int notification_id) {
-        String CHANNEL_ID = getPackageName();
-
-        Intent intent = new Intent(this, NotificationActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("Title", contentTitle);
-        intent.putExtra("Message", messageBody);
-        intent.putExtra("Image", imageUrl);
-        intent.putExtra("Url", url);
-        intent.putExtra("Time", postDate);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, notification_id + 2 */
-    /* Request code */
-    /*, intent, PendingIntent.FLAG_ONE_SHOT);
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher_foreground)
-                .setContentTitle(contentTitle)
-                .setAutoCancel(true)
-                .setContentText(messageBody)
-                .setTicker(messageBody)
-                .setSound(defaultSoundUri)
-                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                .setDefaults(Notification.DEFAULT_SOUND)
-                .setGroup(this.getPackageName() + "." + type)
-                .setChannelId(CHANNEL_ID)
-                .setGroupSummary(true)
-                .setContentIntent(pendingIntent);
-        if (image != null) {
-            notification.setLargeIcon(image);
-            notification.setStyle(new NotificationCompat.BigPictureStyle()
-                    .bigPicture(image)
-                    .setSummaryText(messageBody)
-                    .setBigContentTitle(contentTitle));
-        }
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+    /**
+     * Create notification channel for Android O and above
+     */
+    private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID,
+                    CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Receive important notifications from WishmaPlus");
+            channel.enableLights(true);
+            channel.enableVibration(true);
+            channel.setVibrationPattern(new long[]{1000, 1000, 1000, 1000, 1000});
+            channel.setShowBadge(true);
 
-            int importance = NotificationManager.IMPORTANCE_MIN;
-            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, getPackageName() + " Service", importance);
-            notificationManager.createNotificationChannel(mChannel);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
         }
-        notificationManager.notify(notification_id + 2, notification.build());
     }
-*/
 
-    public Bitmap getBitmapfromUrl(String imageUrl) {
+    /**
+     * Download bitmap from URL
+     */
+    public Bitmap getBitmapFromUrl(String imageUrl) {
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            return null;
+        }
+
         try {
             URL url = new URL(imageUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoInput(true);
+            connection.setConnectTimeout(10000);
+            connection.setReadTimeout(10000);
             connection.connect();
+
             InputStream input = connection.getInputStream();
             Bitmap bitmap = BitmapFactory.decodeStream(input);
-            return bitmap;
+            input.close();
+            connection.disconnect();
 
+            return bitmap;
         } catch (Exception e) {
+            Log.e(TAG, "Error loading image: " + e.getMessage());
             e.printStackTrace();
             return null;
-
         }
     }
 
-    private void sendNewNotificationBrodcast() {
+    /**
+     * Send broadcast for new notification
+     */
+    private void sendNewNotificationBroadcast() {
         Intent intent = new Intent("New_Notification_Detect");
-        // You can also include some extra data.
         intent.putExtra("message", "New Notification");
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    private void sendUPIOrderNotificationBrodcast(String orderkey) {
+    /**
+     * Send broadcast for UPI order notification
+     */
+    private void sendUPIOrderNotificationBroadcast(String orderkey) {
         Intent intent = new Intent("New_UPI_Order_Notification_Detect");
         intent.putExtra("ORDER_KEY", orderkey);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    /*get bitmap image from the URL received in background*/
-    public class generatePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
-
+    /**
+     * AsyncTask to load image in background
+     */
+    public class GeneratePictureStyleNotification extends AsyncTask<String, Void, Bitmap> {
 
         private String url, message, image, title, key, postDate, type;
-        private int notification_id = 1;
+        private int notificationId;
 
-        public generatePictureStyleNotification(String message, String image, String url, String title, String key, String postDate, String type, int notification_id) {
-            super();
+        public GeneratePictureStyleNotification(String message, String image, String url,
+                                                String title, String key, String postDate,
+                                                String type, int notificationId) {
             this.url = url;
-            this.notification_id = notification_id;
+            this.notificationId = notificationId;
             this.message = message;
             this.image = image;
             this.title = title;
@@ -271,20 +398,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         @Override
         protected Bitmap doInBackground(String... params) {
-            Bitmap bitmap = getBitmapfromUrl(this.image);
-            if (bitmap != null) {
-                return bitmap;
-            } else {
-                return null;
-            }
-
+            return getBitmapFromUrl(this.image);
         }
 
         @Override
         protected void onPostExecute(Bitmap result) {
             super.onPostExecute(result);
-            //showNotification(message, result, url, title, key, postDate, type, notification_id);
-            showNotification(message, image, type, postDate, result, url, title, notification_id);
+            showNotification(message, image, type, postDate, result, url, title, notificationId);
         }
     }
 }

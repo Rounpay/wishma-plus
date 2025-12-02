@@ -20,6 +20,7 @@ import com.infotech.wishmaplus.Api.Request.UpdateUserRequest;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.CompanyDetailResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
 import com.infotech.wishmaplus.Api.Response.FollowersResponse;
@@ -222,5 +223,10 @@ public interface EndPointInterface {
 
     @POST("api/UserProfile/AcceptOrRejectRequest")
     Call<BasicResponse> AcceptOrRejectRequest(@Header("Authorization") String authorization,
-                                      @Body BasicRequest request);
+                                              @Body BasicRequest request);
+
+    @GET("api/UserProfile/getPageCategories")
+    Call<List<CategoryResponse>> getPageCategories(@Header("Authorization") String authorization);
+
+
 }

@@ -1,9 +1,14 @@
 package com.infotech.wishmaplus.Activity;
 
+import static android.content.ContentValues.TAG;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,6 +28,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -98,7 +105,9 @@ public class MainActivity extends AppCompatActivity {
         usersLine = findViewById(R.id.usersLine);
         notificationLine = findViewById(R.id.notificationLine);
         menuLine = findViewById(R.id.menuLine);
-
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            handleNotificationIntent(getIntent());
+        }, 500);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new HomeFragment(), "Home").commit();
 
@@ -154,6 +163,116 @@ public class MainActivity extends AppCompatActivity {
         });
         getBalance();
     }
+
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        // Handle notification click when app is in background/foreground
+        handleNotificationIntent(intent);
+    }
+
+    /**
+     * Handle notification click and open NotificationFragment
+     */
+    private void handleNotificationIntent(Intent intent) {
+        if (intent == null) {
+            Log.d(TAG, "Intent is null");
+            return;
+        }
+
+        Log.d(TAG, "Intent Action: " + intent.getAction());
+        Log.d(TAG, "Intent Extras: " + intent.getExtras());
+
+        // Extract unified data
+        Bundle bundle = extractNotificationData(intent);
+
+        if (bundle != null) {
+            Log.d(TAG, "Notification data found → opening fragment");
+            openNotificationFragment(bundle);
+            return;
+        }
+
+        Log.d(TAG, "No notification data found");
+    }
+    /**
+     * extractNotificationData
+     */
+    private Bundle extractNotificationData(Intent intent) {
+        if (intent == null || intent.getExtras() == null) return null;
+        Bundle bundle = new Bundle();
+        Bundle extras = intent.getExtras();
+        // Try custom data first
+        String title   = extras.getString("Title", extras.getString("title"));
+        String message = extras.getString("Message", extras.getString("message"));
+        String image   = extras.getString("Image", extras.getString("image"));
+        String url     = extras.getString("Url", extras.getString("url"));
+        String time    = extras.getString("Time", extras.getString("time"));
+        String type    = extras.getString("Type", extras.getString("type"));
+        int nid        = extras.getInt("NotificationId", -1);
+
+        // FCM Notification Payload fallback
+        if (title == null)
+            title = extras.getString("gcm.notification.title");
+        if (message == null)
+            message = extras.getString("gcm.notification.body");
+
+        // If nothing found → return null
+        if (title == null && message == null) return null;
+
+        bundle.putString("Title", title != null ? title : "");
+        bundle.putString("Message", message != null ? message : "");
+        bundle.putString("Image", image != null ? image : "");
+        bundle.putString("Url", url != null ? url : "");
+        bundle.putString("Time", time != null ? time : "");
+        bundle.putString("Type", type != null ? type : "");
+        bundle.putInt("NotificationId", nid);
+
+        return bundle;
+    }
+
+
+
+    /**
+     * Open NotificationFragment with data
+     */
+    private void openNotificationFragment(Bundle data) {
+        try {
+            // Find fragment container
+            int containerId = R.id.flFragment;
+
+            // Check if container exists
+            if (findViewById(containerId) == null) {
+                Log.e(TAG, "Fragment container not found! Please add FrameLayout with id 'fragment_container' in activity_main.xml");
+                return;
+            }
+            // Remove OLD NotificationFragment from backstack
+            getSupportFragmentManager().popBackStack("NotificationFragment", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            // Make fragment container visible
+            findViewById(containerId).setVisibility(android.view.View.VISIBLE);
+
+            // Create NotificationFragment instance
+            Fragment notificationFragment = new NotificationFragment();
+            selectedLine.setBackgroundColor(Color.WHITE);
+            notificationLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+            selectedLine = notificationLine;
+            notificationFragment.setArguments(data);
+
+            // Replace current fragment with NotificationFragment
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(containerId, notificationFragment, "NotificationFragment");
+            transaction.addToBackStack("NotificationFragment");
+            transaction.commitAllowingStateLoss();
+
+            Log.d(TAG, "NotificationFragment opened successfully");
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error opening NotificationFragment: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void refresh(int typeId){
 
@@ -296,5 +415,21 @@ public class MainActivity extends AppCompatActivity {
 
         // Display the popup window at the center of the screen
         popupWindow.showAsDropDown(view,  0, 0,Gravity.BOTTOM);
+    }
+
+    @SuppressLint("GestureBackNavigation")
+    @Override
+    public void onBackPressed() {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            if (selectedLine != homeLine) {
+                selectedLine.setBackgroundColor(Color.WHITE);
+                homeLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+                selectedLine = homeLine;
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new HomeFragment()).commit();
+            }
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
     }
 }

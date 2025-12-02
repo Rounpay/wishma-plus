@@ -38,10 +38,15 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
+            android:name=".Activity.CreateProfessionalPage"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="false" />
+        <activity
             android:name=".Activity.SentRequests"
             android:exported="false"
             android:theme="@style/Appnew"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.FriendRequest"
             android:exported="false"
@@ -242,8 +247,22 @@
         <activity
             android:name=".Activity.MainActivity"
             android:exported="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Appnew" />
+            android:theme="@style/Appnew">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Handle notification click -->
+            <intent-filter>
+                <action android:name="OPEN_NOTIFICATION_FRAGMENT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activity.WelcomeActivity"
             android:exported="true"
