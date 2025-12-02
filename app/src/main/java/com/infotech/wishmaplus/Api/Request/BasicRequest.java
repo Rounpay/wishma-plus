@@ -14,8 +14,24 @@ public class BasicRequest implements Serializable {
     @Expose
     private int status;
 
+    @SerializedName("userId")
+    @Expose
+    private int userId;
+
+    @SerializedName("block")
+    @Expose
+    private boolean block;
+
+
+
+
     public BasicRequest(String fromUserId, int status) {
         this.fromUserId = fromUserId;
         this.status = status;
+    }
+
+    public BasicRequest(int userId, boolean block) {
+        this.userId = userId;
+        this.block = block;
     }
 }

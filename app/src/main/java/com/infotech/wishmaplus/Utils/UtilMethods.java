@@ -57,11 +57,14 @@ import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -76,6 +79,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -615,7 +620,6 @@ public enum UtilMethods {
     }
 
     public void AcceptOrRejectRequest(Activity activity, String userId, int statusCode, ApiCallBackMulti apiCallBack) {
-
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
             Call<BasicResponse> call = git.AcceptOrRejectRequest("Bearer " + tokenManager.getAccessToken(), new BasicRequest(userId, statusCode));
@@ -639,6 +643,33 @@ public enum UtilMethods {
             apiCallBack.onError(e.getMessage());
         }
     }
+
+    public void getPageCategories(Activity activity, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<List<CategoryResponse>> call = git.getPageCategories("Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<List<CategoryResponse>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<CategoryResponse>> call, @NonNull Response<List<CategoryResponse>> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<CategoryResponse>> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+
 
 
     public void submitReportReason(Activity activity, String postId, int reasonId, ApiCallBack apiCallBack) {
