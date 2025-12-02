@@ -1,6 +1,7 @@
 package com.infotech.wishmaplus.Activity;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 import android.Manifest;
 import android.app.Activity;
@@ -103,6 +104,8 @@ public class ProfileActivity extends AppCompatActivity {
     private Snackbar mSnackBar;
     int isCoverPhoto;
 
+    View  profileView;
+
     String userId = "0";
 
     @Override
@@ -123,6 +126,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         back_button = findViewById(R.id.back_button);
+        profileView = findViewById(R.id.profileView);
         logout = findViewById(R.id.logout);
         moreBtn = findViewById(R.id.moreBTn);
         balance = findViewById(R.id.balance);
@@ -134,7 +138,8 @@ public class ProfileActivity extends AppCompatActivity {
             userId = getIntent().getStringExtra("id");
             balance.setVisibility(View.GONE);
             logout.setVisibility(View.GONE);
-            moreBtn.setVisibility(View.VISIBLE);
+            moreBtn.setVisibility(VISIBLE);
+            profileView.setVisibility(GONE);
         }
         final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
         pullToRefresh.setOnRefreshListener(() -> {
@@ -544,7 +549,14 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void getUserDetail() {
+        loader.show();
         UtilMethods.INSTANCE.userDetail(this, userId, loader, tokenManager, object -> {
+            if (loader != null) {
+                if (loader.isShowing()) {
+                    loader.dismiss();
+                }
+            }
+            profileView.setVisibility(VISIBLE);
             userDetailResponse = (UserDetailResponse) object;
             contentList.set(0, new ContentResult(0, userDetailResponse, null));
             adapter.notifyItemChanged(0);

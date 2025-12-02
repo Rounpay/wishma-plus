@@ -66,6 +66,18 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
             }
         });
 
+        holder.profileImage.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onProfileClick(model, position);
+            }
+        });
+
+        holder.userName.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onProfileClick(model, position);
+            }
+        });
+
         holder.removeUserBtn.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onRemoveClicked(model, position);

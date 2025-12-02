@@ -532,6 +532,8 @@ public enum UtilMethods {
     public interface FriendActionListener {
         void onAddClicked(UserListFriends user, int position);
 
+        void onProfileClick(UserListFriends user, int position);
+
         void onRemoveClicked(UserListFriends user, int position);
     }
 
