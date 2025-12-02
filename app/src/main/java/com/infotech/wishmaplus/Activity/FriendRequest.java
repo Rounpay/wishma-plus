@@ -1,7 +1,10 @@
 package com.infotech.wishmaplus.Activity;
 
+import static android.view.View.GONE;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
 import com.infotech.wishmaplus.Adapter.FriendAdapter;
 import com.infotech.wishmaplus.Adapter.FriendListAdapter;
 import com.infotech.wishmaplus.Api.Response.FriendRequestResponse;
@@ -27,9 +31,11 @@ import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.UtilMethods;
+import com.payu.ui.model.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FriendRequest extends AppCompatActivity {
     RecyclerView recyclerView;
@@ -67,6 +73,29 @@ public class FriendRequest extends AppCompatActivity {
             @Override
             public void onAddClicked(UserListFriends user, int position) {
 //                callAddFriendApi(user, position);
+                loader.show();
+                respondOnRequest(FriendRequest.this,user.getUserId(), new UtilMethods.ApiCallBackMulti() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                        hitApi();
+
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+
+                    }
+                },1);
             }
 
             @Override
@@ -183,6 +212,15 @@ public class FriendRequest extends AppCompatActivity {
                     loader.dismiss();
                 }
             }
+        }
+
+    }
+    public void respondOnRequest(Activity context, String userId, UtilMethods.ApiCallBackMulti apiCallBack, int type) {
+        if(type==1){
+            UtilMethods.INSTANCE.AcceptOrRejectRequest(context, userId, 2, apiCallBack);
+        }
+        else{
+            UtilMethods.INSTANCE.AcceptOrRejectRequest(context, userId, 3, apiCallBack);
         }
 
     }
