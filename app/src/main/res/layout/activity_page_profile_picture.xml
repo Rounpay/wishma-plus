@@ -59,6 +59,8 @@
         app:layout_constraintTop_toBottomOf="@id/back_button" />
 
     <ScrollView
+        android:id="@+id/scrollView"
+        app:layout_constraintBottom_toTopOf="@+id/btnNext"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -71,24 +73,26 @@
             android:padding="16dp">
 
             <!-- Title -->
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextAppearance.AppCompat.Title"
                 android:id="@+id/tvTitle"
+                android:textStyle="bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
-                android:text="Customise your Page"
+                android:text="@string/customise_your_page"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                />
 
             <!-- Subtitle -->
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextAppearance.AppCompat.Subhead"
                 android:id="@+id/tvSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Your profile picture is one of the first things that people see. Try using your logo or a simple image that people can easily associate with you."
+                android:text="@string/your_profile_picture_is_one_of_the_first_things_that_people_see_try_using_your_logo_or_a_simple_image_that_people_can_easily_associate_with_you"
                 android:textColor="@android:color/black"
-                android:textSize="18sp" />
+                />
             <!-- COVER PHOTO -->
 
             <!-- NAME -->
@@ -97,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/cover_photo"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_155sdp"
@@ -139,9 +143,9 @@
                     android:id="@+id/edit_profile_icon"
                     android:layout_width="@dimen/_36sdp"
                     android:layout_height="@dimen/_36sdp"
-                    android:layout_alignRight="@id/profile_picture"
+                    android:layout_alignEnd="@id/profile_picture"
                     android:layout_alignBottom="@id/profile_picture"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="8dp"
                     android:background="@drawable/circle_background_white"
                     android:padding="@dimen/_8sdp"
                     android:src="@drawable/ic_camera"
@@ -151,35 +155,34 @@
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvName"
+                style="@style/TextAppearance.AppCompat.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_gravity="center_horizontal"
                 android:text="Rrsdc"
                 android:textColor="@android:color/black"
-                android:textSize="20sp"
                 android:textStyle="bold"/>
-
-
-
-
-
-
-
-            <!-- Next Button -->
-            <Button
-                android:id="@+id/btnNext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="#1877F2"
-                android:text="Next"
-                android:textAllCaps="false" />
 
         </LinearLayout>
     </ScrollView>
+    <!-- Next Button -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/btnNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_12sdp"
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@drawable/text_button_border"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/create"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/color_white"
+        android:textAllCaps="false" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
