@@ -87,14 +87,12 @@ public class CreateProfessionalPage extends AppCompatActivity {
             String selectedNames = getSelectedCategoryNames();
 
             // LOG RESULT
-            Log.d("CATEGORY_RESULT", "IDs: " + selectedIDs);
-            Log.d("CATEGORY_RESULT", "Names: " + selectedNames);
 
             // SHOW TOAST (Optional)
-            Toast.makeText(this, "Selected: " + selectedNames, Toast.LENGTH_LONG).show();
-
-            Intent intent = new Intent(this, OtpActivity.class);
-            startActivity(intent);
+//            Toast.makeText(this, "Selected: " + selectedNames, Toast.LENGTH_LONG).show();
+//
+//            Intent intent = new Intent(this, OtpActivity.class);
+//            startActivity(intent);
 
 
             // SEND TO NEXT ACTIVITY
