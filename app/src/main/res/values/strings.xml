@@ -183,6 +183,8 @@
     <string name="block">Block</string>
     <string name="insights_information">Insights Information</string>
     <string name="from_previous_90_days">--from previous 90 days</string>
+    <string name="search_for_categories">Search for categories</string>
+    <string name="popular_categories">Popular categories</string>
 
 
 </resources>

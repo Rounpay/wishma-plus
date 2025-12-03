@@ -4,10 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,6 +25,7 @@ import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +38,8 @@ public class CreateProfessionalPage extends AppCompatActivity {
     List<CategoryResponse> categoryList = new ArrayList<>();
     List<CategoryResponse> selectedCategories = new ArrayList<>();
     String pageName;
+
+    ChipGroup popularChipGroup;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -53,48 +60,135 @@ public class CreateProfessionalPage extends AppCompatActivity {
         headingView = findViewById(R.id.headingView);
         categorySearch = findViewById(R.id.categorySearch);
         selectedChipGroup = findViewById(R.id.selectedChipGroup);
+        popularChipGroup = findViewById(R.id.popularChipGroup);
         headingView.setText("What category best describes " + pageName);
+        AppCompatTextView nextButton = findViewById(R.id.continueBtn);
+
+        nextButton.setOnClickListener(v -> {
+
+            // CHECK 1: Minimum 1 category required
+            if (selectedCategories.isEmpty()) {
+                Toast.makeText(this, "Please select at least one category", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // GET IDs and Names
+            String selectedIDs = getSelectedCategoryIDs();
+            String selectedNames = getSelectedCategoryNames();
+
+            // LOG RESULT
+            Log.d("CATEGORY_RESULT", "IDs: " + selectedIDs);
+            Log.d("CATEGORY_RESULT", "Names: " + selectedNames);
+
+            // SHOW TOAST (Optional)
+            Toast.makeText(this, "Selected: " + selectedNames, Toast.LENGTH_LONG).show();
+
+            // SEND TO NEXT ACTIVITY
+
+            // OR → API CALL
+            // sendSelectedCategoriesToServer(selectedIDs);
+        });
 
         callApi();
 
         // AutoComplete selection
         categorySearch.setOnItemClickListener((parent, view, position, id) -> {
             String selectedName = parent.getItemAtPosition(position).toString();
-            // Find category object
-            CategoryResponse selected = null;
-            for (CategoryResponse c : categoryList) {
-                if (c.getCategoryName().equals(selectedName)) {
-                    selected = c;
-                    break;
-                }
-            }
 
+            CategoryResponse selected = findCategory(selectedName);
             if (selected == null) return;
 
-            // Already selected check
-            for (CategoryResponse c : selectedCategories) {
-                if (c.getCategoryID() == selected.getCategoryID()) {
-                    categorySearch.setText("");
-                    return;
-                }
+            if (isAlreadyAdded(selected)) {
+                Toast.makeText(this, "Category already added", Toast.LENGTH_SHORT).show();
+                categorySearch.setText("");
+                return;
             }
 
-            // Max 3 limit
-            if (selectedCategories.size() >= 3) {
+            if (selectedCategories.size() == 3) {
                 showMaxDialog();
                 categorySearch.setText("");
                 return;
             }
 
-            selectedCategories.add(selected);
-            addChip(selected);
-
-            categorySearch.setText(""); // clear input
+            addCategory(selected);
+            categorySearch.setText("");
+            updateSearchVisibility();
         });
     }
 
+    // FIND CATEGORY BY NAME
+    private CategoryResponse findCategory(String name) {
+        for (CategoryResponse c : categoryList) {
+            if (c.getCategoryName().equals(name))
+                return c;
+        }
+        return null;
+    }
 
+    // CHECK IF ALREADY ADDED
+    private boolean isAlreadyAdded(CategoryResponse c) {
+        for (CategoryResponse s : selectedCategories) {
+            if (s.getCategoryID() == c.getCategoryID()) return true;
+        }
+        return false;
+    }
     // ADD CHIP
+
+    // ADD CATEGORY
+    private void addCategory(CategoryResponse category) {
+        selectedCategories.add(category);
+        Chip chip = new Chip(this);
+
+        chip.setText(category.getCategoryName());
+        chip.setCloseIconVisible(true);
+        chip.setChipBackgroundColorResource(R.color.grey_1);
+        chip.setTextColor(Color.BLACK);
+
+        chip.setOnCloseIconClickListener(v -> {
+            selectedChipGroup.removeView(chip);
+            selectedCategories.remove(category);
+            updateSearchVisibility();
+        });
+
+        selectedChipGroup.addView(chip);
+    }
+    // RANDOM POPULAR 3 CATEGORIES
+    private void loadPopularCategories() {
+        Collections.shuffle(categoryList);
+        List<CategoryResponse> randomList = categoryList.subList(0, Math.min(4, categoryList.size()));
+
+        for (CategoryResponse c : randomList) {
+            Chip chip = new Chip(this);
+            chip.setText(c.getCategoryName());
+            chip.setChipBackgroundColorResource(R.color.grey_1);
+            chip.setTextColor(Color.BLACK);
+
+            chip.setOnClickListener(v -> {
+                if (isAlreadyAdded(c)) {
+                    Toast.makeText(this, "Category already added", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (selectedCategories.size() == 3) {
+                    showMaxDialog();
+                    return;
+                }
+
+                addCategory(c);
+                updateSearchVisibility();
+            });
+
+            popularChipGroup.addView(chip);
+        }
+    }
+
+    // HIDE SHOW SEARCH BOX
+    private void updateSearchVisibility() {
+        if (selectedCategories.size() == 3)
+            categorySearch.setVisibility(View.GONE);
+        else
+            categorySearch.setVisibility(View.VISIBLE);
+    }
     private void addChip(CategoryResponse category) {
         Chip chip = new Chip(this);
         chip.setText(category.getCategoryName());
@@ -129,24 +223,22 @@ public class CreateProfessionalPage extends AppCompatActivity {
 
     // API CALL
     private void callApi() {
-        UtilMethods.INSTANCE.getPageCategories(CreateProfessionalPage.this, new UtilMethods.ApiCallBackMulti() {
+        UtilMethods.INSTANCE.getPageCategories(this, new UtilMethods.ApiCallBackMulti() {
             @Override
             public void onSuccess(Object object) {
                 categoryList = (List<CategoryResponse>) object;
 
                 List<String> names = new ArrayList<>();
-                for (CategoryResponse c : categoryList) {
+                for (CategoryResponse c : categoryList)
                     names.add(c.getCategoryName());
-                }
 
-                // Set custom filter adapter
-                CategoryFilterAdapter adapter = new CategoryFilterAdapter(
+                categorySearch.setAdapter(new CategoryFilterAdapter(
                         CreateProfessionalPage.this,
                         android.R.layout.simple_dropdown_item_1line,
                         names
-                );
+                ));
 
-                categorySearch.setAdapter(adapter);
+                loadPopularCategories();
             }
 
             @Override
