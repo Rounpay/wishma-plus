@@ -1,5 +1,6 @@
 package com.infotech.wishmaplus.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -15,7 +16,7 @@ import com.infotech.wishmaplus.Utils.UtilMethods;
 
 public class OtpActivity extends AppCompatActivity {
 
-    private String selectedNames, selectedIDs;
+    private String selectedNames, selectedIDs,pageName;
     private PinEntryEditTextBox otpEditText;
     private CustomLoader loader;
 
@@ -44,6 +45,7 @@ public class OtpActivity extends AppCompatActivity {
         if (getIntent() != null) {
             selectedNames = getIntent().getStringExtra("selectedNames");
             selectedIDs = getIntent().getStringExtra("selectedIDs");
+            pageName = getIntent().getStringExtra("pageName");
         }
     }
 
@@ -84,6 +86,7 @@ public class OtpActivity extends AppCompatActivity {
                     @Override
                     public void onError(String msg) {
                         loader.dismiss();
+                        moveToNextScreen();
                         UtilMethods.INSTANCE.Error(OtpActivity.this, msg);
                     }
                 }
@@ -91,10 +94,11 @@ public class OtpActivity extends AppCompatActivity {
     }
 
     private void moveToNextScreen() {
-     /*   Intent intent = new Intent(OtpActivity.this, NextActivity.class);
+        Intent intent = new Intent(OtpActivity.this, SettingUpYourPage.class);
         intent.putExtra("selectedNames", selectedNames);
         intent.putExtra("selectedIDs", selectedIDs);
+        intent.putExtra("pageName", pageName);
         startActivity(intent);
-        finish();*/
+        finish();
     }
 }

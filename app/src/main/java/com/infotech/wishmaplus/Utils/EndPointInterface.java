@@ -230,5 +230,22 @@ public interface EndPointInterface {
 
     @POST("api/UserProfile/SetProfileType")
     Call<BasicResponse> setProfileType(@Header("Authorization") String authorization,
-                                              @Body BasicRequest request);
+                                       @Body BasicRequest request);
+
+    @Multipart
+    @POST("api/UserProfile/createPage")
+    Call<BasicResponse> createPage(
+            @Header("Authorization") String authorization,
+            @Part("PageName") RequestBody pageName,
+            @Part("CategoryId") RequestBody categoryId,
+            @Part("Bio") RequestBody bio,
+            @Part("Website") RequestBody website,
+            @Part("Email") RequestBody email,
+            @Part("Phone") RequestBody phone,
+            @Part("Address") RequestBody address,
+            @Part MultipartBody.Part ProfileImageFile,
+            @Part MultipartBody.Part CoverImageFile
+    );
+
+
 }

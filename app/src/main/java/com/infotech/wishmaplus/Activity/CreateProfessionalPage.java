@@ -4,6 +4,7 @@ import static com.google.android.material.internal.ViewUtils.dpToPx;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -81,21 +82,8 @@ public class CreateProfessionalPage extends AppCompatActivity {
                 Toast.makeText(this, "Please select at least one category", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-            // GET IDs and Names
             String selectedIDs = getSelectedCategoryIDs();
             String selectedNames = getSelectedCategoryNames();
-
-            // LOG RESULT
-
-            // SHOW TOAST (Optional)
-//            Toast.makeText(this, "Selected: " + selectedNames, Toast.LENGTH_LONG).show();
-//
-//            Intent intent = new Intent(this, OtpActivity.class);
-//            startActivity(intent);
-
-
-            // SEND TO NEXT ACTIVITY
             loader.show();
             UtilMethods.INSTANCE.setProfileType(CreateProfessionalPage.this, "", loader, new UtilMethods.ApiCallBackMulti() {
                 @Override
@@ -105,9 +93,11 @@ public class CreateProfessionalPage extends AppCompatActivity {
                             loader.dismiss();
                         }
                     }
-                    Intent intent = new Intent(CreateProfessionalPage.this, OtpActivity.class);
+                    Intent intent = new Intent(CreateProfessionalPage.this,
+                            OtpActivity.class);
                     intent.putExtra("selectedIDs", selectedIDs);
                     intent.putExtra("selectedNames", selectedNames);
+                    intent.putExtra("pageName", pageName);
                     startActivity(intent);
                 }
 
@@ -208,20 +198,15 @@ public class CreateProfessionalPage extends AppCompatActivity {
             chip.setChipBackgroundColorResource(R.color.grey_1);
             chip.setTextColor(Color.BLACK);
 
-            // ----- 🔥 INCREASE CHIP WIDTH & HEIGHT -----
             ChipGroup.LayoutParams params = new ChipGroup.LayoutParams(
                     ChipGroup.LayoutParams.WRAP_CONTENT,     // width (increase here)
                     ChipGroup.LayoutParams.WRAP_CONTENT
             );
 
-//            params.setMargins(
-//                    (int) dpToPx(this,6),
-//                    (int) dpToPx(this,6),
-//                    (int) dpToPx(this,6),
-//                    (int) dpToPx(this,6));
+
             chip.setLayoutParams(params);
 
-            chip.setChipMinHeight(dpToPx(this,40)); // height
+            chip.setChipMinHeight(dpToPx(this,40));
             chip.setPadding(
                     (int) dpToPx(this,14),
                     (int) dpToPx(this,10),
@@ -250,7 +235,9 @@ public class CreateProfessionalPage extends AppCompatActivity {
             popularChipGroup.addView(chip);
         }
     }
-
+    public static float dpToPx(Context context, float dp) {
+        return dp * context.getResources().getDisplayMetrics().density;
+    }
     // HIDE SHOW SEARCH BOX
     private void updateSearchVisibility() {
         if (selectedCategories.size() == 3)

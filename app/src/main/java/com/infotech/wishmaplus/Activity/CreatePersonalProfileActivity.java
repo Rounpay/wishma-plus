@@ -36,7 +36,8 @@ public class CreatePersonalProfileActivity extends AppCompatActivity {
             return insets;
         });
         findViewById(R.id.nextButton).setOnClickListener(view -> {
-            Intent intent = new Intent(CreatePersonalProfileActivity.this, SettingUpYourPage.class);
+            Intent intent = new Intent(CreatePersonalProfileActivity.this,
+                    SettingUpYourPage.class);
             startActivity(intent);
         });
 

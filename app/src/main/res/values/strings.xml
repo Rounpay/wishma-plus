@@ -187,6 +187,17 @@
     <string name="popular_categories">Popular categories</string>
     <string name="confirm_otp">Confirm OTP</string>
     <string name="please_enter_otp_to_confirm_which_you_have_received_on_your_registered_mobile_number">Please Enter OTP to confirm which you have received on your registered mobile number.</string>
+    <string name="setting">Setting</string>
+    <string name="success_you_ve_created_rrsdc_now_add_more_details_to_help_people_connect_with_you">Success! You\'ve created Rrsdc. Now add more details to help people connect with you.</string>
+    <string name="general">General</string>
+    <string name="bio">Bio</string>
+    <string name="contact">Contact</string>
+    <string name="website">Website</string>
+    <string name="email">Email</string>
+    <string name="phone_number">Phone number</string>
+    <string name="location">Location</string>
+    <string name="your_profile_picture_is_one_of_the_first_things_that_people_see_try_using_your_logo_or_a_simple_image_that_people_can_easily_associate_with_you">Your profile picture is one of the first things that people see. Try using your logo or a simple image that people can easily associate with you.</string>
+    <string name="customise_your_page">Customise your Page</string>
 
 
 </resources>
