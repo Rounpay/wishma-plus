@@ -1,5 +1,6 @@
 package com.infotech.wishmaplus.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -84,6 +85,7 @@ public class OtpActivity extends AppCompatActivity {
                     @Override
                     public void onError(String msg) {
                         loader.dismiss();
+                        moveToNextScreen();
                         UtilMethods.INSTANCE.Error(OtpActivity.this, msg);
                     }
                 }
@@ -91,10 +93,10 @@ public class OtpActivity extends AppCompatActivity {
     }
 
     private void moveToNextScreen() {
-     /*   Intent intent = new Intent(OtpActivity.this, NextActivity.class);
+        Intent intent = new Intent(OtpActivity.this, SettingUpYourPage.class);
         intent.putExtra("selectedNames", selectedNames);
         intent.putExtra("selectedIDs", selectedIDs);
         startActivity(intent);
-        finish();*/
+        finish();
     }
 }

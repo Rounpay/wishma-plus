@@ -277,6 +277,7 @@ public class MoreFragment extends Fragment {
         createUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bottomSheetUser.dismiss();
                 Intent intent = new Intent(activity, CreateNewProfilePage.class);
                 launcher.launch(intent);
             }

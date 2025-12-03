@@ -16,7 +16,7 @@
         android:layout_marginStart="@dimen/_5sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Back"
+        android:contentDescription="@string/back"
         android:padding="@dimen/_10sdp"
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +27,7 @@
         android:id="@+id/user_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Setting"
+        android:text="@string/setting"
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -59,8 +59,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/back_button" />
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnNext"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line1"
         >
@@ -72,7 +74,7 @@
             android:padding="16dp">
 
             <!-- Title -->
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -83,20 +85,20 @@
                 android:textStyle="bold" />
 
             <!-- Subtitle -->
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvSubtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/black"
-                android:text="Success! You've created Rrsdc. Now add more details to help people connect with you."
+                android:text="@string/success_you_ve_created_rrsdc_now_add_more_details_to_help_people_connect_with_you"
                 android:textSize="18sp" />
 
             <!-- Section Title -->
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="General"
+                android:text="@string/general"
                 android:textSize="18sp"
                 android:textColor="@android:color/black"
                 android:textStyle="bold" />
@@ -109,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_bg_new"
                 android:fontFamily="sans-serif-medium"
-                android:hint="Bio"
+                android:hint="@string/bio"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:imeOptions="actionNext"
                 android:inputType="text"
@@ -119,11 +121,11 @@
                 android:textColorHint="@android:color/darker_gray" />
 
             <!-- Contact Section -->
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Contact"
+                android:text="@string/contact"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -135,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_bg_new"
                 android:fontFamily="sans-serif-medium"
-                android:hint="Website"
+                android:hint="@string/website"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:imeOptions="actionNext"
                 android:inputType="text"
@@ -151,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_bg_new"
                 android:fontFamily="sans-serif-medium"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:imeOptions="actionNext"
                 android:inputType="textEmailAddress"
@@ -168,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_bg_new"
                 android:fontFamily="sans-serif-medium"
-                android:hint="Phone number"
+                android:hint="@string/phone_number"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:imeOptions="actionNext"
                 android:inputType="number"
@@ -178,11 +180,11 @@
                 android:textColorHint="@android:color/darker_gray" />
 
             <!-- Location Section -->
-            <TextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Location"
+                android:text="@string/location"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -194,7 +196,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_bg_new"
                 android:fontFamily="sans-serif-medium"
-                android:hint="Address"
+                android:hint="@string/address"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:imeOptions="actionNext"
                 android:inputType="text"
@@ -205,18 +207,25 @@
 
 
 
-            <!-- Next Button -->
-            <Button
-                android:id="@+id/btnNext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:backgroundTint="#1877F2"
-                android:text="Next"
-                android:textAllCaps="false" />
+
 
         </LinearLayout>
     </ScrollView>
+    <!-- Next Button -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/btnNext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_12sdp"
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@drawable/text_button_border"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/next"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/color_white"
+        android:textAllCaps="false" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
