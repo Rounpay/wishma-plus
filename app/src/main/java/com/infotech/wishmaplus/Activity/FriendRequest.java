@@ -13,6 +13,8 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.graphics.Insets;
@@ -20,16 +22,21 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.infotech.wishmaplus.Adapter.FriendAdapter;
 import com.infotech.wishmaplus.Adapter.FriendListAdapter;
+import com.infotech.wishmaplus.Adapter.MultiContentAdapter;
+import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Response.FriendRequestResponse;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 import com.payu.ui.model.utils.Utils;
 
@@ -46,6 +53,9 @@ public class FriendRequest extends AppCompatActivity {
     AppCompatTextView count,heading,sort;
     List<UserListFriends> list = new ArrayList<>();
     FriendListAdapter adapter;
+    public PreferencesManager tokenManager;
+
+    UserDetailResponse userDetailResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +63,20 @@ public class FriendRequest extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_friend_request);
         findViewById(R.id.back_button).setOnClickListener(view -> finish());
-
+        tokenManager = new PreferencesManager(this,1);
         recyclerView = findViewById(R.id.friendRecycler);
         count = findViewById(R.id.count);
         noDataLayout = findViewById(R.id.noDataLayout);
         heading = findViewById(R.id.heading);
         sort = findViewById(R.id.sort);
+        SwipeRefreshLayout pullToRefresh = findViewById(R.id.swipeRefreshLayout);
+        pullToRefresh.setOnRefreshListener(() -> {
+            hitApi();
+            pullToRefresh.setRefreshing(false);
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
-
+        userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
         findViewById(R.id.moreBTn).setOnClickListener(view -> {
             openBottomSheet(this,true);
         });
@@ -99,8 +114,40 @@ public class FriendRequest extends AppCompatActivity {
             }
 
             @Override
+            public void onProfileClick(UserListFriends user, int position) {
+//                startActivity(new Intent(FriendRequest.this, ProfileActivity.class));
+                profileActivityResultLauncher.launch(new Intent(FriendRequest.this, ProfileActivity.class)
+                        .putExtra("userData", userDetailResponse)
+                        .putExtra("id", user.getUserId()));
+
+
+            }
+
+            @Override
             public void onRemoveClicked(UserListFriends user, int position) {
-//                callRemoveFriendApi(user, position);
+                loader.show();
+                respondOnRequest(FriendRequest.this,user.getUserId(), new UtilMethods.ApiCallBackMulti() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                        hitApi();
+
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+
+                    }
+                },2);
             }
         },true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -114,6 +161,30 @@ public class FriendRequest extends AppCompatActivity {
             return insets;
         });
     }
+
+    @Override
+    protected void onResume() {
+        hitApi();
+        getUserDetail();
+        super.onResume();
+    }
+
+    ActivityResultLauncher<Intent> profileActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+//                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+//                    int refreshType = result.getData().getIntExtra("RefreshType", 0);
+//                    if (refreshType == 1) {
+//
+//                    } else if (refreshType == 2) {
+//
+//                    } else {
+//
+//                    }
+//
+//
+//                }
+            });
 
     private void updateEmptyView() {
         if (list.isEmpty()) {
@@ -129,7 +200,7 @@ public class FriendRequest extends AppCompatActivity {
             count.setText(list.size() + "");
             count.setVisibility(View.VISIBLE);
             heading.setVisibility(View.VISIBLE);
-            sort.setVisibility(View.VISIBLE);
+            sort.setVisibility(View.GONE);
         }
     }
 
@@ -214,6 +285,11 @@ public class FriendRequest extends AppCompatActivity {
             }
         }
 
+    }
+    private void getUserDetail() {
+        UtilMethods.INSTANCE.userDetail(this, "0", loader, tokenManager, object -> {
+
+        });
     }
     public void respondOnRequest(Activity context, String userId, UtilMethods.ApiCallBackMulti apiCallBack, int type) {
         if(type==1){

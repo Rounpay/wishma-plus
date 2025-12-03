@@ -322,17 +322,17 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 isRequestPending = content.getUserDetail().isRequestPending();
 
                 /* Showing requestSentStatus  */
-                if (isRequestPending && requestSentStatus == 0) {
+                if (requestSentStatus == 1) {
                     addFriend.setText("Respond"); /* showing Respond */
                     addFriend.setBackgroundResource(R.drawable.bg_blue_rounded);
                     addFriend.setTextColor(ContextCompat.getColor(context, R.color.color_white));
                     addFriend.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.main_blue_color));
-                } else if (requestSentStatus == 0 || requestSentStatus == 3) {
+                } else if ((requestSentStatus == 0 && !isRequestPending) ||(requestSentStatus == 3 && !isRequestPending)) {
                     addFriend.setText("Add Friend");  /* showing Add Friend */
                     addFriend.setBackgroundResource(R.drawable.bg_blue_rounded);
                     addFriend.setTextColor(ContextCompat.getColor(context, R.color.color_white));
                     addFriend.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.main_blue_color));
-                } else if (requestSentStatus == 1) {
+                } else if (isRequestPending && requestSentStatus == 0) {
                     addFriend.setText("Cancel Request");/* showing Cancel Request */
                     addFriend.setBackgroundResource(R.drawable.rounded_corners);
                     addFriend.setTextColor(ContextCompat.getColor(context, R.color.black_alpha_55));
@@ -357,8 +357,8 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     friendUnfriend.setBackgroundTintList(ContextCompat.getColorStateList(context, R.color.grey_1));
                 }
                 addFriend.setOnClickListener(v -> {
-                    if (requestSentStatus == 1) {
-                        UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getUserId(), new UtilMethods.ApiCallBackMulti() {
+                    if (isRequestPending && requestSentStatus == 0) {
+                        UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getFisrtName(), new UtilMethods.ApiCallBackMulti() {
                             @Override
                             public void onSuccess(Object object) {
                                 BasicResponse basicResponse =(BasicResponse) object;
@@ -375,7 +375,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                             }
                         }, 0);
-                    } else if (requestSentStatus == 0 && isRequestPending) {
+                    } else if (requestSentStatus == 1) {
                         UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getFisrtName(), new UtilMethods.ApiCallBackMulti() {
                             @Override
                             public void onSuccess(Object object) {
@@ -391,7 +391,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                             }
                         }, 3);
-                    } else if (requestSentStatus == 0 || requestSentStatus == 3){
+                    } else if ((requestSentStatus == 0 && (!isRequestPending)) ||(requestSentStatus == 3 && (!isRequestPending))){
                         addFriend(content.getUserDetail().getUserId(), friendUnfriend, position);
                     }else if (requestSentStatus ==2) {
                         UtilMethods.INSTANCE.openAcceptRequestBottomSheetDialog(context, content.getUserDetail().getUserId(),content.getUserDetail().getFisrtName(), new UtilMethods.ApiCallBackMulti() {

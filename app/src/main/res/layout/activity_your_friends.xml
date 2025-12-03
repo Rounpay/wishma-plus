@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.FriendRequest">
+    tools:context=".Activity.YourFriends">
 
     <!-- Back Button -->
     <androidx.appcompat.widget.AppCompatImageButton
@@ -26,7 +26,7 @@
         android:id="@+id/user_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Friend Requests"
+        android:text="Friend's"
         android:textColor="#000000"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -37,12 +37,13 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/moreBTn"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|center_vertical"
         android:layout_marginEnd="@dimen/_10sdp"
-        android:paddingVertical="@dimen/_10sdp"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:paddingVertical="@dimen/_10sdp"
         app:layout_constraintBottom_toBottomOf="@id/back_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/back_button"
@@ -66,7 +67,7 @@
         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp"
-        android:text="Friend requests"
+        android:text="Your Friends"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -76,11 +77,12 @@
     <!-- RecyclerView -->
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/count"
+        android:visibility="gone"
         style="@style/TextAppearance.AppCompat.SearchResult.Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="12dp"
         android:text="378"
         android:textColor="@android:color/black"
         android:textSize="18sp"
@@ -93,14 +95,15 @@
         style="@style/TextAppearance.AppCompat.SearchResult.Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Sort"
-        android:visibility="gone"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="10dp"
+        android:text="Sort"
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="18sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line1" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="0dp"
@@ -109,18 +112,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/heading">
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/friendRecycler"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:paddingTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/heading"
-        tools:itemCount="3"
-        tools:listitem="@layout/add_remove_friend_layout" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/heading"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_user" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <LinearLayout
         android:id="@+id/noDataLayout"
         android:layout_width="0dp"

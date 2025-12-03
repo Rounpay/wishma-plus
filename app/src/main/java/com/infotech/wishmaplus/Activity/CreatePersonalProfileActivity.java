@@ -35,6 +35,10 @@ public class CreatePersonalProfileActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        findViewById(R.id.nextButton).setOnClickListener(view -> {
+            Intent intent = new Intent(CreatePersonalProfileActivity.this, SettingUpYourPage.class);
+            startActivity(intent);
+        });
 
         findViewById(R.id.closeBtn).setOnClickListener(v -> finish());
         findViewById(R.id.cancel).setOnClickListener(v -> finish());

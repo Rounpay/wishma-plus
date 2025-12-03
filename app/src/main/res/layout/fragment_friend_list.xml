@@ -55,6 +55,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/home"
+                android:visibility="gone"
                 style="@style/TextAppearance.AppCompat.Subhead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -67,29 +68,11 @@
                 android:paddingVertical="@dimen/_8sdp"
                 android:text="Online"
                 android:textColor="@color/colorPrimaryLight" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/insights"
-                style="@style/TextAppearance.AppCompat.Subhead"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:background="@drawable/rounded_white"
-                android:backgroundTint="@color/light_blue"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center"
-                android:minWidth="@dimen/_60sdp"
-                android:paddingHorizontal="@dimen/_15sdp"
-                android:paddingVertical="@dimen/_8sdp"
-                android:text="Friend Request"
-                android:textColor="@color/colorPrimaryLight" />
-
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/content"
                 style="@style/TextAppearance.AppCompat.Subhead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
                 android:background="@drawable/rounded_white"
                 android:backgroundTint="@color/light_blue"
                 android:fontFamily="sans-serif-medium"
@@ -99,6 +82,71 @@
                 android:paddingVertical="@dimen/_8sdp"
                 android:text="Your Friends"
                 android:textColor="@color/colorPrimaryLight" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/insights"
+                    style="@style/TextAppearance.AppCompat.Subhead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:background="@drawable/rounded_white"
+                    android:backgroundTint="@color/light_blue"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center"
+                    android:minWidth="@dimen/_60sdp"
+                    android:paddingHorizontal="@dimen/_15sdp"
+                    android:paddingVertical="@dimen/_8sdp"
+                    android:text="Friend Requests"
+                    android:textColor="@color/colorPrimaryLight" />
+
+                <!-- Red Dot Badge -->
+                <View
+                    android:id="@+id/notification_dot"
+                    android:layout_width="8dp"
+                    android:visibility="gone"
+                    android:layout_height="8dp"
+                    android:background="@drawable/dot_shape"
+                    android:layout_gravity="top|end"
+                    android:translationX="-3dp"
+                    android:translationY="2dp" />
+            </FrameLayout>
+
+
+            <!--            <androidx.appcompat.widget.AppCompatTextView-->
+<!--                android:id="@+id/insights"-->
+<!--                style="@style/TextAppearance.AppCompat.Subhead"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginStart="@dimen/_10sdp"-->
+<!--                android:background="@drawable/rounded_white"-->
+<!--                android:backgroundTint="@color/light_blue"-->
+<!--                android:fontFamily="sans-serif-medium"-->
+<!--                android:gravity="center"-->
+<!--                android:minWidth="@dimen/_60sdp"-->
+<!--                android:paddingHorizontal="@dimen/_15sdp"-->
+<!--                android:paddingVertical="@dimen/_8sdp"-->
+<!--                android:text="Friend Request"-->
+<!--                android:textColor="@color/colorPrimaryLight" />-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sentRequest"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:background="@drawable/rounded_white"
+                android:backgroundTint="@color/light_blue"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:minWidth="@dimen/_60sdp"
+                android:paddingHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_8sdp"
+                android:text="Sent Requests"
+                android:textColor="@color/colorPrimaryLight" />
+
 
         </LinearLayout>
     </HorizontalScrollView>
@@ -134,7 +182,7 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:text="People you may know"
+                android:text="Your Friends"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -155,7 +203,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/heading"
                 tools:itemCount="3"
-                tools:listitem="@layout/add_remove_friend_layout" />
+                tools:listitem="@layout/item_user" />
 
             <LinearLayout
                 android:id="@+id/noDataLayout"
