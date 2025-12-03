@@ -27,6 +27,7 @@ import com.infotech.wishmaplus.Api.Response.FollowersResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.LoginResponse;
+import com.infotech.wishmaplus.Api.Response.PagesResponse;
 import com.infotech.wishmaplus.Api.Response.SignUpResponse;
 import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
@@ -227,6 +228,9 @@ public interface EndPointInterface {
 
     @GET("api/UserProfile/getPageCategories")
     Call<List<CategoryResponse>> getPageCategories(@Header("Authorization") String authorization);
+
+    @GET("api/UserProfile/getPage")
+    Call<PagesResponse> getPagesResponse(@Header("Authorization") String authorization);
 
     @POST("api/UserProfile/SetProfileType")
     Call<BasicResponse> setProfileType(@Header("Authorization") String authorization,

@@ -168,8 +168,7 @@
                     android:id="@+id/optionTwoSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Build a public presence or promote your\n
-brand or business"
+                    android:text="Build a public presence or promote your brand or business"
                     android:textColor="#6D6D6D"
                     android:textSize="14sp" />
 

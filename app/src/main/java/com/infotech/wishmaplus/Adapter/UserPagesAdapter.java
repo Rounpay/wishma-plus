@@ -9,8 +9,11 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.infotech.wishmaplus.Api.Response.UserModelResponse;
+
+import com.bumptech.glide.Glide;
+import com.infotech.wishmaplus.Api.Response.PageData;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import org.jspecify.annotations.NonNull;
 
@@ -19,11 +22,19 @@ import java.util.List;
 public class UserPagesAdapter extends RecyclerView.Adapter<UserPagesAdapter.ViewHolder> {
 
     Context context;
-    List<UserModelResponse> list;
+    List<PageData> list;
 
-    public UserPagesAdapter(Context context, List<UserModelResponse> list) {
+    private final OnItemClickListener listener;
+
+    public interface OnItemClickListener {
+        void onItemClick(PageData user, int pos);
+        void onMoreClicked(View anchor, PageData user, int pos);
+    }
+
+    public UserPagesAdapter(Context context, List<PageData> list, OnItemClickListener listener) {
         this.context = context;
         this.list = list;
+        this.listener = listener;
     }
 
     @NonNull
@@ -35,13 +46,19 @@ public class UserPagesAdapter extends RecyclerView.Adapter<UserPagesAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        UserModelResponse model = list.get(position);
+        PageData model = list.get(position);
 
-        holder.userName.setText(model.getName());
-        holder.userImage.setImageResource(model.getImage());
-
+        holder.userName.setText(model.getPageName());
+//        holder.userImage.setImageResource();
+        Glide.with(context)
+                .load(model.getProfileImageUrl())
+                .apply(UtilMethods.INSTANCE.getRequestOption_With_UserIcon())
+                .into(holder.userImage);
+        holder.itemHead.setOnClickListener(v -> {
+            if (listener != null) listener.onItemClick(model, holder.getAdapterPosition());
+        });
         // Show blue tick only if verified
-        if (model.isVerified()) {
+        if (false) {
             holder.blueTick.setVisibility(View.VISIBLE);
         } else {
             holder.blueTick.setVisibility(View.GONE);
@@ -57,6 +74,7 @@ public class UserPagesAdapter extends RecyclerView.Adapter<UserPagesAdapter.View
 
         AppCompatImageView userImage, blueTick;
         AppCompatTextView userName;
+        View itemHead;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,6 +82,7 @@ public class UserPagesAdapter extends RecyclerView.Adapter<UserPagesAdapter.View
             userImage = itemView.findViewById(R.id.userImage);
             blueTick = itemView.findViewById(R.id.blueTick1);
             userName = itemView.findViewById(R.id.userName);
+            itemHead = itemView.findViewById(R.id.itemHead);
         }
     }
 }

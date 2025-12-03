@@ -60,6 +60,7 @@ import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
+import com.infotech.wishmaplus.Api.Response.PagesResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
@@ -558,6 +559,27 @@ public enum UtilMethods {
             }
         });
     }
+
+    public void getPagesResponse(Activity activity, ApiCallBackMulti apiCallBack) {
+        EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+        Call<PagesResponse> call = git.getPagesResponse("Bearer " + tokenManager.getAccessToken());
+        call.enqueue(new Callback<PagesResponse>() {
+
+            @Override
+            public void onResponse(@NonNull Call<PagesResponse> call, @NonNull Response<PagesResponse> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    apiCallBack.onSuccess(response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<PagesResponse> call, @NonNull Throwable t) {
+                apiCallBack.onSuccess(null);
+            }
+        });
+    }
+
 
     public void createRequest(Activity activity, String userId, ApiCallBackMulti apiCallBack) {
 
