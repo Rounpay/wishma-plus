@@ -3,7 +3,10 @@ package com.infotech.wishmaplus.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.ScrollView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,13 +20,14 @@ import com.infotech.wishmaplus.R;
 public class SettingUpYourPage extends AppCompatActivity {
 
     AutoCompleteTextView etBio, etWebsite, etEmail, etPhone, etAddress;
-    String selectedNames,selectedIDs;
+    String selectedNames,selectedIDs,pageName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_setting_up_your_page);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -32,6 +36,7 @@ public class SettingUpYourPage extends AppCompatActivity {
         if (getIntent() != null) {
             selectedNames = getIntent().getStringExtra("selectedNames");
             selectedIDs = getIntent().getStringExtra("selectedIDs");
+            pageName = getIntent().getStringExtra("pageName");
         }
         findViewById(R.id.back_button).setOnClickListener(v -> finish());
         etBio = findViewById(R.id.etBio);
@@ -40,7 +45,24 @@ public class SettingUpYourPage extends AppCompatActivity {
         etPhone = findViewById(R.id.etPhone);
         etAddress = findViewById(R.id.etAddress);
         AppCompatTextView btnNext = findViewById(R.id.btnNext);
+        // Scroll automatically to focused EditText
+        ScrollView scrollView = findViewById(R.id.scrollView);
+
+        // Setup for each EditText
+        setupEditText(findViewById(R.id.etBio), scrollView);
+        setupEditText(findViewById(R.id.etWebsite), scrollView);
+        setupEditText(findViewById(R.id.etEmail), scrollView);
+        setupEditText(findViewById(R.id.etPhone), scrollView);
+        setupEditText(findViewById(R.id.etAddress), scrollView);
         btnNext.setOnClickListener(v -> validateAndProceed());
+    }
+
+    private void setupEditText(final AutoCompleteTextView editText, final ScrollView scrollView) {
+        editText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                scrollView.post(() -> scrollView.smoothScrollTo(0, v.getTop()));
+            }
+        });
     }
 
     private void validateAndProceed() {
@@ -84,7 +106,7 @@ public class SettingUpYourPage extends AppCompatActivity {
         intent.putExtra("email", email);
         intent.putExtra("phone", phone);
         intent.putExtra("address", address);
-        intent.putExtra("selectedNames", selectedNames);
+        intent.putExtra("pageName", pageName);
         intent.putExtra("selectedIDs", selectedIDs);
         startActivity(intent);
     }

@@ -16,7 +16,7 @@ import com.infotech.wishmaplus.Utils.UtilMethods;
 
 public class OtpActivity extends AppCompatActivity {
 
-    private String selectedNames, selectedIDs;
+    private String selectedNames, selectedIDs,pageName;
     private PinEntryEditTextBox otpEditText;
     private CustomLoader loader;
 
@@ -45,6 +45,7 @@ public class OtpActivity extends AppCompatActivity {
         if (getIntent() != null) {
             selectedNames = getIntent().getStringExtra("selectedNames");
             selectedIDs = getIntent().getStringExtra("selectedIDs");
+            pageName = getIntent().getStringExtra("pageName");
         }
     }
 
@@ -96,6 +97,7 @@ public class OtpActivity extends AppCompatActivity {
         Intent intent = new Intent(OtpActivity.this, SettingUpYourPage.class);
         intent.putExtra("selectedNames", selectedNames);
         intent.putExtra("selectedIDs", selectedIDs);
+        intent.putExtra("pageName", pageName);
         startActivity(intent);
         finish();
     }
