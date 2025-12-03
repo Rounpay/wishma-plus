@@ -339,6 +339,7 @@ public class PageProfilePicture extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
                     hideLoader();
+                    Log.e("fdadafafa", "onFailureImage: "+t.getMessage() );
                     Toast.makeText(PageProfilePicture.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });

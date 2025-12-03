@@ -175,7 +175,9 @@ public class MoreFragment extends Fragment {
                 PagesResponse pagesResponse = (PagesResponse) object;
                 if(!pagesResponse.getResult().isEmpty()){
                     list.addAll(pagesResponse.getResult());
-//                    adapter.notifyDataSetChanged();
+                    if (adapter!=null) {
+                        adapter.notifyDataSetChanged();
+                    }
                 }
 
 
@@ -289,5 +291,11 @@ public class MoreFragment extends Fragment {
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetUser.show();
 
+    }
+
+    @Override
+    public void onResume() {
+        getPagesList();
+        super.onResume();
     }
 }

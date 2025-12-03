@@ -134,6 +134,7 @@
                     android:padding="@dimen/_2sdp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/user_icon"
+                    android:clipToOutline="true"
                     app:layout_constraintBottom_toBottomOf="@id/cover_photo"
                     app:layout_constraintTop_toBottomOf="@id/cover_photo"
                     app:layout_constraintStart_toStartOf="parent"
