@@ -2,6 +2,7 @@ package com.infotech.wishmaplus.Adapter;
 
 import android.content.Context;
 import android.os.Build;
+import android.text.TextUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 
@@ -13,7 +14,7 @@ import java.util.List;
 
 public class CategoryFilterAdapter extends ArrayAdapter<String> {
 
-    private List<String> originalList;
+    private final List<String> originalList;
     private List<String> filteredList;
 
     public CategoryFilterAdapter(@NonNull Context context, int resource, @NonNull List<String> items) {
@@ -39,30 +40,36 @@ public class CategoryFilterAdapter extends ArrayAdapter<String> {
         return nameFilter;
     }
 
+    // -----------------------------
+      /*  CUSTOM SEARCH FILTER */
+    // -----------------------------
     private final Filter nameFilter = new Filter() {
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+
             List<String> resultList = new ArrayList<>();
 
-            if (constraint == null || constraint.length() == 0) {   // <-- FIXED HERE
+            // FIXED FOR ALL APIs
+            if (constraint == null || TextUtils.isEmpty(constraint)) {
                 resultList = new ArrayList<>(originalList);
             } else {
 
-                String query = constraint.toString().toLowerCase();
+                String query = constraint.toString().toLowerCase().trim();
 
                 List<String> startsWithList = new ArrayList<>();
                 List<String> containsList = new ArrayList<>();
                 List<String> othersList = new ArrayList<>();
 
                 for (String name : originalList) {
-                    String lowerName = name.toLowerCase();
 
-                    if (lowerName.startsWith(query)) {
-                        startsWithList.add(name);
-                    } else if (lowerName.contains(query)) {
-                        containsList.add(name);
+                    String low = name.toLowerCase();
+
+                    if (low.startsWith(query)) {
+                        startsWithList.add(name);  // Priority 1
+                    } else if (low.contains(query)) {
+                        containsList.add(name);    // Priority 2
                     } else {
-                        othersList.add(name);
+                        othersList.add(name);      // Priority 3
                     }
                 }
 
@@ -73,7 +80,7 @@ public class CategoryFilterAdapter extends ArrayAdapter<String> {
 
             FilterResults results = new FilterResults();
             results.values = resultList;
-            results.count = resultList.size();
+            results.count  = resultList.size();
             return results;
         }
 

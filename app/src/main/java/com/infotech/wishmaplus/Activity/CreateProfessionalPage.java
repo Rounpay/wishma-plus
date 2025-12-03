@@ -7,7 +7,6 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
@@ -24,6 +23,7 @@ import com.google.android.material.chip.ChipGroup;
 import com.infotech.wishmaplus.Adapter.CategoryFilterAdapter;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
@@ -31,6 +31,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @noinspection unchecked
+ */
 public class CreateProfessionalPage extends AppCompatActivity {
 
     AppCompatTextView headingView;
@@ -42,6 +45,8 @@ public class CreateProfessionalPage extends AppCompatActivity {
     String pageName;
 
     ChipGroup popularChipGroup;
+
+    CustomLoader loader;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -57,6 +62,7 @@ public class CreateProfessionalPage extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         if (getIntent().getStringExtra("pageName") != null &&
                 !Objects.requireNonNull(getIntent().getStringExtra("pageName")).isEmpty()) {
             pageName = getIntent().getStringExtra("pageName");
@@ -92,9 +98,31 @@ public class CreateProfessionalPage extends AppCompatActivity {
 
 
             // SEND TO NEXT ACTIVITY
+            loader.show();
+            UtilMethods.INSTANCE.setProfileType(CreateProfessionalPage.this, "", loader, new UtilMethods.ApiCallBackMulti() {
+                @Override
+                public void onSuccess(Object object) {
+                    if (loader != null) {
+                        if (loader.isShowing()) {
+                            loader.dismiss();
+                        }
+                    }
+                    Intent intent = new Intent(CreateProfessionalPage.this, OtpActivity.class);
+                    intent.putExtra("selectedIDs", selectedIDs);
+                    intent.putExtra("selectedNames", selectedNames);
+                    startActivity(intent);
+                }
 
-            // OR → API CALL
-            // sendSelectedCategoriesToServer(selectedIDs);
+                @Override
+                public void onError(String msg) {
+                    if (loader != null) {
+                        if (loader.isShowing()) {
+                            loader.dismiss();
+                        }
+                    }
+                    UtilMethods.INSTANCE.Error(CreateProfessionalPage.this,msg);
+                }
+            });
         });
 
         callApi();
@@ -149,7 +177,7 @@ public class CreateProfessionalPage extends AppCompatActivity {
         }
         return false;
     }
-    // ADD CHIP
+
 
     // ADD CATEGORY
     private void addCategory(CategoryResponse category) {
@@ -170,6 +198,7 @@ public class CreateProfessionalPage extends AppCompatActivity {
 
         selectedChipGroup.addView(chip);
     }
+
     // RANDOM POPULAR 3 CATEGORIES
     private void loadPopularCategories() {
         Collections.shuffle(categoryList);
@@ -231,27 +260,6 @@ public class CreateProfessionalPage extends AppCompatActivity {
         else
             categorySearch.setVisibility(View.VISIBLE);
     }
-    private void addChip(CategoryResponse category) {
-        Chip chip = new Chip(this);
-        chip.setText(category.getCategoryName());
-        chip.setCloseIconVisible(true);
-        chip.setChipBackgroundColorResource(R.color.grey_1);
-        chip.setTextColor(Color.BLACK);
-
-        chip.setOnCloseIconClickListener(v -> {
-            selectedChipGroup.removeView(chip);
-
-            // remove from selected list
-            for (int i = 0; i < selectedCategories.size(); i++) {
-                if (selectedCategories.get(i).getCategoryID() == category.getCategoryID()) {
-                    selectedCategories.remove(i);
-                    break;
-                }
-            }
-        });
-
-        selectedChipGroup.addView(chip);
-    }
 
     // MAX 3 DIALOG
     private void showMaxDialog() {
@@ -269,7 +277,6 @@ public class CreateProfessionalPage extends AppCompatActivity {
             @Override
             public void onSuccess(Object object) {
                 categoryList = (List<CategoryResponse>) object;
-
                 List<String> names = new ArrayList<>();
                 for (CategoryResponse c : categoryList)
                     names.add(c.getCategoryName());

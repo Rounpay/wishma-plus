@@ -228,5 +228,7 @@ public interface EndPointInterface {
     @GET("api/UserProfile/getPageCategories")
     Call<List<CategoryResponse>> getPageCategories(@Header("Authorization") String authorization);
 
-
+    @POST("api/UserProfile/SetProfileType")
+    Call<BasicResponse> setProfileType(@Header("Authorization") String authorization,
+                                              @Body BasicRequest request);
 }

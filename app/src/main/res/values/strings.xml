@@ -185,6 +185,8 @@
     <string name="from_previous_90_days">--from previous 90 days</string>
     <string name="search_for_categories">Search for categories</string>
     <string name="popular_categories">Popular categories</string>
+    <string name="confirm_otp">Confirm OTP</string>
+    <string name="please_enter_otp_to_confirm_which_you_have_received_on_your_registered_mobile_number">Please Enter OTP to confirm which you have received on your registered mobile number.</string>
 
 
 </resources>

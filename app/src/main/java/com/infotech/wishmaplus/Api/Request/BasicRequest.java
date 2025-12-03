@@ -22,7 +22,9 @@ public class BasicRequest implements Serializable {
     @Expose
     private boolean block;
 
-
+    @SerializedName("mobileOTP")
+    @Expose
+    private String mobileOTP;
 
 
     public BasicRequest(String fromUserId, int status) {
@@ -33,5 +35,9 @@ public class BasicRequest implements Serializable {
     public BasicRequest(int userId, boolean block) {
         this.userId = userId;
         this.block = block;
+    }
+
+    public BasicRequest(String mobileOTP) {
+        this.mobileOTP = mobileOTP;
     }
 }

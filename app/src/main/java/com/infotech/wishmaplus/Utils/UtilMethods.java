@@ -64,8 +64,6 @@ import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
 
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -79,8 +77,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -644,6 +640,54 @@ public enum UtilMethods {
         }
     }
 
+
+    public void setProfileType(Activity activity, String otp, CustomLoader loader, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BasicResponse> call = git.setProfileType("Bearer " + tokenManager.getAccessToken(), new BasicRequest(otp));
+            call.enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().getStatusCode() == 1) {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        if (response.body() != null && response.body().getStatusCode() == -1) {
+                            if (loader != null) {
+                                if (loader.isShowing()) {
+                                    loader.dismiss();
+                                }
+                            }
+                            apiCallBack.onError(response.body().getResponseText());
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    if (loader != null) {
+                        if (loader.isShowing()) {
+                            loader.dismiss();
+                        }
+                    }
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (loader != null) {
+                if (loader.isShowing()) {
+                    loader.dismiss();
+                }
+            }
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
     public void getPageCategories(Activity activity, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
@@ -668,8 +712,6 @@ public enum UtilMethods {
             apiCallBack.onError(e.getMessage());
         }
     }
-
-
 
 
     public void submitReportReason(Activity activity, String postId, int reasonId, ApiCallBack apiCallBack) {
@@ -840,7 +882,7 @@ public enum UtilMethods {
                 doFollow(context, userId, apiCallBack);
             } else if (type == 3) {
                 AcceptOrRejectRequest(context, userId, 2, apiCallBack);
-            }else {
+            } else {
                 removeRequest(context, userId, apiCallBack);
             }
             AcceptRequestDialog.dismiss();
@@ -854,7 +896,6 @@ public enum UtilMethods {
                 AcceptRequestDialog.dismiss();
             }
         });
-
 
 
         AcceptRequestDialog.setCancelable(true);
