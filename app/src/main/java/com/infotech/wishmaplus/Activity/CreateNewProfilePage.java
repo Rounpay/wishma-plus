@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,10 +82,13 @@ public class CreateNewProfilePage extends AppCompatActivity {
                 Intent intent = new Intent(this, PersonalProfileActivity.class);
                 intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-            }else{
+            }else if (optionTwoRadio.isChecked()){
                 Intent intent = new Intent(this, ProfessionalProfileActivity.class);
                 intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+            }
+            else{
+                Toast.makeText(this, "Please select an option", Toast.LENGTH_SHORT).show();
             }
         });
     }

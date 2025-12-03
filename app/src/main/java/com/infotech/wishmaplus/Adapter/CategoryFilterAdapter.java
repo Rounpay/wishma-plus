@@ -1,6 +1,7 @@
 package com.infotech.wishmaplus.Adapter;
 
 import android.content.Context;
+import android.os.Build;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 
@@ -43,7 +44,7 @@ public class CategoryFilterAdapter extends ArrayAdapter<String> {
         protected FilterResults performFiltering(CharSequence constraint) {
             List<String> resultList = new ArrayList<>();
 
-            if (constraint == null || constraint.isEmpty()) {
+            if (constraint == null || constraint.length() == 0) {   // <-- FIXED HERE
                 resultList = new ArrayList<>(originalList);
             } else {
 
@@ -57,11 +58,11 @@ public class CategoryFilterAdapter extends ArrayAdapter<String> {
                     String lowerName = name.toLowerCase();
 
                     if (lowerName.startsWith(query)) {
-                        startsWithList.add(name);        // TOP PRIORITY
+                        startsWithList.add(name);
                     } else if (lowerName.contains(query)) {
-                        containsList.add(name);          // SECOND PRIORITY
+                        containsList.add(name);
                     } else {
-                        othersList.add(name);             // LAST
+                        othersList.add(name);
                     }
                 }
 

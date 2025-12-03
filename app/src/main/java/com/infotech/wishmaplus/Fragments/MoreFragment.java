@@ -1,20 +1,30 @@
 package com.infotech.wishmaplus.Fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.infotech.wishmaplus.Activity.ContactUsActivity;
 import com.infotech.wishmaplus.Activity.CreateNewProfilePage;
 import com.infotech.wishmaplus.Activity.GroupActivity;
@@ -27,12 +37,18 @@ import com.infotech.wishmaplus.Activity.ProfessionalDashboardActivity;
 import com.infotech.wishmaplus.Activity.ProfileActivity;
 import com.infotech.wishmaplus.Activity.ReferralActivity;
 import com.infotech.wishmaplus.Activity.SettingsAndPrivacy;
+import com.infotech.wishmaplus.Adapter.UserPagesAdapter;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
+import com.infotech.wishmaplus.Api.Response.UserModelResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomAlertDialog;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 import com.infotech.wishmaplus.Utils.Utility;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class MoreFragment extends Fragment {
 
@@ -42,6 +58,8 @@ public class MoreFragment extends Fragment {
     ImageView profileIcon;
     TextView nameTv,currentPackage;
     ActivityResultLauncher<Intent> launcher;
+
+    public static BottomSheetDialog bottomSheetUser;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,9 +110,9 @@ public class MoreFragment extends Fragment {
                     .putExtra("userData", userDetailResponse));
         });
         v.findViewById(R.id.userArrow).setOnClickListener(v1 -> {
-        /*    UtilMethods.INSTANCE.openUserBottomSheetDialog(requireActivity(),
-                    userDetailResponse,launcher);*/
-            startActivity(new Intent(requireActivity(), CreateNewProfilePage.class));
+           openUserBottomSheetDialog(requireActivity(),
+                    userDetailResponse,launcher);
+//            startActivity(new Intent(requireActivity(), CreateNewProfilePage.class));
         });
 
         v.findViewById(R.id.packageView).setOnClickListener(view -> {
@@ -164,4 +182,58 @@ public class MoreFragment extends Fragment {
 
                 }
             });
+
+    @SuppressLint("SetTextI18n")
+    public void openUserBottomSheetDialog(Activity activity,
+                                          UserDetailResponse userDetailResponse,
+                                          ActivityResultLauncher<Intent> launcher) {
+
+
+        RecyclerView userRecycler;
+        List<UserModelResponse> list;
+        UserPagesAdapter adapter;
+        if (bottomSheetUser != null && bottomSheetUser.isShowing()) {
+            return;
+        }
+        bottomSheetUser = new BottomSheetDialog(activity, R.style.DialogStyle);
+        Objects.requireNonNull(bottomSheetUser.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
+        LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View sheetView = inflater.inflate(R.layout.dialog_create_user, null);
+        LinearLayout createUser = sheetView.findViewById(R.id.createUser);
+        AppCompatTextView userName = sheetView.findViewById(R.id.userName);
+        AppCompatImageView userImage = sheetView.findViewById(R.id.userImage);
+        userRecycler = sheetView.findViewById(R.id.userRecycler);
+
+        list = new ArrayList<>();
+        list.add(new UserModelResponse("First User", R.drawable.user_icon, false));
+        list.add(new UserModelResponse("Second User", R.drawable.user_icon, false));
+        list.add(new UserModelResponse("Third User", R.drawable.user_icon, false));
+
+        adapter = new UserPagesAdapter(requireActivity(), list);
+        userRecycler.setLayoutManager(new LinearLayoutManager(requireActivity()));
+        userRecycler.setAdapter(adapter);
+
+        if (userDetailResponse != null) {
+            userName.setText(userDetailResponse.getFisrtName() + userDetailResponse.getLastName());
+            Glide.with(activity)
+                    .load(userDetailResponse.getProfilePictureUrl())
+                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                    .apply(UtilMethods.INSTANCE.getRequestOption_With_UserIcon())
+                    .into(userImage);
+        }
+        createUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity, CreateNewProfilePage.class);
+                launcher.launch(intent);
+            }
+        });
+        bottomSheetUser.setCancelable(true);
+        bottomSheetUser.setContentView(sheetView);
+        BottomSheetBehavior
+                .from(bottomSheetUser.findViewById(com.google.android.material.R.id.design_bottom_sheet))
+                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        bottomSheetUser.show();
+
+    }
 }

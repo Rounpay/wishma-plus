@@ -1,7 +1,10 @@
 package com.infotech.wishmaplus.Activity;
 
+import static com.google.android.material.internal.ViewUtils.dpToPx;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +14,6 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -47,7 +49,9 @@ public class CreateProfessionalPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_create_professional_page);
-
+        findViewById(R.id.back_button).setOnClickListener(v -> {
+            finish();
+        });
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -83,6 +87,10 @@ public class CreateProfessionalPage extends AppCompatActivity {
             // SHOW TOAST (Optional)
             Toast.makeText(this, "Selected: " + selectedNames, Toast.LENGTH_LONG).show();
 
+            Intent intent = new Intent(this, OtpActivity.class);
+            startActivity(intent);
+
+
             // SEND TO NEXT ACTIVITY
 
             // OR → API CALL
@@ -113,7 +121,16 @@ public class CreateProfessionalPage extends AppCompatActivity {
             addCategory(selected);
             categorySearch.setText("");
             updateSearchVisibility();
+            checkChipVisibility();
         });
+    }
+    private void checkChipVisibility(){
+        if(!selectedCategories.isEmpty()){
+            selectedChipGroup.setVisibility(View.VISIBLE);
+        }
+        else{
+            selectedChipGroup.setVisibility(View.GONE);
+        }
     }
 
     // FIND CATEGORY BY NAME
@@ -148,6 +165,7 @@ public class CreateProfessionalPage extends AppCompatActivity {
             selectedChipGroup.removeView(chip);
             selectedCategories.remove(category);
             updateSearchVisibility();
+            checkChipVisibility();
         });
 
         selectedChipGroup.addView(chip);
@@ -163,6 +181,29 @@ public class CreateProfessionalPage extends AppCompatActivity {
             chip.setChipBackgroundColorResource(R.color.grey_1);
             chip.setTextColor(Color.BLACK);
 
+            // ----- 🔥 INCREASE CHIP WIDTH & HEIGHT -----
+            ChipGroup.LayoutParams params = new ChipGroup.LayoutParams(
+                    ChipGroup.LayoutParams.WRAP_CONTENT,     // width (increase here)
+                    ChipGroup.LayoutParams.WRAP_CONTENT
+            );
+
+//            params.setMargins(
+//                    (int) dpToPx(this,6),
+//                    (int) dpToPx(this,6),
+//                    (int) dpToPx(this,6),
+//                    (int) dpToPx(this,6));
+            chip.setLayoutParams(params);
+
+            chip.setChipMinHeight(dpToPx(this,40)); // height
+            chip.setPadding(
+                    (int) dpToPx(this,14),
+                    (int) dpToPx(this,10),
+                    (int) dpToPx(this,14),
+                    (int) dpToPx(this,10)
+            );
+
+            // ------------------------------------------
+
             chip.setOnClickListener(v -> {
                 if (isAlreadyAdded(c)) {
                     Toast.makeText(this, "Category already added", Toast.LENGTH_SHORT).show();
@@ -176,6 +217,7 @@ public class CreateProfessionalPage extends AppCompatActivity {
 
                 addCategory(c);
                 updateSearchVisibility();
+                checkChipVisibility();
             });
 
             popularChipGroup.addView(chip);

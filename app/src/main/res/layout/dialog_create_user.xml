@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/rounded_corners_top"
     android:paddingBottom="@dimen/_10sdp">
 
@@ -29,6 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
         android:background="@android:color/white"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topLine" />
@@ -37,8 +39,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_10sdp"
-        android:background="@drawable/white_border"
         android:orientation="vertical"
+        android:background="@drawable/white_border"
         android:padding="@dimen/_14sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,19 +74,24 @@
                 android:layout_weight="1"
                 android:text="First User"
                 android:textColor="#000000"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
             <!-- Blue Tick -->
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/blueTick1"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
+                android:layout_width="@dimen/_16sdp"
+                android:layout_height="@dimen/_16sdp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/blue_check" />
 
         </LinearLayout>
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/userRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_user_pages"/>
 
         <!-- Row 2 -->
         <LinearLayout
@@ -97,8 +104,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/userImg2"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/circle_background"
                 android:scaleType="centerCrop"
                 android:clipToOutline="true"
@@ -112,10 +119,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_weight="1"
-                android:text="Create new user"
+                android:text="Create new page"
                 android:textColor="#000000"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 

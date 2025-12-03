@@ -38,10 +38,15 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
-            android:name=".Activity.SettingUpYourPage"
+            android:name=".Activity.PageProfilePicture"
             android:exported="false"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".Activity.SettingUpYourPage"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.YourFriends"
             android:exported="false"
@@ -49,9 +54,9 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.CreateProfessionalPage"
+            android:exported="false"
             android:theme="@style/Appnew"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SentRequests"
             android:exported="false"
