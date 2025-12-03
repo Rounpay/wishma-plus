@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -33,6 +35,7 @@ import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.wishmaplus.image.picker.ImagePicker;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -96,7 +99,7 @@ public class PageProfilePicture extends AppCompatActivity {
         phone = getSafeString(intent.getStringExtra("phone"));
         address = getSafeString(intent.getStringExtra("address"));
         selectedIDs = getSafeString(intent.getStringExtra("selectedIDs"));
-        selectedNames = getSafeString(intent.getStringExtra("selectedNames"));
+        selectedNames = getSafeString(intent.getStringExtra("pageName"));
         tvName.setText(selectedNames);
     }
 
@@ -116,7 +119,7 @@ public class PageProfilePicture extends AppCompatActivity {
             if (imageUri == null) return;
 
             // Convert Uri → Permanent File
-            File selectedFile = getFileFromUri(imageUri);
+            File selectedFile = makeFileFromUri(imageUri);
 
             if (selectedFile == null || !selectedFile.exists()) {
                 Toast.makeText(this, "Image loading failed", Toast.LENGTH_SHORT).show();
@@ -137,34 +140,53 @@ public class PageProfilePicture extends AppCompatActivity {
     /* -----------------------------------------------------------
      *        Convert Uri → Permanent File (NO ENOENT EVER)
      * ----------------------------------------------------------- */
-    private File getFileFromUri(Uri uri) {
+    private File makeFileFromUri(Uri uri) {
         try {
-            File directory = new File(getFilesDir(), "images");
+            File directory = new File(
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                    "picked"
+            );
             if (!directory.exists()) directory.mkdirs();
 
-            String fileName = "IMG_" + System.currentTimeMillis() + ".jpg";
-            File file = new File(directory, fileName);
+            File outFile = new File(directory, "IMG_" + System.currentTimeMillis() + ".jpg");
+            // Try InputStream first
+            try (InputStream in = getContentResolver().openInputStream(uri)) {
+                if (in != null) {
+                    try (OutputStream out = new FileOutputStream(outFile)) {
+                        byte[] buffer = new byte[4096];
+                        int read;
+                        while ((read = in.read(buffer)) != -1) {
+                            out.write(buffer, 0, read);
+                        }
+                    }
+                    return outFile;
+                }
+            }
+            // Fallback for Camera URIs
+            ParcelFileDescriptor pfd = getContentResolver().openFileDescriptor(uri, "r");
+            if (pfd != null) {
+                try (FileInputStream fis = new FileInputStream(pfd.getFileDescriptor());
+                     FileOutputStream fos = new FileOutputStream(outFile)) {
 
-            try (InputStream input = getContentResolver().openInputStream(uri);
-                 OutputStream output = new FileOutputStream(file)) {
-
-                byte[] buffer = new byte[4096];
-                int bytesRead;
-
-                if (input != null) {
-                    while ((bytesRead = input.read(buffer)) != -1) {
-                        output.write(buffer, 0, bytesRead);
+                    byte[] buffer = new byte[4096];
+                    int length;
+                    while ((length = fis.read(buffer)) > 0) {
+                        fos.write(buffer, 0, length);
                     }
                 }
-
-                return file;
+                pfd.close();
+                return outFile;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
+
+        return null;
     }
+
+
+
     public void selectProfileImage() {
         isCoverPhoto = 0;
         checkPermissionAndOpenPicker();
@@ -332,6 +354,7 @@ public class PageProfilePicture extends AppCompatActivity {
                        startActivity(intent);
                        finish();
                     } else {
+
                         Toast.makeText(PageProfilePicture.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -340,6 +363,7 @@ public class PageProfilePicture extends AppCompatActivity {
                 public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
                     hideLoader();
                     Log.e("fdadafafa", "onFailureImage: "+t.getMessage() );
+                    Log.d("imageUploadError", "onResponse: "+t.getMessage());
                     Toast.makeText(PageProfilePicture.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });

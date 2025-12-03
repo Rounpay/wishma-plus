@@ -97,6 +97,7 @@ public class CreateProfessionalPage extends AppCompatActivity {
                             OtpActivity.class);
                     intent.putExtra("selectedIDs", selectedIDs);
                     intent.putExtra("selectedNames", selectedNames);
+                    intent.putExtra("pageName", pageName);
                     startActivity(intent);
                 }
 

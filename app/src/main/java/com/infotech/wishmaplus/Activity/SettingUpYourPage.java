@@ -17,7 +17,7 @@ import com.infotech.wishmaplus.R;
 public class SettingUpYourPage extends AppCompatActivity {
 
     AutoCompleteTextView etBio, etWebsite, etEmail, etPhone, etAddress;
-    String selectedNames,selectedIDs;
+    String selectedNames,selectedIDs,pageName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +32,7 @@ public class SettingUpYourPage extends AppCompatActivity {
         if (getIntent() != null) {
             selectedNames = getIntent().getStringExtra("selectedNames");
             selectedIDs = getIntent().getStringExtra("selectedIDs");
+            pageName = getIntent().getStringExtra("pageName");
         }
         findViewById(R.id.back_button).setOnClickListener(v -> finish());
         etBio = findViewById(R.id.etBio);
@@ -84,7 +85,7 @@ public class SettingUpYourPage extends AppCompatActivity {
         intent.putExtra("email", email);
         intent.putExtra("phone", phone);
         intent.putExtra("address", address);
-        intent.putExtra("selectedNames", selectedNames);
+        intent.putExtra("pageName", pageName);
         intent.putExtra("selectedIDs", selectedIDs);
         startActivity(intent);
     }
