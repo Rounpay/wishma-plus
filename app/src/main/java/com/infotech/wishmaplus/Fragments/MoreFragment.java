@@ -37,11 +37,18 @@ import com.infotech.wishmaplus.Activity.ProfessionalDashboardActivity;
 import com.infotech.wishmaplus.Activity.ProfileActivity;
 import com.infotech.wishmaplus.Activity.ReferralActivity;
 import com.infotech.wishmaplus.Activity.SettingsAndPrivacy;
+import com.infotech.wishmaplus.Activity.SwitchPages;
+import com.infotech.wishmaplus.Activity.YourFriends;
 import com.infotech.wishmaplus.Adapter.UserPagesAdapter;
+import com.infotech.wishmaplus.Adapter.UsersAdapter;
+import com.infotech.wishmaplus.Api.Response.PageData;
+import com.infotech.wishmaplus.Api.Response.PagesResponse;
+import com.infotech.wishmaplus.Api.Response.User;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserModelResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomAlertDialog;
+import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 import com.infotech.wishmaplus.Utils.Utility;
@@ -56,8 +63,13 @@ public class MoreFragment extends Fragment {
     private PreferencesManager tokenManager;
     private UserDetailResponse userDetailResponse;
     ImageView profileIcon;
+    private CustomLoader loader;
     TextView nameTv,currentPackage;
     ActivityResultLauncher<Intent> launcher;
+
+    List<PageData> list = new ArrayList<>();
+    RecyclerView userRecycler;
+    UserPagesAdapter adapter;
 
     public static BottomSheetDialog bottomSheetUser;
     @Override
@@ -82,10 +94,12 @@ public class MoreFragment extends Fragment {
                     }
                 }
         );
+        loader = new CustomLoader(requireActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         tokenManager = ((MainActivity)requireActivity()).tokenManager;
         if(tokenManager==null) {
             tokenManager = new PreferencesManager(requireActivity(),1);
         }
+        getPagesList();
 
         profileIcon = v.findViewById(R.id.profileIcon);
         nameTv = v.findViewById(R.id.nameTv);
@@ -147,6 +161,37 @@ public class MoreFragment extends Fragment {
 
         });
     }
+    private void getPagesList() {
+        loader.show();
+        UtilMethods.INSTANCE.getPagesResponse(requireActivity(), new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                list.clear();
+                PagesResponse pagesResponse = (PagesResponse) object;
+                if(!pagesResponse.getResult().isEmpty()){
+                    list.addAll(pagesResponse.getResult());
+//                    adapter.notifyDataSetChanged();
+                }
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
+    }
 
 
     private void signOut() {
@@ -189,9 +234,7 @@ public class MoreFragment extends Fragment {
                                           ActivityResultLauncher<Intent> launcher) {
 
 
-        RecyclerView userRecycler;
-        List<UserModelResponse> list;
-        UserPagesAdapter adapter;
+
         if (bottomSheetUser != null && bottomSheetUser.isShowing()) {
             return;
         }
@@ -204,12 +247,22 @@ public class MoreFragment extends Fragment {
         AppCompatImageView userImage = sheetView.findViewById(R.id.userImage);
         userRecycler = sheetView.findViewById(R.id.userRecycler);
 
-        list = new ArrayList<>();
-        list.add(new UserModelResponse("First User", R.drawable.user_icon, false));
-        list.add(new UserModelResponse("Second User", R.drawable.user_icon, false));
-        list.add(new UserModelResponse("Third User", R.drawable.user_icon, false));
+        adapter = new UserPagesAdapter(requireActivity(), list,new UserPagesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(PageData user, int pos) {
+                bottomSheetUser.dismiss();
+                Intent intent = new Intent(activity, SwitchPages.class);
+                intent.putExtra("imageUrl", user.getProfileImageUrl());
+                intent.putExtra("pageName", user.getPageName());
+                launcher.launch(intent);
 
-        adapter = new UserPagesAdapter(requireActivity(), list);
+            }
+
+            @Override
+            public void onMoreClicked(View anchor, PageData user, int pos) {
+
+            }
+        });
         userRecycler.setLayoutManager(new LinearLayoutManager(requireActivity()));
         userRecycler.setAdapter(adapter);
 

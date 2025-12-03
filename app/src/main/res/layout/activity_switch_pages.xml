@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/main"
+    android:layout_height="match_parent">
+
+    <!-- Main Rounded Card -->
+    <LinearLayout
+        android:id="@+id/mainCard"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="20dp"
+        android:background="@drawable/bg_round_white"/>
+
+    <!-- Profile Image -->
+    <ImageView
+        android:id="@+id/profileImage"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/user_icon"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:background="@drawable/circle_outline"
+        android:scaleType="centerCrop" />
+
+    <!-- Switching Text -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvSwitching"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switching to"
+        android:layout_below="@id/profileImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Name"
+        style="@style/TextAppearance.AppCompat.Title"
+        android:layout_below="@id/tvSwitching"
+        android:layout_centerHorizontal="true" />
+
+    <!-- Facebook Logo Bottom -->
+    <ImageView
+        android:id="@+id/imgFacebook"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/app_logo"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="70dp"/>
+
+</RelativeLayout>

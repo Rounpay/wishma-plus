@@ -38,10 +38,15 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
+            android:name=".Activity.SwitchPages"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".Activity.PageProfilePicture"
             android:exported="false"
             android:theme="@style/Appnew"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SettingUpYourPage"
             android:exported="false"
