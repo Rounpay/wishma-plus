@@ -78,6 +78,7 @@ public interface EndPointInterface {
             @Part("Caption") RequestBody caption,
             @Part("Height") RequestBody height,
             @Part("Width") RequestBody width,
+            @Part("PageId") RequestBody PageId,
             @Part("DurationInMs") RequestBody durationInMs,
             @Part MultipartBody.Part extraParam
     );

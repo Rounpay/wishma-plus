@@ -15,6 +15,7 @@ public class PageData {
     private String profileImageUrl;
     private String coverImageUrl;
     private String createdByUserId;
+    private boolean isProfile;
 
     public PageData(String pageId, String pageName, String categoryId, String bio, String website,
                     String email, String phone, String address, String profileImageUrl,
@@ -75,5 +76,13 @@ public class PageData {
 
     public String getCreatedByUserId() {
         return createdByUserId;
+    }
+
+    public boolean isProfile() {
+        return isProfile;
+    }
+
+    public void setProfile(boolean profile) {
+        isProfile = profile;
     }
 }

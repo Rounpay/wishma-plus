@@ -64,6 +64,7 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -87,6 +88,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
     private File selectedFile;
     private File captureFile;
     private boolean isDeleteFileAllow = false;
+    private boolean isProfile = false;
     private String postId,pageId;
     private PackageResult packageSetting;
     int postType = 1;  //1=> Post, 2=> Stroy, 3=> Reel
@@ -110,7 +112,13 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         userDetailResponse = getIntent().getParcelableExtra("userData");
         postId = getIntent().getStringExtra("postId");
-        pageId = getIntent().getStringExtra("pageId");
+        isProfile = getIntent().getBooleanExtra("isProfile",false);
+
+        if(getIntent().getStringExtra("pageId")!=null && !Objects.requireNonNull(getIntent().getStringExtra("pageId")).isEmpty()){
+            pageId = getIntent().getStringExtra("pageId");
+        }else{
+            pageId ="";
+        }
         postType = getIntent().getIntExtra("postType", 1);
         if (userDetailResponse == null) {
             userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
@@ -133,7 +141,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
         if (userDetailResponse != null) {
             setUserData();
         } else {
-           if(pageId!=null){
+           if(pageId!=null && !isProfile){
                UtilMethods.INSTANCE.getPageDetail(this,pageId, loader, tokenManager, object -> {
                    userDetailResponse = (UserDetailResponse) object;
                    setUserData();
@@ -645,6 +653,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
         loader.show();
         EndPointInterface service = ApiClient.getClient().create(EndPointInterface.class);
         RequestBody postIdPart = createPartFromString(postId);
+        RequestBody pageIdPart = createPartFromString(pageId);
         RequestBody typeIdPart = createPartFromString(String.valueOf(typeId));
         RequestBody contentPart = createPartFromString(content == null ? "" : content);
         RequestBody captionPart = createPartFromString(caption == null ? "" : caption);
@@ -737,6 +746,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
                     captionPart,
                     heightPart,
                     widthPart,
+                    pageIdPart,
                     durationPart,
                     extraParam
             );
@@ -757,7 +767,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
                                 file.delete();
                             }
                             isDeleteFileAllow = false;
-                            UtilMethods.INSTANCE.SuccessfulWithFinsh(PostActivity.this, false, basicResponse.getResponseText(), typeId);
+                            UtilMethods.INSTANCE.SuccessfulWithFinsh(PostActivity.this, false, basicResponse.getResponseText(), typeId,pageId);
                         } else {
                             UtilMethods.INSTANCE.Error(PostActivity.this, basicResponse.getResponseText());
                         }

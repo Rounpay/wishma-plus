@@ -46,12 +46,15 @@ public class VideoFragment extends Fragment {
     int pageNumber = 1;
     int totalPost = 0;
     private static final String ARG_PAGE_ID = "pageId";
+    private static final String ARG_PROFILE_TYPE = "isProfile";
     private String pageId;
+    private boolean isProfileType;
 
-    public static VideoFragment newInstance(String pageId) {
+    public static VideoFragment newInstance(String pageId, boolean isProfileType) {
         VideoFragment fragment = new VideoFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PAGE_ID, pageId);
+        args.putBoolean(ARG_PROFILE_TYPE, isProfileType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,11 +62,12 @@ public class VideoFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             pageId = getArguments().getString(ARG_PAGE_ID, "0");
-        } else {
-            pageId = "0";
+            isProfileType = getArguments().getBoolean(ARG_PROFILE_TYPE, false);
+            if(isProfileType){
+                pageId = ""
+            }
         }
     }
 
@@ -166,6 +170,8 @@ public class VideoFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), PostActivity.class);
                 intent.putExtra("userData", UtilMethods.INSTANCE.getUserDetailResponse(tokenManager));
                 intent.putExtra("postId", postId);
+                intent.putExtra("pageId", pageId);
+                intent.putExtra("isProfileType", isProfileType);
                 intent.putExtra("postType", 1);
                 postActivityResultLauncher.launch(intent);
 

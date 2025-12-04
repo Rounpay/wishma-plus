@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public PreferencesManager tokenManager;
     String pageId = null;
     String finalPageId = null;
+    private boolean isProfileType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
             pageId = getIntent().getStringExtra("pageId");
         }
         String savedPageId = tokenManager.getString("ACTIVE_PAGE_ID");
+        isProfileType = tokenManager.getBooleanNonRemoval("PROFILE_TYPE");
         if (pageId != null && !pageId.isEmpty()) {
             finalPageId = pageId;
             tokenManager.set("ACTIVE_PAGE_ID", pageId);
@@ -115,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
             handleNotificationIntent(getIntent());
         }, 500);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId), "Home").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId,isProfileType), "Home").commit();
 
         selectedLine = homeLine;
         homeTab.setOnClickListener(view -> {
@@ -123,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 homeLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = homeLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId), "Home").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId,isProfileType), "Home").commit();
             }
         });
 
@@ -132,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 videoLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = videoLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, VideoFragment.newInstance(finalPageId), "Video").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, VideoFragment.newInstance(finalPageId,isProfileType), "Video").commit();
             }
         });
 
@@ -159,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 menuLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = menuLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, MoreFragment.newInstance(finalPageId)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, MoreFragment.newInstance(finalPageId,isProfileType)).commit();
             }
         });
 
@@ -406,6 +408,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("userData", UtilMethods.INSTANCE.getUserDetailResponse(tokenManager));
             intent.putExtra("postId", "0");
             intent.putExtra("postType", 1);
+            intent.putExtra("pageId", pageId);
             postActivityResultLauncher.launch(intent);
         });
         addStory.setOnClickListener(v -> {
@@ -415,7 +418,9 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("userData", UtilMethods.INSTANCE.getUserDetailResponse(tokenManager));
             intent.putExtra("postId", "0");
             intent.putExtra("postType", 2);
+            intent.putExtra("pageId", pageId);
             intent.putExtra("pageId", finalPageId);
+            intent.putExtra("isProfileType", isProfileType);
             storyActivityResultLauncher.launch(intent);
         });
 
@@ -431,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 homeLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = homeLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId,isProfileType)).commit();
             }
             getSupportFragmentManager().popBackStack();
         } else {

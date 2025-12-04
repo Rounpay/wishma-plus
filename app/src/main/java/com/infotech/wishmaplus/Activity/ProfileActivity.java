@@ -44,7 +44,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -60,7 +59,6 @@ import com.infotech.wishmaplus.Api.Response.SignUpResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.ApiClient;
-import com.infotech.wishmaplus.Utils.ApplicationConstant;
 import com.infotech.wishmaplus.Utils.CustomAlertDialog;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.EndPointInterface;
@@ -104,10 +102,12 @@ public class ProfileActivity extends AppCompatActivity {
     private Snackbar mSnackBar;
     int isCoverPhoto;
 
-    View  profileView;
+    View profileView;
 
     String userId = "0";
     String pageId = null;
+    boolean isProfile = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,6 +122,10 @@ public class ProfileActivity extends AppCompatActivity {
         userDetailResponse = getIntent().getParcelableExtra("userData");
         if (getIntent() != null) {
             pageId = getIntent().getStringExtra("pageId");
+            isProfile = getIntent().getBooleanExtra("isProfile", false);
+        }
+        if (isProfile) {
+            pageId = "";
         }
         if (userDetailResponse == null) {
             userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
@@ -132,11 +136,11 @@ public class ProfileActivity extends AppCompatActivity {
         logout = findViewById(R.id.logout);
         moreBtn = findViewById(R.id.moreBTn);
         balance = findViewById(R.id.balance);
-        moreBtn.setOnClickListener(view ->{
-            showPopupMenu(view,this);
+        moreBtn.setOnClickListener(view -> {
+            showPopupMenu(view, this);
         });
-        if(getIntent().getStringExtra("id")!=null &&
-                !Objects.equals(getIntent().getStringExtra("id"), "0")){
+        if (getIntent().getStringExtra("id") != null &&
+                !Objects.equals(getIntent().getStringExtra("id"), "0")) {
             userId = getIntent().getStringExtra("id");
             balance.setVisibility(View.GONE);
             logout.setVisibility(View.GONE);
@@ -263,7 +267,8 @@ public class ProfileActivity extends AppCompatActivity {
         getBalance();
 
     }
-    private void showPopupMenu(View view,Context context) {
+
+    private void showPopupMenu(View view, Context context) {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View popupView = inflater.inflate(R.layout.dailog_action_button_pop_up, null);
@@ -302,10 +307,10 @@ public class ProfileActivity extends AppCompatActivity {
         TextView friendUnfriend = dialog.findViewById(R.id.friendUnfriend);
         TextView takeABreak = dialog.findViewById(R.id.takeABreak);
 
-        txtTitle.setText("Are you sure you want to block "+userDetailResponse.getFisrtName()+" "+userDetailResponse.getLastName()+"?");
-        txtDesc.setText(userDetailResponse.getFisrtName()+" "+userDetailResponse.getLastName()+" will no longer be able to:");
-        friendUnfriend.setText("If you're friends, blocking "+userDetailResponse.getFisrtName()+" "+userDetailResponse.getLastName()+" will also unfriend him/her.");
-        takeABreak.setText("If you just want to limit what you share with "+userDetailResponse.getFisrtName()+" or see less of him, you can take a break instead. ");
+        txtTitle.setText("Are you sure you want to block " + userDetailResponse.getFisrtName() + " " + userDetailResponse.getLastName() + "?");
+        txtDesc.setText(userDetailResponse.getFisrtName() + " " + userDetailResponse.getLastName() + " will no longer be able to:");
+        friendUnfriend.setText("If you're friends, blocking " + userDetailResponse.getFisrtName() + " " + userDetailResponse.getLastName() + " will also unfriend him/her.");
+        takeABreak.setText("If you just want to limit what you share with " + userDetailResponse.getFisrtName() + " or see less of him, you can take a break instead. ");
 
         dialog.setOnDismissListener(dialogInterface -> removeBlur(rootView));
         btnCancel.setOnClickListener(v -> dialog.dismiss());
@@ -317,19 +322,22 @@ public class ProfileActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
     private void blurBackground(View rootView) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             RenderEffect blurEffect = RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.CLAMP);
             rootView.setRenderEffect(blurEffect);
         }
     }
+
     private void removeBlur(View rootView) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             rootView.setRenderEffect(null);
         }
     }
+
     private void setAdapter() {
-        adapter = new MultiContentAdapter(userId,contentList, selfRecyclerView, tokenManager, this, new MultiContentAdapter.ClickCallBack() {
+        adapter = new MultiContentAdapter(userId, contentList, selfRecyclerView, tokenManager, this, new MultiContentAdapter.ClickCallBack() {
             @Override
             public void onClickCreatePost(String postId) {
 
@@ -552,31 +560,34 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void getUserDetail() {
         loader.show();
-       if(pageId!=null){
-           UtilMethods.INSTANCE.getPageDetail(this, pageId, loader, tokenManager, object -> {
-               if (loader != null) {
-                   if (loader.isShowing()) {
-                       loader.dismiss();
-                   }
-               }
-               profileView.setVisibility(VISIBLE);
-               userDetailResponse = (UserDetailResponse) object;
-               contentList.set(0, new ContentResult(0, userDetailResponse, null));
-               adapter.notifyItemChanged(0);
-           });
-       }else{
-           UtilMethods.INSTANCE.userDetail(this, userId, loader, tokenManager, object -> {
-               if (loader != null) {
-                   if (loader.isShowing()) {
-                       loader.dismiss();
-                   }
-               }
-               profileView.setVisibility(VISIBLE);
-               userDetailResponse = (UserDetailResponse) object;
-               contentList.set(0, new ContentResult(0, userDetailResponse, null));
-               adapter.notifyItemChanged(0);
-           });
-       }
+        if (pageId != null && !isProfile) {
+            UtilMethods.INSTANCE.getPageDetail(this, pageId, loader, tokenManager, object -> {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                profileView.setVisibility(VISIBLE);
+                userDetailResponse = (UserDetailResponse) object;
+                contentList.set(0, new ContentResult(0, userDetailResponse, null));
+                adapter.notifyItemChanged(0);
+            });
+        } else {
+            String finalId = (userId != null && !userId.isEmpty())
+                    ? userId
+                    : pageId;
+            UtilMethods.INSTANCE.userDetail(this, finalId, loader, tokenManager, object -> {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                profileView.setVisibility(VISIBLE);
+                userDetailResponse = (UserDetailResponse) object;
+                contentList.set(0, new ContentResult(0, userDetailResponse, null));
+                adapter.notifyItemChanged(0);
+            });
+        }
     }
 
     ActivityResultLauncher<Intent> updateUserResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -747,7 +758,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void showContent(boolean isFromRefresh) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "",userId, pageNumber, 20, true, pageId,buttonContentTypeId);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", userId, pageNumber, 20, true, pageId, buttonContentTypeId);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {

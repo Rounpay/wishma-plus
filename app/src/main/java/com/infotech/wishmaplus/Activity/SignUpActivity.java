@@ -322,7 +322,7 @@ public class SignUpActivity extends AppCompatActivity {
                             if (signUpResponse != null) {
                                 if (signUpResponse.getStatusCode() == 1) {
                                     tokenManager.setNonRemoval(ApplicationConstant.INSTANCE.UserReferralPref, "");
-                                    UtilMethods.INSTANCE.SuccessfulWithFinsh(context, true, signUpResponse.getResponseText(), 0);
+                                    UtilMethods.INSTANCE.SuccessfulWithFinsh(context, true, signUpResponse.getResponseText(), 0, "0");
                                 } else {
                                     UtilMethods.INSTANCE.Error(context, signUpResponse.getResponseText());
                                 }
