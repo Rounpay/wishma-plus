@@ -190,7 +190,7 @@ public class CustomAlertDialog {
         }
     }
 
-    public void SuccessfulWithFinsh(boolean isCancelable,final String message,int typeId) {
+    public void SuccessfulWithFinsh(boolean isCancelable, final String message, int typeId, String pageId) {
         if (isScreenOpen) {
             try {
                 alertDialog.changeAlertType(SUCCESS_TYPE);
@@ -201,6 +201,7 @@ public class CustomAlertDialog {
                     alertDialog.dismiss();
                     Intent intent =new Intent();
                     intent.putExtra("Type",typeId);
+                    intent.putExtra("pageId",pageId);
                     context.setResult(Activity.RESULT_OK,intent);
                     context.finish();
                 });
@@ -626,6 +627,7 @@ public class CustomAlertDialog {
                 alertDialog.setConfirmButton("Logout", sweetAlertDialog -> {
                     alertDialog.dismiss();
                     tokenManager.clear();
+                    tokenManager.clearNonRemoval();
                     Intent intent = new Intent(activity, LoginActivity.class);
                     activity.startActivity(intent);
                     activity.finishAffinity();

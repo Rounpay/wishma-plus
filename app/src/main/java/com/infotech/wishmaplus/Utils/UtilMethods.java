@@ -112,9 +112,9 @@ public enum UtilMethods {
         return gson;
     }
 
-    public void SuccessfulWithFinsh(final Activity context, boolean isCancelable, final String message, int typeId) {
+    public void SuccessfulWithFinsh(final Activity context, boolean isCancelable, final String message, int typeId, String pageId) {
         CustomAlertDialog customAlertDialog = new CustomAlertDialog(context, true);
-        customAlertDialog.SuccessfulWithFinsh(isCancelable, message, typeId);
+        customAlertDialog.SuccessfulWithFinsh(isCancelable, message, typeId,pageId);
     }
 
     public void SuccessfulWithDismiss(final Activity context, final String message) {

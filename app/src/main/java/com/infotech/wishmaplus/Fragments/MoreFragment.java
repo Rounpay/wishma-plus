@@ -68,15 +68,18 @@ public class MoreFragment extends Fragment {
     RecyclerView userRecycler;
     UserPagesAdapter adapter;
     private static final String ARG_PAGE_ID = "pageId";
+    private static final String ARG_PROFILE_TYPE = "isProfileType";
     private String pageId;
+    private boolean isProfileType;
     public static BottomSheetDialog bottomSheetUser;
 
     View referralView;
 
-    public static MoreFragment newInstance(String pageId) {
+    public static MoreFragment newInstance(String pageId, boolean isProfileType) {
         MoreFragment fragment = new MoreFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PAGE_ID, pageId);
+        args.putBoolean(ARG_PROFILE_TYPE, isProfileType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -86,6 +89,7 @@ public class MoreFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             pageId = getArguments().getString(ARG_PAGE_ID, "0");
+            isProfileType = getArguments().getBoolean(ARG_PROFILE_TYPE, false);
         } else {
             pageId = "0";
         }
@@ -175,12 +179,12 @@ public class MoreFragment extends Fragment {
     }
 
     private void getUserDetail() {
-        if (pageId != null) {
+        if (pageId != null && !isProfileType) {
             UtilMethods.INSTANCE.getPageDetail(requireActivity(), pageId, null, tokenManager, object -> {
                 userDetailResponse = (UserDetailResponse) object;
                 setUserData();
             });
-        } else {
+        } else{
             UtilMethods.INSTANCE.userDetail(requireActivity(), "0", null, tokenManager, object -> {
                 userDetailResponse = (UserDetailResponse) object;
                 setUserData();
@@ -291,6 +295,7 @@ public class MoreFragment extends Fragment {
                 intent.putExtra("imageUrl", user.getProfileImageUrl());
                 intent.putExtra("pageName", user.getPageName());
                 intent.putExtra("pageId", user.getPageId());
+                intent.putExtra("isProfile", user.isProfile());
                 launcher.launch(intent);
 
             }

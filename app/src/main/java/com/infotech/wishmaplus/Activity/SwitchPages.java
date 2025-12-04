@@ -39,7 +39,10 @@ public class SwitchPages extends AppCompatActivity {
         String imageUrl = getIntent().getStringExtra("imageUrl");
         String name = getIntent().getStringExtra("pageName");
         String pageId = getIntent().getStringExtra("pageId");
+        boolean isProfile = getIntent().getBooleanExtra("isProfile",false);
         tokenManager.set("ACTIVE_PAGE_ID", pageId);
+        tokenManager.setNonRemoval("PROFILE_TYPE", isProfile);
+
         pageName.setText(name);
         Glide.with(this)
                 .load(imageUrl)
@@ -48,6 +51,7 @@ public class SwitchPages extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             Intent intent = new Intent(SwitchPages.this, MainActivity.class);
             intent.putExtra("pageId",pageId);
+            intent.putExtra("isProfile",isProfile);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();

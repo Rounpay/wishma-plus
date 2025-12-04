@@ -48,7 +48,9 @@ import retrofit2.Response;
 public class HomeFragment extends Fragment {
 
     private static final String ARG_PAGE_ID = "pageId";
-    private String pageId;
+    private static final String ARG_PAGE_TYPE = "isProfileType";
+    private String pageId = "";
+    private boolean isProfile;
     CustomRecyclerView recyclerView;
     private PreferencesManager tokenManager;
 
@@ -64,10 +66,11 @@ public class HomeFragment extends Fragment {
     public boolean isScreenPause;
     ArrayList<StoryResult> storyList = new ArrayList<>();
 
-    public static HomeFragment newInstance(String pageId) {
+    public static HomeFragment newInstance(String pageId, boolean isProfileType) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PAGE_ID, pageId);
+        args.putBoolean(ARG_PAGE_TYPE, isProfileType);
         fragment.setArguments(args);
         return fragment;
     }
@@ -77,6 +80,10 @@ public class HomeFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             pageId = getArguments().getString(ARG_PAGE_ID);
+            isProfile = getArguments().getBoolean(ARG_PAGE_TYPE, false);
+            if (isProfile) {
+                pageId = "";
+            }
         }
     }
 
@@ -97,7 +104,7 @@ public class HomeFragment extends Fragment {
         pullToRefresh.setOnRefreshListener(() -> {
             refresh();
             getStory(true);
-            getUserDetail();
+            getUserDetail(pageId, isProfile);
             ((MainActivity) requireActivity()).getBalance();
             pullToRefresh.setRefreshing(false);
         });
@@ -175,7 +182,7 @@ public class HomeFragment extends Fragment {
         loader.show();
         showContent(false);
         getStory(false);
-        getUserDetail();
+        getUserDetail(pageId, isProfile);
 
 
        /* fab.setOnClickListener(v1 -> {
@@ -198,6 +205,8 @@ public class HomeFragment extends Fragment {
                 Intent intent = new Intent(requireActivity(), PostActivity.class);
                 intent.putExtra("userData", userDetailResponse);
                 intent.putExtra("postId", postId);
+                intent.putExtra("pageId", pageId);
+                intent.putExtra("isProfile", isProfile);
                 intent.putExtra("postType", 1);
                 postActivityResultLauncher.launch(intent);
 
@@ -208,6 +217,8 @@ public class HomeFragment extends Fragment {
                 Intent intent = new Intent(requireActivity(), PostActivity.class);
                 intent.putExtra("userData", userDetailResponse);
                 intent.putExtra("postId", storyId);
+                intent.putExtra("pageId", pageId);
+                intent.putExtra("isProfile", isProfile);
                 intent.putExtra("postType", 2);
                 storyActivityResultLauncher.launch(intent);
             }
@@ -217,6 +228,7 @@ public class HomeFragment extends Fragment {
                 profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)
                         .putExtra("userData", userDetailResponse)
                         .putExtra("pageId", pageId)
+                        .putExtra("isProfile", isProfile)
                 );
             }
 
@@ -241,8 +253,8 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void getUserDetail() {
-        if (pageId != null) {
+    private void getUserDetail(String pageId, boolean isProfile) {
+        if (pageId != null && !isProfile) {
             UtilMethods.INSTANCE.getPageDetail(requireActivity(), pageId, loader, tokenManager, object -> {
                 userDetailResponse = (UserDetailResponse) object;
                 contentlist.set(0, new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
@@ -251,10 +263,9 @@ public class HomeFragment extends Fragment {
 
             });
         } else {
-            UtilMethods.INSTANCE.userDetail(requireActivity(), "0", loader, tokenManager, object -> {
+            UtilMethods.INSTANCE.userDetail(requireActivity(), pageId, loader, tokenManager, object -> {
                 userDetailResponse = (UserDetailResponse) object;
                 contentlist.set(0, new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
-
                 adapter.notifyItemChanged(0);
 
             });
@@ -614,7 +625,7 @@ public class HomeFragment extends Fragment {
                     int refreshType = result.getData().getIntExtra("RefreshType", 0);
                     if (refreshType == 1) {
                         //UserDetails
-                        getUserDetail();
+                        getUserDetail(pageId, isProfile);
                     } else if (refreshType == 2) {
                         //Story
                         refreshStory();
@@ -648,7 +659,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onResume() {
-        getUserDetail();
+        getUserDetail(pageId, isProfile);
         recyclerView.playVideo();
         super.onResume();
     }

@@ -28,6 +28,7 @@ public class PreferencesManager {
             generalNonRemovalPreferences = context.getSharedPreferences(PREF_NAME_NON_REMOVAL, Context.MODE_PRIVATE);
         }else {
             generalPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+            generalNonRemovalPreferences = context.getSharedPreferences(PREF_NAME_NON_REMOVAL, Context.MODE_PRIVATE);
         }
     }
 
