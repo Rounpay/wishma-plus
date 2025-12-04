@@ -6,6 +6,7 @@ public class PageData {
 
     private String pageId;
     private String pageName;
+    private Boolean isProfile;
     private String categoryId;
     private String bio;
     private String website;
@@ -16,12 +17,13 @@ public class PageData {
     private String coverImageUrl;
     private String createdByUserId;
 
-    public PageData(String pageId, String pageName, String categoryId, String bio, String website,
+    public PageData(String pageId, String pageName,Boolean isProfile, String categoryId, String bio, String website,
                     String email, String phone, String address, String profileImageUrl,
                     String coverImageUrl, String createdByUserId) {
 
         this.pageId = pageId;
         this.pageName = pageName;
+        this.isProfile = isProfile;
         this.categoryId = categoryId;
         this.bio = bio;
         this.website = website;
@@ -39,6 +41,9 @@ public class PageData {
 
     public String getPageName() {
         return pageName;
+    }
+    public Boolean getIsProfile() {
+        return isProfile;
     }
 
     public String getCategoryId() {

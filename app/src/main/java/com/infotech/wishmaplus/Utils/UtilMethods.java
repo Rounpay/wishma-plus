@@ -693,12 +693,12 @@ public enum UtilMethods {
         }
     }
 
-    public void deleteAccountRequest(Activity activity, ApiCallBackMulti apiCallBack) {
+    public void deleteAccountRequest(Activity activity, ApiCallBackMulti apiCallBack,int AccountType,String AccountId ) {
 
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
 
-            Call<DeleteAccountResponse> call = git.deleteAccount("Bearer " + tokenManager.getAccessToken());
+            Call<DeleteAccountResponse> call = git.deleteAccount("Bearer " + tokenManager.getAccessToken(),AccountType,AccountId);
 
             call.enqueue(new Callback<DeleteAccountResponse>() {
                 @Override

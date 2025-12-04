@@ -16,6 +16,8 @@ import com.infotech.wishmaplus.R;
 
 public class DeactivateOrDeleteAccount extends AppCompatActivity {
     Boolean isDelete = false;
+    String pageId;
+    boolean accountType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,8 @@ public class DeactivateOrDeleteAccount extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        pageId = getIntent().getStringExtra("pageId");
+        accountType = getIntent().getBooleanExtra("accountType", false);
         View card = findViewById(R.id.btnContinue);
         View rbDelete = findViewById(R.id.rbDelete);
 
@@ -44,7 +48,11 @@ public class DeactivateOrDeleteAccount extends AppCompatActivity {
 
         findViewById(R.id.back_button).setOnClickListener(view -> finish());
         findViewById(R.id.btnContinue).setOnClickListener(view -> {
-            startActivity(new Intent(this, DeleteAccountReasonActivity.class));
+//            startActivity(new Intent(this, DeleteAccountReasonActivity.class));
+            Intent intent = new Intent(DeactivateOrDeleteAccount.this, DeleteAccountReasonActivity.class);
+            intent.putExtra("pageId", pageId);
+            intent.putExtra("accountType", accountType);
+            startActivity(intent);
         });
         findViewById(R.id.btnCancel).setOnClickListener(view -> finish());
         RadioGroup radioGroup = findViewById(R.id.radioGroup);

@@ -234,7 +234,12 @@ public class MoreFragment extends Fragment {
     }
 
     private void setUserData() {
-        nameTv.setText(userDetailResponse.getFisrtName() + " " + userDetailResponse.getLastName());
+        if(userDetailResponse.getLastName()==null){
+            nameTv.setText(userDetailResponse.getFisrtName() );
+        }
+        else{
+            nameTv.setText(userDetailResponse.getFisrtName() + " " + userDetailResponse.getLastName());
+        }
         if (userDetailResponse.getPackageDetail() != null) {
             currentPackage.setText(" " + userDetailResponse.getPackageDetail().getPackageName() + " (" + Utility.INSTANCE.formattedAmountWithRupees(userDetailResponse.getPackageDetail().getPackageCost()) + ")");
         }
@@ -271,6 +276,8 @@ public class MoreFragment extends Fragment {
         Objects.requireNonNull(bottomSheetUser.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View sheetView = inflater.inflate(R.layout.dialog_create_user, null);
+        PreferencesManager tokenManager = new PreferencesManager(activity, 1);
+        String pageNumber=tokenManager.getString("ACTIVE_PAGE_ID");
         LinearLayout createUser = sheetView.findViewById(R.id.createUser);
         AppCompatTextView userName = sheetView.findViewById(R.id.userName);
         AppCompatImageView userImage = sheetView.findViewById(R.id.userImage);
@@ -292,7 +299,7 @@ public class MoreFragment extends Fragment {
             public void onMoreClicked(View anchor, PageData user, int pos) {
 
             }
-        });
+        },pageNumber);
         userRecycler.setLayoutManager(new LinearLayoutManager(requireActivity()));
         userRecycler.setAdapter(adapter);
 

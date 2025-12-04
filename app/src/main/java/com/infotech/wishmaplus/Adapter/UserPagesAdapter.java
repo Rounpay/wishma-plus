@@ -25,16 +25,18 @@ public class UserPagesAdapter extends RecyclerView.Adapter<UserPagesAdapter.View
     List<PageData> list;
 
     private final OnItemClickListener listener;
+    String pageNumber;
 
     public interface OnItemClickListener {
         void onItemClick(PageData user, int pos);
         void onMoreClicked(View anchor, PageData user, int pos);
     }
 
-    public UserPagesAdapter(Context context, List<PageData> list, OnItemClickListener listener) {
+    public UserPagesAdapter(Context context, List<PageData> list, OnItemClickListener listener,String pageNumber) {
         this.context = context;
         this.list = list;
         this.listener = listener;
+        this.pageNumber = pageNumber;
     }
 
     @NonNull
@@ -58,11 +60,20 @@ public class UserPagesAdapter extends RecyclerView.Adapter<UserPagesAdapter.View
             if (listener != null) listener.onItemClick(model, holder.getAdapterPosition());
         });
         // Show blue tick only if verified
-        if (false) {
+        if(pageNumber.isEmpty() && position==0){
             holder.blueTick.setVisibility(View.VISIBLE);
-        } else {
+        }
+        else if((!pageNumber.isEmpty()) && model.getPageId().equals(pageNumber)) {
+            holder.blueTick.setVisibility(View.VISIBLE);
+        }
+        else{
             holder.blueTick.setVisibility(View.GONE);
         }
+//        if (false) {
+//            holder.blueTick.setVisibility(View.VISIBLE);
+//        } else {
+//            holder.blueTick.setVisibility(View.GONE);
+//        }
     }
 
     @Override

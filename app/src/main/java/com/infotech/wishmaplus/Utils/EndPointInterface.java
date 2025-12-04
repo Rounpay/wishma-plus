@@ -237,7 +237,9 @@ public interface EndPointInterface {
     Call<PagesResponse> getPagesResponse(@Header("Authorization") String authorization);
 
     @POST("api/UserProfile/DeleteAccount")
-    Call<DeleteAccountResponse> deleteAccount(@Header("Authorization") String authorization);
+    Call<DeleteAccountResponse> deleteAccount(@Header("Authorization") String authorization,
+                                              @Query("AccountType") int AccountType,
+                                              @Query("AccountId") String AccountId);
 
     @POST("api/UserProfile/SetProfileType")
     Call<BasicResponse> setProfileType(@Header("Authorization") String authorization,

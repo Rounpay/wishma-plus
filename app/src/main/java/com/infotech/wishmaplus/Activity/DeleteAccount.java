@@ -11,20 +11,32 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.infotech.wishmaplus.Adapter.UserPagesAdapter;
+import com.infotech.wishmaplus.Adapter.UserProfilesAdapter;
+import com.infotech.wishmaplus.Api.Response.PageData;
+import com.infotech.wishmaplus.Api.Response.PagesResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 import com.infotech.wishmaplus.Utils.Utility;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DeleteAccount extends AppCompatActivity {
     private PreferencesManager tokenManager;
-    private UserDetailResponse userDetailResponse;
+    List<PageData> list = new ArrayList<>();
+    UserProfilesAdapter adapter;
+    RecyclerView rvProfiles;
 
-    ImageView profileIcon;
-    TextView tvName;
+    private CustomLoader loader;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,28 +48,60 @@ public class DeleteAccount extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        tvName = findViewById(R.id.tvName);
-        profileIcon = findViewById(R.id.imgProfile1);
+        rvProfiles = findViewById(R.id.rvProfiles);
+        loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
         tokenManager = new PreferencesManager(this,1);
-        getUserDetail();
+        setRecyclerView();
+        getPagesList();
+
         findViewById(R.id.back_button).setOnClickListener(view -> finish());
-        findViewById(R.id.cardAccount1).setOnClickListener(view -> {
-            startActivity(new Intent(this, DeactivateOrDeleteAccount.class));
+//        findViewById(R.id.cardAccount1).setOnClickListener(view -> {
+//            startActivity(new Intent(this, DeactivateOrDeleteAccount.class));
+//        });
+    }
+    private void getPagesList() {
+        loader.show();
+
+        UtilMethods.INSTANCE.getPagesResponse(this, new UtilMethods.ApiCallBackMulti() {
+
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null && loader.isShowing()) loader.dismiss();
+
+                list.clear();
+                PagesResponse pagesResponse = (PagesResponse) object;
+
+                if (!pagesResponse.getResult().isEmpty()) {
+                    list.addAll(pagesResponse.getResult());
+                    adapter.notifyDataSetChanged();  // <-- adapter already initialized
+                }
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null && loader.isShowing()) loader.dismiss();
+            }
         });
     }
-    private void getUserDetail() {
-        UtilMethods.INSTANCE.userDetail(this,"0", null, tokenManager, object -> {
-            userDetailResponse = (UserDetailResponse) object;
-            setUserData();
+    private void setRecyclerView(){
+        adapter = new UserProfilesAdapter(this,list,new UserProfilesAdapter.OnItemClickListener(){
 
+
+            @Override
+            public void onItemClick(PageData user, int pos) {
+                Intent intent = new Intent(DeleteAccount.this, DeactivateOrDeleteAccount.class);
+                intent.putExtra("pageId", user.getPageId());
+                intent.putExtra("accountType", user.getIsProfile());
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void onMoreClicked(View anchor, PageData user, int pos) {
+
+            }
         });
-    }
-    private void setUserData() {
-        tvName.setText(userDetailResponse.getFisrtName()+" "+userDetailResponse.getLastName());
-
-        Glide.with(this)
-                .load(userDetailResponse.getProfilePictureUrl())
-                .apply(UtilMethods.INSTANCE.getRequestOption_With_UserIcon())
-                .into(profileIcon);
+        rvProfiles.setLayoutManager(new LinearLayoutManager(this));
+        rvProfiles.setAdapter(adapter);
     }
 }

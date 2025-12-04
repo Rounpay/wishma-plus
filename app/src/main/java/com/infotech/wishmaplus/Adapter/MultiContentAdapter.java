@@ -292,7 +292,13 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 Glide.with(context).load(content.getUserDetail().getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile);
 
                 Glide.with(context).load(content.getUserDetail().getCoverPictureUrl()).apply(requestOptionsCoverImage).into(cover_photo);
-                user_name.setText(content.getUserDetail().getFisrtName() + " " + content.getUserDetail().getLastName());
+                if(content.getUserDetail().getLastName()==null){
+                    user_name.setText(content.getUserDetail().getFisrtName());
+                }
+                else{
+                    user_name.setText(content.getUserDetail().getFisrtName() + " " + content.getUserDetail().getLastName());
+
+                }
 
 
                 // FOLLOWERS
@@ -501,6 +507,10 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 // friendUnfriend.setVisibility(VISIBLE);
                 addFriend.setVisibility(VISIBLE);
 
+            }
+            if(content.getUserDetail().getUserId().equals(userId))
+            {
+                addFriend.setVisibility(GONE);
             }
             edit_public_details.setOnClickListener(view -> {
                 if (context instanceof ProfileActivity) {

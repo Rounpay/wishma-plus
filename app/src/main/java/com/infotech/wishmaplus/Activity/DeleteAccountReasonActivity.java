@@ -43,6 +43,8 @@ public class DeleteAccountReasonActivity extends AppCompatActivity {
     private CustomLoader loader;
     private PreferencesManager tokenManager;
     DeleteAccountResponse deleteAccountResponse = new DeleteAccountResponse();
+    String pageId;
+    boolean accountType;
 
 
 
@@ -56,6 +58,8 @@ public class DeleteAccountReasonActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        pageId = getIntent().getStringExtra("pageId");
+        accountType = getIntent().getBooleanExtra("accountType", false);
         tokenManager = new PreferencesManager(this,1);
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
         radioGroup = findViewById(R.id.radioGroup);
@@ -125,10 +129,20 @@ public class DeleteAccountReasonActivity extends AppCompatActivity {
                         loader.dismiss();
                     }
                     Toast.makeText(DeleteAccountReasonActivity.this, deleteAccountResponse.getResponseText(), Toast.LENGTH_SHORT).show();
-                    tokenManager.clear();
-                    Intent intent = new Intent(DeleteAccountReasonActivity.this, LoginActivity.class);
-                    startActivity(intent);
-                    finishAffinity();
+                    if(accountType) {
+                        tokenManager.clear();
+                        Intent intent = new Intent(DeleteAccountReasonActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finishAffinity();
+                    }
+                    else{
+                        PreferencesManager tokenManager = new PreferencesManager(DeleteAccountReasonActivity.this, 1);
+                        tokenManager.set("ACTIVE_PAGE_ID", "");
+                        Intent intent = new Intent(DeleteAccountReasonActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
 
                 }
             }
@@ -140,7 +154,7 @@ public class DeleteAccountReasonActivity extends AppCompatActivity {
                 }
                 Toast.makeText(DeleteAccountReasonActivity.this, "Error: " + msg, Toast.LENGTH_SHORT).show();
             }
-        });
+        },accountType?1:2,pageId);
     }
 
 
