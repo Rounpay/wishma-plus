@@ -58,6 +58,7 @@ import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
+import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
@@ -628,6 +629,34 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void deleteAccountRequest(Activity activity, ApiCallBackMulti apiCallBack) {
+
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+
+            Call<DeleteAccountResponse> call = git.deleteAccount("Bearer " + tokenManager.getAccessToken());
+
+            call.enqueue(new Callback<DeleteAccountResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<DeleteAccountResponse> call, @NonNull Response<DeleteAccountResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<DeleteAccountResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });

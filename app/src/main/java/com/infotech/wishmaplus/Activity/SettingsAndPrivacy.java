@@ -22,6 +22,9 @@ public class SettingsAndPrivacy extends AppCompatActivity {
         findViewById(R.id.blockingButton).setOnClickListener(view -> {
             startActivity(new Intent(this, BlockedUser.class));
         });
+        findViewById(R.id.deleteButton).setOnClickListener(view -> {
+            startActivity(new Intent(this, DeleteAccount.class));
+        });
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

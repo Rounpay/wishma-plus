@@ -71,6 +71,7 @@
                     android:padding="8dp">
 
                     <LinearLayout
+                        android:id="@+id/rowOne"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
@@ -85,10 +86,12 @@
                             android:textSize="16sp"/>
 
                         <RadioButton
-                            android:id="@+id/ebOne"
+                            android:id="@+id/rbOne"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="0dp"
+                            android:enabled="false"
+                            android:clickable="false"
                             android:layout_margin="0dp"
                             android:buttonTint="@color/colorPrimary"
                             android:gravity="center_vertical"
@@ -106,6 +109,7 @@
                         android:background="#E0E0E0" />
 
                     <LinearLayout
+                        android:id="@+id/rowTwo"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
@@ -124,6 +128,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="0dp"
+                            android:enabled="false"
+                            android:clickable="false"
                             android:layout_margin="0dp"
                             android:buttonTint="@color/colorPrimary"
                             android:gravity="center_vertical"
@@ -140,6 +146,7 @@
                         android:background="#E0E0E0" />
 
                     <LinearLayout
+                        android:id="@+id/rowThree"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
@@ -158,6 +165,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="0dp"
+                            android:enabled="false"
+                            android:clickable="false"
                             android:layout_margin="0dp"
                             android:buttonTint="@color/colorPrimary"
                             android:gravity="center_vertical"
@@ -174,6 +183,7 @@
                         android:background="#E0E0E0" />
 
                     <LinearLayout
+                        android:id="@+id/rowFour"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
@@ -192,6 +202,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="0dp"
+                            android:enabled="false"
+                            android:clickable="false"
                             android:layout_margin="0dp"
                             android:buttonTint="@color/colorPrimary"
                             android:gravity="center_vertical"
@@ -207,6 +219,7 @@
                         android:background="#E0E0E0" />
 
                     <LinearLayout
+                        android:id="@+id/rowFive"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
@@ -225,6 +238,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="0dp"
+                            android:enabled="false"
+                            android:clickable="false"
                             android:layout_margin="0dp"
                             android:buttonTint="@color/colorPrimary"
                             android:gravity="center_vertical"

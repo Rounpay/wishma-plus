@@ -133,6 +133,58 @@
             </LinearLayout>
             <View
                 style="@style/Divider"/>
+            <LinearLayout
+                android:id="@+id/deleteButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp">
+
+                <ImageView
+                    android:id="@+id/deleteIcon"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:contentDescription="icon"
+                    android:src="@drawable/ic_delete" />
+
+                <LinearLayout
+                    android:layout_marginStart="12dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/deleteTittle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delete Account"
+                        android:textSize="15sp"
+                        android:textColor="@android:color/black"/>
+
+                    <!-- optional subtitle (comment out if not needed) -->
+                    <TextView
+                        android:id="@+id/deleteSubrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="12sp"
+                        android:textColor="#8a8a8a"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <!--                <ImageView-->
+                <!--                    android:id="@+id/row_chev"-->
+                <!--                    android:layout_width="20dp"-->
+                <!--                    android:layout_height="20dp"-->
+                <!--                    android:src="@drawable/ic_arrow_forward"-->
+                <!--                    android:contentDescription="chevron" />-->
+
+            </LinearLayout>
+            <View
+                style="@style/Divider"/>
 
 
         </LinearLayout>

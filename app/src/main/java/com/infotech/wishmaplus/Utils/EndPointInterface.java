@@ -23,6 +23,7 @@ import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.CompanyDetailResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
+import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.FollowersResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
@@ -231,6 +232,9 @@ public interface EndPointInterface {
 
     @GET("api/UserProfile/getPage")
     Call<PagesResponse> getPagesResponse(@Header("Authorization") String authorization);
+
+    @POST("api/UserProfile/DeleteAccount")
+    Call<DeleteAccountResponse> deleteAccount(@Header("Authorization") String authorization);
 
     @POST("api/UserProfile/SetProfileType")
     Call<BasicResponse> setProfileType(@Header("Authorization") String authorization,
