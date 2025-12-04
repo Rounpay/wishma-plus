@@ -6,7 +6,6 @@ public class PageData {
 
     private String pageId;
     private String pageName;
-    private Boolean isProfile;
     private String categoryId;
     private String bio;
     private String website;
@@ -42,9 +41,6 @@ public class PageData {
 
     public String getPageName() {
         return pageName;
-    }
-    public Boolean getIsProfile() {
-        return isProfile;
     }
 
     public String getCategoryId() {

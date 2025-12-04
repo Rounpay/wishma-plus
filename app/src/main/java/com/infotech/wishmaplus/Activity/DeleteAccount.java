@@ -91,7 +91,7 @@ public class DeleteAccount extends AppCompatActivity {
             public void onItemClick(PageData user, int pos) {
                 Intent intent = new Intent(DeleteAccount.this, DeactivateOrDeleteAccount.class);
                 intent.putExtra("pageId", user.getPageId());
-                intent.putExtra("accountType", user.getIsProfile());
+                intent.putExtra("accountType", user.isProfile());
                 startActivity(intent);
 
             }
