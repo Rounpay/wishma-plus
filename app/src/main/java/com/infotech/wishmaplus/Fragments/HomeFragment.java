@@ -46,6 +46,9 @@ import retrofit2.Response;
 
 
 public class HomeFragment extends Fragment {
+
+    private static final String ARG_PAGE_ID = "pageId";
+    private String pageId;
     CustomRecyclerView recyclerView;
     private PreferencesManager tokenManager;
 
@@ -61,6 +64,21 @@ public class HomeFragment extends Fragment {
     public boolean isScreenPause;
     ArrayList<StoryResult> storyList = new ArrayList<>();
 
+    public static HomeFragment newInstance(String pageId) {
+        HomeFragment fragment = new HomeFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PAGE_ID, pageId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            pageId = getArguments().getString(ARG_PAGE_ID);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -197,7 +215,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClickProfile(String userId) {
                 profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)
-                        .putExtra("userData", userDetailResponse));
+                        .putExtra("userData", userDetailResponse)
+                        .putExtra("pageId", pageId)
+                );
             }
 
             @Override
@@ -222,13 +242,23 @@ public class HomeFragment extends Fragment {
 
 
     private void getUserDetail() {
-        UtilMethods.INSTANCE.userDetail(requireActivity(), "0", loader, tokenManager, object -> {
-            userDetailResponse = (UserDetailResponse) object;
-            contentlist.set(0, new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
+        if (pageId != null) {
+            UtilMethods.INSTANCE.getPageDetail(requireActivity(), pageId, loader, tokenManager, object -> {
+                userDetailResponse = (UserDetailResponse) object;
+                contentlist.set(0, new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
 
-            adapter.notifyItemChanged(0);
+                adapter.notifyItemChanged(0);
 
-        });
+            });
+        } else {
+            UtilMethods.INSTANCE.userDetail(requireActivity(), "0", loader, tokenManager, object -> {
+                userDetailResponse = (UserDetailResponse) object;
+                contentlist.set(0, new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
+
+                adapter.notifyItemChanged(0);
+
+            });
+        }
     }
 
 
@@ -315,7 +345,7 @@ public class HomeFragment extends Fragment {
     private void showContent(boolean isFromRefresh) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", "",pageNumber, 20, false, 0);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", "", pageNumber, 20, false, pageId, 0);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {

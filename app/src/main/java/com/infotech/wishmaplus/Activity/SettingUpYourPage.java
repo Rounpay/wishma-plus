@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.infotech.wishmaplus.R;
@@ -27,12 +28,7 @@ public class SettingUpYourPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_setting_up_your_page);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        setupInsets();
         if (getIntent() != null) {
             selectedNames = getIntent().getStringExtra("selectedNames");
             selectedIDs = getIntent().getStringExtra("selectedIDs");
@@ -57,6 +53,29 @@ public class SettingUpYourPage extends AppCompatActivity {
         btnNext.setOnClickListener(v -> validateAndProceed());
     }
 
+    private void setupInsets() {
+
+        View root = findViewById(R.id.rootContainer);
+
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+
+            Insets sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
+
+            int bottom = Math.max(sysBars.bottom, ime.bottom);
+
+            v.setPadding(
+                    sysBars.left,
+                    sysBars.top,
+                    sysBars.right,
+                    bottom
+            );
+
+            return WindowInsetsCompat.CONSUMED;
+        });
+    }
     private void setupEditText(final AutoCompleteTextView editText, final ScrollView scrollView) {
         editText.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {

@@ -87,7 +87,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
     private File selectedFile;
     private File captureFile;
     private boolean isDeleteFileAllow = false;
-    private String postId;
+    private String postId,pageId;
     private PackageResult packageSetting;
     int postType = 1;  //1=> Post, 2=> Stroy, 3=> Reel
     private ImagePicker imagePicker;
@@ -110,6 +110,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         userDetailResponse = getIntent().getParcelableExtra("userData");
         postId = getIntent().getStringExtra("postId");
+        pageId = getIntent().getStringExtra("pageId");
         postType = getIntent().getIntExtra("postType", 1);
         if (userDetailResponse == null) {
             userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
@@ -132,11 +133,17 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
         if (userDetailResponse != null) {
             setUserData();
         } else {
-            UtilMethods.INSTANCE.userDetail(this,"0", loader, tokenManager, object -> {
-
-                userDetailResponse = (UserDetailResponse) object;
-                setUserData();
-            });
+           if(pageId!=null){
+               UtilMethods.INSTANCE.getPageDetail(this,pageId, loader, tokenManager, object -> {
+                   userDetailResponse = (UserDetailResponse) object;
+                   setUserData();
+               });
+           }else{
+               UtilMethods.INSTANCE.userDetail(this,"0", loader, tokenManager, object -> {
+                   userDetailResponse = (UserDetailResponse) object;
+                   setUserData();
+               });
+           }
         }
 
         textInputEt.addTextChangedListener(new TextWatcher() {

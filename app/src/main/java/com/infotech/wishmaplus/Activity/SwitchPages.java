@@ -16,51 +16,42 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
 public class SwitchPages extends AppCompatActivity {
     ImageView imageView;
+
     AppCompatTextView pageName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_switch_pages);
         EdgeToEdge.enable(this);
-
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        PreferencesManager tokenManager = new PreferencesManager(this, 1);
         imageView = findViewById(R.id.profileImage);
         pageName = findViewById(R.id.tvUserName);
-
-        // Receive data
         String imageUrl = getIntent().getStringExtra("imageUrl");
         String name = getIntent().getStringExtra("pageName");
-
-        // Set the name
+        String pageId = getIntent().getStringExtra("pageId");
+        tokenManager.set("ACTIVE_PAGE_ID", pageId);
         pageName.setText(name);
-
-        // Load the image (Glide recommended)
         Glide.with(this)
                 .load(imageUrl)
                 .apply(UtilMethods.INSTANCE.getRequestOption_With_UserIcon())
                 .into(imageView);
-
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-
             Intent intent = new Intent(SwitchPages.this, MainActivity.class);
-
-            // This clears ALL previous activities and makes MainActivity the root
+            intent.putExtra("pageId",pageId);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-
             startActivity(intent);
-            finish(); // Close SwitchPages
-
-
-        }, 1000); // 1000 ms = 1 second
+            finish();
+        }, 1000);
 
     }
 }

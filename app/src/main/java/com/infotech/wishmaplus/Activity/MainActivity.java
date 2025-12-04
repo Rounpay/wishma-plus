@@ -33,26 +33,16 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.infotech.wishmaplus.Api.Object.BalanceResult;
-import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Fragments.FriendListFragment;
 import com.infotech.wishmaplus.Fragments.HomeFragment;
 import com.infotech.wishmaplus.Fragments.MoreFragment;
 import com.infotech.wishmaplus.Fragments.NotificationFragment;
-import com.infotech.wishmaplus.Fragments.UsersFragment;
 import com.infotech.wishmaplus.Fragments.VideoFragment;
 import com.infotech.wishmaplus.R;
-import com.infotech.wishmaplus.Utils.ApiClient;
 import com.infotech.wishmaplus.Utils.ApplicationConstant;
 import com.infotech.wishmaplus.Utils.CustomLoader;
-import com.infotech.wishmaplus.Utils.EndPointInterface;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
-import com.infotech.wishmaplus.Utils.Utility;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -63,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     View selectedLine;
     public CustomLoader loader;
     public PreferencesManager tokenManager;
+    String pageId = null;
+    String finalPageId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +66,20 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        tokenManager = new PreferencesManager(this, 1);
+        if (getIntent().getStringExtra("pageId") != null) {
+            pageId = getIntent().getStringExtra("pageId");
+        }
+        String savedPageId = tokenManager.getString("ACTIVE_PAGE_ID");
+        if (pageId != null && !pageId.isEmpty()) {
+            finalPageId = pageId;
+            tokenManager.set("ACTIVE_PAGE_ID", pageId);
+        } else if (savedPageId != null && !savedPageId.isEmpty()) {
+            finalPageId = savedPageId;
+        } else {
+            finalPageId = null;
+        }
+
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
@@ -84,11 +90,11 @@ public class MainActivity extends AppCompatActivity {
                     String token = task.getResult();
                     Log.d("FCM_TOKEN", "Token: " + token);
 
-                    PreferencesManager mAppPreferences = new PreferencesManager(this,2);
+                    PreferencesManager mAppPreferences = new PreferencesManager(this, 2);
                     mAppPreferences.setNonRemoval(ApplicationConstant.INSTANCE.regFCMKeyPref, token);
                 });
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
-        tokenManager = new PreferencesManager(this,1);
+
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
         email = intent.getStringExtra("email");
@@ -109,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
             handleNotificationIntent(getIntent());
         }, 500);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new HomeFragment(), "Home").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId), "Home").commit();
 
         selectedLine = homeLine;
         homeTab.setOnClickListener(view -> {
@@ -117,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 homeLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = homeLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new HomeFragment(), "Home").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId), "Home").commit();
             }
         });
 
@@ -126,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 videoLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = videoLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new VideoFragment(), "Video").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, VideoFragment.newInstance(finalPageId), "Video").commit();
             }
         });
 
@@ -153,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 menuLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = menuLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new MoreFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, MoreFragment.newInstance(finalPageId)).commit();
             }
         });
 
@@ -195,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "No notification data found");
     }
+
     /**
      * extractNotificationData
      */
@@ -203,13 +210,13 @@ public class MainActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         Bundle extras = intent.getExtras();
         // Try custom data first
-        String title   = extras.getString("Title", extras.getString("title"));
+        String title = extras.getString("Title", extras.getString("title"));
         String message = extras.getString("Message", extras.getString("message"));
-        String image   = extras.getString("Image", extras.getString("image"));
-        String url     = extras.getString("Url", extras.getString("url"));
-        String time    = extras.getString("Time", extras.getString("time"));
-        String type    = extras.getString("Type", extras.getString("type"));
-        int nid        = extras.getInt("NotificationId", -1);
+        String image = extras.getString("Image", extras.getString("image"));
+        String url = extras.getString("Url", extras.getString("url"));
+        String time = extras.getString("Time", extras.getString("time"));
+        String type = extras.getString("Type", extras.getString("type"));
+        int nid = extras.getInt("NotificationId", -1);
 
         // FCM Notification Payload fallback
         if (title == null)
@@ -230,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
 
         return bundle;
     }
-
 
 
     /**
@@ -273,8 +279,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    public void refresh(int typeId){
+    public void refresh(int typeId) {
 
         Fragment f = getSupportFragmentManager().findFragmentById(R.id.flFragment);
         if (f instanceof HomeFragment) {
@@ -288,9 +293,9 @@ public class MainActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
                 if (result.getResultCode() == Activity.RESULT_OK) {
-                    int typeId=1;
+                    int typeId = 1;
                     if (result.getData() != null) {
-                        typeId  = result.getData().getIntExtra("Type", 1);
+                        typeId = result.getData().getIntExtra("Type", 1);
                     }
                     Fragment f = getSupportFragmentManager().findFragmentById(R.id.flFragment);
                     if (f instanceof HomeFragment) {
@@ -398,7 +403,7 @@ public class MainActivity extends AppCompatActivity {
         addPost.setOnClickListener(v -> {
             popupWindow.dismiss();
             Intent intent = new Intent(MainActivity.this, PostActivity.class);
-             intent.putExtra("userData", UtilMethods.INSTANCE.getUserDetailResponse(tokenManager));
+            intent.putExtra("userData", UtilMethods.INSTANCE.getUserDetailResponse(tokenManager));
             intent.putExtra("postId", "0");
             intent.putExtra("postType", 1);
             postActivityResultLauncher.launch(intent);
@@ -410,11 +415,12 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("userData", UtilMethods.INSTANCE.getUserDetailResponse(tokenManager));
             intent.putExtra("postId", "0");
             intent.putExtra("postType", 2);
+            intent.putExtra("pageId", finalPageId);
             storyActivityResultLauncher.launch(intent);
         });
 
         // Display the popup window at the center of the screen
-        popupWindow.showAsDropDown(view,  0, 0,Gravity.BOTTOM);
+        popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM);
     }
 
     @SuppressLint("GestureBackNavigation")
@@ -425,7 +431,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 homeLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = homeLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, new HomeFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId)).commit();
             }
             getSupportFragmentManager().popBackStack();
         } else {
