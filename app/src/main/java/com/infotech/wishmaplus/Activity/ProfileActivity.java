@@ -107,7 +107,7 @@ public class ProfileActivity extends AppCompatActivity {
     View  profileView;
 
     String userId = "0";
-
+    String pageId = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +120,9 @@ public class ProfileActivity extends AppCompatActivity {
         });
         tokenManager = new PreferencesManager(this, 1);
         userDetailResponse = getIntent().getParcelableExtra("userData");
-
+        if (getIntent() != null) {
+            pageId = getIntent().getStringExtra("pageId");
+        }
         if (userDetailResponse == null) {
             userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
         }
@@ -550,17 +552,31 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void getUserDetail() {
         loader.show();
-        UtilMethods.INSTANCE.userDetail(this, userId, loader, tokenManager, object -> {
-            if (loader != null) {
-                if (loader.isShowing()) {
-                    loader.dismiss();
-                }
-            }
-            profileView.setVisibility(VISIBLE);
-            userDetailResponse = (UserDetailResponse) object;
-            contentList.set(0, new ContentResult(0, userDetailResponse, null));
-            adapter.notifyItemChanged(0);
-        });
+       if(pageId!=null){
+           UtilMethods.INSTANCE.getPageDetail(this, pageId, loader, tokenManager, object -> {
+               if (loader != null) {
+                   if (loader.isShowing()) {
+                       loader.dismiss();
+                   }
+               }
+               profileView.setVisibility(VISIBLE);
+               userDetailResponse = (UserDetailResponse) object;
+               contentList.set(0, new ContentResult(0, userDetailResponse, null));
+               adapter.notifyItemChanged(0);
+           });
+       }else{
+           UtilMethods.INSTANCE.userDetail(this, userId, loader, tokenManager, object -> {
+               if (loader != null) {
+                   if (loader.isShowing()) {
+                       loader.dismiss();
+                   }
+               }
+               profileView.setVisibility(VISIBLE);
+               userDetailResponse = (UserDetailResponse) object;
+               contentList.set(0, new ContentResult(0, userDetailResponse, null));
+               adapter.notifyItemChanged(0);
+           });
+       }
     }
 
     ActivityResultLauncher<Intent> updateUserResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -731,7 +747,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void showContent(boolean isFromRefresh) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "",userId, pageNumber, 20, true, buttonContentTypeId);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "",userId, pageNumber, 20, true, pageId,buttonContentTypeId);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {

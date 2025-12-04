@@ -1,10 +1,19 @@
 package com.infotech.wishmaplus.Fragments;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -14,13 +23,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -28,7 +30,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.infotech.wishmaplus.Activity.ContactUsActivity;
 import com.infotech.wishmaplus.Activity.CreateNewProfilePage;
 import com.infotech.wishmaplus.Activity.GroupActivity;
-import com.infotech.wishmaplus.Activity.ImageZoomViewActivity;
 import com.infotech.wishmaplus.Activity.IncomeReportActivity;
 import com.infotech.wishmaplus.Activity.LevelCountActivity;
 import com.infotech.wishmaplus.Activity.MainActivity;
@@ -38,14 +39,10 @@ import com.infotech.wishmaplus.Activity.ProfileActivity;
 import com.infotech.wishmaplus.Activity.ReferralActivity;
 import com.infotech.wishmaplus.Activity.SettingsAndPrivacy;
 import com.infotech.wishmaplus.Activity.SwitchPages;
-import com.infotech.wishmaplus.Activity.YourFriends;
 import com.infotech.wishmaplus.Adapter.UserPagesAdapter;
-import com.infotech.wishmaplus.Adapter.UsersAdapter;
 import com.infotech.wishmaplus.Api.Response.PageData;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
-import com.infotech.wishmaplus.Api.Response.User;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
-import com.infotech.wishmaplus.Api.Response.UserModelResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomAlertDialog;
 import com.infotech.wishmaplus.Utils.CustomLoader;
@@ -64,17 +61,34 @@ public class MoreFragment extends Fragment {
     private UserDetailResponse userDetailResponse;
     ImageView profileIcon;
     private CustomLoader loader;
-    TextView nameTv,currentPackage;
+    TextView nameTv, currentPackage;
     ActivityResultLauncher<Intent> launcher;
 
     List<PageData> list = new ArrayList<>();
     RecyclerView userRecycler;
     UserPagesAdapter adapter;
-
+    private static final String ARG_PAGE_ID = "pageId";
+    private String pageId;
     public static BottomSheetDialog bottomSheetUser;
+
+    View referralView;
+
+    public static MoreFragment newInstance(String pageId) {
+        MoreFragment fragment = new MoreFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PAGE_ID, pageId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            pageId = getArguments().getString(ARG_PAGE_ID, "0");
+        } else {
+            pageId = "0";
+        }
     }
 
     @Override
@@ -95,9 +109,9 @@ public class MoreFragment extends Fragment {
                 }
         );
         loader = new CustomLoader(requireActivity(), android.R.style.Theme_Translucent_NoTitleBar);
-        tokenManager = ((MainActivity)requireActivity()).tokenManager;
-        if(tokenManager==null) {
-            tokenManager = new PreferencesManager(requireActivity(),1);
+        tokenManager = ((MainActivity) requireActivity()).tokenManager;
+        if (tokenManager == null) {
+            tokenManager = new PreferencesManager(requireActivity(), 1);
         }
         getPagesList();
 
@@ -107,10 +121,10 @@ public class MoreFragment extends Fragment {
         TextView termAndPrivacyTxt = v.findViewById(R.id.term_and_privacy_txt);
         Utility.INSTANCE.setTerm_Privacy(requireActivity(), termAndPrivacyTxt,
                 0, 16, 21, 35);
-        userDetailResponse= UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
-        if(userDetailResponse==null){
+        userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+        if (userDetailResponse == null) {
             getUserDetail();
-        }else {
+        } else {
             setUserData();
         }
         v.findViewById(R.id.groupView).setOnClickListener(view -> {
@@ -124,14 +138,20 @@ public class MoreFragment extends Fragment {
                     .putExtra("userData", userDetailResponse));
         });
         v.findViewById(R.id.userArrow).setOnClickListener(v1 -> {
-           openUserBottomSheetDialog(requireActivity(),
-                    userDetailResponse,launcher);
+            openUserBottomSheetDialog(requireActivity(),
+                    userDetailResponse, launcher);
 //            startActivity(new Intent(requireActivity(), CreateNewProfilePage.class));
         });
 
         v.findViewById(R.id.packageView).setOnClickListener(view -> {
             startActivity(new Intent(requireActivity(), PackageActivity.class));
         });
+        referralView = v.findViewById(R.id.referralView);
+        if (pageId == null) {
+            referralView.setVisibility(GONE);
+        } else {
+            referralView.setVisibility(VISIBLE);
+        }
         v.findViewById(R.id.referralView).setOnClickListener(view -> {
             startActivity(new Intent(requireActivity(), ReferralActivity.class)
                     .putExtra("userData", userDetailResponse));
@@ -155,12 +175,19 @@ public class MoreFragment extends Fragment {
     }
 
     private void getUserDetail() {
-        UtilMethods.INSTANCE.userDetail(requireActivity(),"0", null, tokenManager, object -> {
-            userDetailResponse = (UserDetailResponse) object;
-            setUserData();
-
-        });
+        if (pageId != null) {
+            UtilMethods.INSTANCE.getPageDetail(requireActivity(), pageId, null, tokenManager, object -> {
+                userDetailResponse = (UserDetailResponse) object;
+                setUserData();
+            });
+        } else {
+            UtilMethods.INSTANCE.userDetail(requireActivity(), "0", null, tokenManager, object -> {
+                userDetailResponse = (UserDetailResponse) object;
+                setUserData();
+            });
+        }
     }
+
     private void getPagesList() {
         loader.show();
         UtilMethods.INSTANCE.getPagesResponse(requireActivity(), new UtilMethods.ApiCallBackMulti() {
@@ -173,9 +200,9 @@ public class MoreFragment extends Fragment {
                 }
                 list.clear();
                 PagesResponse pagesResponse = (PagesResponse) object;
-                if(!pagesResponse.getResult().isEmpty()){
+                if (!pagesResponse.getResult().isEmpty()) {
                     list.addAll(pagesResponse.getResult());
-                    if (adapter!=null) {
+                    if (adapter != null) {
                         adapter.notifyDataSetChanged();
                     }
                 }
@@ -205,10 +232,11 @@ public class MoreFragment extends Fragment {
 
         });*/
     }
+
     private void setUserData() {
-        nameTv.setText(userDetailResponse.getFisrtName()+" "+userDetailResponse.getLastName());
-        if(userDetailResponse.getPackageDetail()!=null) {
-            currentPackage.setText(" "+userDetailResponse.getPackageDetail().getPackageName() + " (" + Utility.INSTANCE.formattedAmountWithRupees(userDetailResponse.getPackageDetail().getPackageCost())+")");
+        nameTv.setText(userDetailResponse.getFisrtName() + " " + userDetailResponse.getLastName());
+        if (userDetailResponse.getPackageDetail() != null) {
+            currentPackage.setText(" " + userDetailResponse.getPackageDetail().getPackageName() + " (" + Utility.INSTANCE.formattedAmountWithRupees(userDetailResponse.getPackageDetail().getPackageCost()) + ")");
         }
         Glide.with(requireActivity())
                 .load(userDetailResponse.getProfilePictureUrl())
@@ -219,9 +247,9 @@ public class MoreFragment extends Fragment {
     ActivityResultLauncher<Intent> profileActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == Activity.RESULT_OK && result.getData()!=null) {
-                    int refreshType =  result.getData().getIntExtra("RefreshType", 0);
-                    if(refreshType==1){
+                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+                    int refreshType = result.getData().getIntExtra("RefreshType", 0);
+                    if (refreshType == 1) {
                         //UserDetails
                         getUserDetail();
                     }
@@ -236,7 +264,6 @@ public class MoreFragment extends Fragment {
                                           ActivityResultLauncher<Intent> launcher) {
 
 
-
         if (bottomSheetUser != null && bottomSheetUser.isShowing()) {
             return;
         }
@@ -249,13 +276,14 @@ public class MoreFragment extends Fragment {
         AppCompatImageView userImage = sheetView.findViewById(R.id.userImage);
         userRecycler = sheetView.findViewById(R.id.userRecycler);
 
-        adapter = new UserPagesAdapter(requireActivity(), list,new UserPagesAdapter.OnItemClickListener() {
+        adapter = new UserPagesAdapter(requireActivity(), list, new UserPagesAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(PageData user, int pos) {
                 bottomSheetUser.dismiss();
                 Intent intent = new Intent(activity, SwitchPages.class);
                 intent.putExtra("imageUrl", user.getProfileImageUrl());
                 intent.putExtra("pageName", user.getPageName());
+                intent.putExtra("pageId", user.getPageId());
                 launcher.launch(intent);
 
             }

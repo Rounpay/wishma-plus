@@ -275,6 +275,61 @@ public enum UtilMethods {
         customAlertDialog.NetworkError("Network Error!", "Slow or No Internet Connection.");
     }
 
+    public void getPageDetail(Activity activity, String pageID, final CustomLoader loader, PreferencesManager mAppPreferences, ApiCallBack apiCallBack) {
+        try {
+            tokenManager = new PreferencesManager(activity, 1);
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<UserDetailResponse> call = git.getPageDetails("Bearer " + tokenManager.getAccessToken(), pageID);
+            call.enqueue(new Callback<UserDetailResponse>() {
+                @Override
+                public void onResponse(Call<UserDetailResponse> call, Response<UserDetailResponse> response) {
+                    try {
+
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                        if (response.isSuccessful()) {
+                            userDetailResponse = response.body();
+                            mAppPreferences.set(ApplicationConstant.INSTANCE.ProfilePref, getGson().toJson(response.body()));
+                            apiCallBack.onSuccess(userDetailResponse);
+                        } else {
+                            Toast.makeText(activity, "Failed to fetch user details", Toast.LENGTH_SHORT).show();
+                        }
+                    } catch (Exception e) {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UserDetailResponse> call, Throwable t) {
+                    try {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                        apiFailureError(activity, t);
+                    } catch (IllegalStateException ise) {
+                        Error(activity, ise.getMessage());
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void userDetail(Activity activity, String userID, final CustomLoader loader, PreferencesManager mAppPreferences, ApiCallBack apiCallBack) {
         try {
             tokenManager = new PreferencesManager(activity, 1);

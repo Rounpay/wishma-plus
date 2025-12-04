@@ -95,6 +95,14 @@ public class ContentResult implements Parcelable {
     @Expose
     private boolean isRequestPending;
 
+    @SerializedName("isPagePost")
+    @Expose
+    private boolean isPagePost;
+
+    @SerializedName("pageId")
+    @Expose
+    private String pageId;
+
     @SerializedName("requestSentStatus")
     @Expose
     private int requestSentStatus;
@@ -128,7 +136,9 @@ public class ContentResult implements Parcelable {
         postContent = in.readString();
         totalStory = in.readInt();
         caption = in.readString();
+        pageId = in.readString();
         isLiked = in.readByte() != 0;
+        isPagePost = in.readByte() != 0;
         userDetail = in.readParcelable(UserDetailResponse.class.getClassLoader());
         parsedSharedData = in.readParcelable(SharedData.class.getClassLoader());
         storyList = in.createTypedArrayList(StoryResult.CREATOR);
@@ -160,7 +170,9 @@ public class ContentResult implements Parcelable {
         dest.writeString(postContent);
         dest.writeInt(totalStory);
         dest.writeString(caption);
+        dest.writeString(pageId);
         dest.writeByte((byte) (isLiked ? 1 : 0));
+        dest.writeByte((byte) (isPagePost ? 1 : 0));
         dest.writeParcelable(userDetail, flags);
         dest.writeParcelable(parsedSharedData, flags);
         dest.writeTypedList(storyList);
@@ -334,5 +346,21 @@ public class ContentResult implements Parcelable {
 
     public void setSelfProfile(boolean selfProfile) {
         isSelfProfile = selfProfile;
+    }
+
+    public boolean isPagePost() {
+        return isPagePost;
+    }
+
+    public void setPagePost(boolean pagePost) {
+        isPagePost = pagePost;
+    }
+
+    public String getPageId() {
+        return pageId;
+    }
+
+    public void setPageId(String pageId) {
+        this.pageId = pageId;
     }
 }

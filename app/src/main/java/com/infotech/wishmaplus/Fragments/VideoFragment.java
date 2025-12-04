@@ -45,6 +45,27 @@ public class VideoFragment extends Fragment {
     CustomLoader loader;
     int pageNumber = 1;
     int totalPost = 0;
+    private static final String ARG_PAGE_ID = "pageId";
+    private String pageId;
+
+    public static VideoFragment newInstance(String pageId) {
+        VideoFragment fragment = new VideoFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_PAGE_ID, pageId);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments() != null) {
+            pageId = getArguments().getString(ARG_PAGE_ID, "0");
+        } else {
+            pageId = "0";
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -181,7 +202,7 @@ public class VideoFragment extends Fragment {
     private void showContent(boolean isFromRefresh) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "","",pageNumber, 20, false, 2);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "","",pageNumber, 20, false,pageId, 2);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {

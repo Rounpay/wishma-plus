@@ -104,6 +104,7 @@ public interface EndPointInterface {
                                      @Query("pageNumber") int pageNumber,
                                      @Query("pageSize") int pageSize,
                                      @Query("IsSelf") boolean IsSelf,
+                                     @Query("PageId") String PageId,
                                      @Query("ContentTypeID") int contentTypeID);
 
     @GET("api/Content/GetStory")
@@ -133,7 +134,9 @@ public interface EndPointInterface {
                                     @Query("StoryId") String storyId);
 
     @GET("api/GetUserDetails")
-    Call<UserDetailResponse> getUserDetail(@Header("Authorization") String token, @Query("UserId") String UserId);
+    Call<UserDetailResponse> getUserDetail(@Header("Authorization") String token,
+                                           @Query("UserId") String UserId);
+
 
     @POST("api/DoFollow")
     Call<LikeResponse> DoFollow(@Header("Authorization") String token,
@@ -255,5 +258,7 @@ public interface EndPointInterface {
             @Part MultipartBody.Part CoverImageFile
     );
 
-
+    @GET("api/UserProfile/getPageDetails/{PageId}")
+    Call<UserDetailResponse> getPageDetails(@Header("Authorization") String token,
+                                            @Path("PageId") String PageId);
 }

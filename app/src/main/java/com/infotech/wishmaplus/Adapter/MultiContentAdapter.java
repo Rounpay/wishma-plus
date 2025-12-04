@@ -1581,6 +1581,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             profile.setOnClickListener(v -> {
                 Intent intent = new Intent(context, ProfileActivity.class);
                 intent.putExtra("id", content.getUserId());
+                intent.putExtra("pageId", content.getPageId());
                 context.startActivity(intent);
             });
         }
