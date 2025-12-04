@@ -66,7 +66,7 @@ public class VideoFragment extends Fragment {
             pageId = getArguments().getString(ARG_PAGE_ID, "0");
             isProfileType = getArguments().getBoolean(ARG_PROFILE_TYPE, false);
             if(isProfileType){
-                pageId = ""
+                pageId = "";
             }
         }
     }
