@@ -34,6 +34,7 @@ import com.infotech.wishmaplus.Activity.IncomeReportActivity;
 import com.infotech.wishmaplus.Activity.LevelCountActivity;
 import com.infotech.wishmaplus.Activity.MainActivity;
 import com.infotech.wishmaplus.Activity.PackageActivity;
+import com.infotech.wishmaplus.Activity.ProfessionalDashBoardPersonal;
 import com.infotech.wishmaplus.Activity.ProfessionalDashboardActivity;
 import com.infotech.wishmaplus.Activity.ProfileActivity;
 import com.infotech.wishmaplus.Activity.ReferralActivity;
@@ -135,7 +136,8 @@ public class MoreFragment extends Fragment {
             startActivity(new Intent(requireActivity(), GroupActivity.class));
         });
         v.findViewById(R.id.professionalView).setOnClickListener(view -> {
-            startActivity(new Intent(requireActivity(), ProfessionalDashboardActivity.class));
+           // startActivity(new Intent(requireActivity(), ProfessionalDashboardActivity.class));
+            startActivity(new Intent(requireActivity(), ProfessionalDashBoardPersonal.class));
         });
         v.findViewById(R.id.profileIcon).setOnClickListener(view -> {
             profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)

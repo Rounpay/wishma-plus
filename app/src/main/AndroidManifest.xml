@@ -38,6 +38,21 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
+            android:name=".Activity.CreatorSupportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.DashBoardPersonalInformation"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.ProfessionalDashBoardPersonal"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
+            android:name=".Activity.AdvertiseActivity"
+            android:exported="false"
+            android:theme="@style/Appnew" />
+        <activity
             android:name=".Activity.SwitchPages"
             android:exported="false"
             android:theme="@style/Appnew"
@@ -50,8 +65,7 @@
         <activity
             android:name=".Activity.SettingUpYourPage"
             android:exported="false"
-            android:theme="@style/Appnew"
-            />
+            android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.YourFriends"
             android:exported="false"
