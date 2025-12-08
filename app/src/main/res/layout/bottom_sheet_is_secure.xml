@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/rounded_top"
+    android:orientation="vertical"
+    android:padding="16dp">
+    <View
+        android:id="@+id/topLine"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_3sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/comment_bg" />
+
+    <!-- Back Button -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <!-- Title Section -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Is this ad about securities and investments with audiences in India?"
+            android:maxLines="1"
+            android:paddingLeft="30dp"
+            android:singleLine="true"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+    <!-- Horizontal Line -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="#D3D3D3"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Description Section -->
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="To run an ad with audiences in India, you must declare if the ad is about securities investments."
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Learn More Link -->
+    <TextView
+        android:id="@+id/learn_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LEARN MORE"
+        android:textColor="@color/dark_blue"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+</LinearLayout>

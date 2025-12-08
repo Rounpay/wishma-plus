@@ -37,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.Adapter.Interfaces.CountChangeCallBack;
 import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Fragments.ShareDialogFragment;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.ApiClient;
@@ -296,6 +297,23 @@ public class VideoViewActivity extends AppCompatActivity {
 
                 }
             });
+            UserDetailResponse userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+            int accountType = userDetailResponse.isSelfProfile()?1:2;//Objects.equals(tokenManager.getString("ACTIVE_PAGE_ID"), userDetailResponse.getUserId()) ?2:1;
+//                    InsightTypeID
+//                    Impressions = 1,
+//                    Viewed = 2,
+//                    Clicked = 3
+            UtilMethods.INSTANCE.addInsight(this, userDetailResponse.getUserId(),videoData.getPostId(), accountType ,2, new UtilMethods.ApiCallBackMulti() {
+                @Override
+                public void onSuccess(Object object) {
+
+                }
+
+                @Override
+                public void onError(String msg) {
+
+                }
+            });
         });
 
         likeBtnTv.setOnClickListener(v -> {
@@ -327,6 +345,23 @@ public class VideoViewActivity extends AppCompatActivity {
                         likeBtn.setImageTintList(ContextCompat.getColorStateList(VideoViewActivity.this, android.R.color.white));
                         likeBtnTv.setTextColor(ContextCompat.getColor(VideoViewActivity.this, android.R.color.white));
                     }
+                }
+
+                @Override
+                public void onError(String msg) {
+
+                }
+            });
+            UserDetailResponse userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+            int accountType = userDetailResponse.isSelfProfile()?1:2;//Objects.equals(tokenManager.getString("ACTIVE_PAGE_ID"), userDetailResponse.getUserId()) ?2:1;
+//                    InsightTypeID
+//                    Impressions = 1,
+//                    Viewed = 2,
+//                    Clicked = 3
+            UtilMethods.INSTANCE.addInsight(this, userDetailResponse.getUserId(),videoData.getPostId(), accountType ,2, new UtilMethods.ApiCallBackMulti() {
+                @Override
+                public void onSuccess(Object object) {
+
                 }
 
                 @Override

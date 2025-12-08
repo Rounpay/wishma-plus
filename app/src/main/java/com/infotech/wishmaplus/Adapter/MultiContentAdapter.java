@@ -19,6 +19,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +66,7 @@ import com.infotech.wishmaplus.Adapter.Interfaces.CountChangeCallBack;
 import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Fragments.ShareDialogFragment;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.ApiClient;
@@ -81,6 +83,7 @@ import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.VideoUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -846,6 +849,23 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     }
                 });
+                UserDetailResponse userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+                int accountType = userDetailResponse.isSelfProfile()?1:2;//Objects.equals(tokenManager.getString("ACTIVE_PAGE_ID"), userDetailResponse.getUserId()) ?2:1;
+//                    InsightTypeID
+//                    Impressions = 1,
+//                    Viewed = 2,
+//                    Clicked = 3
+                UtilMethods.INSTANCE.addInsight(context, userDetailResponse.getUserId(),content.getPostId(), accountType ,2, new UtilMethods.ApiCallBackMulti() {
+                    @Override
+                    public void onSuccess(Object object) {
+
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+
+                    }
+                });
             });
             moreBTn.setOnClickListener(view -> showPopupMenu(view, content, position, null));
             shareBtn.setOnClickListener(view -> {
@@ -1151,6 +1171,23 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     }
                 };
+                UserDetailResponse userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+                int accountType = userDetailResponse.isSelfProfile()?1:2;//Objects.equals(tokenManager.getString("ACTIVE_PAGE_ID"), userDetailResponse.getUserId()) ?2:1;
+//                    InsightTypeID
+//                    Impressions = 1,
+//                    Viewed = 2,
+//                    Clicked = 3
+                UtilMethods.INSTANCE.addInsight(context, userDetailResponse.getUserId(),content.getPostId(), accountType ,3, new UtilMethods.ApiCallBackMulti() {
+                    @Override
+                    public void onSuccess(Object object) {
+
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+
+                    }
+                });
 
                 context.startActivity(new Intent(context, VideoViewActivity.class).putExtra("Position", position).putExtra("VideoData", content));
 
@@ -1285,6 +1322,23 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         boolean isLiked = (boolean) object;
 
                         updateLikeState(/*content,*/ isLiked, position, likeBtn, like_count);
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+
+                    }
+                });
+                UserDetailResponse userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+                int accountType = userDetailResponse.isSelfProfile()?1:2;//Objects.equals(tokenManager.getString("ACTIVE_PAGE_ID"), userDetailResponse.getUserId()) ?2:1;
+//                    InsightTypeID
+//                    Impressions = 1,
+//                    Viewed = 2,
+//                    Clicked = 3
+                UtilMethods.INSTANCE.addInsight(context, userDetailResponse.getUserId(),content.getPostId(), accountType ,2, new UtilMethods.ApiCallBackMulti() {
+                    @Override
+                    public void onSuccess(Object object) {
+
                     }
 
                     @Override
@@ -1544,6 +1598,24 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         }
                     }
                 };
+                UserDetailResponse userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+                int accountType = userDetailResponse.isSelfProfile()?1:2;//Objects.equals(tokenManager.getString("ACTIVE_PAGE_ID"), userDetailResponse.getUserId()) ?2:1;
+
+//                    InsightTypeID
+//                    Impressions = 1,
+//                    Viewed = 2,
+//                    Clicked = 3
+                UtilMethods.INSTANCE.addInsight(context, userDetailResponse.getUserId(),content.getPostId(), accountType ,3, new UtilMethods.ApiCallBackMulti() {
+                    @Override
+                    public void onSuccess(Object object) {
+
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+
+                    }
+                });
                 context.startActivity(new Intent(context, ImageZoomViewActivity.class).putExtra("Position", position).putExtra("ImageData", content));
 
                 //videoHolder=null;
@@ -1555,6 +1627,23 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         boolean isLiked = (boolean) object;
 
                         updateLikeState(/*content,*/ isLiked, position, likeBtn, like_count);
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+
+                    }
+                });
+                UserDetailResponse userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+                int accountType = userDetailResponse.isSelfProfile()?1:2;//Objects.equals(tokenManager.getString("ACTIVE_PAGE_ID"), userDetailResponse.getUserId()) ?2:1;
+//                    InsightTypeID
+//                    Impressions = 1,
+//                    Viewed = 2,
+//                    Clicked = 3
+                UtilMethods.INSTANCE.addInsight(context, userDetailResponse.getUserId(),content.getPostId(), accountType ,2, new UtilMethods.ApiCallBackMulti() {
+                    @Override
+                    public void onSuccess(Object object) {
+
                     }
 
                     @Override

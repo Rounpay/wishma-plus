@@ -26,6 +26,7 @@ import com.infotech.wishmaplus.Api.Response.ContentResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.FollowersResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
+import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.LoginResponse;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
@@ -115,6 +116,14 @@ public interface EndPointInterface {
     @POST("api/Like/Do")
     Call<LikeResponse> likePost(@Header("Authorization") String token,
                                 @Body LikeRequest likeRequest);
+    @Headers("Content-Type: application/json")
+    @POST("api/AddInsight")
+    Call<InsightResponse> addInsight(@Header("Authorization") String token,
+                                     @Query("AccountId") String AccountId,
+                                     @Query("PostID") String PostID,
+                                     @Query("AccountType") int AccountType,
+                                     @Query("InsightTypeID") int InsightTypeID);
+
 
     @Headers("Content-Type: application/json")
     @POST("api/Comment/Do")

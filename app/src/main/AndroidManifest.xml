@@ -38,6 +38,26 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
+            android:name=".Activity.ManageAds"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".Activity.CreateNewAd"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.BoostContent"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.Advertisement"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".Activity.SwitchPages"
             android:exported="false"
             android:theme="@style/Appnew"
@@ -50,8 +70,7 @@
         <activity
             android:name=".Activity.SettingUpYourPage"
             android:exported="false"
-            android:theme="@style/Appnew"
-            />
+            android:theme="@style/Appnew" />
         <activity
             android:name=".Activity.YourFriends"
             android:exported="false"

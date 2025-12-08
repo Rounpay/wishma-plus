@@ -36,6 +36,7 @@ import com.infotech.wishmaplus.Adapter.Interfaces.CountChangeCallBack;
 import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Fragments.ShareDialogFragment;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.ApiClient;
@@ -300,6 +301,23 @@ public class ShareRedirectActivity extends AppCompatActivity {
                         likeBtn.setIconTint(ContextCompat.getColorStateList(ShareRedirectActivity.this, R.color.grey_1));
                         likeBtn.setTextColor(ContextCompat.getColor(ShareRedirectActivity.this, R.color.grey_1));
                     }
+                }
+
+                @Override
+                public void onError(String msg) {
+
+                }
+            });
+            UserDetailResponse userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+            int accountType = userDetailResponse.isSelfProfile()?1:2;//Objects.equals(tokenManager.getString("ACTIVE_PAGE_ID"), userDetailResponse.getUserId()) ?2:1;
+//                    InsightTypeID
+//                    Impressions = 1,
+//                    Viewed = 2,
+//                    Clicked = 3
+            UtilMethods.INSTANCE.addInsight(this, userDetailResponse.getUserId(),content.getPostId(), accountType ,2, new UtilMethods.ApiCallBackMulti() {
+                @Override
+                public void onSuccess(Object object) {
+
                 }
 
                 @Override

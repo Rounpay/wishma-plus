@@ -185,6 +185,51 @@
             </LinearLayout>
             <View
                 style="@style/Divider"/>
+            <LinearLayout
+                android:id="@+id/adsButton"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp">
+
+                <ImageView
+                    android:id="@+id/adsIcon"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:contentDescription="icon"
+                    android:src="@drawable/ic_calendar" />
+
+                <LinearLayout
+                    android:layout_marginStart="12dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/adsTittle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ads"
+                        android:textSize="15sp"
+                        android:textColor="@android:color/black"/>
+
+                    <!-- optional subtitle (comment out if not needed) -->
+                    <TextView
+                        android:id="@+id/adsSubrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=""
+                        android:textSize="12sp"
+                        android:textColor="#8a8a8a"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+            </LinearLayout>
+            <View
+                style="@style/Divider"/>
 
 
         </LinearLayout>

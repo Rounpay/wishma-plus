@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.Advertisement">
+
+    <!-- Back Button -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Back"
+        android:padding="@dimen/_10sdp"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Title -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/user_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ads"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/back_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/back_button" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/moreBTn"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:text="Manage"
+        android:textColor="@color/dark_blue"
+        android:textSize="16sp"
+        android:paddingVertical="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="@id/back_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/back_button" />
+
+    <!-- Line -->
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDDDDD"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/back_button" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fitsSystemWindows="true"
+        android:layout_marginHorizontal="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ===== Card 1: Boost Content ===== -->
+
+            <!-- ===== Card 2: Create New Ad ===== -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/boostContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_card"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/iconBoost"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/tab_selected_bg"
+                    android:src="@drawable/arrow_up"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvTitleBoost"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Boost content"
+                    android:textColor="#000"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@id/rightArrow1"
+                    app:layout_constraintStart_toEndOf="@id/iconBoost"
+                    app:layout_constraintTop_toTopOf="@id/iconBoost" />
+
+                <TextView
+                    android:id="@+id/tvSubBoost"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Use your Facebook or Instagram content to create an ad and reach a wider audience."
+                    android:textColor="#666"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="@id/tvTitleBoost"
+                    app:layout_constraintStart_toStartOf="@id/tvTitleBoost"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitleBoost" />
+
+                <ImageView
+                    android:id="@+id/rightArrow1"
+                    android:layout_width="30dp"
+                    android:layout_height="18dp"
+                    android:layout_marginLeft="@dimen/_30sdp"
+                    android:src="@drawable/ic_arrow_forward"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/createNewAd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_card"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/iconCreateAd"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:padding="5dp"
+                    android:background="@drawable/tab_selected_bg"
+                    android:src="@drawable/ic_edit"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvTitleCreate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Create new ad"
+                    android:textColor="#000"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@id/rightArrow2"
+                    app:layout_constraintStart_toEndOf="@id/iconCreateAd"
+                    app:layout_constraintTop_toTopOf="@id/iconCreateAd" />
+
+                <TextView
+                    android:id="@+id/tvSubCreate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Make an ad from scratch using text, photos or videos to promote your business."
+                    android:textColor="#666"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="@id/tvTitleCreate"
+                    app:layout_constraintStart_toStartOf="@id/tvTitleCreate"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitleCreate" />
+
+                <ImageView
+                    android:id="@+id/rightArrow2"
+                    android:layout_width="30dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_arrow_forward"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- ===== Card 3: Automated Ads ===== -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/automatedAds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:padding="16dp">
+
+                <ImageView
+                    android:id="@+id/iconAutoAds"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:padding="5dp"
+                    android:background="@drawable/tab_selected_bg"
+                    android:src="@drawable/setting_icon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@android:color/black" />
+
+                <TextView
+                    android:id="@+id/tvTitleAuto"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text="Get started with Automated Ads"
+                    android:textColor="#000"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@id/rightArrow3"
+                    app:layout_constraintStart_toEndOf="@id/iconAutoAds"
+                    app:layout_constraintTop_toTopOf="@id/iconAutoAds" />
+
+                <TextView
+                    android:id="@+id/tvSubAuto"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="We’ll provide recommendations for your ads"
+                    android:textColor="#666"
+                    android:textSize="13sp"
+                    app:layout_constraintEnd_toEndOf="@id/tvTitleAuto"
+                    app:layout_constraintStart_toStartOf="@id/tvTitleAuto"
+                    app:layout_constraintTop_toBottomOf="@id/tvTitleAuto" />
+
+                <ImageView
+                    android:id="@+id/rightArrow3"
+                    android:layout_width="30dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_arrow_forward"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

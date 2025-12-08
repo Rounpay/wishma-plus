@@ -19,6 +19,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.button.MaterialButton;
 import com.infotech.wishmaplus.Adapter.Interfaces.ReplyCallBack;
 import com.infotech.wishmaplus.Api.Object.CommentResult;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
@@ -200,6 +201,23 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
                 }
 
                 notifyItemChanged(position);
+            }
+
+            @Override
+            public void onError(String msg) {
+
+            }
+        });
+        UserDetailResponse userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+        int accountType = userDetailResponse.isSelfProfile()?1:2;//Objects.equals(tokenManager.getString("ACTIVE_PAGE_ID"), userDetailResponse.getUserId()) ?2:1;
+//                    InsightTypeID
+//                    Impressions = 1,
+//                    Viewed = 2,
+//                    Clicked = 3
+        UtilMethods.INSTANCE.addInsight(context, userDetailResponse.getUserId(),postId, accountType ,2, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+
             }
 
             @Override

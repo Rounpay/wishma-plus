@@ -1,0 +1,1483 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.CreateNewAd">
+
+    <!-- Back Button -->
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Back"
+        android:padding="@dimen/_10sdp"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Title -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/user_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ads"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/back_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/back_button" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/moreBTn"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:text="Manage"
+        android:textColor="@color/dark_blue"
+        android:textSize="16sp"
+        android:paddingVertical="@dimen/_10sdp"
+        app:layout_constraintBottom_toBottomOf="@id/back_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/back_button" />
+
+    <!-- Line -->
+    <View
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDDDDD"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/back_button" />
+
+    <!-- Scrollable Content -->
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@+id/line1"
+        app:layout_constraintBottom_toTopOf="@+id/bottomLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Header -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:padding="12dp"
+                android:background="@drawable/card_border">
+
+                <!-- Left Image -->
+                <ImageView
+                    android:id="@+id/imgHeader"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/edittext_bg_new"
+                    android:src="@drawable/user_profile"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/tvHeaderTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Test"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"
+                    app:layout_constraintStart_toEndOf="@id/imgHeader"
+                    app:layout_constraintTop_toTopOf="@id/imgHeader"
+                    android:layout_marginStart="10dp"/>
+
+                <!-- Subtitle -->
+                <TextView
+                    android:id="@+id/tvHeaderSub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Connect with Test"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    app:layout_constraintStart_toStartOf="@id/tvHeaderTitle"
+                    app:layout_constraintTop_toBottomOf="@id/tvHeaderTitle"
+                    android:layout_marginTop="3dp"/>
+
+                <!-- Edit Icon -->
+                <ImageView
+                    android:id="@+id/imgEdit"
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:padding="7dp"
+                    android:background="@drawable/edittext_bg_new"
+                    android:src="@drawable/ic_edit"
+                    android:elevation="2dp"
+                    android:scaleType="centerInside"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <LinearLayout
+                android:id="@+id/goalSection"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="12dp"
+
+                android:background="@drawable/card_border">
+
+                <!-- Title -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/_5sdp">
+                <TextView
+                    android:id="@+id/txtGoalTitle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="Goal"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="#000000" />
+                    <ImageView
+                        android:id="@+id/imgInfoGoal"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/info_circle" />
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/txtDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="What results would you like from this ad?"
+                    android:textSize="13sp"
+                    android:textColor="#555555"
+                    android:layout_marginTop="3dp" />
+
+                <!-- Automatic Item -->
+                <include layout="@layout/goal_item_view"
+                    android:id="@+id/itemAutomatic" />
+
+                <!-- Followers -->
+                <include layout="@layout/goal_item_view"
+                    android:id="@+id/itemFollowers" />
+
+                <!-- Website Visitors -->
+                <include layout="@layout/goal_item_view"
+                    android:id="@+id/itemWebsite" />
+
+                <!-- Page Visits -->
+                <include layout="@layout/goal_item_view"
+                    android:id="@+id/itemPageVisit" />
+
+                <!-- Messages -->
+                <include layout="@layout/goal_item_view"
+                    android:id="@+id/itemMessages" />
+
+                <!-- Leads -->
+                <include layout="@layout/goal_item_view"
+                    android:id="@+id/itemLeads" />
+
+                <!-- Calls -->
+                <include layout="@layout/goal_item_view"
+                    android:id="@+id/itemCalls" />
+
+                <!-- See Less button -->
+                <TextView
+                    android:id="@+id/txtSeeLess"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="See less  ↑"
+                    android:textSize="15sp"
+                    android:textColor="#111111"
+                    android:background="#EDEDED"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:drawablePadding="8dp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/buttonAndSpecialSection"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@drawable/card_border"
+                    android:orientation="vertical">
+
+                    <!-- Title: Button -->
+                    <TextView
+                        android:id="@+id/tvButtonTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Button"
+                        android:textColor="#000000"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <!-- Follow + Edit Icon Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingTop="6dp">
+
+                        <TextView
+                            android:id="@+id/tvFollowText"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Follow"
+                            android:textSize="14sp"
+                            android:textColor="#000000"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/imgEditFollow"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:src="@drawable/ic_edit"
+                            android:padding="2dp" />
+                    </LinearLayout>
+
+                    <!-- Description -->
+                    <TextView
+                        android:id="@+id/tvButtonDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Choose the action you want people to take when they see your ad."
+                        android:textColor="#777777"
+                        android:textSize="14sp"
+                        android:paddingTop="4dp" />
+
+                </LinearLayout>
+
+                <!-- Divider Line -->
+<!--                <View-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="1dp"-->
+<!--                    android:background="#E0E0E0" />-->
+
+                <!-- ================ SPECIAL AD CATEGORY SECTION ================= -->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:background="@drawable/card_border"
+                    android:padding="12dp">
+
+                    <!-- Row: Title + Info + Switch -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <!-- Title -->
+                        <TextView
+                            android:id="@+id/tvSpecialAdTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Special Ad Category"
+                            android:textColor="#000000"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+
+                        <!-- Info Icon -->
+                        <ImageView
+                            android:id="@+id/imgInfo"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:src="@drawable/info_circle" />
+
+                        <!-- Switch -->
+
+
+                    </LinearLayout>
+
+                    <!-- Description -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+                    <TextView
+                        android:id="@+id/tvSpecialAdDescription"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Ads about financial products and services, employment, housing, social issues or elections and politics"
+                        android:textColor="#777777"
+                        android:textSize="14sp"
+                        android:paddingTop="6dp" />
+                        <Switch
+                            android:id="@+id/switchSpecialAd"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:thumbTint="#CCCCCC"
+                            android:trackTint="#E5E5E5" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_border"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:padding="12dp">
+
+                <!-- Title -->
+                <LinearLayout
+                    android:id="@+id/tvChooseAudience"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteX="12dp">
+
+                    <TextView
+
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Choose audience"
+                        android:textColor="#000"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/infoAudience"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/info_circle" />
+                </LinearLayout>
+
+                <!-- Advantage+ audience -->
+                <TextView
+                    android:id="@+id/tvAdvantageTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Advantage + audience"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:textColor="@android:color/black"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvChooseAudience"
+                    app:layout_constraintEnd_toStartOf="@id/rbAdvantage"
+                    android:paddingEnd="8dp"/>
+
+                <RadioButton
+                    android:id="@+id/rbAdvantage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/tvAdvantageTitle"
+                    android:padding="0dp"
+                    android:layout_margin="0dp"
+                    android:buttonTint="@color/colorPrimary"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:text=""
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"/>
+
+
+                <!-- Advantage+ Subtitle -->
+                <TextView
+                    android:id="@+id/tvAdvantageSub"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Automatically created and adjusts over time to reach more people interested in your business."
+                    android:textSize="13sp"
+                    android:textColor="#666"
+                    android:layout_marginTop="4dp"
+                    app:layout_constraintStart_toStartOf="@id/tvAdvantageTitle"
+                    app:layout_constraintEnd_toEndOf="@+id/tvAdvantageTitle"
+                    app:layout_constraintTop_toBottomOf="@id/tvAdvantageTitle"/>
+
+                <!-- Card-like box -->
+                <LinearLayout
+                    android:id="@+id/boxAdvantage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_box_round"
+                    android:padding="12dp"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintStart_toStartOf="@id/tvAdvantageSub"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvAdvantageSub"
+                    android:orientation="horizontal">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Location: "
+                            android:textSize="14sp"/>
+
+                        <TextView
+                            android:id="@+id/tvLocation"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="India"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"/>
+
+
+                    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Minimum age: "
+                        android:textSize="14sp"
+                        android:layout_marginTop="4dp"/>
+                    <TextView
+                        android:id="@+id/tvMinAge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="18"
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Advantage+ audience: "
+                        android:textSize="14sp"
+                        android:layout_marginTop="4dp"/>
+                    <TextView
+                        android:id="@+id/tvAdvantageOn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="On"
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+
+                </LinearLayout>
+                    <Button
+                        android:id="@+id/btnEdit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Edit"
+                        android:backgroundTint="@color/colorAccent"
+                        android:layout_marginTop="8dp"
+                        android:paddingHorizontal="12dp"/>
+                </LinearLayout>
+
+                <!-- Radio: People you choose -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/rbChoosePeople"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/rbChoosePeople"
+                    app:layout_constraintTop_toBottomOf="@id/boxAdvantage">
+
+                    <TextView
+                        android:id="@+id/tvChoosePeople"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="6dp"
+                        android:text="People you choose through targeting"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:buttonTint="@color/colorPrimary"
+                        android:gravity="center_vertical"
+                        android:includeFontPadding="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:padding="0dp"
+                        android:text=""
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/rbLocalArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/rbLocalArea"
+                    app:layout_constraintTop_toBottomOf="@+id/rbChoosePeople">
+
+                    <TextView
+                        android:id="@+id/tvLocalPeople"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="6dp"
+                        android:text="People you choose through targeting"
+                        android:textColor="@android:color/black"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:buttonTint="@color/colorPrimary"
+                        android:gravity="center_vertical"
+                        android:includeFontPadding="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:padding="0dp"
+                        android:text=""
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+                <!-- Buttons: See all / Create new -->
+                <LinearLayout
+                    android:id="@+id/rowButtons"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintTop_toBottomOf="@id/rbLocalArea"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <Button
+                        android:id="@+id/btnSeeAll"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/colorAccent"
+                        android:layout_height="wrap_content"
+                        android:text="See all" />
+
+                    <Button
+                        android:id="@+id/btnCreateNew"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:backgroundTint="@color/colorAccent"
+                        android:layout_height="wrap_content"
+                        android:text="Create new"
+                        android:layout_marginStart="12dp" />
+                </LinearLayout>
+
+                <!-- Securities title -->
+                <LinearLayout
+                    android:id="@+id/tvSecuritiesTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/rowButtons"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="20dp">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:textStyle="bold"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:text="Is this ad about securities and investments with audiences in India?"
+                        android:textSize="15sp"/>
+                    <ImageView
+                        android:id="@+id/info"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/info_circle" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    app:layout_constraintTop_toBottomOf="@id/tvSecuritiesTitle"
+                    app:layout_constraintStart_toStartOf="parent">
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:textStyle="bold"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/black"
+                            android:text="Securities and investments declaration"
+                            android:textSize="15sp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="This ad is about securities and investments."
+                            android:textSize="13sp"
+                            android:textColor="#666"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+
+                    <!-- Checkbox -->
+                    <CheckBox
+                        android:id="@+id/cbDeclaration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_height="wrap_content">
+
+                <!-- Card container -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardPlacements"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:cardUseCompatPadding="true"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    app:cardPreventCornerOverlap="false"
+                    app:cardBackgroundColor="@android:color/white"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="16dp">
+
+                        <!-- Title + info icon -->
+                        <TextView
+                            android:id="@+id/tvTitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:text="Placements"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#222222"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/ivInfo"
+                            app:layout_constraintVertical_bias="0" />
+
+                        <ImageView
+                            android:id="@+id/ivInfo"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
+                            android:contentDescription="info"
+                            android:src="@drawable/info_circle"
+                            app:layout_constraintTop_toTopOf="@id/tvTitle"
+                            app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                        <!-- Subtitle/description -->
+                        <TextView
+                            android:id="@+id/tvSubtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Choose where you want to show your ad.  The more placements you select, the more opportunities you'll have to reach your target audience."
+                            android:textSize="13sp"
+                            android:textColor="#666666"
+                            android:maxLines="3"
+                            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                        <!-- Divider -->
+                        <View
+                            android:id="@+id/divider"
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="12dp"
+                            android:background="#EEEEEE"
+                            app:layout_constraintTop_toBottomOf="@id/tvSubtitle"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent" />
+
+                        <!-- Rows container -->
+                        <LinearLayout
+                            android:id="@+id/rowsContainer"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintTop_toBottomOf="@id/divider"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent">
+
+                            <!-- Row: Facebook -->
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/rowFacebook"
+                                android:layout_width="match_parent"
+                                android:layout_height="56dp"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp">
+
+                                <ImageView
+                                    android:id="@+id/ivFacebook"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/app_logo"
+                                    android:background="@drawable/edittext_bg_new"
+                                    android:padding="6dp"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/tvFacebook"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Whisma Plus"
+                                    android:textSize="15sp"
+                                    android:textColor="#222222"
+                                    android:layout_marginStart="12dp"
+                                    app:layout_constraintStart_toEndOf="@id/ivFacebook"
+                                    app:layout_constraintTop_toTopOf="@id/ivFacebook"
+                                    app:layout_constraintBottom_toBottomOf="@id/ivFacebook"
+                                    app:layout_constraintEnd_toStartOf="@+id/cbFacebook" />
+
+                                <androidx.appcompat.widget.AppCompatCheckBox
+                                    android:id="@+id/cbFacebook"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checked="true"
+                                    android:padding="0dp"
+                                    android:layout_margin="0dp"
+                                    android:gravity="center_vertical"
+                                    android:includeFontPadding="false"
+                                    android:text=""
+                                    android:minWidth="0dp"
+                                    android:minHeight="0dp"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <!-- Row: Instagram -->
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/rowInstagram"
+                                android:layout_width="match_parent"
+                                android:layout_height="56dp"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp">
+
+                                <ImageView
+                                    android:id="@+id/ivInstagram"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/ic_instagram"
+                                    android:background="@drawable/edittext_bg_new"
+                                    android:padding="6dp"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/tvInstagram"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Instagram"
+                                    android:textSize="15sp"
+                                    android:textColor="#222222"
+                                    android:layout_marginStart="12dp"
+                                    app:layout_constraintStart_toEndOf="@id/ivInstagram"
+                                    app:layout_constraintTop_toTopOf="@id/ivInstagram"
+                                    app:layout_constraintBottom_toBottomOf="@id/ivInstagram"
+                                    app:layout_constraintEnd_toStartOf="@+id/cbInstagram" />
+
+                                <androidx.appcompat.widget.AppCompatCheckBox
+                                    android:id="@+id/cbInstagram"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checked="false"
+                                    android:padding="0dp"
+                                    android:layout_margin="0dp"
+                                    android:gravity="center_vertical"
+                                    android:includeFontPadding="false"
+                                    android:text=""
+                                    android:minWidth="0dp"
+                                    android:minHeight="0dp"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                            <!-- Row: Messenger -->
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:id="@+id/rowMessenger"
+                                android:layout_width="match_parent"
+                                android:layout_height="56dp"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="8dp">
+
+                                <ImageView
+                                    android:id="@+id/ivMessenger"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:scaleType="centerInside"
+                                    android:src="@drawable/ic_messenger"
+                                    android:background="@drawable/edittext_bg_new"
+                                    android:padding="6dp"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/tvMessenger"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Messenger"
+                                    android:textSize="15sp"
+                                    android:textColor="#222222"
+                                    android:layout_marginStart="12dp"
+                                    app:layout_constraintStart_toEndOf="@id/ivMessenger"
+                                    app:layout_constraintTop_toTopOf="@id/ivMessenger"
+                                    app:layout_constraintBottom_toBottomOf="@id/ivMessenger"
+                                    app:layout_constraintEnd_toStartOf="@+id/cbMessenger" />
+
+                                <androidx.appcompat.widget.AppCompatCheckBox
+                                    android:id="@+id/cbMessenger"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checked="false"
+                                    android:padding="0dp"
+                                    android:layout_margin="0dp"
+                                    android:gravity="center_vertical"
+                                    android:includeFontPadding="false"
+                                    android:text=""
+                                    android:minWidth="0dp"
+                                    android:minHeight="0dp"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </LinearLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.cardview.widget.CardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="@drawable/card_border"
+                android:padding="16dp">
+
+                <!-- Budget & duration title -->
+                <LinearLayout
+                    android:id="@+id/tvTitleBudget"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Budget and duration"
+                        android:textColor="#000"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/infoBudget"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/info_circle" />
+                </LinearLayout>
+
+
+                <!-- Estimated daily results card -->
+                <TextView
+                    android:id="@+id/svTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:text="Estimated daily results"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTitleBudget" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardEstimatedResults"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:backgroundTint="@color/cb_grey"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/svTitle">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp"
+                        android:weightSum="2">
+
+                        <!-- Link Clicks -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Link Clicks"
+                                android:textColor="#777"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/tvLinkClicks"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="37 - 100"
+                                android:textColor="#000"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- People Reached -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="People reached"
+                                android:textColor="#777"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/tvPeopleReached"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="3.7K - 11K"
+                                android:textColor="#000"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+                <!-- Daily Budget Label -->
+                <TextView
+                    android:id="@+id/tvDailyBudget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Daily budget"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/cardEstimatedResults" />
+
+                <!-- Budget Value -->
+                <LinearLayout
+                    android:id="@+id/tvBudgetValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvDailyBudget">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="₹89"
+                        android:textColor="#000"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/imgEditPrice"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="10dp"
+                        android:padding="2dp"
+                        android:src="@drawable/ic_edit" />
+                </LinearLayout>
+                <!-- Seekbar -->
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹90"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#777"
+                    android:textSize="12sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvBudgetValue" />
+
+                <SeekBar
+                    android:id="@+id/budgetSeekBar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:max="20000"
+                    android:progress="89"
+                    app:layout_constraintEnd_toStartOf="@+id/textView2"
+                    app:layout_constraintStart_toEndOf="@+id/textView3"
+                    app:layout_constraintTop_toBottomOf="@id/tvBudgetValue" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹20,000"
+                    android:layout_marginTop="10dp"
+                    android:textColor="#777"
+                    android:textSize="12sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvBudgetValue" />
+
+
+
+                <!-- Duration -->
+                <TextView
+                    android:id="@+id/tvDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:text="Duration"
+                    android:textStyle="bold"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textView3" />
+
+                <!-- Radio Button - Run continuously -->
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/rbContinuous"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvDuration">
+
+                    <TextView
+                        android:id="@+id/runTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Run this ad continuously"
+                        android:textColor="#000"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <RadioButton
+                        android:id="@+id/rbRun"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:gravity="center_vertical"
+                        android:includeFontPadding="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:padding="0dp"
+                        android:text=""
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/runSub"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="Your ad will continue to run on a daily budget unless you pause it, which you can do any time."
+                        android:textColor="#777"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toStartOf="@+id/rbRun"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/runTv" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/rbChoose"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rbContinuous">
+
+                    <TextView
+                        android:id="@+id/tvChooseEnd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Choose when this ad will end"
+                        android:textColor="#000"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <RadioButton
+                        android:id="@+id/rbChooseAd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="0dp"
+                        android:gravity="center_vertical"
+                        android:includeFontPadding="false"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:padding="0dp"
+                        android:text=""
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:id="@+id/llInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rbChoose">
+
+                    <TextView
+                        android:id="@+id/tvLine1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:text="Your ad will run continuously with a daily budget of ₹89. Actual amount spent daily may vary."
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tvLine2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/dark_blue"
+                        android:text="Learn more"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:padding="16dp"
+                android:background="@drawable/card_border">
+
+                <!-- Payment Details (Title) -->
+                <TextView
+                    android:id="@+id/tvPaymentDetails"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Payment details"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/ivInfoPayment"
+                    />
+
+                <!-- Info Icon -->
+                <ImageView
+                    android:id="@+id/ivInfoPayment"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/info_circle"
+                    app:layout_constraintTop_toTopOf="@+id/tvPaymentDetails"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <!-- Payment Method Row -->
+                <LinearLayout
+                    android:id="@+id/rowPaymentMethod"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="10dp"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPaymentDetails"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:src="@drawable/payu_credit_debit_cards"
+                        app:tint="#555"/>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+                        <TextView
+                            android:id="@+id/tvPaymentMethod"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Payment method"
+                            android:textSize="15sp"
+                            android:textColor="#000"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:id="@+id/tvAdd"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Add"
+                            android:textSize="14sp"/>
+                    </LinearLayout>
+
+
+
+
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_marginStart="6dp"
+                        android:src="@drawable/ic_arrow_forward"
+                        app:tint="#777"/>
+                </LinearLayout>
+
+                <!-- Payment Summary Label -->
+                <TextView
+                    android:id="@+id/tvPaymentSummary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Payment summary"
+                    android:textSize="15sp"
+                    android:textColor="#000"
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintTop_toBottomOf="@+id/rowPaymentMethod"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <!-- Summary subtitle -->
+                <TextView
+                    android:id="@+id/tvSummarySubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your ad will run until you turn it off."
+                    android:textSize="13sp"
+                    android:textColor="#858585"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPaymentSummary"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <!-- Daily Text -->
+                <TextView
+                    android:id="@+id/tvDaily"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Daily"
+                    android:textSize="15sp"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvSummarySubtitle"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <!-- Price -->
+                <TextView
+                    android:id="@+id/tvPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="₹89.00"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#000"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvSummarySubtitle"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:padding="16dp"
+                android:background="@drawable/card_border">
+
+                <!-- Regular text -->
+                <TextView
+                    android:id="@+id/tvProblemText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Need to report a problem?"
+                    android:textColor="#6E6E6E"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
+
+                <!-- Blue clickable text -->
+                <TextView
+                    android:id="@+id/tvGiveFeedback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Give feedback"
+                    android:textColor="#1A73E8"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="6dp"
+                    app:layout_constraintStart_toEndOf="@id/tvProblemText"
+                    app:layout_constraintTop_toTopOf="@id/tvProblemText"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Bottom Promote Button -->
+    <!-- Bottom Promote Button -->
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/btnPromoteNow"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Promote Now"
+            android:backgroundTint="#1877F2"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:elevation="0dp"
+            android:stateListAnimator="@null"
+            android:padding="0dp"/>
+
+        <TextView
+            android:id="@+id/tvTerms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="By tapping Promote Now, you acknowledge that your use of Meta’s ad tools is subject to our Terms and Conditions."
+            android:textSize="12sp"
+            android:textColor="#777777"
+            android:textAlignment="center"
+            android:paddingTop="8dp"/>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+

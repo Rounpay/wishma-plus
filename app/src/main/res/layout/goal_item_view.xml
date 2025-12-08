@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_5sdp">
+
+    <!-- Icon -->
+    <ImageView
+        android:id="@+id/imgIcon"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:background="@drawable/round_img"
+        android:padding="10dp"
+        android:src="@drawable/ic_liked_thumbs"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Automatic"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@id/imgIcon"
+        app:layout_constraintEnd_toStartOf="@+id/radioGoal" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/txtDesc"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Let Facebook select the most relevant goal based on the button label and other settings you choose."
+        android:textSize="13sp"
+        android:textColor="#555555"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="3dp"
+        app:layout_constraintTop_toBottomOf="@id/txtTitle"
+        app:layout_constraintStart_toEndOf="@id/imgIcon"
+        app:layout_constraintEnd_toStartOf="@+id/radioGoal" />
+
+    <!-- Radio Button -->
+    <RadioButton
+        android:id="@+id/radioGoal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:padding="0dp"
+        android:layout_margin="0dp"
+        android:buttonTint="@color/colorPrimary"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:text=""
+        android:minWidth="0dp"
+        android:minHeight="0dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

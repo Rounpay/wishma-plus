@@ -60,6 +60,7 @@ import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
+import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
@@ -1039,6 +1040,44 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<LikeResponse> call, @NonNull Throwable t) {
+                    if (apiCallBack != null) {
+                        apiCallBack.onError(t.getMessage());
+                    }
+                    Toast.makeText(context, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            if (apiCallBack != null) {
+                apiCallBack.onError(e.getMessage());
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void addInsight(Activity context, String userId,String postId,int accountType,int insightTypeID, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<InsightResponse> call = git.addInsight("Bearer " + tokenManager.getAccessToken(), userId,postId,accountType,insightTypeID);
+            call.enqueue(new Callback<InsightResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<InsightResponse> call, @NonNull Response<InsightResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        if (response.body().getStatusCode() == 1 || response.body().getStatusCode() == -1) {
+                            if (apiCallBack != null) {
+                                apiCallBack.onSuccess(response.body().getStatusCode());
+                            }
+                        } else {
+                            if (apiCallBack != null) {
+                                apiCallBack.onError(response.body().getResponseText());
+                            }
+                            Toast.makeText(context, response.body().getResponseText(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<InsightResponse> call, @NonNull Throwable t) {
                     if (apiCallBack != null) {
                         apiCallBack.onError(t.getMessage());
                     }

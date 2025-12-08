@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_top"
+    android:gravity="top">
+    <View
+        android:id="@+id/topLine"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_3sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_corners"
+        android:backgroundTint="@color/comment_bg" />
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content"
+        android:text="Currently viewing"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:gravity="center" />
+    <View
+        android:id="@+id/line1"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDDDDD"/>
+
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/tvDesc"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="The ad summary will only include results from the ad account you select."
+        android:textSize="14sp"
+        android:textColor="#7A7A7A"
+        android:paddingBottom="24dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Last 7 days"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:buttonTint="@color/colorPrimary"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:text=""
+            android:minWidth="0dp"
+            android:minHeight="0dp"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="Last 30 days"
+            android:textSize="15sp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:buttonTint="@color/colorPrimary"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:text=""
+            android:minWidth="0dp"
+            android:minHeight="0dp"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="Last 60 days"
+            android:textSize="15sp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:buttonTint="@color/colorPrimary"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:text=""
+            android:minWidth="0dp"
+            android:minHeight="0dp"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:text="Last 90 days"
+            android:textSize="15sp"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:padding="0dp"
+            android:layout_margin="0dp"
+            android:buttonTint="@color/colorPrimary"
+            android:gravity="center_vertical"
+            android:includeFontPadding="false"
+            android:text=""
+            android:minWidth="0dp"
+            android:minHeight="0dp"/>
+
+    </RelativeLayout>
+
+
+</LinearLayout>
