@@ -6,6 +6,7 @@ public class PageData {
 
     private String pageId;
     private String pageName;
+
     private String categoryId;
     private String bio;
     private String website;
@@ -42,6 +43,7 @@ public class PageData {
     public String getPageName() {
         return pageName;
     }
+
 
     public String getCategoryId() {
         return categoryId;
@@ -83,7 +85,5 @@ public class PageData {
         return isProfile;
     }
 
-    public void setProfile(boolean profile) {
-        isProfile = profile;
-    }
+
 }

@@ -60,8 +60,6 @@ public class ContactUsActivity extends AppCompatActivity {
        /* if (userDetailResponse == null) {
             userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
         }*/
-
-
         init();
         getDetail();
 
