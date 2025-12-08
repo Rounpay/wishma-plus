@@ -59,19 +59,24 @@
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.CreatorSupportActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.DashBoardPersonalInformation"
             android:exported="false"
-            android:theme="@style/Appnew" />
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.ProfessionalDashBoardPersonal"
             android:exported="false"
-            android:theme="@style/Appnew" />
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.AdvertiseActivity"
             android:exported="false"
-            android:theme="@style/Appnew" />
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SwitchPages"
             android:exported="false"
@@ -86,6 +91,7 @@
             android:name=".Activity.SettingUpYourPage"
             android:exported="false"
             android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize"
             />
         <activity
             android:name=".Activity.YourFriends"
