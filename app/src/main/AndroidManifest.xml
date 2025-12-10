@@ -38,10 +38,45 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
-            android:name=".Activity.ManageAds"
+            android:name=".Activity.NotEligibleForProfessional"
             android:exported="false"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".Activity.SuccessProfessional"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.ProfessionalTools"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.MonetizationProfessional"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.AudienceProfessional"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.WelcomeProfessional"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.TurnOnProfessionalMode"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.ManageAds"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.CreateNewAd"
             android:exported="false"
@@ -91,8 +126,7 @@
             android:name=".Activity.SettingUpYourPage"
             android:exported="false"
             android:theme="@style/Appnew"
-            android:windowSoftInputMode="adjustResize"
-            />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.YourFriends"
             android:exported="false"

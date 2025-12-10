@@ -24,6 +24,7 @@ import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.CompanyDetailResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
+import com.infotech.wishmaplus.Api.Response.EligibilityModel;
 import com.infotech.wishmaplus.Api.Response.FollowersResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
@@ -242,6 +243,9 @@ public interface EndPointInterface {
 
     @GET("api/UserProfile/getPageCategories")
     Call<List<CategoryResponse>> getPageCategories(@Header("Authorization") String authorization);
+
+    @POST("api/UserProfile/CheckProfessionalDashboardEligibility")
+    Call<EligibilityModel> checkEligibilityForProfessional(@Header("Authorization") String authorization);
 
     @GET("api/UserProfile/getPage")
     Call<PagesResponse> getPagesResponse(@Header("Authorization") String authorization);

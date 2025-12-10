@@ -60,18 +60,22 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.material.button.MaterialButton;
 import com.infotech.wishmaplus.Activity.ImageZoomViewActivity;
 import com.infotech.wishmaplus.Activity.MainActivity;
+import com.infotech.wishmaplus.Activity.NotEligibleForProfessional;
 import com.infotech.wishmaplus.Activity.ProfileActivity;
+import com.infotech.wishmaplus.Activity.TurnOnProfessionalMode;
 import com.infotech.wishmaplus.Activity.VideoViewActivity;
 import com.infotech.wishmaplus.Adapter.Interfaces.CountChangeCallBack;
 import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.EligibilityModel;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Fragments.ShareDialogFragment;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.ApiClient;
 import com.infotech.wishmaplus.Utils.ApplicationConstant;
 import com.infotech.wishmaplus.Utils.CommentDialog;
+import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.EndPointInterface;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
@@ -230,6 +234,9 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageButton editCoverIcon;
 
         View line_1;
+
+        com.google.android.material.button.MaterialButton btnProfessionalDashboard;
+        private CustomLoader loader;
         /*MaterialButtonadd_story_button,edit_profile_button;*/ AppCompatTextView addPostTitle, user_name, storyAddBtn, packageTitle, packageName, bioTv, location, posts_tab, photos_tab, videos_tab, noDataTv, searchBar, edit_public_details, joiningDate, followers, subscribers, followersView, followingView, friendUnfriend, addFriend;
 
         public ProfileViewHolder(View itemView) {
@@ -246,6 +253,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             followingView = itemView.findViewById(R.id.followingView);
             friendUnfriend = itemView.findViewById(R.id.friendUnfriend);
             addFriend = itemView.findViewById(R.id.addFriend);
+            btnProfessionalDashboard = itemView.findViewById(R.id.btnProfessionalDashboard);
             user_name = itemView.findViewById(R.id.user_name);
             addPostTitle = itemView.findViewById(R.id.addPostTitle);
             line_1 = itemView.findViewById(R.id.line_1);
@@ -261,6 +269,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             joiningDate = itemView.findViewById(R.id.joiningDate);
             followers = itemView.findViewById(R.id.followers);
             subscribers = itemView.findViewById(R.id.subscribers);
+            loader = new CustomLoader(context, android.R.style.Theme_Translucent_NoTitleBar);
         }
 
         @SuppressLint("SetTextI18n")
@@ -284,11 +293,56 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
                 noDataTv.setVisibility(VISIBLE);
             }
+            boolean isProfessionalDashboard = content.getUserDetail().isShowProfessionalDashboard();
             boolean isProfessional = content.getUserDetail().isProfessional();
-            if (isProfessional) {
+            if (isProfessional && !(content.getUserDetail().isSelfProfile())) {
                 friendUnfriend.setVisibility(VISIBLE);
             } else {
                 friendUnfriend.setVisibility(GONE);
+            }
+            if(isProfessionalDashboard){
+                btnProfessionalDashboard.setText("Professional Dashboard");
+            }
+            else{
+                btnProfessionalDashboard.setText("Turn on professional mode");
+                btnProfessionalDashboard.setOnClickListener(v -> {
+                    loader.show();
+                    UtilMethods.INSTANCE.checkEligibilityForProfessional(context, new UtilMethods.ApiCallBackMulti() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            if (loader != null) {
+                                if (loader.isShowing()) {
+                                    loader.dismiss();
+                                }
+                            }
+                            EligibilityModel eligibilityModel =(EligibilityModel) object;
+                            if(eligibilityModel.getStatusCode()==1){
+                                Intent intent = new Intent(context, TurnOnProfessionalMode.class);
+                                context.startActivity(intent);
+                            }
+                            else if(eligibilityModel.getStatusCode()==-1){
+                                Intent intent = new Intent(context, NotEligibleForProfessional.class);
+                                intent.putExtra("eligibilityData", eligibilityModel);   // make sure SAME KEY
+                                context.startActivity(intent);
+
+                            }
+
+                        }
+
+                        @Override
+                        public void onError(String msg) {
+                            if (loader != null) {
+                                if (loader.isShowing()) {
+                                    loader.dismiss();
+                                }
+                            }
+
+                        }
+                    });
+//                    Intent intent = new Intent(context, TurnOnProfessionalMode.class);
+//                    intent.putExtra("isProfessional", true);
+//                    context.startActivity(intent);
+                });
             }
             if (content.getUserDetail() != null) {
                 Glide.with(context).load(content.getUserDetail().getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile_picture);

@@ -27,6 +27,9 @@ public class UserDetailResponse implements Parcelable {
     @SerializedName("isProfessional")
     @Expose
     private boolean isProfessional;
+    @SerializedName("isShowProfessionalDashboard")
+    @Expose
+    private boolean isShowProfessionalDashboard;
     @SerializedName("isRequestPending")
     @Expose
     private boolean isRequestPending;
@@ -160,6 +163,7 @@ public class UserDetailResponse implements Parcelable {
         isActive = in.readByte() != 0;
         isSelfProfile = in.readByte() != 0;
         isProfessional = in.readByte() != 0;
+        isShowProfessionalDashboard = in.readByte() != 0;
         isRequestPending = in.readByte() != 0;
         id = in.readInt();
         referralID = in.readInt();
@@ -211,6 +215,7 @@ public class UserDetailResponse implements Parcelable {
         dest.writeByte((byte) (isActive ? 1 : 0));
         dest.writeByte((byte) (isSelfProfile ? 1 : 0));
         dest.writeByte((byte) (isProfessional ? 1 : 0));
+        dest.writeByte((byte) (isShowProfessionalDashboard ? 1 : 0));
         dest.writeByte((byte) (isRequestPending ? 1 : 0));
         dest.writeInt(id);
         dest.writeInt(referralID);
@@ -480,9 +485,15 @@ public class UserDetailResponse implements Parcelable {
     public boolean isProfessional() {
         return isProfessional;
     }
+    public boolean isShowProfessionalDashboard() {
+        return isShowProfessionalDashboard;
+    }
 
     public void setProfessional(boolean professional) {
         isProfessional = professional;
+    }
+    public void setShowProfessionalDashboard(boolean ShowProfessionalDashboard) {
+        isShowProfessionalDashboard = ShowProfessionalDashboard;
     }
 
     public boolean isSelfProfile() {

@@ -59,6 +59,7 @@ import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
+import com.infotech.wishmaplus.Api.Response.EligibilityModel;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
@@ -811,6 +812,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<List<CategoryResponse>> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void checkEligibilityForProfessional(Activity activity, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<EligibilityModel> call = git.checkEligibilityForProfessional("Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<EligibilityModel>() {
+                @Override
+                public void onResponse(@NonNull Call<EligibilityModel> call, @NonNull Response<EligibilityModel> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<EligibilityModel> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });
