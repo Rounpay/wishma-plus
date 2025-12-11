@@ -132,6 +132,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/createNewAd"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -187,6 +188,7 @@
             <!-- ===== Card 3: Automated Ads ===== -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/automatedAds"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_card"

@@ -58,9 +58,11 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.button.MaterialButton;
+import com.infotech.wishmaplus.Activity.Advertisement;
 import com.infotech.wishmaplus.Activity.ImageZoomViewActivity;
 import com.infotech.wishmaplus.Activity.MainActivity;
 import com.infotech.wishmaplus.Activity.NotEligibleForProfessional;
+import com.infotech.wishmaplus.Activity.ProfessionalDashBoardPersonal;
 import com.infotech.wishmaplus.Activity.ProfileActivity;
 import com.infotech.wishmaplus.Activity.TurnOnProfessionalMode;
 import com.infotech.wishmaplus.Activity.VideoViewActivity;
@@ -235,7 +237,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         View line_1;
 
-        com.google.android.material.button.MaterialButton btnProfessionalDashboard;
+        com.google.android.material.button.MaterialButton btnProfessionalDashboard,btnAdvertise;
         private CustomLoader loader;
         /*MaterialButtonadd_story_button,edit_profile_button;*/ AppCompatTextView addPostTitle, user_name, storyAddBtn, packageTitle, packageName, bioTv, location, posts_tab, photos_tab, videos_tab, noDataTv, searchBar, edit_public_details, joiningDate, followers, subscribers, followersView, followingView, friendUnfriend, addFriend;
 
@@ -254,6 +256,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             friendUnfriend = itemView.findViewById(R.id.friendUnfriend);
             addFriend = itemView.findViewById(R.id.addFriend);
             btnProfessionalDashboard = itemView.findViewById(R.id.btnProfessionalDashboard);
+            btnAdvertise = itemView.findViewById(R.id.btnAdvertise);
             user_name = itemView.findViewById(R.id.user_name);
             addPostTitle = itemView.findViewById(R.id.addPostTitle);
             line_1 = itemView.findViewById(R.id.line_1);
@@ -300,8 +303,27 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 friendUnfriend.setVisibility(GONE);
             }
+            if (content.getUserDetail().isSelfProfile()) {
+                btnProfessionalDashboard.setVisibility(VISIBLE);
+            } else {
+                btnProfessionalDashboard.setVisibility(GONE);
+            }
+            if (content.getUserDetail().isSelfProfile() && isProfessionalDashboard ) {
+                btnAdvertise.setVisibility(VISIBLE);
+            } else {
+                btnAdvertise.setVisibility(GONE);
+            }
+            btnAdvertise.setOnClickListener(view -> {
+                Intent intent = new Intent(context, Advertisement.class);
+                context.startActivity(intent);
+
+            });
             if(isProfessionalDashboard){
                 btnProfessionalDashboard.setText("Professional Dashboard");
+                btnProfessionalDashboard.setOnClickListener(v -> {
+                    Intent intent = new Intent(context, ProfessionalDashBoardPersonal.class);
+                    context.startActivity(intent);
+                });
             }
             else{
                 btnProfessionalDashboard.setText("Turn on professional mode");

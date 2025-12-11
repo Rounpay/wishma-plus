@@ -29,10 +29,17 @@ import com.infotech.wishmaplus.Activity.SentRequests;
 import com.infotech.wishmaplus.Activity.SettingsAndPrivacy;
 import com.infotech.wishmaplus.Activity.YourFriends;
 import com.infotech.wishmaplus.Adapter.FriendListAdapter;
+import com.infotech.wishmaplus.Adapter.FriendSuggestionAdapter;
+import com.infotech.wishmaplus.Adapter.FriendSuggestionItem;
+import com.infotech.wishmaplus.Adapter.FriendSuggestionResponse;
+import com.infotech.wishmaplus.Adapter.SentRequestAdapter;
 import com.infotech.wishmaplus.Adapter.UsersAdapter;
+import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.User;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
@@ -43,8 +50,10 @@ public class FriendListFragment extends Fragment {
     View noDataLayout;
     RecyclerView recyclerView;
     List<UserListFriends> list = new ArrayList<>();
+    private CustomLoader loader;
 //    FriendListAdapter adapter;
-    UsersAdapter adapter;
+    FriendSuggestionAdapter adapter;
+    FriendSuggestionResponse friendSuggestionResponse = new FriendSuggestionResponse();
     ArrayList<User> data = new ArrayList<>();
 
     BottomSheetDialog bottomSheetDialog;
@@ -56,40 +65,14 @@ public class FriendListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
         SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.swipeRefreshLayout);
         pullToRefresh.setOnRefreshListener(() -> {
-            hitApi();
+//            hitApi();
+            getFriendSuggestionList(true);
             pullToRefresh.setRefreshing(false);
         });
         recyclerView = view.findViewById(R.id.recyclerView);
         noDataLayout = view.findViewById(R.id.noDataLayout);
         notificationDot = view.findViewById(R.id.notification_dot);
-        data.add(new User("Anamika Singh", "", "https://i.pravatar.cc/150?img=1"));
-        data.add(new User("Akhilesh Shukla", "1 mutual friend", "https://i.pravatar.cc/150?img=2"));
-        data.add(new User("Tamanna Singh ", "", "https://i.pravatar.cc/150?img=3"));
-        data.add(new User("Priya Verma", "1 mutual friend", "https://i.pravatar.cc/150?img=4"));
-        adapter = new UsersAdapter(requireActivity(), data, new UsersAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(User user, int pos) {
-                // open profile
-            }
-
-            @Override
-            public void onMoreClicked(View anchor, User user, int pos) {
-                openBottomSheet(requireActivity());
-                //)
-                // show popup - sample
-//                androidx.appcompat.widget.PopupMenu pm = new androidx.appcompat.widget.PopupMenu(requireActivity(), anchor);
-//                pm.getMenu().add("Unfriend");
-//                pm.setOnMenuItemClickListener(menuItem -> {
-//                    // action
-//                    return true;
-//                });
-//                pm.show();
-            }
-        });
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity()));
-        recyclerView.setAdapter(adapter);
-        recyclerView.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
+        loader = new CustomLoader(requireContext(), android.R.style.Theme_Translucent_NoTitleBar);
 
         view.findViewById(R.id.content).setOnClickListener(view1 -> {
             startActivity(new Intent(requireActivity(), YourFriends.class));
@@ -118,13 +101,65 @@ public class FriendListFragment extends Fragment {
 //        },false);
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 //        recyclerView.setAdapter(adapter);
-        updateEmptyView();
-        hitApi();
+        getFriendSuggestionList(false);
+//        updateEmptyView();
+//        hitApi();
         return view;
+    }
+    private void getFriendSuggestionList(boolean isRefresh) {
+
+        loader.show();
+
+        UtilMethods.INSTANCE.getFriendSuggestionList(new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null && loader.isShowing()) loader.dismiss();
+
+                friendSuggestionResponse = (FriendSuggestionResponse) object;
+
+                if (friendSuggestionResponse.getStatusCode() == 1) {
+
+                    adapter = new FriendSuggestionAdapter(
+                            requireContext(),
+                            friendSuggestionResponse.getResult(),
+                            new FriendSuggestionAdapter.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(FriendSuggestionItem user, int pos) {
+
+                                }
+
+                                @Override
+                                public void onMoreClicked(View anchor, FriendSuggestionItem user, int pos) {
+
+                                }
+
+                            }
+                    );
+
+                    recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+                    recyclerView.setAdapter(adapter);
+                    recyclerView.addItemDecoration(
+                            new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+                    );
+                    updateEmptyView();
+                }
+
+                if (isRefresh && adapter != null)
+                    adapter.notifyDataSetChanged();
+
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null && loader.isShowing()) loader.dismiss();
+            }
+        });
     }
 
     private void updateEmptyView() {
-        if (data.isEmpty()) {
+        if (friendSuggestionResponse.getResult().isEmpty()) {
             recyclerView.setVisibility(GONE);
             noDataLayout.setVisibility(VISIBLE);
         } else {
@@ -135,7 +170,7 @@ public class FriendListFragment extends Fragment {
 
     @Override
     public void onResume() {
-        hitApi();
+//        hitApi();
         super.onResume();
     }
 
@@ -199,7 +234,7 @@ public class FriendListFragment extends Fragment {
                     if (adapter != null) {
                         adapter.notifyItemRemoved(position);
                         adapter.notifyItemRangeChanged(position, list.size());
-                        updateEmptyView();
+//                        updateEmptyView();
                     }
                 }
             }

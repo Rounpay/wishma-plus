@@ -182,7 +182,7 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:text="Your Friends"
+                android:text="Pepole you may know"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
                 android:textStyle="bold"

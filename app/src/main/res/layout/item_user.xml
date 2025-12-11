@@ -14,7 +14,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/app_logo"
+        android:src="@drawable/user_icon"
         android:background="@drawable/circle_background"
         android:clipToOutline="true"
         app:layout_constraintStart_toStartOf="parent"

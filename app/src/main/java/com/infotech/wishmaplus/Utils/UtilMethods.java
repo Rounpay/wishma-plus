@@ -48,6 +48,7 @@ import com.google.gson.Gson;
 import com.infotech.wishmaplus.Activity.CreateNewProfilePage;
 import com.infotech.wishmaplus.Adapter.DialogListBottomSheetAdapter;
 import com.infotech.wishmaplus.Adapter.DialogReportBottomSheetAdapter;
+import com.infotech.wishmaplus.Adapter.FriendSuggestionResponse;
 import com.infotech.wishmaplus.Api.Object.CommentResult;
 import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
 import com.infotech.wishmaplus.Api.Request.BasicRequest;
@@ -60,10 +61,14 @@ import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.EligibilityModel;
+import com.infotech.wishmaplus.Api.Response.EnableDashboardResponse;
+import com.infotech.wishmaplus.Api.Response.FriendListResponse;
+import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
+import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
@@ -821,6 +826,81 @@ public enum UtilMethods {
         }
     }
 
+    public void getFriendList(ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<FriendListResponse> call = git.getFriendList("Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<FriendListResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<FriendListResponse> call, @NonNull Response<FriendListResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<FriendListResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getFriendSuggestionList(ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<FriendSuggestionResponse> call = git.getFriendSuggestionList("Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<FriendSuggestionResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<FriendSuggestionResponse> call, @NonNull Response<FriendSuggestionResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<FriendSuggestionResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getSentRequest(ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<SentRequestResponse> call = git.getFriendRequests("Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<SentRequestResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<SentRequestResponse> call, @NonNull Response<SentRequestResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<SentRequestResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
     public void checkEligibilityForProfessional(Activity activity, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
@@ -837,6 +917,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<EligibilityModel> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void enableProfessionalDashBoard(Activity activity, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<EnableDashboardResponse> call = git.enableProfessionalDashBoard("Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<EnableDashboardResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<EnableDashboardResponse> call, @NonNull Response<EnableDashboardResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<EnableDashboardResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });

@@ -1,5 +1,6 @@
 package com.infotech.wishmaplus.Utils;
 
+import com.infotech.wishmaplus.Adapter.FriendSuggestionResponse;
 import com.infotech.wishmaplus.Api.Object.BalanceResult;
 import com.infotech.wishmaplus.Api.Object.BankResult;
 import com.infotech.wishmaplus.Api.Object.CityResult;
@@ -25,12 +26,16 @@ import com.infotech.wishmaplus.Api.Response.CompanyDetailResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.EligibilityModel;
+import com.infotech.wishmaplus.Api.Response.EnableDashboardResponse;
 import com.infotech.wishmaplus.Api.Response.FollowersResponse;
+import com.infotech.wishmaplus.Api.Response.FriendListResponse;
+import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.LoginResponse;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
+import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.SignUpResponse;
 import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
@@ -244,8 +249,19 @@ public interface EndPointInterface {
     @GET("api/UserProfile/getPageCategories")
     Call<List<CategoryResponse>> getPageCategories(@Header("Authorization") String authorization);
 
+    @GET("api/UserProfile/GetFriendList")
+    Call<FriendListResponse> getFriendList(@Header("Authorization") String authorization);
+
+    @GET("api/UserProfile/GetFriendSuggestionList")
+    Call<FriendSuggestionResponse> getFriendSuggestionList(@Header("Authorization") String authorization);
+
+    @GET("api/UserProfile/GetSentRequestFriendList")
+    Call<SentRequestResponse> getFriendRequests(@Header("Authorization") String authorization);
+
     @POST("api/UserProfile/CheckProfessionalDashboardEligibility")
     Call<EligibilityModel> checkEligibilityForProfessional(@Header("Authorization") String authorization);
+    @POST("api/UserProfile/EnableProfessionalDashBoard")
+    Call<EnableDashboardResponse> enableProfessionalDashBoard(@Header("Authorization") String authorization);
 
     @GET("api/UserProfile/getPage")
     Call<PagesResponse> getPagesResponse(@Header("Authorization") String authorization);

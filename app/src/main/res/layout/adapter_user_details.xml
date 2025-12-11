@@ -230,6 +230,7 @@
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:layout_margin="12dp"
+        android:visibility="gone"
         android:backgroundTint="#1B74E4"
         android:gravity="center"
         android:text=""
@@ -245,13 +246,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/followersView" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnAdvertise"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="12dp"
+        android:visibility="gone"
+        android:backgroundTint="#E6E6E6"
+        android:gravity="center"
+        android:text="Advertise"
+        android:textColor="@android:color/black"
+        android:textSize="12sp"
+        android:textAllCaps="false"
+        app:cornerRadius="6dp"
+        app:icon="@drawable/ic_my_team"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconSize="20dp"
+        app:iconTint="@android:color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnProfessionalDashboard" />
     <LinearLayout
         android:id="@+id/buttonsLayout"
         android:layout_width="wrap_content"
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnProfessionalDashboard">
+        app:layout_constraintTop_toBottomOf="@id/btnAdvertise">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/friendUnfriend"

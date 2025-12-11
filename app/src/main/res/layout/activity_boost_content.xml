@@ -118,6 +118,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/postCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp">

@@ -136,8 +136,8 @@ public class MoreFragment extends Fragment {
             startActivity(new Intent(requireActivity(), GroupActivity.class));
         });
         v.findViewById(R.id.professionalView).setOnClickListener(view -> {
-           // startActivity(new Intent(requireActivity(), ProfessionalDashboardActivity.class));
-            startActivity(new Intent(requireActivity(), ProfessionalDashBoardPersonal.class));
+            startActivity(new Intent(requireActivity(), ProfessionalDashboardActivity.class));
+//            startActivity(new Intent(requireActivity(), ProfessionalDashBoardPersonal.class));
         });
         v.findViewById(R.id.profileIcon).setOnClickListener(view -> {
             profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)

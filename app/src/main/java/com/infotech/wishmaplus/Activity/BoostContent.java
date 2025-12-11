@@ -1,5 +1,6 @@
 package com.infotech.wishmaplus.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -23,6 +24,9 @@ public class BoostContent extends AppCompatActivity {
             return insets;
         });
         findViewById(R.id.back_button).setOnClickListener(v -> finish());
+        findViewById(R.id.postCard).setOnClickListener(v -> {
+            startActivity(new Intent(this, CreateNewAd.class));
+        });
 
     }
 }
