@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
+import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class SentRequestAdapter extends RecyclerView.Adapter<SentRequestAdapter.
     public interface OnItemClickListener {
         void onItemClick(SentRequestResponse.ResultItem user, int pos);
         void onMoreClicked(View anchor, SentRequestResponse.ResultItem user, int pos);
+        void onProfileClick(SentRequestResponse.ResultItem user, int position);
     }
 
     public SentRequestAdapter(Context ctx, List<SentRequestResponse.ResultItem> list, OnItemClickListener listener) {
@@ -83,6 +85,16 @@ public class SentRequestAdapter extends RecyclerView.Adapter<SentRequestAdapter.
 //                });
 //                pm.show();
 //            }
+        });
+        holder.profileImage.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onProfileClick(u, position);
+            }
+        });
+        holder.name.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onProfileClick(u, position);
+            }
         });
     }
 

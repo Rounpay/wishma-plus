@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -26,8 +28,10 @@ import com.infotech.wishmaplus.Adapter.UsersAdapter;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.User;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
@@ -38,6 +42,8 @@ public class YourFriends extends AppCompatActivity {
     RecyclerView recyclerView;
     FriendsListAdapter adapter;
     private CustomLoader loader;
+    public PreferencesManager tokenManager;
+    UserDetailResponse userDetailResponse;
     FriendListResponse friendListResponse = new FriendListResponse();
     BottomSheetDialog bottomSheetDialog;
 
@@ -48,6 +54,8 @@ public class YourFriends extends AppCompatActivity {
         setContentView(R.layout.activity_your_friends);
         findViewById(R.id.back_button).setOnClickListener(view -> finish());
         SwipeRefreshLayout pullToRefresh = findViewById(R.id.swipeRefreshLayout);
+        tokenManager = new PreferencesManager(this,1);
+        userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         pullToRefresh.setOnRefreshListener(() -> {
 //            hitApi();
@@ -83,7 +91,15 @@ public class YourFriends extends AppCompatActivity {
 
                         @Override
                         public void onMoreClicked(View anchor, FriendUserModel user, int pos) {
+                            openBottomSheet(YourFriends.this);
+                        }
 
+                        @Override
+                        public void onProfileClick(FriendUserModel user, int position) {
+                            //                startActivity(new Intent(FriendRequest.this, ProfileActivity.class));
+                            profileActivityResultLauncher.launch(new Intent(YourFriends.this, ProfileActivity.class)
+                                    .putExtra("userData", userDetailResponse)
+                                    .putExtra("id", user.getUserId()));
                         }
                     });
                     recyclerView.setLayoutManager(new LinearLayoutManager(YourFriends.this));
@@ -141,4 +157,21 @@ public class YourFriends extends AppCompatActivity {
 
         bottomSheetDialog.show();
     }
+
+    ActivityResultLauncher<Intent> profileActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+//                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+//                    int refreshType = result.getData().getIntExtra("RefreshType", 0);
+//                    if (refreshType == 1) {
+//
+//                    } else if (refreshType == 2) {
+//
+//                    } else {
+//
+//                    }
+//
+//
+//                }
+            });
 }

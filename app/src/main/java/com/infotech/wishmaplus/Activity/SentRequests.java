@@ -3,11 +3,14 @@ package com.infotech.wishmaplus.Activity;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -24,8 +27,10 @@ import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.FriendRequestResponse;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
@@ -39,6 +44,8 @@ public class SentRequests extends AppCompatActivity {
     List<FriendRequestResponse> list;
 
     TextView tvTitle;
+    public PreferencesManager tokenManager;
+    UserDetailResponse userDetailResponse;
 
     SentRequestResponse sentRequestResponse = new SentRequestResponse();
 
@@ -49,8 +56,10 @@ public class SentRequests extends AppCompatActivity {
         setContentView(R.layout.activity_sent_requests);
         findViewById(R.id.back_button).setOnClickListener(view -> finish());
         noDataLayout = findViewById(R.id.noDataLayout);
+        tokenManager = new PreferencesManager(this,1);
         tvTitle = findViewById(R.id.tvTitle);
         recyclerView = findViewById(R.id.friendRecycler);
+        userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -101,6 +110,15 @@ public class SentRequests extends AppCompatActivity {
                                             0
                                     );
                                 }
+
+                                @Override
+                                public void onProfileClick(SentRequestResponse.ResultItem user, int position) {
+                                    //                startActivity(new Intent(FriendRequest.this, ProfileActivity.class));
+                                    profileActivityResultLauncher.launch(new Intent(SentRequests.this, ProfileActivity.class)
+                                            .putExtra("userData", userDetailResponse)
+                                            .putExtra("id", user.getUserId()));
+
+                                }
                             }
                     );
 
@@ -131,4 +149,21 @@ public class SentRequests extends AppCompatActivity {
             noDataLayout.setVisibility(GONE);
         }
     }
+
+    ActivityResultLauncher<Intent> profileActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+//                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+//                    int refreshType = result.getData().getIntExtra("RefreshType", 0);
+//                    if (refreshType == 1) {
+//
+//                    } else if (refreshType == 2) {
+//
+//                    } else {
+//
+//                    }
+//
+//
+//                }
+            });
 }

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
+import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.R;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
     public interface OnItemClickListener {
         void onItemClick(FriendUserModel user, int pos);
         void onMoreClicked(View anchor, FriendUserModel user, int pos);
+        void onProfileClick(FriendUserModel user, int position);
     }
 
     public FriendsListAdapter(Context ctx, List<FriendUserModel> list, OnItemClickListener listener) {
@@ -81,6 +83,16 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 //                });
 //                pm.show();
 //            }
+        });
+        holder.img.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onProfileClick(u, position);
+            }
+        });
+        holder.tvName.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onProfileClick(u, position);
+            }
         });
     }
 

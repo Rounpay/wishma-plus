@@ -67,7 +67,9 @@ import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
+import com.infotech.wishmaplus.Api.Response.NotificationResponse;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
+import com.infotech.wishmaplus.Api.Response.PostsResponse;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
@@ -623,6 +625,27 @@ public enum UtilMethods {
         });
     }
 
+    public void getNotifications(ApiCallBackMulti apiCallBack) {
+        EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+        Call<NotificationResponse> call = git.getNotifications("Bearer " + tokenManager.getAccessToken());
+        call.enqueue(new Callback<NotificationResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<NotificationResponse> call, @NonNull Response<NotificationResponse> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    apiCallBack.onSuccess(response.body());
+                } else {
+                    apiCallBack.onSuccess(new NotificationResponse());
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<NotificationResponse> call, @NonNull Throwable t) {
+                apiCallBack.onSuccess(new NotificationResponse());
+            }
+        });
+    }
+
     public void getPagesResponse(Activity activity, ApiCallBackMulti apiCallBack) {
         EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
         Call<PagesResponse> call = git.getPagesResponse("Bearer " + tokenManager.getAccessToken());
@@ -950,6 +973,32 @@ public enum UtilMethods {
             apiCallBack.onError(e.getMessage());
         }
     }
+
+    public void getContentToBoost(String pageId, Activity activity, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<PostsResponse> call = git.getContentToBoost(pageId,"Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<PostsResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<PostsResponse> call, @NonNull Response<PostsResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<PostsResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
 
 
     public void submitReportReason(Activity activity, String postId, int reasonId, ApiCallBack apiCallBack) {

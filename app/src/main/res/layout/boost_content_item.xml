@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@android:color/transparent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardPost"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/postCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp">
+
+            <!-- LEFT BLOCK -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/leftBlock"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toStartOf="@+id/rightBlock"
+                app:layout_constraintHorizontal_weight="4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <!-- Post Image -->
+                <LinearLayout
+                    android:id="@+id/imageData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                    <ImageView
+                        android:id="@+id/imgPost"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/edittext_bg"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <VideoView
+                        android:id="@+id/videoPost"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:clipToOutline="true"
+                        android:scaleType="centerCrop"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </LinearLayout>
+
+
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/tvPostTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    android:singleLine="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imageData"
+                    app:layout_constraintTop_toTopOf="@+id/imageData" />
+
+                <!-- Date -->
+                <TextView
+                    android:id="@+id/tvPostDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:text=""
+                    android:textColor="#666"
+                    android:textSize="10sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imageData"
+                    app:layout_constraintTop_toBottomOf="@+id/tvPostTitle" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <!-- RIGHT BLOCK (50% WIDTH) -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/rightBlock"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:paddingVertical="5dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_weight="3"
+                app:layout_constraintStart_toEndOf="@+id/leftBlock"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_weight="1">
+
+                <!-- People Reached -->
+                <TextView
+                    android:id="@+id/tvReachedLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="People Reached"
+                    android:textColor="@color/cb_dark_grey"
+                    android:textSize="11sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvReachedValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvReachedLabel" />
+
+                <!-- Divider -->
+                <View
+                    android:id="@+id/divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#DDDDDD"
+                    app:layout_constraintBottom_toTopOf="@+id/tvEngagementLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/tvReachedLabel" />
+
+                <!-- Engagement -->
+                <TextView
+                    android:id="@+id/tvEngagementLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Engagement"
+                    android:textColor="@color/cb_dark_grey"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvEngagementValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#000"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tvEngagementLabel" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

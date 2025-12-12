@@ -34,7 +34,9 @@ import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.LoginResponse;
+import com.infotech.wishmaplus.Api.Response.NotificationResponse;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
+import com.infotech.wishmaplus.Api.Response.PostsResponse;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.SignUpResponse;
 import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
@@ -234,6 +236,10 @@ public interface EndPointInterface {
     Call<List<UserListFriends>> getFriendRequest(@Header("Authorization") String authorization);
 
 
+    @GET("api/UserProfile/GetContentNotification")
+    Call<NotificationResponse> getNotifications(@Header("Authorization") String authorization);
+
+
     @POST("api/UserProfile/CreateRequest/{ToUserId}")
     Call<BasicResponse> createRequest(@Header("Authorization") String authorization,
                                       @Path("ToUserId") String ToUserId);
@@ -293,4 +299,10 @@ public interface EndPointInterface {
     @GET("api/UserProfile/getPageDetails/{PageId}")
     Call<UserDetailResponse> getPageDetails(@Header("Authorization") String token,
                                             @Path("PageId") String PageId);
+
+    @GET("GetContentToBoost")
+    Call<PostsResponse> getContentToBoost(
+            @Query("PageId") String pageId,
+            @Header("Authorization") String token
+    );
 }

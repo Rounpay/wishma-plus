@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.R;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class FriendSuggestionAdapter extends RecyclerView.Adapter<FriendSuggesti
     public interface OnItemClickListener {
         void onItemClick(FriendSuggestionItem user, int pos);
         void onMoreClicked(View anchor, FriendSuggestionItem user, int pos);
+        void onProfileClick(FriendSuggestionItem user, int position);
     }
 
     public FriendSuggestionAdapter(Context ctx, List<FriendSuggestionItem> list, OnItemClickListener listener) {
@@ -68,6 +70,16 @@ public class FriendSuggestionAdapter extends RecyclerView.Adapter<FriendSuggesti
         holder.btnConfirm.setOnClickListener(v -> {
             if (listener != null) listener.onMoreClicked(holder.btnDelete, u, holder.getAdapterPosition());
 
+        });
+        holder.profileImage.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onProfileClick(u, position);
+            }
+        });
+        holder.name.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onProfileClick(u, position);
+            }
         });
     }
 

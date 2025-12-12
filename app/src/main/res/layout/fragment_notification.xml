@@ -1,85 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bgColor">
+    android:background="#F0F2F5">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvNotifications"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <!-- Title -->
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Notification Title"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="8dp"
-            tools:text="Notification Title" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Time -->
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="2024-01-01 10:00 AM"
-            android:textSize="12sp"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp"
-            tools:text="2024-01-01 10:00 AM" />
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:background="@color/bgColor">-->
 
-        <!-- Image -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="2dp">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:padding="16dp">-->
 
-            <ImageView
-                android:id="@+id/iv_notification_image"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:scaleType="fitCenter"
-                android:src="@drawable/app_logo"
-                tools:src="@drawable/app_logo" />
+<!--        &lt;!&ndash; Title &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_title"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Notification Title"-->
+<!--            android:textSize="20sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:layout_marginBottom="8dp"-->
+<!--            tools:text="Notification Title" />-->
 
-        </androidx.cardview.widget.CardView>
+<!--        &lt;!&ndash; Time &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_time"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="2024-01-01 10:00 AM"-->
+<!--            android:textSize="12sp"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:layout_marginBottom="16dp"-->
+<!--            tools:text="2024-01-01 10:00 AM" />-->
 
-        <!-- Message -->
-        <TextView
-            android:id="@+id/tv_message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Notification message content goes here..."
-            android:textSize="16sp"
-            android:textColor="@android:color/black"
-            android:lineSpacingExtra="4dp"
-            android:layout_marginBottom="16dp"
-            tools:text="Notification message content goes here..." />
+<!--        &lt;!&ndash; Image &ndash;&gt;-->
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="16dp"-->
+<!--            app:cardCornerRadius="8dp"-->
+<!--            app:cardElevation="2dp">-->
 
-        <!-- URL -->
-        <TextView
-            android:id="@+id/tv_url"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="https://example.com"
-            android:textSize="14sp"
-            android:textColor="@color/main_blue_color"
-            android:textStyle="bold"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="12dp"
-            android:background="?attr/selectableItemBackground"
-            tools:text="https://example.com" />
+<!--            <ImageView-->
+<!--                android:id="@+id/iv_notification_image"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="200dp"-->
+<!--                android:scaleType="fitCenter"-->
+<!--                android:src="@drawable/app_logo"-->
+<!--                tools:src="@drawable/app_logo" />-->
 
-    </LinearLayout>
+<!--        </androidx.cardview.widget.CardView>-->
 
-</ScrollView>
+<!--        &lt;!&ndash; Message &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_message"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Notification message content goes here..."-->
+<!--            android:textSize="16sp"-->
+<!--            android:textColor="@android:color/black"-->
+<!--            android:lineSpacingExtra="4dp"-->
+<!--            android:layout_marginBottom="16dp"-->
+<!--            tools:text="Notification message content goes here..." />-->
+
+<!--        &lt;!&ndash; URL &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/tv_url"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="https://example.com"-->
+<!--            android:textSize="14sp"-->
+<!--            android:textColor="@color/main_blue_color"-->
+<!--            android:textStyle="bold"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            android:padding="12dp"-->
+<!--            android:background="?attr/selectableItemBackground"-->
+<!--            tools:text="https://example.com" />-->
+
+<!--    </LinearLayout>-->
+
+<!--</ScrollView>-->

@@ -13,8 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +28,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.infotech.wishmaplus.Activity.FriendRequest;
 import com.infotech.wishmaplus.Activity.MainActivity;
+import com.infotech.wishmaplus.Activity.ProfileActivity;
 import com.infotech.wishmaplus.Activity.SentRequests;
 import com.infotech.wishmaplus.Activity.SettingsAndPrivacy;
 import com.infotech.wishmaplus.Activity.YourFriends;
@@ -37,9 +41,11 @@ import com.infotech.wishmaplus.Adapter.UsersAdapter;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.User;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
@@ -56,6 +62,8 @@ public class FriendListFragment extends Fragment {
     FriendSuggestionResponse friendSuggestionResponse = new FriendSuggestionResponse();
     ArrayList<User> data = new ArrayList<>();
 
+    public PreferencesManager tokenManager;
+    UserDetailResponse userDetailResponse;
     BottomSheetDialog bottomSheetDialog;
     View notificationDot;
 
@@ -65,10 +73,12 @@ public class FriendListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_friend_list, container, false);
         SwipeRefreshLayout pullToRefresh = view.findViewById(R.id.swipeRefreshLayout);
         pullToRefresh.setOnRefreshListener(() -> {
-//            hitApi();
+            hitApi();
             getFriendSuggestionList(true);
             pullToRefresh.setRefreshing(false);
         });
+        tokenManager = new PreferencesManager(requireContext(),1);
+        userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
         recyclerView = view.findViewById(R.id.recyclerView);
         noDataLayout = view.findViewById(R.id.noDataLayout);
         notificationDot = view.findViewById(R.id.notification_dot);
@@ -103,7 +113,7 @@ public class FriendListFragment extends Fragment {
 //        recyclerView.setAdapter(adapter);
         getFriendSuggestionList(false);
 //        updateEmptyView();
-//        hitApi();
+        hitApi();
         return view;
     }
     private void getFriendSuggestionList(boolean isRefresh) {
@@ -130,7 +140,15 @@ public class FriendListFragment extends Fragment {
 
                                 @Override
                                 public void onMoreClicked(View anchor, FriendSuggestionItem user, int pos) {
+                                    addFriend(user.getUserId());
+                                }
 
+                                @Override
+                                public void onProfileClick(FriendSuggestionItem user, int position) {
+                                    //                startActivity(new Intent(FriendRequest.this, ProfileActivity.class));
+                                    profileActivityResultLauncher.launch(new Intent(requireContext(), ProfileActivity.class)
+                                            .putExtra("userData", userDetailResponse)
+                                            .putExtra("id", user.getUserId()));
                                 }
 
                             }
@@ -157,6 +175,35 @@ public class FriendListFragment extends Fragment {
             }
         });
     }
+    private void getUserDetail() {
+        UtilMethods.INSTANCE.userDetail(requireActivity(), "0", loader, tokenManager, object -> {
+        });
+    }
+    private void addFriend(String userId) {
+        loader.show();
+        UtilMethods.INSTANCE.createRequest(requireActivity(), userId, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null && loader.isShowing()) loader.dismiss();
+                BasicResponse basicResponse = (BasicResponse) object;
+                if(basicResponse.getStatusCode()==1){
+                    getFriendSuggestionList(true);
+
+                }else{
+                    UtilMethods.INSTANCE.Error(requireActivity(),basicResponse.getResponseText());
+                }
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null && loader.isShowing()) loader.dismiss();
+
+            }
+        });
+
+
+    }
 
     private void updateEmptyView() {
         if (friendSuggestionResponse.getResult().isEmpty()) {
@@ -170,9 +217,27 @@ public class FriendListFragment extends Fragment {
 
     @Override
     public void onResume() {
-//        hitApi();
+        getUserDetail();
+        hitApi();
         super.onResume();
     }
+
+    ActivityResultLauncher<Intent> profileActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+//                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
+//                    int refreshType = result.getData().getIntExtra("RefreshType", 0);
+//                    if (refreshType == 1) {
+//
+//                    } else if (refreshType == 2) {
+//
+//                    } else {
+//
+//                    }
+//
+//
+//                }
+            });
 
     public void openBottomSheet(Activity context) {
 
