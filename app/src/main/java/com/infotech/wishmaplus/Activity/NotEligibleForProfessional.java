@@ -47,7 +47,7 @@ public class NotEligibleForProfessional extends AppCompatActivity {
         tvTitle.setText(eligibilityModel.getResponseText());
         followersYouHave.setText("You currently have " + eligibilityModel.getFollowers() + " followers.");
         followersMinimum.setText(eligibilityModel.getMinFollowersRequired());
-        postsYouHave.setText("You currently have " + eligibilityModel.getMonthlyPosts() + " posts in the last 30 days.");
+        postsYouHave.setText("You currently have " + eligibilityModel.getMonthlyPosts() + " posts.");
         postsMinimum.setText(eligibilityModel.getMinMonthlyPostsRequired());
         engagementYouHave.setText("Your engagement rate is " + eligibilityModel.getEngagementRate() + "%.");
         engagementMinimum.setText(eligibilityModel.getMinEngagementRateRequired());

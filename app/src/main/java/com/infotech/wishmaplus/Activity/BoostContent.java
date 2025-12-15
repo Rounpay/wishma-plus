@@ -73,7 +73,9 @@ public class BoostContent extends AppCompatActivity {
                     adapter = new BoostPostsAdapter(BoostContent.this, postsResponse.getResult(), new BoostPostsAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(PostItem user, int pos) {
-                            startActivity(new Intent(BoostContent.this, CreateNewAd.class));
+                            Intent intent = new Intent(BoostContent.this, CreateNewAd.class);
+                            intent.putExtra("postId", user.getPostId());
+                            startActivity(intent);
 
                         }
 

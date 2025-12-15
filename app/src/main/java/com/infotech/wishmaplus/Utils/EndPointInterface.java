@@ -30,6 +30,7 @@ import com.infotech.wishmaplus.Api.Response.EnableDashboardResponse;
 import com.infotech.wishmaplus.Api.Response.FollowersResponse;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
+import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
@@ -37,6 +38,7 @@ import com.infotech.wishmaplus.Api.Response.LoginResponse;
 import com.infotech.wishmaplus.Api.Response.NotificationResponse;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
 import com.infotech.wishmaplus.Api.Response.PostsResponse;
+import com.infotech.wishmaplus.Api.Response.ReadNotificationResponse;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.SignUpResponse;
 import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
@@ -115,7 +117,8 @@ public interface EndPointInterface {
                                      @Query("pageSize") int pageSize,
                                      @Query("IsSelf") boolean IsSelf,
                                      @Query("PageId") String PageId,
-                                     @Query("ContentTypeID") int contentTypeID);
+                                     @Query("ContentTypeID") int contentTypeID,
+                                     @Query("IsFromNotification") boolean IsFromNotification );
 
     @GET("api/Content/GetStory")
     Call<BasicListResponse<StoryResult>> getStory(@Header("Authorization") String token);
@@ -300,9 +303,19 @@ public interface EndPointInterface {
     Call<UserDetailResponse> getPageDetails(@Header("Authorization") String token,
                                             @Path("PageId") String PageId);
 
-    @GET("GetContentToBoost")
+    @GET("api/GetContentToBoost")
     Call<PostsResponse> getContentToBoost(
             @Query("PageId") String pageId,
+            @Header("Authorization") String token
+    );
+    @GET("api/UserProfile/IsReadContentNotification")
+    Call<ReadNotificationResponse> getMarkNotificationRead(
+            @Query("NotificationId") int NotificationId,
+            @Header("Authorization") String token
+    );
+    @GET("api/GetContentDetailsToBoost")
+    Call<GetContentDetailsToBoostResponse> getContentDetailsToBoost(
+            @Query("PostId") String PostId,
             @Header("Authorization") String token
     );
 }

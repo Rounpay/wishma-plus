@@ -29,6 +29,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         void onConfirm(int position);
         void onDelete(int position);
         void onMore(int position);
+        void onItem(NotificationResponse.NotificationItem item,int position);
     }
 
     public NotificationAdapter(Context context, List<NotificationResponse.NotificationItem> list, OnNotificationClick listener) {
@@ -85,6 +86,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         // Button click listeners
         holder.btnConfirm.setOnClickListener(v ->
                 listener.onConfirm(position)
+        );
+        holder.notificationCard.setOnClickListener(v ->
+                listener.onItem(model,position)
         );
 
         holder.btnDelete.setOnClickListener(v ->

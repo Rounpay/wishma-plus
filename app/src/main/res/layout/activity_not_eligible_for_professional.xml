@@ -183,7 +183,7 @@
                             android:id="@+id/postsYouHave"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="You currently have 11 posts in the last 30 days."
+                            android:text="You currently have 11 posts."
                             android:textSize="12sp"
                             android:textColor="#555555" />
 

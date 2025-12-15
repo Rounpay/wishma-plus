@@ -758,7 +758,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void showContent(boolean isFromRefresh) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", userId, pageNumber, 20, true, pageId, buttonContentTypeId);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", userId, pageNumber, 20, true, pageId, buttonContentTypeId,false);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {

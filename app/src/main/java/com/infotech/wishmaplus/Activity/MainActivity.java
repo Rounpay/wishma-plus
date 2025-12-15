@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     String finalPageId = null;
     private boolean isProfileType;
 
+    public String postId = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,6 +172,14 @@ public class MainActivity extends AppCompatActivity {
 
         });
         getBalance();
+    }
+    public void navigateToHome() {
+        if (selectedLine != homeLine) {
+            selectedLine.setBackgroundColor(Color.WHITE);
+            homeLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
+            selectedLine = homeLine;
+            getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId,isProfileType), "Home").commit();
+        }
     }
 
     @Override

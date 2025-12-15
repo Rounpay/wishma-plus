@@ -17,9 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.infotech.wishmaplus.Activity.MainActivity;
 import com.infotech.wishmaplus.Adapter.NotificationAdapter;
 import com.infotech.wishmaplus.Api.Response.NotificationModel;
 import com.infotech.wishmaplus.Api.Response.NotificationResponse;
+import com.infotech.wishmaplus.Api.Response.ReadNotificationResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.UtilMethods;
@@ -144,9 +146,41 @@ public class NotificationFragment extends Fragment {
                                 public void onMore(int position) {
                                     openGoalBottomSheetDialog(requireActivity());
                                 }
+
+                                @Override
+                                public void onItem(NotificationResponse.NotificationItem item, int position) {
+                                    MainActivity main = (MainActivity) requireActivity();
+                                    main.postId = item.getPostId();
+//                                    main.navigateToHome();
+                                    getMarkNotificationRead(item.getNotificationId());
+                                }
                             }
                     );
                     rvNotifications.setAdapter(adapter);
+                }
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null && loader.isShowing()) loader.dismiss();
+
+
+            }
+        });
+
+
+    }
+    public void  getMarkNotificationRead(int notificationId){
+        loader.show();
+        UtilMethods.INSTANCE.getMarkNotificationRead(notificationId,new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null && loader.isShowing()) loader.dismiss();
+                ReadNotificationResponse readNotificationResponse = (ReadNotificationResponse) object;
+                if(readNotificationResponse.getStatusCode()==1){
+                    MainActivity main = (MainActivity) requireActivity();
+                    main.navigateToHome();
                 }
 
             }

@@ -26,19 +26,19 @@
                 android:layout_height="48dp"
                 android:src="@drawable/user_icon"
                 android:scaleType="centerCrop"
-                android:background="@drawable/circle_bg"
-                android:padding="2dp" />
+                android:clipToOutline="true"
+                android:background="@drawable/circle_bg" />
 
             <!-- Small Blue Badge -->
             <ImageView
                 android:id="@+id/imgBadge"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:src="@drawable/user_profile"
                 android:background="@drawable/circle_bg"
-                android:padding="2dp" />
+                android:padding="4dp" />
         </RelativeLayout>
 
         <!-- Texts -->
@@ -110,6 +110,7 @@
 
         </LinearLayout>
         <ImageView
+            android:visibility="gone"
             android:id="@+id/imgMenu"
             android:layout_width="22dp"
             android:layout_height="22dp"

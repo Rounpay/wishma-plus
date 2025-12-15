@@ -64,12 +64,14 @@ import com.infotech.wishmaplus.Api.Response.EligibilityModel;
 import com.infotech.wishmaplus.Api.Response.EnableDashboardResponse;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
+import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.NotificationResponse;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
 import com.infotech.wishmaplus.Api.Response.PostsResponse;
+import com.infotech.wishmaplus.Api.Response.ReadNotificationResponse;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
@@ -990,6 +992,55 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<PostsResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+    public void getMarkNotificationRead(int notificationId, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<ReadNotificationResponse> call = git.getMarkNotificationRead(notificationId,"Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<ReadNotificationResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<ReadNotificationResponse> call, @NonNull Response<ReadNotificationResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ReadNotificationResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getContentDetailsToBoost(String PostId, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<GetContentDetailsToBoostResponse> call = git.getContentDetailsToBoost(PostId,"Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<GetContentDetailsToBoostResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<GetContentDetailsToBoostResponse> call, @NonNull Response<GetContentDetailsToBoostResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<GetContentDetailsToBoostResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });

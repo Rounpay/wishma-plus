@@ -3,6 +3,7 @@ package com.infotech.wishmaplus.Fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -354,9 +355,12 @@ public class HomeFragment extends Fragment {
          startActivityForResult(intent, mediaType);
      }*/
     private void showContent(boolean isFromRefresh) {
+        MainActivity main = (MainActivity) requireActivity();
+        String postId = main.postId;
+        boolean isFromNotification = !main.postId.isEmpty();
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", "", pageNumber, 20, false, pageId, 0);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), postId, "", pageNumber, 20, false, pageId, 0,isFromNotification);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {
@@ -426,6 +430,7 @@ public class HomeFragment extends Fragment {
                     loader.dismiss();
             }
         }
+        main.postId = "";
     }
 
     private void getStory(boolean isFromRefresh) {
