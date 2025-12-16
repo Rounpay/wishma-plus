@@ -5,6 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
@@ -18,8 +23,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.infotech.wishmaplus.Adapter.AudienceAdapter;
 import com.infotech.wishmaplus.Adapter.BoostPostsAdapter;
 import com.infotech.wishmaplus.Adapter.GoalAdapter;
+import com.infotech.wishmaplus.Api.Response.EstimateResponse;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
 import com.infotech.wishmaplus.Api.Response.PostItem;
 import com.infotech.wishmaplus.Api.Response.PostsResponse;
@@ -29,23 +36,28 @@ import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
+import java.util.Objects;
+
 public class CreateNewAd extends AppCompatActivity {
-    BottomSheetDialog bottomGoalDialogReport;
-    BottomSheetDialog bottomSpecialCatDialogReport;
-    BottomSheetDialog bottomChooseAudienceCatDialogReport;
-    BottomSheetDialog bottomIsSecureCatDialogReport;
-    BottomSheetDialog bottomPlacementsCatDialogReport;
-    BottomSheetDialog bottomBudgetCatDialogReport;
-    BottomSheetDialog bottomPaymentCatDialogReport;
+    BottomSheetDialog bottomGoalDialogReport,bottomSpecialCatDialogReport,bottomChooseAudienceCatDialogReport,bottomIsSecureCatDialogReport,bottomPlacementsCatDialogReport,bottomBudgetCatDialogReport,bottomPaymentCatDialogReport;
     androidx.appcompat.widget.AppCompatImageView profile,containerImage;
     androidx.appcompat.widget.AppCompatTextView nameTv,timeTv,postTxt;
     View containerVideo;
     VideoView videoView;
     private CustomLoader loader;
     GetContentDetailsToBoostResponse getContentDetailsToBoostResponse = new GetContentDetailsToBoostResponse();
+
+    EstimateResponse estimateResponse = new EstimateResponse();
     String postId ="";
-    RecyclerView rvGoals;
+    RecyclerView rvGoals,rvAudience;
     GoalAdapter adapter;
+    AudienceAdapter audienceAdapter;
+    TextView linkClicks,postEngagements,peopleReached,textView,tvPeopleReached,tvBudgetPrice,tvCostPrice,tvSubPrice,tvGstPrice,tvPrice;
+
+    LinearLayout layoutCall,layoutUrl;
+    SeekBar seekBar;
+
+    int audienceId = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,10 +71,39 @@ public class CreateNewAd extends AppCompatActivity {
             return insets;
         });
         rvGoals = findViewById(R.id.rvGoals);
+        rvAudience = findViewById(R.id.rvAudience);
+        seekBar = findViewById(R.id.budgetSeekBar);
+        textView = findViewById(R.id.tvBudgetText);
+        tvPeopleReached = findViewById(R.id.tvPeopleReached);
+        tvBudgetPrice = findViewById(R.id.tvBudgetPrice);
+        tvCostPrice = findViewById(R.id.tvCostPrice);
+        tvSubPrice = findViewById(R.id.tvSubPrice);
+        tvGstPrice = findViewById(R.id.tvGstPrice);
+        tvPrice = findViewById(R.id.tvPrice);
+
+        textView.setText("₹" + seekBar.getProgress());
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textView.setText("₹" + progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                getEstimateBoostReach((double) seekBar.getProgress(),1,audienceId);
+            }
+        });
+
 
         // RecyclerView setup
         rvGoals.setLayoutManager(new LinearLayoutManager(this));
         rvGoals.setHasFixedSize(true);
+        rvAudience.setLayoutManager(new LinearLayoutManager(this));
+        rvAudience.setHasFixedSize(true);
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         profile = findViewById(R.id.profile);
         nameTv = findViewById(R.id.nameTv);
@@ -71,11 +112,25 @@ public class CreateNewAd extends AppCompatActivity {
         containerVideo = findViewById(R.id.containerVideo);
         videoView = findViewById(R.id.videoView);
         containerImage = findViewById(R.id.containerImage);
+        linkClicks = findViewById(R.id.linkClicks);
+        postEngagements = findViewById(R.id.postEngagements);
+        peopleReached = findViewById(R.id.peopleReached);
+        layoutCall = findViewById(R.id.layoutCall);
+        layoutUrl = findViewById(R.id.layoutUrl);
+        Spinner spinner = findViewById(R.id.spCountry);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                new String[]{"India (+91)"}
+        );
+
+        spinner.setAdapter(adapter);
         findViewById(R.id.back_button).setOnClickListener(v -> finish());
         findViewById(R.id.imgInfoGoal).setOnClickListener(v -> openGoalBottomSheetDialog(this));
         findViewById(R.id.imgInfo).setOnClickListener(v -> openSpecialCatBottomSheetDialog(this));
         findViewById(R.id.infoAudience).setOnClickListener(v -> openChooseAudienceBottomSheetDialog(this));
-        findViewById(R.id.info).setOnClickListener(v -> openIsSecureBottomSheetDialog(this));
+//        findViewById(R.id.info).setOnClickListener(v -> openIsSecureBottomSheetDialog(this));
         findViewById(R.id.ivInfo).setOnClickListener(v -> openPlacementsBottomSheetDialog(this));
         findViewById(R.id.infoBudget).setOnClickListener(v -> openBudgetBottomSheetDialog(this));
         findViewById(R.id.ivInfoPayment).setOnClickListener(v -> openPaymentBottomSheetDialog(this));
@@ -93,6 +148,15 @@ public class CreateNewAd extends AppCompatActivity {
                 }
                 getContentDetailsToBoostResponse =(GetContentDetailsToBoostResponse) object;
                 if(getContentDetailsToBoostResponse.getStatusCode()==1){
+                    if (getContentDetailsToBoostResponse.getAudience() != null
+                            && !getContentDetailsToBoostResponse.getAudience().isEmpty()) {
+
+                        audienceId = getContentDetailsToBoostResponse
+                                .getAudience()
+                                .get(0)
+                                .getAudienceId();
+                    }
+                    getEstimateBoostReach((double) seekBar.getProgress(),1,audienceId);
                     GetContentDetailsToBoostResponse.PostInsights postInsights = getContentDetailsToBoostResponse.getPostInsights();
                     Glide.with(CreateNewAd.this).load(postInsights.getProfilePictureUrl()).placeholder(R.drawable.user_icon).into(profile);
                     nameTv.setText(postInsights.getUserName());
@@ -114,12 +178,77 @@ public class CreateNewAd extends AppCompatActivity {
                         containerImage.setVisibility(View.VISIBLE);
                         Glide.with(CreateNewAd.this).load(postInsights.getPostContent()).placeholder(R.drawable.app_logo).into(containerImage);
                     }
+                    peopleReached.setText(""+getContentDetailsToBoostResponse.getPostInsights().getPeopleReach());
+                    postEngagements.setText(""+getContentDetailsToBoostResponse.getPostInsights().getEngagement());
 
-                    adapter = new GoalAdapter(CreateNewAd.this, getContentDetailsToBoostResponse.getGoal(), goal -> {
-                        // OnClick: send to next screen
+                    adapter = new GoalAdapter(CreateNewAd.this, getContentDetailsToBoostResponse.getGoal(), (position, goal) -> {
+                        if(Objects.equals(goal.getIconName().toLowerCase(), "visitors")){
+                            layoutCall.setVisibility(View.GONE);
+                            layoutUrl.setVisibility(View.VISIBLE);
+                        } else if (Objects.equals(goal.getIconName().toLowerCase(), "calls")) {
+                            layoutCall.setVisibility(View.VISIBLE);
+                            layoutUrl.setVisibility(View.GONE);
+                        }
+                        else{
+                            layoutCall.setVisibility(View.GONE);
+                            layoutUrl.setVisibility(View.GONE);
+                        }
                     });
 
                     rvGoals.setAdapter(adapter);
+                    audienceAdapter = new AudienceAdapter(CreateNewAd.this, getContentDetailsToBoostResponse.getAudience(), new AudienceAdapter.OnAudienceClickListener() {
+                        @Override
+                        public void onAudienceClick(int position, GetContentDetailsToBoostResponse.Audience goal) {
+                            audienceId = goal.getAudienceId();
+                            getEstimateBoostReach((double) seekBar.getProgress(),1,audienceId);
+
+                        }
+
+                        @Override
+                        public void onAudienceEditClick(int position, GetContentDetailsToBoostResponse.Audience goal) {
+
+                            startActivity(new Intent(CreateNewAd.this,EditAudience.class));
+
+
+                        }
+                    });
+                    rvAudience.setAdapter(audienceAdapter);
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
+    }
+    public void getEstimateBoostReach(double budget,int days,int audienceId){
+        loader.show();
+        UtilMethods.INSTANCE.getEstimateBoostReach(budget,days,audienceId, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                estimateResponse =(EstimateResponse) object;
+                if(estimateResponse.getStatusCode()==1){
+                    tvPeopleReached.setText(estimateResponse.getResult().getReach());
+                    tvBudgetPrice.setText(estimateResponse.getResult().getBudget()+"");
+                    tvCostPrice.setText(estimateResponse.getResult().getEstimatedCost()+"");
+                    tvSubPrice.setText(estimateResponse.getResult().getSubTotal()+"");
+                    tvGstPrice.setText(estimateResponse.getResult().getGst()+"");
+                    tvPrice.setText(estimateResponse.getResult().getTotal()+"");
 
                 }
 

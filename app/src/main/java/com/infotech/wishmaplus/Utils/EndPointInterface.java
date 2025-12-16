@@ -27,6 +27,7 @@ import com.infotech.wishmaplus.Api.Response.ContentResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.EligibilityModel;
 import com.infotech.wishmaplus.Api.Response.EnableDashboardResponse;
+import com.infotech.wishmaplus.Api.Response.EstimateResponse;
 import com.infotech.wishmaplus.Api.Response.FollowersResponse;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
@@ -318,4 +319,13 @@ public interface EndPointInterface {
             @Query("PostId") String PostId,
             @Header("Authorization") String token
     );
+
+    @GET("api/GetEstimateBoostReach")
+    Call<EstimateResponse> getEstimateBoostReach(
+            @Query("Budget") double Budget,
+            @Query("DurationDays") int DurationDays,
+            @Query("AudienceId") int AudienceId,
+            @Header("Authorization") String token
+    );
+
 }

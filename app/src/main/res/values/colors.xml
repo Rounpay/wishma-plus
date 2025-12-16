@@ -27,4 +27,7 @@
     <color name="main_blue_color">#2469df</color>
     <color name="dark_blue">#0000FF</color>
     <color name="new_gray">#888</color>
+
+    <color name="button_inactive">#E0E0E0</color>
+    <color name="button_active">#4A90E2</color>
 </resources>

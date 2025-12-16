@@ -38,10 +38,15 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
-            android:name=".Activity.NotEligibleForProfessional"
+            android:name=".Activity.EditAudience"
             android:exported="false"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".Activity.NotEligibleForProfessional"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SuccessProfessional"
             android:exported="false"

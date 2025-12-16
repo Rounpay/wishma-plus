@@ -21,6 +21,7 @@ import java.util.Objects;
 public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
 
     Context context;
+    private int selectedPosition = 0;
     List<GetContentDetailsToBoostResponse.Goal> list;
     OnGoalClickListener listener;
 
@@ -31,7 +32,7 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
     }
 
     public interface OnGoalClickListener {
-        void onGoalClick(GetContentDetailsToBoostResponse.Goal goal);
+        void onGoalClick(int position,GetContentDetailsToBoostResponse.Goal goal);
     }
 
     @NonNull
@@ -62,7 +63,25 @@ public class GoalAdapter extends RecyclerView.Adapter<GoalAdapter.ViewHolder> {
         }
         holder.imgIcon.setImageResource(iconRes);
 
-        holder.itemView.setOnClickListener(v -> listener.onGoalClick(model));
+        holder.radioGoal.setChecked(position == selectedPosition);
+
+        holder.itemView.setOnClickListener(v -> {
+
+            int previous = selectedPosition;
+            selectedPosition = position;
+
+            if (previous != -1) {
+                notifyItemChanged(previous);
+            }
+            notifyItemChanged(selectedPosition);
+
+            if (listener != null) {
+                listener.onGoalClick(
+                        selectedPosition,
+                        list.get(selectedPosition)
+                );
+            }
+        });
     }
 
     @Override

@@ -62,6 +62,7 @@ import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.EligibilityModel;
 import com.infotech.wishmaplus.Api.Response.EnableDashboardResponse;
+import com.infotech.wishmaplus.Api.Response.EstimateResponse;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
@@ -1041,6 +1042,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<GetContentDetailsToBoostResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getEstimateBoostReach(double budget,int days,int audienceId, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<EstimateResponse> call = git.getEstimateBoostReach(budget,days,audienceId,"Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<EstimateResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<EstimateResponse> call, @NonNull Response<EstimateResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<EstimateResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });
