@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.infotech.wishmaplus.Activity.CreateNewAd;
+import com.infotech.wishmaplus.Activity.EditAudience;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
 import com.infotech.wishmaplus.R;
 
@@ -29,16 +32,22 @@ public class AudienceAdapter extends RecyclerView.Adapter<AudienceAdapter.ViewHo
     private int selectedPosition = 0;
     List<GetContentDetailsToBoostResponse.Audience> list;
     OnAudienceClickListener listener;
+    private int minAge;
+    private int maxAge;
+    private String gender;
 
-    public AudienceAdapter(Context context, List<GetContentDetailsToBoostResponse.Audience> list, OnAudienceClickListener listener) {
+    public AudienceAdapter(Context context, List<GetContentDetailsToBoostResponse.Audience> list, OnAudienceClickListener listener,int minAge, int maxAge, String gender) {
         this.context = context;
         this.list = list;
         this.listener = listener;
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+        this.gender = gender;
     }
 
     public interface OnAudienceClickListener {
         void onAudienceClick(int position,GetContentDetailsToBoostResponse.Audience goal);
-        void onAudienceEditClick(int position,GetContentDetailsToBoostResponse.Audience goal);
+        void onAudienceEditClick(int position,GetContentDetailsToBoostResponse.Audience goal,int minAge, int maxAge, String gender);
     }
 
     @NonNull
@@ -53,6 +62,9 @@ public class AudienceAdapter extends RecyclerView.Adapter<AudienceAdapter.ViewHo
         GetContentDetailsToBoostResponse.Audience model = list.get(position);
 
         holder.tvAdvantageTitle.setText(model.getAudienceName());
+        holder.tvAdvantageOn.setText(gender);
+        holder.tvMinAge.setText(minAge+"");
+        holder.tvMaxAge.setText(maxAge+"");
 
         if(Objects.equals(model.getAudienceName().toLowerCase(), "Advantage + Audience".toLowerCase())){
             holder.tvAdvantageSub.setVisibility(VISIBLE);
@@ -62,10 +74,12 @@ public class AudienceAdapter extends RecyclerView.Adapter<AudienceAdapter.ViewHo
         }
         holder.boxAdvantage.setVisibility(position == selectedPosition?VISIBLE:GONE);
 
-        holder.btnEdit.setOnClickListener(view -> listener.onAudienceEditClick(
-                selectedPosition,
-                list.get(selectedPosition)
-        ));
+        holder.btnEdit.setOnClickListener(view -> {
+            listener.onAudienceEditClick(
+                    selectedPosition,
+                    list.get(selectedPosition),minAge,maxAge,gender
+            );
+        });
 
 
 
@@ -90,6 +104,13 @@ public class AudienceAdapter extends RecyclerView.Adapter<AudienceAdapter.ViewHo
             }
         });
     }
+    public void updateAudience(int minAge, int maxAge, String gender) {
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+        this.gender = gender;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getItemCount() {
@@ -99,7 +120,7 @@ public class AudienceAdapter extends RecyclerView.Adapter<AudienceAdapter.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         View boxAdvantage;
-        TextView tvAdvantageTitle, tvAdvantageSub;
+        TextView tvAdvantageTitle, tvAdvantageSub,tvMinAge,tvMaxAge,tvAdvantageOn;
         RadioButton rbAdvantage;
         Button btnEdit;
 
@@ -111,6 +132,9 @@ public class AudienceAdapter extends RecyclerView.Adapter<AudienceAdapter.ViewHo
             tvAdvantageSub = itemView.findViewById(R.id.tvAdvantageSub);
             rbAdvantage = itemView.findViewById(R.id.rbAdvantage);
             btnEdit = itemView.findViewById(R.id.btnEdit);
+            tvMinAge = itemView.findViewById(R.id.tvMinAge);
+            tvMaxAge = itemView.findViewById(R.id.tvMaxAge);
+            tvAdvantageOn = itemView.findViewById(R.id.tvAdvantageOn);
         }
     }
 }

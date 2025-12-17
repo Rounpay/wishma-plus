@@ -48,7 +48,6 @@
         android:textColor="@android:color/white"
         android:textStyle="bold"
         app:backgroundTint="@color/colorAccent"
-        app:icon="@drawable/ic_add_circle"
         app:iconGravity="end"
         app:iconPadding="@dimen/_4sdp"
         app:iconSize="@dimen/_13sdp"

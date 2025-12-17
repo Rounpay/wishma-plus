@@ -8,6 +8,7 @@ public class EstimateResult {
     private int subTotal;
     private double gst;
     private double total;
+    private double userBalance;
     private int statusCode;
     private String responseText;
 
@@ -55,9 +56,15 @@ public class EstimateResult {
     public double getTotal() {
         return total;
     }
+    public double getUserBalance() {
+        return userBalance;
+    }
 
     public void setTotal(double total) {
         this.total = total;
+    }
+    public void setUserBalance(double userBalance) {
+        this.userBalance = userBalance;
     }
 
     public int getStatusCode() {
