@@ -1518,7 +1518,7 @@
                                     android:id="@+id/tvFacebook"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
-                                    android:text="Whisma Plus"
+                                    android:text="Wishma Plus"
                                     android:textSize="15sp"
                                     android:textColor="#222222"
                                     android:layout_marginStart="12dp"

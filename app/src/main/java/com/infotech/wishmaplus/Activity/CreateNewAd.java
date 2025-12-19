@@ -7,12 +7,18 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -20,11 +26,13 @@ import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -35,24 +43,54 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.infotech.wishmaplus.Adapter.AudienceAdapter;
 import com.infotech.wishmaplus.Adapter.BoostPostsAdapter;
 import com.infotech.wishmaplus.Adapter.GoalAdapter;
+import com.infotech.wishmaplus.Api.Object.PgKeyVals;
+import com.infotech.wishmaplus.Api.Request.InitiateBoostRequest;
+import com.infotech.wishmaplus.Api.Response.BoostResponse;
 import com.infotech.wishmaplus.Api.Response.EstimateResponse;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
 import com.infotech.wishmaplus.Api.Response.PostItem;
 import com.infotech.wishmaplus.Api.Response.PostsResponse;
+import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.ApiClient;
+import com.infotech.wishmaplus.Utils.CheckoutProWebChromeClient;
+import com.infotech.wishmaplus.Utils.CheckoutProWebViewClient;
 import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.EndPointInterface;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
+import com.payu.base.models.CardType;
+import com.payu.base.models.ErrorResponse;
+import com.payu.base.models.PayUPaymentParams;
+import com.payu.base.models.PaymentType;
+import com.payu.checkoutpro.PayUCheckoutPro;
+import com.payu.checkoutpro.models.PayUCheckoutProConfig;
+import com.payu.checkoutpro.utils.PayUCheckoutProConstants;
+import com.payu.custombrowser.Bank;
+import com.payu.ui.model.listeners.PayUCheckoutProListener;
+import com.payu.ui.model.listeners.PayUHashGenerationListener;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CreateNewAd extends AppCompatActivity {
     BottomSheetDialog bottomGoalDialogReport,bottomSpecialCatDialogReport,bottomChooseAudienceCatDialogReport,bottomIsSecureCatDialogReport,bottomPlacementsCatDialogReport,bottomBudgetCatDialogReport,bottomPaymentCatDialogReport;
@@ -62,6 +100,8 @@ public class CreateNewAd extends AppCompatActivity {
     VideoView videoView;
     private CustomLoader loader;
     GetContentDetailsToBoostResponse getContentDetailsToBoostResponse = new GetContentDetailsToBoostResponse();
+
+    BoostResponse boostResponse = new BoostResponse();
 
     EstimateResponse estimateResponse = new EstimateResponse();
     String postId ="";
@@ -76,6 +116,8 @@ public class CreateNewAd extends AppCompatActivity {
     RadioButton rbChooseAd,rbRun;
 
     int audienceId = 1;
+    private long mLastClickTime;
+    private PreferencesManager tokenManager;
 
 
     private TextView tvDays, tvDate, tvInfo,tvLine1,textView3,textView2,tvSummarySubtitle;
@@ -85,10 +127,19 @@ public class CreateNewAd extends AppCompatActivity {
     private int days = 1;
     private Calendar startDate;
     private Calendar endDate;
-    EditText etBudget;
+    EditText etBudget,etPhone,etUrl;
     int minAge = 18;
     int maxAge = 65;
     String gender = "All";
+    String xmlType = "";
+    double budgetGlobal = 0.0;
+    double estimatedCost =0.0;
+    double gstAmount =0.0;
+    double subTotal =0.0;
+    double total = 0.0;
+    Button btnPromoteNow;
+
+    int boostId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +152,7 @@ public class CreateNewAd extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        tokenManager = new PreferencesManager(this,1);
         rvGoals = findViewById(R.id.rvGoals);
         rvAudience = findViewById(R.id.rvAudience);
         seekBar = findViewById(R.id.budgetSeekBar);
@@ -130,6 +182,9 @@ public class CreateNewAd extends AppCompatActivity {
         callNow = findViewById(R.id.callNow);
         bookNow = findViewById(R.id.bookNow);
         tvAdd = findViewById(R.id.tvAdd);
+        etPhone = findViewById(R.id.etPhone);
+        etUrl = findViewById(R.id.etUrl);
+        btnPromoteNow = findViewById(R.id.btnPromoteNow);
 
         goalTypeLayout.setVisibility(GONE);
 
@@ -152,6 +207,7 @@ public class CreateNewAd extends AppCompatActivity {
                 getEstimateBoostReach((double) seekBar.getProgress(),days,audienceId);
             }
         });
+        btnPromoteNow.setOnClickListener(view -> getInitiatePostBoost(null,null,null,null));
 
 
         // RecyclerView setup
@@ -417,6 +473,7 @@ public class CreateNewAd extends AppCompatActivity {
                             tvDials.setText("VISIT");
                             callNow.setVisibility(GONE);
                             bookNow.setVisibility(VISIBLE);
+                            xmlType= "url";
 
 
                         } else if (Objects.equals(goal.getIconName().toLowerCase(), "calls")) {
@@ -426,11 +483,13 @@ public class CreateNewAd extends AppCompatActivity {
                             tvDials.setText("DIALS");
                             callNow.setVisibility(VISIBLE);
                             bookNow.setVisibility(GONE);
+                            xmlType= "call";
                         }
                         else{
                             layoutCall.setVisibility(GONE);
                             layoutUrl.setVisibility(GONE);
                             goalTypeLayout.setVisibility(GONE);
+                            xmlType= "";
                         }
                     });
 
@@ -475,6 +534,393 @@ public class CreateNewAd extends AppCompatActivity {
             }
         });
     }
+    public static String formatDate(String inputDate) {
+        try {
+            SimpleDateFormat inputFormat =
+                    new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.ENGLISH);
+
+            SimpleDateFormat outputFormat =
+                    new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+
+            Date date = inputFormat.parse(inputDate);
+            return outputFormat.format(date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+
+    public void getInitiatePostBoost(String tid, String hashData, String hashName, PayUHashGenerationListener hashGenerationListener){
+        String phoneNo ="";
+        if(!etPhone.getText().toString().isEmpty())
+        {
+            phoneNo = "+91" + etPhone.getText().toString();
+        }
+        else{
+            phoneNo ="";
+        }
+        String url = etUrl.getText().toString();
+        String endDate = formatDate(tvDate.getText().toString());
+        int genderType = 0;
+        if (gender.equals("All")) {
+            genderType = 0;
+        }
+        else if (gender.equals("Male")) {
+            genderType = 1;
+        }
+        else if (gender.equals("Female")) {
+            genderType = 1;
+        }
+
+        loader.show();
+        InitiateBoostRequest request = new InitiateBoostRequest(
+                tid,
+                hashData,
+                boostId,
+                postId,
+                url,
+                phoneNo,
+                xmlType,
+                budgetGlobal,
+                estimatedCost,
+                subTotal,
+                gstAmount,
+                total,
+                days,
+                endDate,
+                audienceId,
+                minAge,
+                maxAge,
+                genderType,
+                "Wishma Plus"
+
+        );
+        UtilMethods.INSTANCE.initiateBoostPost(request, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                boostResponse =(BoostResponse) object;
+                if(boostResponse.getStatusCode()==1){
+
+                }
+                if (boostResponse != null) {
+                    if (boostResponse.getStatusCode() == 1) {
+                        boostId = boostResponse.getBoostId();
+
+                        if(boostResponse.isPgActive() && boostResponse.getData()!=null){
+                            if(boostResponse.getData().getStatusCode()==1 && boostResponse.getData().getPgResponse()!=null){
+                                if(boostResponse.getData().getPgResponse().getKeyVals()!=null){
+                                    if (hashData == null || hashData.isEmpty()) {
+                                        startPayUPayment(boostResponse.getData().getPgResponse().getKeyVals());
+                                    } else {
+                                        if (boostResponse.getData().getPgResponse().getKeyVals().getHash() != null && !boostResponse.getData().getPgResponse().getKeyVals().getHash().isEmpty()){
+                                            // hashPayUSDkPro = packageResponse.getData().getPgResponse().getKeyVals().getHash();
+                                            HashMap<String, String> dataMap = new HashMap<>();
+                                            dataMap.put(hashName, boostResponse.getData().getPgResponse().getKeyVals().getHash());
+                                            /*Log.e("HashData", hashPayUSDkPro);*/
+                                            hashGenerationListener.onHashGenerated(dataMap);
+
+                                        } else {
+                                            UtilMethods.INSTANCE.Error(CreateNewAd.this, "Problem in Hash generation");
+                                        }
+                                    }
+
+
+
+                                }else{
+                                    UtilMethods.INSTANCE.Error(CreateNewAd.this, "Transaction data is not available");
+                                }
+                                //call Gatway
+                            }else {
+                                UtilMethods.INSTANCE.Error(CreateNewAd.this, boostResponse.getData().getResponseText());
+                            }
+                        }else {
+//                            getPackage();
+                            Toast.makeText(CreateNewAd.this, boostResponse.getResponseText(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        UtilMethods.INSTANCE.Error(CreateNewAd.this, boostResponse.getResponseText());
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
+    }
+    private void startPayUPayment(PgKeyVals keyVals) {
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000)
+            return;
+        mLastClickTime = SystemClock.elapsedRealtime();
+        if (validateSDKParams(keyVals)) {
+            //hashPayUSDkPro = keyVals.getHash();
+            initUiSdk(preparePayUBizParams(keyVals), keyVals);
+        }
+    }
+    private boolean validateSDKParams(PgKeyVals mKeyVals) {
+        if (mKeyVals.getKey() == null || TextUtils.isEmpty(mKeyVals.getKey())) {
+            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Key");
+            return false;
+        } else if (mKeyVals.getHash() == null || TextUtils.isEmpty(mKeyVals.getHash())) {
+            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Hash");
+            return false;
+        } else if (mKeyVals.getTxnid() == null || TextUtils.isEmpty(mKeyVals.getTxnid())) {
+            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Transaction Id");
+            return false;
+        } else if (mKeyVals.getEmail() == null || TextUtils.isEmpty(mKeyVals.getEmail())) {
+            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Mail Id");
+            return false;
+        } else if (mKeyVals.getFirstname() == null || TextUtils.isEmpty(mKeyVals.getFirstname())) {
+            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Name");
+            return false;
+        } else if (mKeyVals.getSurl() == null || TextUtils.isEmpty(mKeyVals.getSurl())) {
+            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Success URL");
+            return false;
+        } else if (mKeyVals.getFurl() == null || TextUtils.isEmpty(mKeyVals.getFurl())) {
+            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Fail URL");
+            return false;
+        }
+
+        return true;
+    }
+    private PayUPaymentParams preparePayUBizParams(PgKeyVals mKeyVals) {
+
+        HashMap<String, Object> additionalParams = new HashMap<>();
+        additionalParams.put(PayUCheckoutProConstants.CP_UDF1, "udf1");
+        additionalParams.put(PayUCheckoutProConstants.CP_UDF2, "udf2");
+        additionalParams.put(PayUCheckoutProConstants.CP_UDF3, "udf3");
+        additionalParams.put(PayUCheckoutProConstants.CP_UDF4, "udf4");
+        additionalParams.put(PayUCheckoutProConstants.CP_UDF5, "udf5");
+
+        PayUPaymentParams.Builder builder = new PayUPaymentParams.Builder();
+        builder.setAmount(mKeyVals.getAmount())
+                .setIsProduction(mKeyVals.isProdcution())
+                .setProductInfo(mKeyVals.getProductinfo())
+                .setKey(mKeyVals.getKey())
+                .setPhone(mKeyVals.getPhone())
+                .setTransactionId(mKeyVals.getTxnid())
+                .setFirstName(mKeyVals.getFirstname())
+                .setEmail(mKeyVals.getEmail())
+                .setSurl(mKeyVals.getSurl())
+                .setFurl(mKeyVals.getFurl())
+                .setAdditionalParams(additionalParams)
+                .setUserCredential(mKeyVals.getKey() + mKeyVals.getEmail())
+                .setPayUSIParams(null);
+        PayUPaymentParams payUPaymentParams = builder.build();
+        return payUPaymentParams;
+    }
+    private void initUiSdk(PayUPaymentParams payUPaymentParams, PgKeyVals mKeyVals) {
+        PayUCheckoutPro.open(
+                this,
+                payUPaymentParams,
+                getCheckoutProConfig(mKeyVals),
+                new PayUCheckoutProListener() {
+
+                    @Override
+                    public void onPaymentSuccess(@NotNull Object response) {
+
+                        //HashMap<String, Object> result = (HashMap<String, Object>) response;
+                        // Log.e("PAYUProResp", "Payu's Data : " + result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE) + "\n\n\n Merchant's Data: " + result.get(PayUCheckoutProConstants.CP_MERCHANT_RESPONSE));
+                        // Object payuResponse = result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE);
+                        // PayUCheckProResponse itemResponse = new Gson().fromJson((String) payuResponse, PayUCheckProResponse.class);
+                        //JSONObject payuCheckProJObject  = new JSONObject((String)payuResponse); // json
+                        //Log.e("PAYUProResp", "Payu's Success : " + itemResponse);
+                        payuStatusUpdate(mKeyVals.getTxnid()/*,itemResponse.getStatus()*/);
+                        //PayUCheckProCallBackApi(PayUCheckProSuccessData(mKeyVals, payuResponse, 2));
+                    }
+
+                    @Override
+                    public void onPaymentFailure(Object response) {
+                      //  HashMap<String, Object> result = (HashMap<String, Object>) response;
+                        //Log.e("PAYUProResp", "Payu's Data : " + result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE) + "\n\n\n Merchant's Data: " + result.get(PayUCheckoutProConstants.CP_MERCHANT_RESPONSE));
+                        //Object payuResponse = result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE);
+                      //  try {
+                           // PayUCheckProResponse itemResponse = new Gson().fromJson((String) payuResponse, PayUCheckProResponse.class);
+                            payuStatusUpdate(mKeyVals.getTxnid()/*,itemResponse.getStatus()*/);
+                            // Log.e("PAYUProResp", "Payu's Error : " + itemResponse);
+                          //  PayUCheckProCallBackApi(PayUCheckProFailedData(mKeyVals, 3, itemResponse.getStatus(), itemResponse.getErrorMessage()));
+                       // } catch (Exception exception) {
+                            //  Log.e("PAYUProResp", "Payu's Error : " + exception.getMessage());
+                       // }
+
+                       /*   UtilMethods.INSTANCE.Balancecheck(AddMoneyActivity.this, loader, object -> {
+                                        balanceCheckResponse = (BalanceResponse) object;
+                                        if (balanceCheckResponse != null && balanceCheckResponse.getBalanceData() != null) {
+                                            showWalletListPopupWindow();
+                                        }
+                                    });*/
+
+                    }
+
+                    @Override
+                    public void onPaymentCancel(boolean isTxnInitiated) {
+                        showSnackBar(getResources().getString(R.string.transaction_cancelled_by_user));
+                    }
+
+                    @Override
+                    public void onError(ErrorResponse errorResponse) {
+                        String errorMessage = errorResponse.getErrorMessage();
+                        if (TextUtils.isEmpty(errorMessage))
+                            errorMessage = getResources().getString(R.string.some_thing_error);
+                        showSnackBar(errorMessage);
+                    }
+
+                    @Override
+                    public void setWebViewProperties(@Nullable WebView webView, @Nullable Object o) {
+                        //For setting webview properties, if any. Check Customized Integration section for more details on this
+                        webView.setWebChromeClient(new CheckoutProWebChromeClient((Bank) o));
+                        webView.setWebViewClient(new CheckoutProWebViewClient((Bank) o, mKeyVals.getKey()));
+                    }
+
+                    @Override
+                    public void generateHash(HashMap<String, String> valueMap, PayUHashGenerationListener hashGenerationListener) {
+                        String hashName = valueMap.get(PayUCheckoutProConstants.CP_HASH_NAME);
+                        String hashData = valueMap.get(PayUCheckoutProConstants.CP_HASH_STRING);
+                        if (!TextUtils.isEmpty(hashName) && !TextUtils.isEmpty(hashData)) {
+                             Log.e("CP_HASH_STRING", hashData);
+                             Log.e("CP_HASH_NAME", hashName);
+
+                            //Generate Hash Key From Server End---
+                            //GatewayTransaction(hashData, hashName, hashGenerationListener);
+                           /* String hash = hashString;*/
+                            getInitiatePostBoost(mKeyVals.getTxnid(),hashData, hashName, hashGenerationListener);
+                            /*if (!TextUtils.isEmpty(hashPayUSDkPro)) {
+                                HashMap hashMap = new HashMap();
+                                hashMap.put(hashName, hashPayUSDkPro);
+                                hashGenerationListener.onHashGenerated(hashMap);
+                            }*/
+                        }
+                    }
+
+                }
+        );
+
+        /*Log.e("PayUPaymentParams", new Gson().toJson(payUPaymentParams));*/
+    }
+    private PayUCheckoutProConfig getCheckoutProConfig(PgKeyVals mKeyVals) {
+        PayUCheckoutProConfig checkoutProConfig = new PayUCheckoutProConfig();
+        checkoutProConfig.setMerchantName(getString(R.string.app_name));
+        //checkoutProConfig.setPaymentModesOrder(getCheckoutOrderList(mKeyVals));
+        //checkoutProConfig.setOfferDetails(getOfferDetailsList());
+        //checkoutProConfig.setPaymentModesOrder(getCheckoutOrderList(mKeyVals));
+        checkoutProConfig.setEnforcePaymentList(getEnforcePaymentList(mKeyVals));
+        checkoutProConfig.setShowCbToolbar(false);
+        checkoutProConfig.setAutoSelectOtp(false);
+        checkoutProConfig.setAutoApprove(false);
+        checkoutProConfig.setMerchantSmsPermission(true);
+        //checkoutProConfig.setSurePayCount(Integer.parseInt(binding.etSurePayCount.getText().toString()));
+        checkoutProConfig.setShowExitConfirmationOnPaymentScreen(true);
+        checkoutProConfig.setShowExitConfirmationOnCheckoutScreen(true);
+        checkoutProConfig.setMerchantLogo(R.drawable.app_logo);
+        checkoutProConfig.setMerchantResponseTimeout(10000); // for 10 seconds timeout
+        checkoutProConfig.setWaitingTime(30000);// for 30 seconds read OTP Time
+        //checkoutProConfig.setSurePayCount(3); //The Default value is 0.
+        //checkoutProConfig.setCustomNoteDetails(getCustomeNoteList());
+        /*if (reviewOrderAdapter != null)
+            checkoutProConfig.setCartDetails(reviewOrderAdapter.getOrderDetailsList());*/
+        return checkoutProConfig;
+    }
+    private ArrayList<HashMap<String, String>> getEnforcePaymentList(PgKeyVals mKeyVals) {
+        ArrayList<HashMap<String, String>> enforceList = new ArrayList();
+
+
+        if (mKeyVals.getEnforce_paymethod() != null && !mKeyVals.getEnforce_paymethod().isEmpty()) {
+            HashMap<String, String> map = new HashMap<>();
+            if (mKeyVals.getEnforce_paymethod().toLowerCase().contains("debitcard") || mKeyVals.getEnforce_paymethod().toLowerCase().contains("debit card") /*|| selectedMethod.toLowerCase().contains("debit")*/) {
+                map.put(PayUCheckoutProConstants.CP_PAYMENT_TYPE, PaymentType.CARD.name());
+                map.put(PayUCheckoutProConstants.CP_CARD_TYPE, CardType.DC.name());
+                //map.put(PayUCheckoutProConstants.CP_CARD_SCHEME, CardScheme.RUPAY.name());
+            } else if (mKeyVals.getEnforce_paymethod().toLowerCase().contains("creditcard") || mKeyVals.getEnforce_paymethod().toLowerCase().contains("credit card") /*|| selectedMethod.toLowerCase().contains("credit")*/) {
+                map.put(PayUCheckoutProConstants.CP_PAYMENT_TYPE, PaymentType.CARD.name());
+                map.put(PayUCheckoutProConstants.CP_CARD_TYPE, CardType.CC.name());
+            } else if (mKeyVals.getEnforce_paymethod().toLowerCase().contains("upi") /*|| selectedMethod.toLowerCase().contains("upi")*/) {
+                map.put(PayUCheckoutProConstants.CP_PAYMENT_TYPE, PaymentType.UPI_INTENT.name());
+            } else if (mKeyVals.getEnforce_paymethod().toLowerCase().contains("net banking") || mKeyVals.getEnforce_paymethod().toLowerCase().contains("netbanking") /*|| selectedMethod.toLowerCase().contains("net")*/) {
+                map.put(PayUCheckoutProConstants.CP_PAYMENT_TYPE, PaymentType.NB.name());
+            } else if (mKeyVals.getEnforce_paymethod().toLowerCase().contains("wallet") /*|| selectedMethod.toLowerCase().contains("wallet")*/) {
+                map.put(PayUCheckoutProConstants.CP_PAYMENT_TYPE, PaymentType.WALLET.name());
+            }
+
+            enforceList.add(map);
+        }
+
+        return enforceList;
+    }
+    public void payuStatusUpdate(String tid/*, String status*/) {
+        try {
+
+            loader.show();
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<UpgradePackageResponse> call = git.payUTransactionUpdate("Bearer " + tokenManager.getAccessToken(),
+                    tid);
+            call.enqueue(new Callback<UpgradePackageResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<UpgradePackageResponse> call, @NonNull Response<UpgradePackageResponse> response) {
+                    if (loader != null) {
+                        if (loader.isShowing()) {
+                            loader.dismiss();
+                        }
+                    }
+                    try {
+                        UpgradePackageResponse packageResponse = response.body();
+                        if (packageResponse != null) {
+                            if (packageResponse.getStatusCode() == 1) {
+//                                getPackage();
+                                UtilMethods.INSTANCE.SuccessWithOkay(CreateNewAd.this, packageResponse.getResponseText(),false);
+                            } else {
+                                UtilMethods.INSTANCE.Error(CreateNewAd.this, packageResponse.getResponseText());
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        UtilMethods.INSTANCE.Error(CreateNewAd.this, e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<UpgradePackageResponse> call, @NonNull Throwable t) {
+                    if (loader != null) {
+                        if (loader.isShowing()) {
+                            loader.dismiss();
+                        }
+                    }
+                    try {
+
+                        UtilMethods.INSTANCE.apiFailureError(CreateNewAd.this, t);
+                    } catch (IllegalStateException ise) {
+                        UtilMethods.INSTANCE.Error(CreateNewAd.this, ise.getMessage());
+
+                    }
+
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (loader != null) {
+                if (loader.isShowing()) {
+                    loader.dismiss();
+                }
+            }
+            UtilMethods.INSTANCE.Error(CreateNewAd.this, e.getMessage());
+
+        }
+    }
     public void getEstimateBoostReach(double budget,int days,int audienceId){
         loader.show();
         UtilMethods.INSTANCE.getEstimateBoostReach(budget,days,audienceId, new UtilMethods.ApiCallBackMulti() {
@@ -495,6 +941,12 @@ public class CreateNewAd extends AppCompatActivity {
                     tvSubPrice.setText("₹"+estimateResponse.getResult().getSubTotal()+"");
                     tvGstPrice.setText("₹"+estimateResponse.getResult().getGst()+"");
                     tvPrice.setText("₹"+estimateResponse.getResult().getTotal()+"");
+
+                    budgetGlobal = estimateResponse.getResult().getBudget();
+                    estimatedCost = estimateResponse.getResult().getEstimatedCost();
+                    gstAmount =estimateResponse.getResult().getGst();
+                    subTotal =estimateResponse.getResult().getSubTotal();
+                    total = estimateResponse.getResult().getTotal();
                 }
 
 
@@ -651,5 +1103,8 @@ public class CreateNewAd extends AppCompatActivity {
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomPaymentCatDialogReport.show();
+    }
+    private void showSnackBar(String message) {
+        Snackbar.make(findViewById(R.id.main), message, Snackbar.LENGTH_LONG).show();
     }
 }

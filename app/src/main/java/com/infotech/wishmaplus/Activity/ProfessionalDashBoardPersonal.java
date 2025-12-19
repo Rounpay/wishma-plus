@@ -49,6 +49,11 @@ public class ProfessionalDashBoardPersonal extends AppCompatActivity {
                     DashBoardPersonalInformation.class);
             startActivity(intent);
         });
+        findViewById(R.id.analytics_tab).setOnClickListener(v -> {
+            Intent intent = new Intent(ProfessionalDashBoardPersonal.this,
+                    AnalyticsDashboard.class);
+            startActivity(intent);
+        });
         findViewById(R.id.creator_support_card).setOnClickListener(v -> {
             Intent intent = new Intent(ProfessionalDashBoardPersonal.this,
                     CreatorSupportActivity.class);

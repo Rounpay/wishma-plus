@@ -53,11 +53,13 @@ import com.infotech.wishmaplus.Api.Object.CommentResult;
 import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
 import com.infotech.wishmaplus.Api.Request.BasicRequest;
 import com.infotech.wishmaplus.Api.Request.CommentRequest;
+import com.infotech.wishmaplus.Api.Request.InitiateBoostRequest;
 import com.infotech.wishmaplus.Api.Request.LikeRequest;
 import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.BoostResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.EligibilityModel;
@@ -147,6 +149,10 @@ public enum UtilMethods {
     public void Success(final Activity context, final String message) {
         CustomAlertDialog customAlertDialog = new CustomAlertDialog(context, true);
         customAlertDialog.Successful(message);
+    }
+    public void SuccessWithOkay(final Activity context, final String message, boolean isCancelable) {
+        CustomAlertDialog customAlertDialog = new CustomAlertDialog(context, true);
+        customAlertDialog.SuccessfulWithOkay(isCancelable,message);
     }
 
     public void NetworkError(final Activity context, String title, final String message) {
@@ -1067,6 +1073,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<EstimateResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void initiateBoostPost(InitiateBoostRequest request, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BoostResponse> call = git.initiateBoostPost("Bearer " + tokenManager.getAccessToken(),request);
+            call.enqueue(new Callback<BoostResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BoostResponse> call, @NonNull Response<BoostResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BoostResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });

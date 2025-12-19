@@ -3,9 +3,9 @@ package com.infotech.wishmaplus.Api.Response;
 public class EstimateResult {
 
     private String reach;
-    private int budget;
-    private int estimatedCost;
-    private int subTotal;
+    private double budget;
+    private double estimatedCost;
+    private double subTotal;
     private double gst;
     private double total;
     private double userBalance;
@@ -21,27 +21,27 @@ public class EstimateResult {
         this.reach = reach;
     }
 
-    public int getBudget() {
+    public double getBudget() {
         return budget;
     }
 
-    public void setBudget(int budget) {
+    public void setBudget(double budget) {
         this.budget = budget;
     }
 
-    public int getEstimatedCost() {
+    public double getEstimatedCost() {
         return estimatedCost;
     }
 
-    public void setEstimatedCost(int estimatedCost) {
+    public void setEstimatedCost(double estimatedCost) {
         this.estimatedCost = estimatedCost;
     }
 
-    public int getSubTotal() {
+    public double getSubTotal() {
         return subTotal;
     }
 
-    public void setSubTotal(int subTotal) {
+    public void setSubTotal(double subTotal) {
         this.subTotal = subTotal;
     }
 

@@ -11,6 +11,8 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AlertDialog;
 
 import com.infotech.wishmaplus.Activity.LoginActivity;
+import com.infotech.wishmaplus.Activity.MainActivity;
+import com.infotech.wishmaplus.Activity.SwitchPages;
 import com.infotech.wishmaplus.R;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -203,6 +205,30 @@ public class CustomAlertDialog {
                     intent.putExtra("Type",typeId);
                     intent.putExtra("pageId",pageId);
                     context.setResult(Activity.RESULT_OK,intent);
+                    context.finish();
+                });
+                alertDialog.show();
+            } catch (WindowManager.BadTokenException bte) {
+
+            } catch (IllegalStateException ise) {
+
+            } catch (Exception e) {
+
+            }
+        }
+    }
+    public void SuccessfulWithOkay(boolean isCancelable, final String message) {
+        if (isScreenOpen) {
+            try {
+                alertDialog.changeAlertType(SUCCESS_TYPE);
+                alertDialog.setContentText(message);
+                alertDialog.setCancelable(isCancelable);
+                // alertDialog.setCustomImage(R.drawable.ic_success);
+                alertDialog.setConfirmButton("Ok", sweetAlertDialog -> {
+                    alertDialog.dismiss();
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
                     context.finish();
                 });
                 alertDialog.show();

@@ -13,6 +13,7 @@ import com.infotech.wishmaplus.Api.Object.StateResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
 import com.infotech.wishmaplus.Api.Request.BasicRequest;
 import com.infotech.wishmaplus.Api.Request.CommentRequest;
+import com.infotech.wishmaplus.Api.Request.InitiateBoostRequest;
 import com.infotech.wishmaplus.Api.Request.LikeRequest;
 import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
 import com.infotech.wishmaplus.Api.Request.SharePostRequest;
@@ -21,6 +22,7 @@ import com.infotech.wishmaplus.Api.Request.UpdateUserRequest;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.BoostResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.CompanyDetailResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
@@ -326,6 +328,12 @@ public interface EndPointInterface {
             @Query("DurationDays") int DurationDays,
             @Query("AudienceId") int AudienceId,
             @Header("Authorization") String token
+    );
+
+    @POST("api/InitiateBoostPost")
+    Call<BoostResponse> initiateBoostPost(
+            @Header("Authorization") String token,
+            @Body InitiateBoostRequest request
     );
 
 }
