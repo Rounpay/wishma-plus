@@ -80,7 +80,7 @@ public class InsightsProfessionalFragment extends Fragment {
 
         ivInfo.setOnClickListener(v -> UtilMethods.INSTANCE.InsightsBottomSheetDialog(requireActivity()));
         updatePercentage(28);
-        dropdownText.setOnClickListener(v -> UtilMethods.INSTANCE.selectDateRangeBottomSheet(requireActivity(), dropdownText, this::updatePercentage));
+        dropdownText.setOnClickListener(v -> UtilMethods.INSTANCE.selectDateRangeBottomSheet(requireActivity(), dropdownText, this::updatePercentage,false));
         return view;
     }
 

@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:text="@string/date_range"
+        android:text="Metric"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/today"
+            android:text="Views"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
@@ -94,7 +94,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/last_7_days"
+            android:text="Viewers"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
@@ -129,7 +129,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/last_14_days"
+            android:text="Engagement"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
@@ -164,7 +164,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/last_28_days"
+            android:text="Date"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
 
@@ -184,75 +184,5 @@
 
     </LinearLayout>
 
-    <!-- Last 90 -->
-    <LinearLayout
-        android:id="@+id/option_last90"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:paddingVertical="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/option_last28">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/TextAppearance.AppCompat.Subhead"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/last_90_days"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <RadioButton
-            android:id="@+id/rbLast90"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:buttonTint="@color/colorPrimary"
-            android:clickable="false"
-            android:gravity="center_vertical"
-            android:includeFontPadding="false"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:padding="0dp"
-            android:text="" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/option_last_lifetime"
-        android:layout_width="0dp"
-        android:visibility="gone"
-        android:layout_height="wrap_content"
-        android:paddingVertical="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/option_last90">
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/TextAppearance.AppCompat.Subhead"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Lifetime"
-            android:textColor="@android:color/black"
-            android:textStyle="bold" />
-
-        <RadioButton
-            android:id="@+id/rbLastLifetime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="0dp"
-            android:buttonTint="@color/colorPrimary"
-            android:clickable="false"
-            android:gravity="center_vertical"
-            android:includeFontPadding="false"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:padding="0dp"
-            android:text="" />
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -309,6 +309,8 @@ public interface EndPointInterface {
     @GET("api/GetContentToBoost")
     Call<PostsResponse> getContentToBoost(
             @Query("PageId") String pageId,
+            @Query("DateRange") int DateRange,
+            @Query("ContentType") int ContentType,
             @Header("Authorization") String token
     );
     @GET("api/UserProfile/IsReadContentNotification")

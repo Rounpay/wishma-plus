@@ -101,7 +101,6 @@
                 android:textSize="16sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:visibility="gone"
                 android:id="@+id/content_tab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

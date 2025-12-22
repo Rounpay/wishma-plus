@@ -38,6 +38,11 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
+            android:name=".Activity.AnalyticsContent"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize"  />
+        <activity
             android:name=".Activity.AnalyticsDashboard"
             android:exported="false"
             android:theme="@style/Appnew"

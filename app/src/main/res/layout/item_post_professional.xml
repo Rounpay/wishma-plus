@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/cardPost"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp">
+
+    <!-- Profile Image -->
+    <LinearLayout
+        android:id="@+id/imgProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    <ImageView
+        android:id="@+id/imagePost"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/app_logo"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <VideoView
+        android:id="@+id/videoPost"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:clipToOutline="true"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+
+    <!-- Name -->
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:singleLine="true"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#000"
+        app:layout_constraintStart_toEndOf="@id/imgProfile"
+        app:layout_constraintTop_toTopOf="@id/imgProfile"
+        app:layout_constraintEnd_toStartOf="@id/tvEngagementValue"
+        android:layout_marginStart="12dp"/>
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/tvSubTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="13sp"
+        android:textColor="#777"
+        app:layout_constraintStart_toStartOf="@id/tvName"
+        app:layout_constraintTop_toBottomOf="@id/tvName"/>
+    <TextView
+        android:id="@+id/dotView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=" · "
+        android:textSize="13sp"
+        android:textColor="#777"
+        app:layout_constraintStart_toEndOf="@+id/tvSubTitle"
+        app:layout_constraintTop_toBottomOf="@id/tvName"/>
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#777"
+        android:textSize="13sp"
+        app:layout_constraintStart_toEndOf="@+id/dotView"
+        app:layout_constraintTop_toBottomOf="@id/tvName"/>
+
+    <!-- Right Count -->
+    <TextView
+        android:id="@+id/tvEngagementValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textColor="#000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

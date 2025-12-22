@@ -116,6 +116,9 @@ public enum UtilMethods {
     public BottomSheetDialog bottomSheetDialogReport, AcceptRequestDialog;
     public static BottomSheetDialog bottomSheetUser;
     int selectedDateRange = 28;
+    int selectedDateRangeNew = 0;
+    int selectedPostType = 0;
+    int selectedMetricType = 1;
 
 
     //public HashMap<Long, String> downloadIdMap= new HashMap<>();
@@ -983,10 +986,10 @@ public enum UtilMethods {
         }
     }
 
-    public void getContentToBoost(String pageId, Activity activity, ApiCallBackMulti apiCallBack) {
+    public void getContentToBoost(String pageId, Activity activity, ApiCallBackMulti apiCallBack,int DateRange,int ContentType) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<PostsResponse> call = git.getContentToBoost(pageId,"Bearer " + tokenManager.getAccessToken());
+            Call<PostsResponse> call = git.getContentToBoost(pageId,DateRange,ContentType,"Bearer " + tokenManager.getAccessToken());
             call.enqueue(new Callback<PostsResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<PostsResponse> call, @NonNull Response<PostsResponse> response) {
@@ -1380,7 +1383,7 @@ public enum UtilMethods {
         }
     }
 
-    public void selectDateRangeBottomSheet(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback) {
+    public void selectDateRangeBottomSheet(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback,boolean showLifetime) {
 
         if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
             return;
@@ -1388,12 +1391,16 @@ public enum UtilMethods {
         bottomDateDialogDateRange = new BottomSheetDialog(context, R.style.DialogStyle);
         View sheetView = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_date_range, null);
+        if (showLifetime) {
+            sheetView.findViewById(R.id.option_last_lifetime).setVisibility(View.VISIBLE);
+        }
 
         RadioButton rToday = sheetView.findViewById(R.id.rbToday);
         RadioButton r7 = sheetView.findViewById(R.id.rbLast7);
         RadioButton r14 = sheetView.findViewById(R.id.rbLast14);
         RadioButton r28 = sheetView.findViewById(R.id.rbLast28);
         RadioButton r90 = sheetView.findViewById(R.id.rbLast90);
+        RadioButton rbLastLifetime = sheetView.findViewById(R.id.rbLastLifetime);
         switch (selectedDateRange) {
             case 1:
                 rToday.setChecked(true);
@@ -1410,6 +1417,9 @@ public enum UtilMethods {
             case 90:
                 r90.setChecked(true);
                 break;
+            case 100:
+                rbLastLifetime.setChecked(true);
+                break;
         }
 
         bottomDateDialogDateRange.setContentView(sheetView);
@@ -1422,6 +1432,7 @@ public enum UtilMethods {
             r14.setChecked(id == R.id.rbLast14);
             r28.setChecked(id == R.id.rbLast28);
             r90.setChecked(id == R.id.rbLast90);
+            rbLastLifetime.setChecked(id == R.id.rbLastLifetime);
 
             int idSelected = 28;
             if (id == R.id.option_today) {
@@ -1444,6 +1455,10 @@ public enum UtilMethods {
                 idSelected = 90;
                 selectedDateRange = 90;
                 tvDropdownText.setText("Last 90 days");
+            }else if (id == R.id.rbLastLifetime) {
+                idSelected = 100;
+                selectedDateRange = 100;
+                tvDropdownText.setText("Lifetime");
             }
 
             bottomDateDialogDateRange.dismiss();
@@ -1457,6 +1472,253 @@ public enum UtilMethods {
         sheetView.findViewById(R.id.rbLast14).setOnClickListener(listener);
         sheetView.findViewById(R.id.rbLast28).setOnClickListener(listener);
         sheetView.findViewById(R.id.rbLast90).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLastLifetime).setOnClickListener(listener);
+        bottomDateDialogDateRange.show();
+    }
+    public void selectDateRangeBottomSheetNew(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback,boolean showLifetime) {
+
+        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
+            return;
+
+        bottomDateDialogDateRange = new BottomSheetDialog(context, R.style.DialogStyle);
+        View sheetView = LayoutInflater.from(context)
+                .inflate(R.layout.bottom_sheet_date_range, null);
+        if (showLifetime) {
+            sheetView.findViewById(R.id.option_last_lifetime).setVisibility(View.VISIBLE);
+        }
+
+        RadioButton rToday = sheetView.findViewById(R.id.rbToday);
+        RadioButton r7 = sheetView.findViewById(R.id.rbLast7);
+        RadioButton r14 = sheetView.findViewById(R.id.rbLast14);
+        RadioButton r28 = sheetView.findViewById(R.id.rbLast28);
+        RadioButton r90 = sheetView.findViewById(R.id.rbLast90);
+        RadioButton rbLastLifetime = sheetView.findViewById(R.id.rbLastLifetime);
+        switch (selectedDateRangeNew) {
+            case 1:
+                rToday.setChecked(true);
+                break;
+            case 2:
+                r7.setChecked(true);
+                break;
+            case 3:
+                r14.setChecked(true);
+                break;
+            case 4:
+                r28.setChecked(true);
+                break;
+            case 5:
+                r90.setChecked(true);
+                break;
+            case 0:
+                rbLastLifetime.setChecked(true);
+                break;
+        }
+
+        bottomDateDialogDateRange.setContentView(sheetView);
+
+        @SuppressLint("SetTextI18n") View.OnClickListener listener = v -> {
+            int id = v.getId();
+
+            rToday.setChecked(id == R.id.option_today);
+            r7.setChecked(id == R.id.rbLast7);
+            r14.setChecked(id == R.id.rbLast14);
+            r28.setChecked(id == R.id.rbLast28);
+            r90.setChecked(id == R.id.rbLast90);
+            rbLastLifetime.setChecked(id == R.id.rbLastLifetime);
+
+            int idSelected = 0;
+            if (id == R.id.option_today) {
+                idSelected = 1;
+                selectedDateRangeNew = 1;
+                tvDropdownText.setText("Today");
+            } else if (id == R.id.rbLast7) {
+                idSelected = 2;
+                selectedDateRangeNew = 2;
+                tvDropdownText.setText("Last 7 days");
+            } else if (id == R.id.rbLast14) {
+                idSelected = 3;
+                selectedDateRangeNew = 3;
+                tvDropdownText.setText("Last 14 days");
+            } else if (id == R.id.rbLast28) {
+                idSelected = 4;
+                selectedDateRangeNew = 4;
+                tvDropdownText.setText("Last 28 days");
+            } else if (id == R.id.rbLast90) {
+                idSelected = 5;
+                selectedDateRangeNew = 5;
+                tvDropdownText.setText("Last 90 days");
+            }else if (id == R.id.rbLastLifetime) {
+                idSelected = 0;
+                selectedDateRangeNew = 0;
+                tvDropdownText.setText("Lifetime");
+            }
+
+            bottomDateDialogDateRange.dismiss();
+            if (callback != null) {
+                callback.onSelected(idSelected);
+            }
+        };
+
+        sheetView.findViewById(R.id.option_today).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast7).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast14).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast28).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast90).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLastLifetime).setOnClickListener(listener);
+        bottomDateDialogDateRange.show();
+    }
+
+    public void selectMetricBottomSheet(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback) {
+
+        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
+            return;
+
+        bottomDateDialogDateRange = new BottomSheetDialog(context, R.style.DialogStyle);
+        View sheetView = LayoutInflater.from(context)
+                .inflate(R.layout.bottom_sheet_metric, null);
+
+        RadioButton rToday = sheetView.findViewById(R.id.rbToday);
+        RadioButton r7 = sheetView.findViewById(R.id.rbLast7);
+        RadioButton r14 = sheetView.findViewById(R.id.rbLast14);
+        RadioButton r28 = sheetView.findViewById(R.id.rbLast28);
+        switch (selectedMetricType) {
+            case 1:
+                rToday.setChecked(true);
+                break;
+            case 7:
+                r7.setChecked(true);
+                break;
+            case 14:
+                r14.setChecked(true);
+                break;
+            case 28:
+                r28.setChecked(true);
+                break;
+        }
+
+        bottomDateDialogDateRange.setContentView(sheetView);
+
+        @SuppressLint("SetTextI18n") View.OnClickListener listener = v -> {
+            int id = v.getId();
+
+            rToday.setChecked(id == R.id.option_today);
+            r7.setChecked(id == R.id.rbLast7);
+            r14.setChecked(id == R.id.rbLast14);
+            r28.setChecked(id == R.id.rbLast28);
+
+            int idSelected = 28;
+            if (id == R.id.option_today) {
+                idSelected = 1;
+                selectedMetricType = 1;
+                tvDropdownText.setText("Views");
+            } else if (id == R.id.rbLast7) {
+                idSelected = 7;
+                selectedMetricType = 7;
+                tvDropdownText.setText("Viewers");
+            } else if (id == R.id.rbLast14) {
+                idSelected = 14;
+                selectedMetricType = 14;
+                tvDropdownText.setText("Engagement");
+            } else if (id == R.id.rbLast28) {
+                idSelected = 28;
+                selectedMetricType = 28;
+                tvDropdownText.setText("Date");
+            }
+
+            bottomDateDialogDateRange.dismiss();
+            if (callback != null) {
+                callback.onSelected(idSelected);
+            }
+        };
+
+        sheetView.findViewById(R.id.option_today).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast7).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast14).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast28).setOnClickListener(listener);
+        bottomDateDialogDateRange.show();
+    }
+    public void selectPostTypeBottomSheet(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback) {
+
+        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
+            return;
+
+        bottomDateDialogDateRange = new BottomSheetDialog(context, R.style.DialogStyle);
+        View sheetView = LayoutInflater.from(context)
+                .inflate(R.layout.bottom_sheet_post, null);
+
+        RadioButton rToday = sheetView.findViewById(R.id.rbToday);
+        RadioButton r7 = sheetView.findViewById(R.id.rbLast7);
+        RadioButton r14 = sheetView.findViewById(R.id.rbLast14);
+        RadioButton r28 = sheetView.findViewById(R.id.rbLast28);
+        RadioButton r90 = sheetView.findViewById(R.id.rbLast90);
+        RadioButton rbLastLifetime = sheetView.findViewById(R.id.rbLastLifetime);
+        RadioButton rbLastText = sheetView.findViewById(R.id.rbLastText);
+        RadioButton rbLastStory = sheetView.findViewById(R.id.rbLastStory);
+        RadioButton rbLastAbTest = sheetView.findViewById(R.id.rbLastAbTest);
+        switch (selectedPostType) {
+            case 0:
+                rToday.setChecked(true);
+                break;
+            case 1:
+                r7.setChecked(true);
+                break;
+            case 2:
+                r14.setChecked(true);
+                break;
+            case 3:
+                r28.setChecked(true);
+                break;
+        }
+
+        bottomDateDialogDateRange.setContentView(sheetView);
+
+        @SuppressLint("SetTextI18n") View.OnClickListener listener = v -> {
+            int id = v.getId();
+
+            rToday.setChecked(id == R.id.option_today);
+            r7.setChecked(id == R.id.rbLast7);
+            r14.setChecked(id == R.id.rbLast14);
+            r28.setChecked(id == R.id.rbLast28);
+            r90.setChecked(id == R.id.rbLast90);
+            rbLastLifetime.setChecked(id == R.id.rbLastLifetime);
+            rbLastText.setChecked(id == R.id.rbLastText);
+            rbLastStory.setChecked(id == R.id.rbLastStory);
+            rbLastAbTest.setChecked(id == R.id.rbLastAbTest);
+
+            int idSelected = 0;
+            if (id == R.id.option_today) {
+                idSelected = 0;
+                selectedPostType = 0;
+                tvDropdownText.setText("All posts");
+            } else if (id == R.id.rbLast7) {
+                idSelected = 1;
+                selectedPostType = 1;
+                tvDropdownText.setText("Text");
+            } else if (id == R.id.rbLast14) {
+                idSelected = 2;
+                selectedPostType = 2;
+                tvDropdownText.setText("Video");
+            } else if (id == R.id.rbLast28) {
+                idSelected = 3;
+                selectedPostType = 3;
+                tvDropdownText.setText("Images");
+            }
+
+            bottomDateDialogDateRange.dismiss();
+            if (callback != null) {
+                callback.onSelected(idSelected);
+            }
+        };
+
+        sheetView.findViewById(R.id.option_today).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast7).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast14).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast28).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLast90).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLastLifetime).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLastText).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLastStory).setOnClickListener(listener);
+        sheetView.findViewById(R.id.rbLastAbTest).setOnClickListener(listener);
         bottomDateDialogDateRange.show();
     }
 

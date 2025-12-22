@@ -102,7 +102,7 @@ public class BoostContent extends AppCompatActivity {
                 }
 
             }
-        });
+        },0,0);
     }
 
     private void updateEmptyView() {
