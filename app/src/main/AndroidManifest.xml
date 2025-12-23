@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <queries>
         <intent>
@@ -36,12 +36,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.App"
         android:usesCleartextTraffic="true"
-        tools:replace="android:icon,theme">
+        tools:replace="android:icon,theme" >
+        <activity
+            android:name=".Activity.PostDetails"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize"  />
         <activity
             android:name=".Activity.AnalyticsContent"
             android:exported="false"
             android:theme="@style/Appnew"
-            android:windowSoftInputMode="adjustResize"  />
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.AnalyticsDashboard"
             android:exported="false"
@@ -247,8 +252,8 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/Appnew"
-            android:windowSoftInputMode="adjustResize">
-            <intent-filter android:autoVerify="true">
+            android:windowSoftInputMode="adjustResize" >
+            <intent-filter android:autoVerify="true" >
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -359,7 +364,7 @@
             android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/Appnew">
+            android:theme="@style/Appnew" >
             <intent-filter>
                 <action android:name="OPEN_NOTIFICATION_FRAGMENT" />
 
@@ -370,7 +375,7 @@
             android:name=".Activity.WelcomeActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Appnew">
+            android:theme="@style/Appnew" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -392,7 +397,7 @@
         <receiver
             android:name=".Utils.VideoEdit.AutoPlayVideo.DownloadManagerReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
             </intent-filter>
@@ -407,7 +412,7 @@
 
         <service
             android:name=".Notification.service.MyFirebaseMessagingService"
-            android:exported="false">
+            android:exported="false" >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -417,7 +422,7 @@
             android:exported="false" /> <!-- android:foregroundServiceType="dataSync" /> -->
         <receiver
             android:name=".Utils.Receiver.InstallReferrerReceiver"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>

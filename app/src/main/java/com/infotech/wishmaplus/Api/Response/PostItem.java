@@ -2,6 +2,7 @@ package com.infotech.wishmaplus.Api.Response;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.infotech.wishmaplus.Utils.BoostStatus;
 
 public class PostItem {
 
@@ -19,6 +20,10 @@ public class PostItem {
 
     @SerializedName("engagement")
     private int engagement;
+    @SerializedName("boostId")
+    private int boostId;
+    @SerializedName("boostStatus")
+    private int boostStatus;
 
     @SerializedName("caption")
     private String caption;
@@ -45,6 +50,12 @@ public class PostItem {
     public int getEngagement() {
         return engagement;
     }
+    public int getBoostId() {
+        return boostId;
+    }
+    public BoostStatus getBoostStatus() {
+        return BoostStatus.fromValue(boostStatus);
+    }
 
     public String getCaption() {
         return caption;
@@ -53,5 +64,9 @@ public class PostItem {
     public String getCreatedDate() {
         return createdDate;
     }
+    public void setBoostStatus(int boostStatus) {
+        this.boostStatus = boostStatus;
+    }
+
 }
 

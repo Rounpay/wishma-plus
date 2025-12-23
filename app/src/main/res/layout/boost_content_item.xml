@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
@@ -39,6 +40,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
+
                     <ImageView
                         android:id="@+id/imgPost"
                         android:layout_width="55dp"
@@ -62,18 +64,17 @@
                 </LinearLayout>
 
 
-
                 <!-- Title -->
                 <TextView
                     android:id="@+id/tvPostTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
+                    android:singleLine="true"
                     android:text=""
                     android:textColor="#000"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:singleLine="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/imageData"
                     app:layout_constraintTop_toTopOf="@+id/imageData" />
@@ -100,7 +101,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:paddingVertical="5dp"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/layoutBoostActions"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_weight="3"
                 app:layout_constraintStart_toEndOf="@+id/leftBlock"
@@ -161,6 +162,74 @@
                     app:layout_constraintTop_toTopOf="@+id/tvEngagementLabel" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Boost Status + Actions -->
+            <LinearLayout
+                android:id="@+id/layoutBoostActions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+
+                android:visibility="gone"
+                android:paddingTop="@dimen/_10sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/leftBlock">
+
+                <!-- Status Badge -->
+                <TextView
+                    android:id="@+id/tvBoostStatus"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_boost_pending"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:layout_marginHorizontal="@dimen/_5sdp"
+                    android:text="Pending"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+                <!-- Action Buttons -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="@dimen/_5sdp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnStopBoost"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="Stop"
+                        android:textSize="11sp"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="#F44336"
+                        app:cornerRadius="100dp"
+                        android:visibility="gone"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnRestartBoost"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="Restart"
+                        android:textSize="11sp"
+                        android:textColor="@android:color/white"
+                        app:backgroundTint="#4CAF50"
+                        app:cornerRadius="100dp"
+                        android:visibility="gone"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

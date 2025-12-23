@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.Api.Response.PostItem;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.BoostStatus;
 
 import java.util.List;
 
@@ -26,6 +28,11 @@ public class BoostPostsAdapter extends RecyclerView.Adapter<BoostPostsAdapter.Us
     public interface OnItemClickListener {
         void onItemClick(PostItem user, int pos);
         void onMoreClicked(View anchor, PostItem user, int pos);
+        void onBtnStopClicked(PostItem user, int pos);
+        void onBtnRestartClicked(PostItem user, int pos);
+    }
+    public List<PostItem> getPostList() {
+        return list;
     }
 
     public BoostPostsAdapter(Context ctx, List<PostItem> list, OnItemClickListener listener) {
@@ -48,7 +55,7 @@ public class BoostPostsAdapter extends RecyclerView.Adapter<BoostPostsAdapter.Us
         // HIDE ALL FIRST
         holder.imgPost.setVisibility(View.GONE);
         holder.videoPost.setVisibility(View.GONE);
-
+        updateBoostUI(item.getBoostStatus(),holder);
         if (item.getContentTypeId() == 3) {  // IMAGE
             holder.imgPost.setVisibility(View.VISIBLE);
             if(item.getCaption() != null)
@@ -58,7 +65,6 @@ public class BoostPostsAdapter extends RecyclerView.Adapter<BoostPostsAdapter.Us
                     .placeholder(R.drawable.app_logo)
                     .into(holder.imgPost);
         }
-
         else if (item.getContentTypeId() == 2) {  // VIDEO
             holder.videoPost.setVisibility(View.VISIBLE);
             holder.videoPost.setVideoPath(item.getPostContent());
@@ -66,7 +72,6 @@ public class BoostPostsAdapter extends RecyclerView.Adapter<BoostPostsAdapter.Us
             if(item.getCaption() != null)
                 holder.tvPostTitle.setText(item.getCaption());
         }
-
         else if (item.getContentTypeId() == 1) {  // TEXT
             holder.imgPost.setVisibility(View.VISIBLE);
             holder.tvPostTitle.setText(item.getPostContent());
@@ -84,8 +89,43 @@ public class BoostPostsAdapter extends RecyclerView.Adapter<BoostPostsAdapter.Us
         holder.cardPost.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(item, holder.getAdapterPosition());
         });
+        holder.btnStop.setOnClickListener(v -> {
+            if (listener != null) listener.onBtnStopClicked(item, holder.getAdapterPosition());
+        });
+        holder.btnRestart.setOnClickListener(v -> {
+            if (listener != null) listener.onBtnRestartClicked(item, holder.getAdapterPosition());
+        });
 
     }
+    private void updateBoostUI(BoostStatus status,UserVH holder) {
+
+        holder.btnStop.setVisibility(View.GONE);
+        holder.btnRestart.setVisibility(View.GONE);
+        holder.layoutBoostActions.setVisibility(View.GONE);
+
+        switch (status) {
+            case PENDING:
+                holder.tvBoostStatus.setText("Pending");
+                holder.tvBoostStatus.setBackgroundResource(R.drawable.bg_boost_pending);
+                holder.layoutBoostActions.setVisibility(View.VISIBLE);
+                break;
+
+            case BOOST_START:
+                holder.tvBoostStatus.setText("Active");
+                holder.tvBoostStatus.setBackgroundResource(R.drawable.bg_boost_active);
+                holder.btnStop.setVisibility(View.VISIBLE);
+                holder.layoutBoostActions.setVisibility(View.VISIBLE);
+                break;
+
+            case BOOST_STOP:
+                holder.tvBoostStatus.setText("Stopped");
+                holder.tvBoostStatus.setBackgroundResource(R.drawable.bg_boost_stopped);
+                holder.btnRestart.setVisibility(View.VISIBLE);
+                holder.layoutBoostActions.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
 
     @Override
     public int getItemCount() {
@@ -96,8 +136,10 @@ public class BoostPostsAdapter extends RecyclerView.Adapter<BoostPostsAdapter.Us
         ImageView imgPost;
         VideoView videoPost;
         TextView tvPostTitle, tvPostDate,tvReachedValue,tvEngagementValue;
-
-        View cardPost;
+        View cardPost,layoutBoostActions;
+        TextView tvBoostStatus;
+        Button btnStop;
+        Button btnRestart;
 
         public UserVH(@NonNull View itemView) {
             super(itemView);
@@ -105,9 +147,13 @@ public class BoostPostsAdapter extends RecyclerView.Adapter<BoostPostsAdapter.Us
             cardPost = itemView.findViewById(R.id.cardPost);
             videoPost = itemView.findViewById(R.id.videoPost);
             tvPostTitle = itemView.findViewById(R.id.tvPostTitle);
+            layoutBoostActions = itemView.findViewById(R.id.layoutBoostActions);
             tvPostDate = itemView.findViewById(R.id.tvPostDate);
             tvReachedValue = itemView.findViewById(R.id.tvReachedValue);
             tvEngagementValue = itemView.findViewById(R.id.tvEngagementValue);
+            tvBoostStatus = itemView.findViewById(R.id.tvBoostStatus);
+            btnStop = itemView.findViewById(R.id.btnStopBoost);
+            btnRestart = itemView.findViewById(R.id.btnRestartBoost);
         }
     }
 }

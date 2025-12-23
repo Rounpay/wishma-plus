@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.Api.Response.PostItem;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.BoostStatus;
 
 import java.util.List;
 
@@ -26,7 +28,12 @@ private final ProfessionalPostAdapter.OnItemClickListener listener;
 public interface OnItemClickListener {
     void onItemClick(PostItem user, int pos);
     void onMoreClicked(View anchor, PostItem user, int pos);
+    void onBtnStopClicked(PostItem user, int pos);
+    void onBtnRestartClicked(PostItem user, int pos);
 }
+    public List<PostItem> getPostList() {
+        return list;
+    }
 
 public ProfessionalPostAdapter(Context ctx, List<PostItem> list, ProfessionalPostAdapter.OnItemClickListener listener) {
     this.ctx = ctx;
@@ -48,6 +55,8 @@ public void onBindViewHolder(@NonNull ProfessionalPostAdapter.UserVH holder, int
     // HIDE ALL FIRST
     holder.imgPost.setVisibility(View.GONE);
     holder.videoPost.setVisibility(View.GONE);
+
+    updateBoostUI(item.getBoostStatus(),holder);
 
     if (item.getContentTypeId() == 3) {  // IMAGE
         holder.imgPost.setVisibility(View.VISIBLE);
@@ -86,8 +95,43 @@ public void onBindViewHolder(@NonNull ProfessionalPostAdapter.UserVH holder, int
     holder.cardPost.setOnClickListener(v -> {
         if (listener != null) listener.onItemClick(item, holder.getAdapterPosition());
     });
+    holder.btnStop.setOnClickListener(v -> {
+        if (listener != null) listener.onBtnStopClicked(item, holder.getAdapterPosition());
+    });
+    holder.btnRestart.setOnClickListener(v -> {
+        if (listener != null) listener.onBtnRestartClicked(item, holder.getAdapterPosition());
+    });
 
 }
+    private void updateBoostUI(BoostStatus status, ProfessionalPostAdapter.UserVH holder) {
+
+        holder.btnStop.setVisibility(View.GONE);
+        holder.btnRestart.setVisibility(View.GONE);
+        holder.layoutBoostActions.setVisibility(View.GONE);
+
+        switch (status) {
+            case PENDING:
+                holder.tvBoostStatus.setText("Pending");
+                holder.tvBoostStatus.setBackgroundResource(R.drawable.bg_boost_pending);
+                holder.layoutBoostActions.setVisibility(View.VISIBLE);
+                break;
+
+            case BOOST_START:
+                holder.tvBoostStatus.setText("Active");
+                holder.tvBoostStatus.setBackgroundResource(R.drawable.bg_boost_active);
+                holder.btnStop.setVisibility(View.VISIBLE);
+                holder.layoutBoostActions.setVisibility(View.VISIBLE);
+                break;
+
+            case BOOST_STOP:
+                holder.tvBoostStatus.setText("Stopped");
+                holder.tvBoostStatus.setBackgroundResource(R.drawable.bg_boost_stopped);
+                holder.btnRestart.setVisibility(View.VISIBLE);
+                holder.layoutBoostActions.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
 
 @Override
 public int getItemCount() {
@@ -99,7 +143,10 @@ static class UserVH extends RecyclerView.ViewHolder {
     VideoView videoPost;
     TextView tvPostTitle, tvPostDate,tvSubTitle,tvEngagementValue;
 
-    View cardPost;
+    View cardPost,layoutBoostActions;
+    TextView tvBoostStatus;
+    Button btnStop;
+    Button btnRestart;
 
     public UserVH(@NonNull View itemView) {
         super(itemView);
@@ -110,6 +157,10 @@ static class UserVH extends RecyclerView.ViewHolder {
         tvPostDate = itemView.findViewById(R.id.tvDate);
         tvSubTitle = itemView.findViewById(R.id.tvSubTitle);
         tvEngagementValue = itemView.findViewById(R.id.tvEngagementValue);
+        layoutBoostActions = itemView.findViewById(R.id.layoutBoostActions);
+        tvBoostStatus = itemView.findViewById(R.id.tvBoostStatus);
+        btnStop = itemView.findViewById(R.id.btnStopBoost);
+        btnRestart = itemView.findViewById(R.id.btnRestartBoost);
     }
 }
 }

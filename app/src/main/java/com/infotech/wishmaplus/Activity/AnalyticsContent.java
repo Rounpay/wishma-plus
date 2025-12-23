@@ -5,10 +5,13 @@ import static android.view.View.VISIBLE;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.infotech.wishmaplus.Adapter.ProfessionalPostAdapter;
+import com.infotech.wishmaplus.Api.Response.BoostedPostStatusChangeResponse;
 import com.infotech.wishmaplus.Api.Response.PostItem;
 import com.infotech.wishmaplus.Api.Response.PostsResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
@@ -112,11 +116,25 @@ public class AnalyticsContent extends AppCompatActivity {
                     adapter = new ProfessionalPostAdapter(AnalyticsContent.this, postsResponse.getResult(), new ProfessionalPostAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(PostItem user, int pos) {
+                            Intent intent = new Intent(AnalyticsContent.this, PostDetails.class);
+                            intent.putExtra("postId", user.getPostId());
+                            startActivity(intent);
 
                         }
 
                         @Override
                         public void onMoreClicked(View anchor, PostItem user, int pos) {
+
+                        }
+                        @Override
+                        public void onBtnStopClicked(PostItem user, int pos) {
+                            showConfirmationDialog(user,3,AnalyticsContent.this);
+
+                        }
+
+                        @Override
+                        public void onBtnRestartClicked(PostItem user, int pos) {
+                            showConfirmationDialog(user,2,AnalyticsContent.this);
 
                         }
                     });
@@ -139,6 +157,56 @@ public class AnalyticsContent extends AppCompatActivity {
 
             }
         },DateRange,ContentType);
+    }
+    private void showConfirmationDialog(PostItem user,int status,Activity context) {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Confirmation")
+                .setMessage("Are you sure you want to continue?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    updateBoostStatus(user.getBoostId(),status,context);
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
+    }
+
+
+    private void updateBoostStatus(int boostId, int Status, Activity context){
+        loader.show();
+        UtilMethods.INSTANCE.updateBoostStatus(boostId, Status, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                BoostedPostStatusChangeResponse boostedPostStatusChangeResponse =(BoostedPostStatusChangeResponse) object;
+                if(boostedPostStatusChangeResponse.getStatusCode()==1){
+                    boostContentList(0,0);
+                    Toast.makeText(context, boostedPostStatusChangeResponse.getResponseText(), Toast.LENGTH_SHORT).show();
+
+
+                }else{
+                    UtilMethods.INSTANCE.Error(context, boostedPostStatusChangeResponse.getResponseText());
+                }
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                UtilMethods.INSTANCE.Error(context, msg);
+
+            }
+        });
     }
     public void openFilterBottomSheetDialog(Activity context) {
         String dateRangeText = dateRange.getText().toString();

@@ -60,6 +60,7 @@ import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.BoostResponse;
+import com.infotech.wishmaplus.Api.Response.BoostedPostStatusChangeResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.EligibilityModel;
@@ -1101,6 +1102,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<BoostResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void updateBoostStatus(int boostId,int status, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BoostedPostStatusChangeResponse> call = git.updateBoostStatus("Bearer " + tokenManager.getAccessToken(),boostId,status);
+            call.enqueue(new Callback<BoostedPostStatusChangeResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BoostedPostStatusChangeResponse> call, @NonNull Response<BoostedPostStatusChangeResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BoostedPostStatusChangeResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });

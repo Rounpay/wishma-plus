@@ -23,6 +23,7 @@ import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.BoostResponse;
+import com.infotech.wishmaplus.Api.Response.BoostedPostStatusChangeResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.CompanyDetailResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
@@ -337,5 +338,11 @@ public interface EndPointInterface {
             @Header("Authorization") String token,
             @Body InitiateBoostRequest request
     );
+
+    @POST("api/UpdateBoostStatus")
+    Call<BoostedPostStatusChangeResponse> updateBoostStatus(
+            @Header("Authorization") String authorization,
+            @Query("BoostId") int BoostId,
+            @Query("BoostStatus") int BoostStatus);
 
 }
