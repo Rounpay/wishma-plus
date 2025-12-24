@@ -85,7 +85,7 @@
         android:paddingTop="@dimen/_8sdp"
         android:paddingBottom="@dimen/_8sdp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@id/like_count"
+        app:layout_constraintBottom_toTopOf="@id/goalTypeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView">
@@ -147,6 +147,112 @@
             app:layout_constraintTop_toBottomOf="@id/profileParent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/goalTypeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:backgroundTint="@color/grey_1"
+        app:cardElevation="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ownerView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <!-- LEFT TEXT SECTION -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvDials"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#757575"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/userNameTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text=""
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/goalType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text=""
+                    android:textColor="#757575"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <!-- CALL NOW BUTTON -->
+            <LinearLayout
+                android:id="@+id/callNow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_call_now"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:rotation="-90"
+                    android:src="@android:drawable/ic_menu_call"
+                    app:tint="#000000" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Call now"
+                    android:textColor="#000000"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/bookNow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_call_now"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="Book now"
+                    android:textColor="#000000"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/like_count"
@@ -167,7 +273,7 @@
         app:drawableStartCompat="@drawable/ic_like"
         app:layout_constraintBottom_toTopOf="@id/barrier"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ownerView" />
+        app:layout_constraintTop_toBottomOf="@id/goalTypeLayout" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -186,7 +292,7 @@
         app:layout_constraintBottom_toTopOf="@id/barrier"
         app:layout_constraintEnd_toStartOf="@id/share_count"
         app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintTop_toBottomOf="@id/ownerView" />
+        app:layout_constraintTop_toBottomOf="@id/goalTypeLayout" />
 
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -204,7 +310,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/barrier"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ownerView" />
+        app:layout_constraintTop_toBottomOf="@id/goalTypeLayout" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier"

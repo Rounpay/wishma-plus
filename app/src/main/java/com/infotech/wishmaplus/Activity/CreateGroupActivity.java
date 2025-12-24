@@ -1,6 +1,7 @@
 package com.infotech.wishmaplus.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -56,6 +57,10 @@ public class CreateGroupActivity extends AppCompatActivity {
         findViewById(R.id.spinnerPrivacy).setOnClickListener(view -> openPrivacyBottomSheetDialog(this));
         findViewById(R.id.visibility).setOnClickListener(view -> openVisibilityBottomSheetDialog(this));
         etGroupName = findViewById(R.id.etGroupName);
+        findViewById(R.id.btnCreateGroup).setOnClickListener(view -> {
+            Intent intent = new Intent(CreateGroupActivity.this, GroupAddPeople.class);
+            startActivity(intent);
+        });
 //        spinnerPrivacy = findViewById(R.id.spinnerPrivacy);
         btnCreateGroup = findViewById(R.id.btnCreateGroup);
         // Spinner Values

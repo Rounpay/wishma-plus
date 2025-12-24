@@ -73,6 +73,16 @@ public class ContentResult implements Parcelable {
     @SerializedName("isLiked")
     @Expose
     private boolean isLiked;
+    @SerializedName("isBoosted")
+    @Expose
+    private boolean isBoosted;
+
+    @SerializedName("boostedURL")
+    @Expose
+    private String boostedURL;
+    @SerializedName("boostedPhoneNo")
+    @Expose
+    private String boostedPhoneNo;
     @SerializedName("userDetail")
     @Expose
     private UserDetailResponse userDetail;
@@ -137,7 +147,10 @@ public class ContentResult implements Parcelable {
         totalStory = in.readInt();
         caption = in.readString();
         pageId = in.readString();
+        boostedURL = in.readString();
+        boostedPhoneNo = in.readString();
         isLiked = in.readByte() != 0;
+        isBoosted = in.readByte() != 0;
         isPagePost = in.readByte() != 0;
         userDetail = in.readParcelable(UserDetailResponse.class.getClassLoader());
         parsedSharedData = in.readParcelable(SharedData.class.getClassLoader());
@@ -171,7 +184,10 @@ public class ContentResult implements Parcelable {
         dest.writeInt(totalStory);
         dest.writeString(caption);
         dest.writeString(pageId);
+        dest.writeString(boostedURL);
+        dest.writeString(boostedPhoneNo);
         dest.writeByte((byte) (isLiked ? 1 : 0));
+        dest.writeByte((byte) (isBoosted ? 1 : 0));
         dest.writeByte((byte) (isPagePost ? 1 : 0));
         dest.writeParcelable(userDetail, flags);
         dest.writeParcelable(parsedSharedData, flags);
@@ -283,6 +299,15 @@ public class ContentResult implements Parcelable {
     public boolean isLiked() {
         return isLiked;
     }
+    public boolean isBoosted() {
+        return isBoosted;
+    }
+    public String boostedURL() {
+        return boostedURL;
+    }
+    public String boostedPhoneNo() {
+        return boostedPhoneNo;
+    }
 
     public UserDetailResponse getUserDetail() {
         return userDetail;
@@ -298,6 +323,15 @@ public class ContentResult implements Parcelable {
 
     public void setLiked(boolean liked) {
         isLiked = liked;
+    }
+    public void setIsBoosted(boolean boosted) {
+        isBoosted = boosted;
+    }
+    public void setBoostedURL(String boostURL) {
+        boostedURL = boostURL;
+    }
+    public void setBoostedPhoneNo(String boostPhoneNo) {
+        boostedPhoneNo = boostPhoneNo;
     }
 
     public void setTotalShares(int totalShares) {

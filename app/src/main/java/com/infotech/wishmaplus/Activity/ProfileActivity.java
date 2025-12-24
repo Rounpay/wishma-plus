@@ -376,7 +376,7 @@ public class ProfileActivity extends AppCompatActivity {
                 totalPost = totalPost - 1;
 
             }
-        });
+        },false);
         selfRecyclerView.setAdapter(adapter);
     }
 

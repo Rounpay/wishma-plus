@@ -249,7 +249,7 @@ public class HomeFragment extends Fragment {
                 totalPost = totalPost - 1;
 
             }
-        });
+        },true);
         recyclerView.setAdapter(adapter);
     }
 

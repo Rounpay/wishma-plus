@@ -66,6 +66,7 @@ import com.infotech.wishmaplus.Activity.ProfessionalDashBoardPersonal;
 import com.infotech.wishmaplus.Activity.ProfileActivity;
 import com.infotech.wishmaplus.Activity.TurnOnProfessionalMode;
 import com.infotech.wishmaplus.Activity.VideoViewActivity;
+import com.infotech.wishmaplus.Activity.WebViewActivity;
 import com.infotech.wishmaplus.Adapter.Interfaces.CountChangeCallBack;
 import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
@@ -119,13 +120,14 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private CustomRecyclerView mRecyclerView;
     private boolean isMute;
     int videoMaxHeight;
+    boolean showBoosted;
 
     private CommentDialog commentDialog;
     private String isFollowed;
     private int requestSentStatus;
     private boolean isRequestPending;
 
-    public MultiContentAdapter(String UserUnikID, List<ContentResult> contentList, CustomRecyclerView recyclerView, PreferencesManager tokenManager, FragmentActivity context, ClickCallBack clickCallBack) {
+    public MultiContentAdapter(String UserUnikID, List<ContentResult> contentList, CustomRecyclerView recyclerView, PreferencesManager tokenManager, FragmentActivity context, ClickCallBack clickCallBack,boolean showBoosted) {
         if (requestOptionsUserImage == null) {
             requestOptionsUserImage = UtilMethods.INSTANCE.getRequestOption_With_UserIcon();
         }
@@ -152,6 +154,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         videoMaxHeight = (int) (displayMetrics.heightPixels / 1.4);
         this.userId = tokenManager.getUserId();
         this.UserUnikID = UserUnikID;
+        this.showBoosted = showBoosted;
 
         am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
@@ -800,10 +803,10 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     class TextViewHolder extends RecyclerView.ViewHolder {
         TextView textView;
         MaterialButton likeBtn, commentBtn, whatsAppBtn, shareBtn;
-        TextView nameTv, nameParentTv, timeParentTv, postParentTxt, timeTv, like_count, comment_count, share_count;
+        TextView nameTv, nameParentTv, timeParentTv, postParentTxt, timeTv, like_count, comment_count, share_count,tvDials,userNameTitle,goalType;
 
         ImageView profile, moreBTn, profileParent;
-        View ownerView;
+        View ownerView,goalTypeLayout,callNow,bookNow;
 
         public TextViewHolder(View itemView) {
             super(itemView);
@@ -824,6 +827,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             commentBtn = itemView.findViewById(R.id.commentBtn);
             whatsAppBtn = itemView.findViewById(R.id.whatsAppBtn);
             shareBtn = itemView.findViewById(R.id.shareBtn);
+            goalTypeLayout = itemView.findViewById(R.id.goalTypeLayout);
+            tvDials = itemView.findViewById(R.id.tvDials);
+            userNameTitle = itemView.findViewById(R.id.userNameTitle);
+            goalType = itemView.findViewById(R.id.goalType);
+            callNow = itemView.findViewById(R.id.callNow);
+            bookNow = itemView.findViewById(R.id.bookNow);
         }
 
         public void bind(ContentResult content, int position) {
@@ -836,12 +845,55 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 moreBTn.setVisibility(View.GONE);
             }*/
+            if(content.isBoosted() && showBoosted)
+            {
+
+                if(content.boostedURL()!=null && !Objects.equals(content.boostedURL(), ""))
+                {
+                    goalTypeLayout.setVisibility(VISIBLE);
+                    tvDials.setText("VISIT");
+                    userNameTitle.setText(content.getFisrtName() + " " + content.getLastName());
+                    goalType.setText("Website");
+                    bookNow.setVisibility(VISIBLE);
+                    callNow.setVisibility(GONE);
+                    bookNow.setOnClickListener(view -> {
+                        openInAppWebView(context, content.boostedURL());
+                    });
+
+
+                }
+                else if(content.boostedPhoneNo()!=null && !Objects.equals(content.boostedPhoneNo(), ""))
+                {
+                    goalTypeLayout.setVisibility(VISIBLE);
+                    tvDials.setText("DIALS");
+                    userNameTitle.setText(content.getFisrtName() + " " + content.getLastName());
+                    goalType.setText("Call");
+                    bookNow.setVisibility(GONE);
+                    callNow.setVisibility(VISIBLE);
+                    callNow.setOnClickListener(view -> {
+                        redirectToCall(context, content.boostedPhoneNo());
+                    });
+
+                }
+                else{
+                    goalTypeLayout.setVisibility(GONE);
+                }
+            }
+            else {
+                goalTypeLayout.setVisibility(GONE);
+
+            }
 
 
             if (content.getParsedSharedData() != null) {
                 ownerView.setVisibility(VISIBLE);
                 nameTv.setText(content.getParsedSharedData().getFisrtName() + " " + content.getParsedSharedData().getLastName());
+                if(content.isBoosted() && showBoosted)
+                {
+                    timeTv.setText("Sponsored");
+                }else{
                 timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getParsedSharedData().getEntryAt()));
+                }
                 if (content.getParsedSharedData().getCaption() != null && !content.getParsedSharedData().getCaption().trim().isEmpty()) {
                     textView.setText(content.getParsedSharedData().getCaption().trim());
                     textView.setVisibility(VISIBLE);
@@ -862,7 +914,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 ownerView.setVisibility(GONE);
                 nameTv.setText(content.getFisrtName() + " " + content.getLastName());
-                timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
+                if(content.isBoosted() && showBoosted)
+                {
+                    timeTv.setText("Sponsored");
+                }else {
+                    timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
+                }
 
                 Glide.with(context).load(content.getProfilePictureUrl()).apply(requestOptionsUserImage).into(profile);
                 textView.setText((content.getPostContent() + "").trim());
@@ -972,13 +1029,31 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
         }
     }
+    public static void openInAppWebView(Context context, String webUrl) {
+        if (webUrl == null || webUrl.isEmpty()) return;
+
+        Intent intent = new Intent(context, WebViewActivity.class);
+        intent.putExtra(WebViewActivity.EXTRA_URL, webUrl);
+        context.startActivity(intent);
+    }
+    public static void redirectToCall(Context context, String mobileNumber) {
+        if (mobileNumber == null || mobileNumber.trim().isEmpty()) return;
+
+        String formattedNumber = mobileNumber.replaceAll("\\s+", "");
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + formattedNumber));
+        context.startActivity(intent);
+    }
+
+
+
 
     @OptIn(markerClass = UnstableApi.class)
     public class VideoViewHolder extends RecyclerView.ViewHolder {
 
         MaterialButton likeBtn, commentBtn, whatsAppBtn, shareBtn;
-        View ownerView;
-        TextView nameTv, nameParentTv, timeParentTv, postParentTxt, timeTv, postTxt, like_count, comment_count, share_count;
+        View ownerView,goalTypeLayout,callNow,bookNow;
+        TextView nameTv, nameParentTv, timeParentTv, postParentTxt, timeTv, postTxt, like_count, comment_count, share_count,tvDials,userNameTitle,goalType;
         public ImageView playBtn, volBtn, profile, profileParent, thumbnail, moreBTn;
         RelativeLayout container;
         /* boolean isMuted;*/
@@ -1037,11 +1112,54 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             shareBtn = itemView.findViewById(R.id.shareBtn);
             playBtn = itemView.findViewById(R.id.playBtn);
             volBtn = itemView.findViewById(R.id.volBtn);
+            goalTypeLayout = itemView.findViewById(R.id.goalTypeLayout);
+            tvDials = itemView.findViewById(R.id.tvDials);
+            userNameTitle = itemView.findViewById(R.id.userNameTitle);
+            goalType = itemView.findViewById(R.id.goalType);
+            callNow = itemView.findViewById(R.id.callNow);
+            bookNow = itemView.findViewById(R.id.bookNow);
 
 
         }
 
         public void bind(ContentResult content, int position) {
+            if(content.isBoosted() && showBoosted)
+            {
+
+                if(content.boostedURL()!=null && !Objects.equals(content.boostedURL(), ""))
+                {
+                    goalTypeLayout.setVisibility(VISIBLE);
+                    tvDials.setText("VISIT");
+                    userNameTitle.setText(content.getFisrtName() + " " + content.getLastName());
+                    goalType.setText("Website");
+                    bookNow.setVisibility(VISIBLE);
+                    callNow.setVisibility(GONE);
+                    bookNow.setOnClickListener(view -> {
+                        openInAppWebView(context, content.boostedURL());
+                    });
+
+                }
+                else if(content.boostedPhoneNo()!=null && !Objects.equals(content.boostedPhoneNo(), ""))
+                {
+                    goalTypeLayout.setVisibility(VISIBLE);
+                    tvDials.setText("DIALS");
+                    userNameTitle.setText(content.getFisrtName() + " " + content.getLastName());
+                    goalType.setText("Call");
+                    bookNow.setVisibility(GONE);
+                    callNow.setVisibility(VISIBLE);
+                    callNow.setOnClickListener(view -> {
+                        redirectToCall(context, content.boostedPhoneNo());
+                    });
+
+                }
+                else{
+                    goalTypeLayout.setVisibility(GONE);
+                }
+            }
+            else {
+                goalTypeLayout.setVisibility(GONE);
+
+            }
 
 
             if (content.getHeight() > 0 && content.getWidth() > 0) {
@@ -1318,7 +1436,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (content.getParsedSharedData() != null) {
                 ownerView.setVisibility(VISIBLE);
                 nameTv.setText(content.getParsedSharedData().getFisrtName() + " " + content.getParsedSharedData().getLastName());
-                timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getParsedSharedData().getEntryAt()));
+                if(content.isBoosted() && showBoosted)
+                {
+                    timeTv.setText("Sponsored");
+                }else {
+                    timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getParsedSharedData().getEntryAt()));
+                }
                 if (content.getParsedSharedData().getCaption() != null && !content.getParsedSharedData().getCaption().trim().isEmpty()) {
                     postTxt.setText(content.getParsedSharedData().getCaption().trim());
                     postTxt.setVisibility(VISIBLE);
@@ -1339,7 +1462,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 ownerView.setVisibility(GONE);
                 nameTv.setText(content.getFisrtName() + " " + content.getLastName());
-                timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
+                if(content.isBoosted() && showBoosted)
+                {
+                    timeTv.setText("Sponsored");
+                }else {
+                    timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
+                }
                 if (content.getCaption() != null && !content.getCaption().trim().isEmpty()) {
                     postTxt.setText(content.getCaption().trim());
                     postTxt.setVisibility(VISIBLE);
@@ -1458,9 +1586,9 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     class ImageViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView, moreBTn;
         MaterialButton likeBtn, commentBtn, whatsAppBtn, shareBtn;
-        TextView nameTv, nameParentTv, timeParentTv, postParentTxt, timeTv, postTxt, like_count, comment_count, share_count;
+        TextView nameTv, nameParentTv, timeParentTv, postParentTxt, timeTv, postTxt, like_count, comment_count, share_count,tvDials,userNameTitle,goalType;
         ImageView profile, profileParent;
-        View ownerView;
+        View ownerView,goalTypeLayout,callNow,bookNow;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
@@ -1482,12 +1610,57 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             commentBtn = itemView.findViewById(R.id.commentBtn);
             whatsAppBtn = itemView.findViewById(R.id.whatsAppBtn);
             shareBtn = itemView.findViewById(R.id.shareBtn);
+            goalTypeLayout = itemView.findViewById(R.id.goalTypeLayout);
+            tvDials = itemView.findViewById(R.id.tvDials);
+            userNameTitle = itemView.findViewById(R.id.userNameTitle);
+            goalType = itemView.findViewById(R.id.goalType);
+            callNow = itemView.findViewById(R.id.callNow);
+            bookNow = itemView.findViewById(R.id.bookNow);
         }
 
         public void bind(ContentResult content, int position) {
             /*if(videoHolder!=null && !videoHolder.isPlaying()) {
                 videoHolder = null;
             }*/
+
+            if(content.isBoosted() && showBoosted)
+            {
+
+                if(content.boostedURL()!=null && !Objects.equals(content.boostedURL(), ""))
+                {
+                    goalTypeLayout.setVisibility(VISIBLE);
+                    tvDials.setText("VISIT");
+                    userNameTitle.setText(content.getFisrtName() + " " + content.getLastName());
+                    goalType.setText("Website");
+                    bookNow.setVisibility(VISIBLE);
+                    callNow.setVisibility(GONE);
+                    bookNow.setOnClickListener(view -> {
+                        openInAppWebView(context, content.boostedURL());
+                    });
+
+                }
+                else if(content.boostedPhoneNo()!=null && !Objects.equals(content.boostedPhoneNo(), ""))
+                {
+                    goalTypeLayout.setVisibility(VISIBLE);
+                    tvDials.setText("DIALS");
+                    userNameTitle.setText(content.getFisrtName() + " " + content.getLastName());
+                    goalType.setText("Call");
+                    bookNow.setVisibility(GONE);
+                    callNow.setVisibility(VISIBLE);
+                    callNow.setOnClickListener(view -> {
+                        redirectToCall(context, content.boostedPhoneNo());
+                    });
+
+
+                }
+                else{
+                    goalTypeLayout.setVisibility(GONE);
+                }
+            }
+            else {
+                goalTypeLayout.setVisibility(GONE);
+
+            }
             if (content.getHeight() > 0 && content.getWidth() > 0) {
                 double aspectRatio = content.getWidth() / content.getHeight();
                 double showImageHeight = screenWidth / aspectRatio;
@@ -1538,7 +1711,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             if (content.getParsedSharedData() != null) {
                 ownerView.setVisibility(VISIBLE);
                 nameTv.setText(content.getParsedSharedData().getFisrtName() + " " + content.getParsedSharedData().getLastName());
-                timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getParsedSharedData().getEntryAt()));
+                if(content.isBoosted() && showBoosted)
+                {
+                    timeTv.setText("Sponsored");
+                }else {
+                    timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getParsedSharedData().getEntryAt()));
+                }
                 if (content.getParsedSharedData().getCaption() != null && !content.getParsedSharedData().getCaption().trim().isEmpty()) {
                     postTxt.setText(content.getParsedSharedData().getCaption().trim());
                     postTxt.setVisibility(VISIBLE);
@@ -1559,7 +1737,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 ownerView.setVisibility(GONE);
                 nameTv.setText(content.getFisrtName() + " " + content.getLastName());
-                timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
+                if(content.isBoosted() && showBoosted)
+                {
+                    timeTv.setText("Sponsored");
+                }else {
+                    timeTv.setText(UtilMethods.INSTANCE.covertTimeToText(content.getEntryAt()));
+                }
                 if (content.getCaption() != null && !content.getCaption().trim().isEmpty()) {
                     postTxt.setText(content.getCaption().trim());
                     postTxt.setVisibility(VISIBLE);

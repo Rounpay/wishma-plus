@@ -21,5 +21,17 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="GroupTab">
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">#1877F2</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="PostAction">
+        <item name="android:textColor">#1877F2</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+
 
 </resources>
