@@ -11,6 +11,7 @@ import com.infotech.wishmaplus.Api.Object.PackageResult;
 import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
 import com.infotech.wishmaplus.Api.Object.StateResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
+import com.infotech.wishmaplus.Api.Request.AddFriendsRequest;
 import com.infotech.wishmaplus.Api.Request.BasicRequest;
 import com.infotech.wishmaplus.Api.Request.CommentRequest;
 import com.infotech.wishmaplus.Api.Request.InitiateBoostRequest;
@@ -19,6 +20,7 @@ import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
 import com.infotech.wishmaplus.Api.Request.SharePostRequest;
 import com.infotech.wishmaplus.Api.Request.SignUpRequest;
 import com.infotech.wishmaplus.Api.Request.UpdateUserRequest;
+import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
@@ -27,6 +29,7 @@ import com.infotech.wishmaplus.Api.Response.BoostedPostStatusChangeResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.CompanyDetailResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
+import com.infotech.wishmaplus.Api.Response.CreateGroupResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.EligibilityModel;
 import com.infotech.wishmaplus.Api.Response.EnableDashboardResponse;
@@ -35,6 +38,8 @@ import com.infotech.wishmaplus.Api.Response.FollowersResponse;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
+import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
+import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
@@ -46,6 +51,7 @@ import com.infotech.wishmaplus.Api.Response.ReadNotificationResponse;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.SignUpResponse;
 import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
+import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
 
@@ -344,5 +350,39 @@ public interface EndPointInterface {
             @Header("Authorization") String authorization,
             @Query("BoostId") int BoostId,
             @Query("BoostStatus") int BoostStatus);
+
+    @POST("api/Group/CreateUpdateGroup")
+    Call<CreateGroupResponse> createUpdateGroup(
+            @Header("Authorization") String authorization,
+            @Query("GroupId") String GroupId,
+            @Query("Title") String Title,
+            @Query("Description") String Description,
+            @Query("IsPrivate") boolean IsPrivate,
+            @Query("IsVisible") Boolean IsVisible);
+
+    @GET("api/Group/GetUserList")
+    Call<GetUserListResponse> getUsersList(
+            @Header("Authorization") String token
+    );
+    @GET("api/Group/GetGroupById")
+    Call<GroupDetailsResponse> getGroupById(
+            @Header("Authorization") String token,
+            @Query("GroupId") String groupId
+    );
+
+    @Multipart
+    @POST("api/Group/UpdateGroupProfilePicture")
+    Call<UploadGroupCoverResponse> updateGroupProfilePicture(
+            @Header("Authorization") String token,
+            @Query("GroupId") String groupId,
+            @Query("IsCoverPicture") boolean isCoverPicture,
+            @Part MultipartBody.Part model);
+
+    @POST("api/Group/AddMultipleFriendsToGroup")
+    Call<AddPeopleResponse> addMultipleFriendsToGroup(
+            @Header("Authorization") String authorization,
+            @Body AddFriendsRequest request
+    );
+
 
 }

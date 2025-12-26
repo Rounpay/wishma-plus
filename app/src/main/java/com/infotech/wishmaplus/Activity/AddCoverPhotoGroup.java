@@ -30,7 +30,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.infotech.wishmaplus.Adapter.CoverAdapter;
+import com.infotech.wishmaplus.Adapter.UserListAdapter;
+import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
+import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 import com.wishmaplus.image.picker.ImagePicker;
 
 import java.io.File;
@@ -39,6 +44,10 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class AddCoverPhotoGroup extends AppCompatActivity {
     private ArrayList<Integer> coverList;
@@ -51,6 +60,8 @@ public class AddCoverPhotoGroup extends AppCompatActivity {
     private File profileImageFile = null;
     private File coverImageFile = null;
     private ImageView cover_photo, profile_picture;
+    private String groupId;
+    private CustomLoader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,18 +73,60 @@ public class AddCoverPhotoGroup extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Intent intentParam = getIntent();
+        if (intentParam != null && intentParam.hasExtra("groupId")) {
+            groupId = intentParam.getStringExtra("groupId");
+        }
+        findViewById(R.id.back_button).setOnClickListener(view -> {
+            finish();
+        });
+        loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         findViewById(R.id.btnEdit).setOnClickListener(view -> {
             selectCoverImage();
         });
         findViewById(R.id.search_button).setOnClickListener(view -> {
             Intent intent = new Intent(AddCoverPhotoGroup.this, GroupDashboard.class);
-            startActivity(intent);
+            intent.putExtra("groupId", groupId);
+            startActivityForResult(
+                    intent,
+                    103
+            );
+//            startActivity(intent);
         });
         rvCovers = findViewById(R.id.rvCovers);
         setupRecyclerView();
         cover_photo = findViewById(R.id.ivCover);
         setupImagePicker();
 
+    }
+    public void updateGroupProfilePicture(MultipartBody.Part model){
+        loader.show();
+        UtilMethods.INSTANCE.updateGroupProfilePicture(groupId,true,model,new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                UploadGroupCoverResponse uploadGroupCoverResponse = (UploadGroupCoverResponse) object;
+                if(uploadGroupCoverResponse.getStatusCode()==1){
+                    Toast.makeText(AddCoverPhotoGroup.this, uploadGroupCoverResponse.getResponseText(), Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
     }
     public void selectCoverImage() {
         isCoverPhoto = 1;
@@ -94,10 +147,19 @@ public class AddCoverPhotoGroup extends AppCompatActivity {
             }
 
 
-
+            MultipartBody.Part profilePart = null;
             // Update UI & assign file
             if (isCoverPhoto == 1) {
                 coverImageFile = selectedFile;
+                if (coverImageFile != null) {
+                    RequestBody reqProfile = RequestBody.create(MediaType.parse("image/*"), coverImageFile);
+                    profilePart = MultipartBody.Part.createFormData(
+                            "model",
+                            coverImageFile.getName(),
+                            reqProfile
+                    );
+                    updateGroupProfilePicture(profilePart);
+                }
                 Glide.with(this).load(selectedFile).into(cover_photo);
             } else {
                 profileImageFile = selectedFile;
@@ -213,9 +275,15 @@ public class AddCoverPhotoGroup extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 103 && resultCode == RESULT_OK) {
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        }
         if (imagePicker != null) {
             imagePicker.handleActivityResult(resultCode, requestCode, data);
         }
+
     }
 
     @Override

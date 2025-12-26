@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -12,6 +13,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,14 +23,21 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.infotech.wishmaplus.Adapter.ProfessionalPostAdapter;
+import com.infotech.wishmaplus.Api.Response.CreateGroupResponse;
+import com.infotech.wishmaplus.Api.Response.PostItem;
+import com.infotech.wishmaplus.Api.Response.PostsResponse;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 
 public class CreateGroupActivity extends AppCompatActivity {
 
     EditText etGroupName;
     //    Spinner spinnerPrivacy;
     Button btnCreateGroup;
-
+    private CustomLoader loader;
     TextView privacyTextView, learnMore, spinnerPrivacy,tvSelectedVisibility;
 
     LinearLayout visibilityLayout;
@@ -51,15 +60,34 @@ public class CreateGroupActivity extends AppCompatActivity {
         findViewById(R.id.back_button).setOnClickListener(view -> finish());
         spinnerPrivacy = findViewById(R.id.tvSelected);
         privacyTextView = findViewById(R.id.privacyText);
-        learnMore = findViewById(R.id.learnMore);
+//        learnMore = findViewById(R.id.learnMore);
         visibilityLayout = findViewById(R.id.visibilitySpinner);
         tvSelectedVisibility = findViewById(R.id.tvSelectedVisibility);
+        loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
+//        loader.show();
+//        if (loader != null) {
+//            if (loader.isShowing()) {
+//                loader.dismiss();
+//            }
+//        }
         findViewById(R.id.spinnerPrivacy).setOnClickListener(view -> openPrivacyBottomSheetDialog(this));
         findViewById(R.id.visibility).setOnClickListener(view -> openVisibilityBottomSheetDialog(this));
         etGroupName = findViewById(R.id.etGroupName);
         findViewById(R.id.btnCreateGroup).setOnClickListener(view -> {
-            Intent intent = new Intent(CreateGroupActivity.this, GroupAddPeople.class);
-            startActivity(intent);
+//            Intent intent = new Intent(CreateGroupActivity.this, GroupAddPeople.class);
+//            intent.putExtra("groupId","31E1B0C1-B0B7-401B-95AD-36F9BDB07E40");
+////            startActivity(intent);
+//            startActivityForResult(
+//                    intent,
+//                    101
+//            );
+            if (validateForm()) {
+                createUpdateGroup();
+                // API call or next step
+//                Toast.makeText(this, "Group Created Successfully", Toast.LENGTH_SHORT).show();
+            }
+//            Intent intent = new Intent(CreateGroupActivity.this, GroupAddPeople.class);
+//            startActivity(intent);
         });
 //        spinnerPrivacy = findViewById(R.id.spinnerPrivacy);
         btnCreateGroup = findViewById(R.id.btnCreateGroup);
@@ -91,6 +119,45 @@ public class CreateGroupActivity extends AppCompatActivity {
 //            }
 //            @Override public void onNothingSelected(AdapterView<?> parent) {}
 //        });
+    }
+    public void createUpdateGroup(){
+        String groupName = etGroupName.getText().toString().trim();
+        boolean isPrivacySelected = selectedPrivacy == 2 ? true : false;
+        Boolean isVisibilitySelected = isPrivacySelected ? selectedVisibility == 1 ? true : false:null;
+
+        loader.show();
+        UtilMethods.INSTANCE.createUpdateGroup("",groupName,"",isPrivacySelected,isVisibilitySelected, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+                CreateGroupResponse createGroupResponse=(CreateGroupResponse) object;
+                if(createGroupResponse.getStatusCode()==1){
+                    Intent intent = new Intent(CreateGroupActivity.this, GroupAddPeople.class);
+                    intent.putExtra("groupId",createGroupResponse.getGroupId());
+                    startActivityForResult(
+                            intent,
+                            101
+                    );
+                }
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
     }
 
     public void openPrivacyBottomSheetDialog(Activity context) {
@@ -144,7 +211,7 @@ public class CreateGroupActivity extends AppCompatActivity {
             visibilityLayout.setVisibility(View.GONE);
 
             privacyTextView.setVisibility(View.VISIBLE);
-            learnMore.setVisibility(View.VISIBLE);
+//            learnMore.setVisibility(View.VISIBLE);
 
         } else if (selectedPrivacy == 2) {
             rbPublic.setChecked(false);
@@ -155,7 +222,7 @@ public class CreateGroupActivity extends AppCompatActivity {
             visibilityLayout.setVisibility(View.VISIBLE);
 
             privacyTextView.setVisibility(View.VISIBLE);
-            learnMore.setVisibility(View.VISIBLE);
+//            learnMore.setVisibility(View.VISIBLE);
 
         } else {
             // Nothing selected initially
@@ -163,7 +230,7 @@ public class CreateGroupActivity extends AppCompatActivity {
             rbPrivate.setChecked(false);
 
             privacyTextView.setVisibility(View.GONE);
-            learnMore.setVisibility(View.GONE);
+//            learnMore.setVisibility(View.GONE);
             visibilityLayout.setVisibility(View.GONE);
         }
     }
@@ -226,4 +293,45 @@ public class CreateGroupActivity extends AppCompatActivity {
             btnCreateGroup.setEnabled(false);
         }
     }
+
+    // ---------------- VALIDATION ----------------
+
+    private boolean validateForm() {
+
+        // Group Name Validation
+        if (etGroupName.getText().toString().trim().isEmpty()) {
+            etGroupName.setError("Group name is required");
+            etGroupName.requestFocus();
+            return false;
+        }
+
+        // Privacy Validation
+        if (spinnerPrivacy.getText().toString().equalsIgnoreCase("Select")) {
+            showToast("Please select privacy");
+            return false;
+        }
+
+        // Visibility Validation (only if visible)
+        if (visibilityLayout.getVisibility() == View.VISIBLE) {
+            if (tvSelectedVisibility.getText().toString().equalsIgnoreCase("Select")) {
+                showToast("Please select visibility");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 101 && resultCode == RESULT_OK) {
+            finish(); // close B
+        }
+    }
+
 }

@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.Settings;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -24,7 +25,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
+import com.infotech.wishmaplus.Adapter.UserListAdapter;
+import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
+import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 import com.wishmaplus.image.picker.ImagePicker;
 
 import java.io.File;
@@ -41,7 +47,11 @@ public class GroupDashboard extends AppCompatActivity {
     private ImageView cover_photo, profile_picture;
     private ImagePicker imagePicker;
     private Snackbar mSnackBar;
+    private String groupId;
+    private CustomLoader loader;
     private static final int REQUEST_PERMISSIONS_IMAGE = 7676;
+
+    TextView tvGroupName,groupType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +63,64 @@ public class GroupDashboard extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        Intent intentParam = getIntent();
+        if (intentParam != null && intentParam.hasExtra("groupId")) {
+            groupId = intentParam.getStringExtra("groupId");
+        }
+        loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
+        groupType =findViewById(R.id.groupType);
+        tvGroupName =findViewById(R.id.tvGroupName);
+        findViewById(R.id.back_button).setOnClickListener(view -> {
+//            finish();
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        });
         findViewById(R.id.btnEdit).setOnClickListener(view -> {
             selectCoverImage();
         });
         cover_photo = findViewById(R.id.ivCover);
         setupImagePicker();
+        getGroupById();
+    }
+    public void getGroupById(){
+        loader.show();
+        UtilMethods.INSTANCE.getGroupById(groupId,new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+                GroupDetailsResponse groupDetailsResponse=(GroupDetailsResponse) object;
+                if(groupDetailsResponse.getStatusCode()==1){
+                    Glide.with(GroupDashboard.this).load(groupDetailsResponse.getResult().getCoverImageUrl()).into(cover_photo);
+                    tvGroupName.setText(groupDetailsResponse.getResult().getTitle());
+                    if(groupDetailsResponse.getResult().isPrivate())
+                    {
+                        groupType.setText("Private group");
+                    }
+                    else{
+                        groupType.setText("Public group");
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
     }
 
     public void selectCoverImage() {
