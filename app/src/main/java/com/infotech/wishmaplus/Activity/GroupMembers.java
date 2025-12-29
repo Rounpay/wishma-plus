@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,21 +15,24 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.infotech.wishmaplus.Adapter.MembersListAdapter;
 import com.infotech.wishmaplus.Adapter.UserListAdapter;
 import com.infotech.wishmaplus.Api.Request.AddFriendsRequest;
+import com.infotech.wishmaplus.Api.Request.UpdateGroupMemberRequest;
 import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
 import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
+import com.infotech.wishmaplus.Api.Response.GroupMembersResponse;
+import com.infotech.wishmaplus.Api.Response.GroupMembersUpdateResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
-import java.util.Objects;
+public class GroupMembers extends AppCompatActivity {
 
-public class GroupAddPeople extends AppCompatActivity {
-    private String groupId,screenType="newGroup";
+    private String groupId;
     private CustomLoader loader;
     RecyclerView rv;
-    UserListAdapter adapter;
+    MembersListAdapter adapter;
 
     EditText etSearch;
 
@@ -39,7 +40,7 @@ public class GroupAddPeople extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_group_add_people);
+        setContentView(R.layout.activity_group_members);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -55,28 +56,8 @@ public class GroupAddPeople extends AppCompatActivity {
         if (intentParam != null && intentParam.hasExtra("groupId")) {
             groupId = intentParam.getStringExtra("groupId");
         }
-        if (intentParam != null && intentParam.hasExtra("screenType")) {
-            screenType = intentParam.getStringExtra("screenType");
-        }
-        if(Objects.equals(screenType, "newGroup"))
-        {
-            findViewById(R.id.search_button).setVisibility(View.VISIBLE);
-        } else if (Objects.equals(screenType, "dashboard")) {
-            findViewById(R.id.search_button).setVisibility(View.GONE);
-        }
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
 
-
-        findViewById(R.id.search_button).setOnClickListener(view -> {
-            Intent intent = new Intent(GroupAddPeople.this, AddCoverPhotoGroup.class);
-            intent.putExtra("groupId", groupId);
-//            intent.putExtra("groupId", "31E1B0C1-B0B7-401B-95AD-36F9BDB07E40");
-            startActivityForResult(
-                    intent,
-                    102
-            );
-//            startActivity(intent);
-        });
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -92,12 +73,11 @@ public class GroupAddPeople extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
 
-        getUsersList();
-
+        getGroupsMembers();
     }
-    public void getUsersList(){
+    public void getGroupsMembers(){
         loader.show();
-        UtilMethods.INSTANCE.getUsersList(new UtilMethods.ApiCallBackMulti() {
+        UtilMethods.INSTANCE.getGroupsMembers(groupId,new UtilMethods.ApiCallBackMulti() {
             @Override
             public void onSuccess(Object object) {
                 if (loader != null) {
@@ -106,14 +86,14 @@ public class GroupAddPeople extends AppCompatActivity {
                     }
                 }
 
-                GetUserListResponse getUserListResponse=(GetUserListResponse) object;
-                if(getUserListResponse.getStatusCode()==1){
-                    adapter = new UserListAdapter(
-                            GroupAddPeople.this,
-                            getUserListResponse.getResult(),
+                GroupMembersResponse groupMembersResponse=(GroupMembersResponse) object;
+                if(groupMembersResponse.getStatusCode()==1){
+                    adapter = new MembersListAdapter(
+                            GroupMembers.this,
+                            groupMembersResponse.getResult(),
                             (user, position) -> {
                                 // Handle Add / Invite click
-                                addPeopleInGroup(user.getUserId());
+                                updateGroupMembers(user.getUserId());
                             }
                     );
 
@@ -134,13 +114,14 @@ public class GroupAddPeople extends AppCompatActivity {
             }
         });
     }
-    public void addPeopleInGroup(String userId){
-        AddFriendsRequest request = new AddFriendsRequest(
+    public void updateGroupMembers(String userId){
+        UpdateGroupMemberRequest request = new UpdateGroupMemberRequest (
                 groupId,
-                userId
+                userId,
+                false
         );
         loader.show();
-        UtilMethods.INSTANCE.addPeopleInGroup(request,new UtilMethods.ApiCallBackMulti() {
+        UtilMethods.INSTANCE.updateGroupMembers(request,new UtilMethods.ApiCallBackMulti() {
             @Override
             public void onSuccess(Object object) {
                 if (loader != null) {
@@ -149,10 +130,10 @@ public class GroupAddPeople extends AppCompatActivity {
                     }
                 }
 
-                AddPeopleResponse addPeopleResponse=(AddPeopleResponse) object;
-                if(addPeopleResponse.getStatusCode()==1){
-                    Toast.makeText(GroupAddPeople.this, addPeopleResponse.getResponseText(), Toast.LENGTH_SHORT).show();
-                    getUsersList();
+                GroupMembersUpdateResponse groupMembersUpdateResponse=(GroupMembersUpdateResponse) object;
+                if(groupMembersUpdateResponse.getStatusCode()==1){
+                    Toast.makeText(GroupMembers.this, groupMembersUpdateResponse.getResponseText(), Toast.LENGTH_SHORT).show();
+                    getGroupsMembers();
                 }
 
 
@@ -168,14 +149,5 @@ public class GroupAddPeople extends AppCompatActivity {
 
             }
         });
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 102 && resultCode == RESULT_OK) {
-            Intent intent = new Intent();
-            setResult(RESULT_OK, intent);
-            finish();
-        }
     }
 }

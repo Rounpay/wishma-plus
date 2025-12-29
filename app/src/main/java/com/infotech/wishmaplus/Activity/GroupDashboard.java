@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.Settings;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.infotech.wishmaplus.Adapter.UserListAdapter;
 import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
 import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
+import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.UtilMethods;
@@ -39,19 +41,23 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+
 public class GroupDashboard extends AppCompatActivity {
 
     private int isCoverPhoto = 0;
     private File profileImageFile = null;
     private File coverImageFile = null;
-    private ImageView cover_photo, profile_picture;
+    private ImageView cover_photo, profile_picture,ivProfile;
     private ImagePicker imagePicker;
     private Snackbar mSnackBar;
     private String groupId;
     private CustomLoader loader;
     private static final int REQUEST_PERMISSIONS_IMAGE = 7676;
-
     TextView tvGroupName,groupType;
+    Button addPeople;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,8 @@ public class GroupDashboard extends AppCompatActivity {
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         groupType =findViewById(R.id.groupType);
         tvGroupName =findViewById(R.id.tvGroupName);
+        ivProfile =findViewById(R.id.ivProfile);
+        addPeople =findViewById(R.id.addPeople);
         findViewById(R.id.back_button).setOnClickListener(view -> {
 //            finish();
             Intent intent = new Intent();
@@ -82,6 +90,15 @@ public class GroupDashboard extends AppCompatActivity {
         cover_photo = findViewById(R.id.ivCover);
         setupImagePicker();
         getGroupById();
+        addPeople.setOnClickListener(view -> {
+            addPeople();
+        });
+    }
+    public void addPeople(){
+        Intent intent = new Intent(GroupDashboard.this, GroupAddPeople.class);
+        intent.putExtra("groupId",groupId);
+        intent.putExtra("screenType","dashboard");
+        startActivity(intent);
     }
     public void getGroupById(){
         loader.show();
@@ -96,7 +113,8 @@ public class GroupDashboard extends AppCompatActivity {
 
                 GroupDetailsResponse groupDetailsResponse=(GroupDetailsResponse) object;
                 if(groupDetailsResponse.getStatusCode()==1){
-                    Glide.with(GroupDashboard.this).load(groupDetailsResponse.getResult().getCoverImageUrl()).into(cover_photo);
+                    Glide.with(GroupDashboard.this).load(groupDetailsResponse.getResult().getCoverImageUrl()).placeholder(R.drawable.dog_cover).into(cover_photo);
+                    Glide.with(GroupDashboard.this).load(groupDetailsResponse.getResult().getOwnerProfileImage()).placeholder(R.drawable.user_icon).into(ivProfile);
                     tvGroupName.setText(groupDetailsResponse.getResult().getTitle());
                     if(groupDetailsResponse.getResult().isPrivate())
                     {
@@ -135,14 +153,26 @@ public class GroupDashboard extends AppCompatActivity {
             // Convert Uri → Permanent File
             File selectedFile = makeFileFromUri(imageUri);
 
+
             if (selectedFile == null || !selectedFile.exists()) {
                 Toast.makeText(this, "Image loading failed", Toast.LENGTH_SHORT).show();
                 return;
             }
 
+
+            MultipartBody.Part profilePart = null;
             // Update UI & assign file
             if (isCoverPhoto == 1) {
                 coverImageFile = selectedFile;
+                if (coverImageFile != null) {
+                    RequestBody reqProfile = RequestBody.create(MediaType.parse("image/*"), coverImageFile);
+                    profilePart = MultipartBody.Part.createFormData(
+                            "model",
+                            coverImageFile.getName(),
+                            reqProfile
+                    );
+                    updateGroupProfilePicture(profilePart);
+                }
                 Glide.with(this).load(selectedFile).into(cover_photo);
             } else {
                 profileImageFile = selectedFile;
@@ -150,6 +180,35 @@ public class GroupDashboard extends AppCompatActivity {
             }
 
         }).setWithImageCrop(); // cropping enabled
+    }
+    public void updateGroupProfilePicture(MultipartBody.Part model){
+        loader.show();
+        UtilMethods.INSTANCE.updateGroupProfilePicture(groupId,true,model,new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                UploadGroupCoverResponse uploadGroupCoverResponse = (UploadGroupCoverResponse) object;
+                if(uploadGroupCoverResponse.getStatusCode()==1){
+                    Toast.makeText(GroupDashboard.this, uploadGroupCoverResponse.getResponseText(), Toast.LENGTH_SHORT).show();
+
+                }
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
     }
 
     private File makeFileFromUri(Uri uri) {

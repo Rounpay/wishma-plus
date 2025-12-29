@@ -10,6 +10,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:scaleType="centerCrop"
+        android:clipToOutline="true"
         android:src="@drawable/app_logo"
         android:layout_marginEnd="10dp"
         android:background="@drawable/round_img"/>
@@ -25,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Group Name"
+            android:textColor="@android:color/black"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -42,5 +44,5 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/ic_check_circle"
-        android:visibility="visible" />
+        android:visibility="gone" />
 </LinearLayout>

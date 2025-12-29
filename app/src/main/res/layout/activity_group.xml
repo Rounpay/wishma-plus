@@ -102,7 +102,8 @@
                 android:id="@+id/yourGroups"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
                 <!-- Search Bar -->
                 <EditText
                     android:id="@+id/etSearch"
@@ -179,17 +180,20 @@
                     >
                     <!-- Group Summary Header -->
                     <LinearLayout
+                        android:id="@+id/activeGroup"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:padding="10dp"
+                        android:paddingVertical="10dp"
                         android:orientation="horizontal">
 
                         <ImageView
+                            android:id="@+id/groupImage"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:src="@mipmap/ic_launcher_round"
                             android:scaleType="centerCrop"
+                            android:clipToOutline="true"
                             android:background="@drawable/round_img" />
 
                         <LinearLayout
@@ -200,6 +204,7 @@
                             android:layout_weight="1">
 
                             <TextView
+                                android:id="@+id/groupName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Group Name"
@@ -208,6 +213,7 @@
                                 android:textSize="16sp" />
 
                             <TextView
+                                android:id="@+id/groupType"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Private Group · 105 Members"
@@ -225,8 +231,9 @@
                             app:srcCompat="@drawable/ic_arrow_forward" />
                         <androidx.appcompat.widget.AppCompatImageView
                             android:id="@+id/groupBottom"
-                            android:layout_width="@dimen/_15sdp"
-                            android:layout_height="@dimen/_15sdp"
+                            android:layout_width="@dimen/_40sdp"
+                            android:padding="@dimen/_13sdp"
+                            android:layout_height="@dimen/_40sdp"
                             android:rotation="90"
                             android:visibility="visible"
                             android:layout_alignParentEnd="true"
@@ -242,6 +249,7 @@
                         android:textStyle="bold"
                         android:textSize="15sp"
                         android:paddingTop="16dp"
+                        android:textColor="@android:color/black"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
@@ -249,20 +257,43 @@
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:id="@+id/members"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="10dp">
 
-                        <include layout="@layout/item_shortcut" />
-                        <include layout="@layout/item_shortcut" />
-                        <include layout="@layout/item_shortcut" />
-                        <include layout="@layout/item_shortcut" />
-                        <include layout="@layout/item_shortcut" />
-                        <include layout="@layout/item_shortcut" />
-                        <include layout="@layout/item_shortcut" />
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:src="@drawable/ic_users" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Members"
+                                android:textColor="@android:color/black"
+                                android:textSize="14sp"
+                                android:paddingStart="12dp" />
+
+                        </LinearLayout>
+
+<!--                        <include layout="@layout/item_shortcut" />-->
+<!--                        <include layout="@layout/item_shortcut" />-->
+<!--                        <include layout="@layout/item_shortcut" />-->
+<!--                        <include layout="@layout/item_shortcut" />-->
+<!--                        <include layout="@layout/item_shortcut" />-->
+<!--                        <include layout="@layout/item_shortcut" />-->
+<!--                        <include layout="@layout/item_shortcut" />-->
 
                     </LinearLayout>
 
 
                     <!-- Button -->
                     <Button
+                        android:visibility="gone"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:text="See all tools"

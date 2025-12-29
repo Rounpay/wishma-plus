@@ -1,5 +1,7 @@
 package com.infotech.wishmaplus.Activity;
 
+import static android.view.View.GONE;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
@@ -24,24 +27,39 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.infotech.wishmaplus.Adapter.DialogReportBottomSheetAdapter;
 import com.infotech.wishmaplus.Adapter.GroupAdapter;
+import com.infotech.wishmaplus.Adapter.GroupAdapterManage;
 import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
+import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
+import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
+import com.infotech.wishmaplus.Api.Response.GroupListResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.PreferencesManager;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class GroupActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     List<GroupModel> list;
-    TextView tvYourGroups, tvJumpBack, manageGroup,tvSort;
-    LinearLayout layoutPosts,yourGroups;
+    TextView tvYourGroups, tvJumpBack, manageGroup,tvSort,groupName,groupType;
+    LinearLayout layoutPosts,yourGroups,members,activeGroup;
     ScrollView layoutManage;
     int selectedFilter = 0;
+    GroupAdapter adapter;
+    private CustomLoader loader;
+    GroupListResponse groupListResponse;
+    ImageView groupImage;
+    PreferencesManager tokenManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,9 +76,15 @@ public class GroupActivity extends AppCompatActivity {
         layoutPosts = findViewById(R.id.layoutPosts);
         layoutManage = findViewById(R.id.layoutManage);
         yourGroups = findViewById(R.id.yourGroups);
+        groupImage = findViewById(R.id.groupImage);
+        groupName = findViewById(R.id.groupName);
+        groupType = findViewById(R.id.groupType);
+        members = findViewById(R.id.members);
         tvSort = findViewById(R.id.tvSort);
+        activeGroup = findViewById(R.id.activeGroup);
+        tokenManager = new PreferencesManager(GroupActivity.this, 1);
         showYourGroups();
-
+        loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         tvYourGroups.setOnClickListener(v -> showYourGroups());
         tvJumpBack.setOnClickListener(v -> showPosts());
         manageGroup.setOnClickListener(v -> showManage());
@@ -68,6 +92,18 @@ public class GroupActivity extends AppCompatActivity {
         findViewById(R.id.addGroupButton).setOnClickListener(v -> openReportBottomSheetDialog(this));
         findViewById(R.id.sortSection).setOnClickListener(v -> openSortBottomSheetDialog(this));
         findViewById(R.id.groupBottom).setOnClickListener(v -> openGroupsBottomSheetDialog(this));
+        members.setOnClickListener(view -> {
+            String savedPageId = tokenManager.getString("ACTIVE_GROUP_ID");
+            Intent intent = new Intent(GroupActivity.this, GroupMembers.class);
+            intent.putExtra("groupId",savedPageId);
+            startActivity(intent);
+        });
+        activeGroup.setOnClickListener(view -> {
+            String savedPageId = tokenManager.getString("ACTIVE_GROUP_ID");
+            Intent intent = new Intent(GroupActivity.this, GroupDashboard.class);
+            intent.putExtra("groupId", savedPageId);
+            startActivity(intent);
+        });
 
 
 
@@ -76,18 +112,95 @@ public class GroupActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerGroups);
 
-        list = new ArrayList<>();
-        list.add(new GroupModel("Office Group", "25+ new posts", R.drawable.user_icon));
-        list.add(new GroupModel("The Wishma", "25+ new posts", R.drawable.user_icon));
-        list.add(new GroupModel("Family Group", "25+ new posts", R.drawable.user_icon));
-        list.add(new GroupModel("Tuition Group", "25+ new posts", R.drawable.user_icon));
-        list.add(new GroupModel("College Group", "25+ new posts", R.drawable.user_icon));
-
-        GroupAdapter adapter = new GroupAdapter(this, list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        getGroupsListing(false);
+        getGroupsListingMy(true);
+        super.onResume();
+    }
+
+    public void getGroupsListing(boolean OnlyMyGroups){
+        loader.show();
+        UtilMethods.INSTANCE.getGroupsListing(OnlyMyGroups,new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                GroupListResponse groupListResponse=(GroupListResponse) object;
+                if(groupListResponse.getStatusCode()==1){
+                    adapter = new GroupAdapter(GroupActivity.this, groupListResponse.getResult(),(item, pos) -> {
+                        Intent intent = new Intent(GroupActivity.this, GroupDashboard.class);
+                        intent.putExtra("groupId", item.getGroupId());
+                        startActivity(intent);
+                    });
+                    recyclerView.setLayoutManager(new LinearLayoutManager(GroupActivity.this));
+                    recyclerView.setAdapter(adapter);
+
+                }
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+            }
+        });
+    }
+    public void getGroupsListingMy(boolean OnlyMyGroups){
+        loader.show();
+        UtilMethods.INSTANCE.getGroupsListing(OnlyMyGroups,new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                groupListResponse=(GroupListResponse) object;
+                if(groupListResponse.getStatusCode()==1){
+                    if (!groupListResponse.getResult().isEmpty())
+                    {
+                        String savedPageId = tokenManager.getString("ACTIVE_GROUP_ID");
+                        int index = IntStream.range(0, groupListResponse.getResult().size())
+                                .filter(i -> savedPageId.equals(
+                                        groupListResponse.getResult().get(i).getGroupId()))
+                                .findFirst()
+                                .orElse(0);
+                        String groupTypeValue = groupListResponse.getResult().get(index).isPrivate() ? "Private Group" : "Public Group";
+                        groupName.setText(groupListResponse.getResult().get(index).getTitle());
+                        groupType.setText(groupTypeValue);
+                        Glide.with(GroupActivity.this).load(groupListResponse.getResult().get(index).getCoverImageUrl()).placeholder(R.drawable.user_icon).into(groupImage);
+                        tokenManager.set("ACTIVE_GROUP_ID", groupListResponse.getResult().get(index).getGroupId());
+
+                    }
+                    else{
+                        manageGroup.setVisibility(GONE);
+                    }
+                }
+                else {
+                    manageGroup.setVisibility(GONE);
+                }
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+            }
+        });
     }
     BottomSheetDialog bottomSheetDialogReport;
     BottomSheetDialog bottomSortDialogReport;
@@ -185,6 +298,13 @@ public class GroupActivity extends AppCompatActivity {
         bottomGroupsDialogReport.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View sheetView = inflater.inflate(R.layout.bottom_sheet_groups, null);
+        RecyclerView recyclerGroupsManage = sheetView.findViewById(R.id.recyclerGroupsManage);
+        recyclerGroupsManage.setLayoutManager(new LinearLayoutManager(this));
+        recyclerGroupsManage.setAdapter(new GroupAdapterManage(this, groupListResponse.getResult(),tokenManager,(item, pos) -> {
+            tokenManager.set("ACTIVE_GROUP_ID", item.getGroupId());
+            getGroupsListingMy(true);
+            bottomGroupsDialogReport.dismiss();
+        }));
 
 
 
@@ -197,23 +317,24 @@ public class GroupActivity extends AppCompatActivity {
     }
     private void showYourGroups() {
         yourGroups.setVisibility(View.VISIBLE);
-        layoutPosts.setVisibility(View.GONE);
-        layoutManage.setVisibility(View.GONE);
+        layoutPosts.setVisibility(GONE);
+        layoutManage.setVisibility(GONE);
 
         highlightTab(tvYourGroups);
     }
 
     private void showPosts() {
-        yourGroups.setVisibility(View.GONE);
+        yourGroups.setVisibility(GONE);
         layoutPosts.setVisibility(View.VISIBLE);
-        layoutManage.setVisibility(View.GONE);
+        layoutManage.setVisibility(GONE);
 
         highlightTab(tvJumpBack);
     }
 
     private void showManage() {
-        yourGroups.setVisibility(View.GONE);
-        layoutPosts.setVisibility(View.GONE);
+        getGroupsListing(true);
+        yourGroups.setVisibility(GONE);
+        layoutPosts.setVisibility(GONE);
         layoutManage.setVisibility(View.VISIBLE);
 
         highlightTab(manageGroup);

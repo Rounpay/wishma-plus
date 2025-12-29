@@ -57,6 +57,7 @@ import com.infotech.wishmaplus.Api.Request.CommentRequest;
 import com.infotech.wishmaplus.Api.Request.InitiateBoostRequest;
 import com.infotech.wishmaplus.Api.Request.LikeRequest;
 import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
+import com.infotech.wishmaplus.Api.Request.UpdateGroupMemberRequest;
 import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
@@ -74,6 +75,9 @@ import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
 import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
 import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
+import com.infotech.wishmaplus.Api.Response.GroupListResponse;
+import com.infotech.wishmaplus.Api.Response.GroupMembersResponse;
+import com.infotech.wishmaplus.Api.Response.GroupMembersUpdateResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
@@ -1232,6 +1236,81 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<GroupDetailsResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getGroupsListing(boolean OnlyMyGroups,ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<GroupListResponse> call = git.getGroupsListing("Bearer " + tokenManager.getAccessToken(),OnlyMyGroups);
+            call.enqueue(new Callback<GroupListResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<GroupListResponse> call, @NonNull Response<GroupListResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<GroupListResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getGroupsMembers(String groupId,ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<GroupMembersResponse> call = git.getGroupsMembers("Bearer " + tokenManager.getAccessToken(),groupId);
+            call.enqueue(new Callback<GroupMembersResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<GroupMembersResponse> call, @NonNull Response<GroupMembersResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<GroupMembersResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void updateGroupMembers(UpdateGroupMemberRequest updateGroupMemberRequest , ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<GroupMembersUpdateResponse> call = git.updateGroupMembers("Bearer " + tokenManager.getAccessToken(),updateGroupMemberRequest);
+            call.enqueue(new Callback<GroupMembersUpdateResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<GroupMembersUpdateResponse> call, @NonNull Response<GroupMembersUpdateResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<GroupMembersUpdateResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });

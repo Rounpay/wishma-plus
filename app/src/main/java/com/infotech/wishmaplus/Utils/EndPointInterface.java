@@ -19,6 +19,7 @@ import com.infotech.wishmaplus.Api.Request.LikeRequest;
 import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
 import com.infotech.wishmaplus.Api.Request.SharePostRequest;
 import com.infotech.wishmaplus.Api.Request.SignUpRequest;
+import com.infotech.wishmaplus.Api.Request.UpdateGroupMemberRequest;
 import com.infotech.wishmaplus.Api.Request.UpdateUserRequest;
 import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
@@ -40,6 +41,9 @@ import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
 import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
 import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
+import com.infotech.wishmaplus.Api.Response.GroupListResponse;
+import com.infotech.wishmaplus.Api.Response.GroupMembersResponse;
+import com.infotech.wishmaplus.Api.Response.GroupMembersUpdateResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
@@ -384,5 +388,22 @@ public interface EndPointInterface {
             @Body AddFriendsRequest request
     );
 
+    @GET("api/Group/GetGroup")
+    Call<GroupListResponse> getGroupsListing(
+            @Header("Authorization") String token,
+            @Query("OnlyMyGroups") boolean OnlyMyGroups
+    );
+
+
+    @GET("api/Group/GetGroupMembers")
+    Call<GroupMembersResponse> getGroupsMembers(
+            @Header("Authorization") String token,
+            @Query("GroupId") String GroupId
+    );
+
+    @POST("api/Group/UpdateGroupMembers")
+    Call<GroupMembersUpdateResponse> updateGroupMembers(
+            @Header("Authorization") String authorization,
+            @Body UpdateGroupMemberRequest request);
 
 }

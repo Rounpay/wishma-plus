@@ -10,9 +10,10 @@
         android:id="@+id/imgGroup"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:clipToOutline="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_launcher_background"
-        android:background="@drawable/cb_lock" />
+        android:src="@drawable/user_icon"
+        android:background="@drawable/bg_circle" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -24,12 +25,14 @@
             android:id="@+id/tvGroupName"
             android:text="Group Name"
             android:textSize="16sp"
+            android:textColor="@android:color/black"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/tvPosts"
+            android:visibility="gone"
             android:text="25+ new posts"
             android:textSize="13sp"
             android:textColor="#007AFF"
