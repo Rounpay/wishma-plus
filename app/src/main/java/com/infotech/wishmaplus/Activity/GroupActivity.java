@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -50,7 +52,7 @@ import java.util.stream.IntStream;
 public class GroupActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     List<GroupModel> list;
-    TextView tvYourGroups, tvJumpBack, manageGroup,tvSort,groupName,groupType;
+    TextView tvYourGroups, tvJumpBack, manageGroup,tvSort,groupName,groupType,etSearch;
     LinearLayout layoutPosts,yourGroups,members,activeGroup;
     ScrollView layoutManage;
     int selectedFilter = 0;
@@ -81,9 +83,9 @@ public class GroupActivity extends AppCompatActivity {
         groupType = findViewById(R.id.groupType);
         members = findViewById(R.id.members);
         tvSort = findViewById(R.id.tvSort);
+        etSearch = findViewById(R.id.etSearch);
         activeGroup = findViewById(R.id.activeGroup);
         tokenManager = new PreferencesManager(GroupActivity.this, 1);
-        showYourGroups();
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         tvYourGroups.setOnClickListener(v -> showYourGroups());
         tvJumpBack.setOnClickListener(v -> showPosts());
@@ -111,6 +113,21 @@ public class GroupActivity extends AppCompatActivity {
 
 
         recyclerView = findViewById(R.id.recyclerGroups);
+        showYourGroups();
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (adapter != null) {
+                    adapter.filter(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
 
 
@@ -299,13 +316,28 @@ public class GroupActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View sheetView = inflater.inflate(R.layout.bottom_sheet_groups, null);
         RecyclerView recyclerGroupsManage = sheetView.findViewById(R.id.recyclerGroupsManage);
-        recyclerGroupsManage.setLayoutManager(new LinearLayoutManager(this));
-        recyclerGroupsManage.setAdapter(new GroupAdapterManage(this, groupListResponse.getResult(),tokenManager,(item, pos) -> {
+        TextView etSearchGroup = sheetView.findViewById(R.id.etSearchGroup);
+        GroupAdapterManage adapterManage = new GroupAdapterManage(this, groupListResponse.getResult(),tokenManager,(item, pos) -> {
             tokenManager.set("ACTIVE_GROUP_ID", item.getGroupId());
             getGroupsListingMy(true);
             bottomGroupsDialogReport.dismiss();
-        }));
+        });
+        recyclerGroupsManage.setLayoutManager(new LinearLayoutManager(this));
+        recyclerGroupsManage.setAdapter(adapterManage);
+        etSearchGroup.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (adapterManage != null) {
+                    adapterManage.filter(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
 
 
         bottomGroupsDialogReport.setContentView(sheetView);
@@ -316,6 +348,7 @@ public class GroupActivity extends AppCompatActivity {
 
     }
     private void showYourGroups() {
+        getGroupsListing(false);
         yourGroups.setVisibility(View.VISIBLE);
         layoutPosts.setVisibility(GONE);
         layoutManage.setVisibility(GONE);
@@ -332,7 +365,7 @@ public class GroupActivity extends AppCompatActivity {
     }
 
     private void showManage() {
-        getGroupsListing(true);
+        getGroupsListingMy(true);
         yourGroups.setVisibility(GONE);
         layoutPosts.setVisibility(GONE);
         layoutManage.setVisibility(View.VISIBLE);

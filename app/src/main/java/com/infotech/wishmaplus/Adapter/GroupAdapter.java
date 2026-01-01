@@ -14,13 +14,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.Api.Response.GroupListResponse;
+import com.infotech.wishmaplus.Api.Response.GroupMembersResponse;
 import com.infotech.wishmaplus.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
 
     private List<GroupListResponse.Result> list;
+    private List<GroupListResponse.Result> originalList;
     private Context context;
     private final OnItemClickListener listener;
 
@@ -31,7 +34,8 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     public GroupAdapter(Context context, List<GroupListResponse.Result> list, OnItemClickListener listener) {
         this.context = context;
-        this.list = list;
+        this.list = new ArrayList<>(list);
+        this.originalList = new ArrayList<>(list); // backup
         this.listener = listener;
     }
 
@@ -59,7 +63,25 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return list == null ? 0 : list.size();
+    }
+
+
+    public void filter(String text) {
+        list.clear();
+
+        if (text == null || text.trim().isEmpty()) {
+            list.addAll(originalList);
+        } else {
+            text = text.toLowerCase();
+            for (GroupListResponse.Result user : originalList) {
+                if (user.getTitle() != null &&
+                        user.getTitle().toLowerCase().contains(text)) {
+                    list.add(user);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     class GroupViewHolder extends RecyclerView.ViewHolder {

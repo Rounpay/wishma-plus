@@ -81,6 +81,7 @@ import com.infotech.wishmaplus.Api.Response.GroupMembersUpdateResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
+import com.infotech.wishmaplus.Api.Response.LinkClickResponse;
 import com.infotech.wishmaplus.Api.Response.NotificationResponse;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
 import com.infotech.wishmaplus.Api.Response.PostsResponse;
@@ -1311,6 +1312,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<GroupMembersUpdateResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void insertLinkClick(String PostId,int ClickType, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<LinkClickResponse> call = git.insertLinkClick("Bearer " + tokenManager.getAccessToken(),PostId.toString(),ClickType);
+            call.enqueue(new Callback<LinkClickResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<LinkClickResponse> call, @NonNull Response<LinkClickResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<LinkClickResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });

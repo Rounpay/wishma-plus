@@ -47,6 +47,7 @@ import com.infotech.wishmaplus.Api.Response.GroupMembersUpdateResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
+import com.infotech.wishmaplus.Api.Response.LinkClickResponse;
 import com.infotech.wishmaplus.Api.Response.LoginResponse;
 import com.infotech.wishmaplus.Api.Response.NotificationResponse;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
@@ -405,5 +406,11 @@ public interface EndPointInterface {
     Call<GroupMembersUpdateResponse> updateGroupMembers(
             @Header("Authorization") String authorization,
             @Body UpdateGroupMemberRequest request);
+
+    @POST("api/InsertLinkClick")
+    Call<LinkClickResponse> insertLinkClick(
+            @Header("Authorization") String authorization,
+            @Query("PostId") String PostId,
+            @Query("ClickType") int ClickType);
 
 }

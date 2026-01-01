@@ -72,6 +72,7 @@ import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.EligibilityModel;
+import com.infotech.wishmaplus.Api.Response.LinkClickResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Fragments.ShareDialogFragment;
 import com.infotech.wishmaplus.R;
@@ -807,6 +808,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         ImageView profile, moreBTn, profileParent;
         View ownerView,goalTypeLayout,callNow,bookNow;
+        private CustomLoader loader;
 
         public TextViewHolder(View itemView) {
             super(itemView);
@@ -833,6 +835,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             goalType = itemView.findViewById(R.id.goalType);
             callNow = itemView.findViewById(R.id.callNow);
             bookNow = itemView.findViewById(R.id.bookNow);
+            loader = new CustomLoader(context, android.R.style.Theme_Translucent_NoTitleBar);
         }
 
         public void bind(ContentResult content, int position) {
@@ -857,7 +860,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     bookNow.setVisibility(VISIBLE);
                     callNow.setVisibility(GONE);
                     bookNow.setOnClickListener(view -> {
-                        openInAppWebView(context, content.boostedURL());
+                        openInAppWebView(context, content.boostedURL(),loader,content.getPostId(),1);
                     });
 
 
@@ -871,7 +874,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     bookNow.setVisibility(GONE);
                     callNow.setVisibility(VISIBLE);
                     callNow.setOnClickListener(view -> {
-                        redirectToCall(context, content.boostedPhoneNo());
+                        redirectToCall(context, content.boostedPhoneNo(),loader,content.getPostId(),0);
                     });
 
                 }
@@ -1029,20 +1032,70 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
         }
     }
-    public static void openInAppWebView(Context context, String webUrl) {
+    public static void openInAppWebView(Context context, String webUrl,CustomLoader loader,String postId, int clickType) {
         if (webUrl == null || webUrl.isEmpty()) return;
+        loader.show();
+        UtilMethods.INSTANCE.insertLinkClick(postId, clickType, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                LinkClickResponse linkClickResponse =(LinkClickResponse) object;
+                if(linkClickResponse.getStatusCode()==1){
+                    Intent intent = new Intent(context, WebViewActivity.class);
+                    intent.putExtra(WebViewActivity.EXTRA_URL, webUrl);
+                    context.startActivity(intent);
+                }
 
-        Intent intent = new Intent(context, WebViewActivity.class);
-        intent.putExtra(WebViewActivity.EXTRA_URL, webUrl);
-        context.startActivity(intent);
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
+
+
     }
-    public static void redirectToCall(Context context, String mobileNumber) {
+    public static void redirectToCall(Context context, String mobileNumber,CustomLoader loader,String postId, int clickType) {
         if (mobileNumber == null || mobileNumber.trim().isEmpty()) return;
+        loader.show();
+        UtilMethods.INSTANCE.insertLinkClick(postId, clickType, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                LinkClickResponse linkClickResponse =(LinkClickResponse) object;
+                if(linkClickResponse.getStatusCode()==1){
+                    String formattedNumber = mobileNumber.replaceAll("\\s+", "");
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + formattedNumber));
+                    context.startActivity(intent);
+                }
 
-        String formattedNumber = mobileNumber.replaceAll("\\s+", "");
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:" + formattedNumber));
-        context.startActivity(intent);
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
     }
 
 
@@ -1061,6 +1114,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         /*public boolean isPause = false;*/
         // MediaPlayer mediaPlayer;
         ProgressBar progress;
+        private CustomLoader loader;
         DefaultLoadControl loadControl = new DefaultLoadControl.Builder().setBufferDurationsMs(
                 /* minBufferMs= */ 2000,   // 2 seconds
                 /* maxBufferMs= */ 4000,   // 4 seconds
@@ -1118,6 +1172,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             goalType = itemView.findViewById(R.id.goalType);
             callNow = itemView.findViewById(R.id.callNow);
             bookNow = itemView.findViewById(R.id.bookNow);
+            loader = new CustomLoader(context, android.R.style.Theme_Translucent_NoTitleBar);
 
 
         }
@@ -1135,7 +1190,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     bookNow.setVisibility(VISIBLE);
                     callNow.setVisibility(GONE);
                     bookNow.setOnClickListener(view -> {
-                        openInAppWebView(context, content.boostedURL());
+                        openInAppWebView(context, content.boostedURL(),loader,content.getPostId(),1);
                     });
 
                 }
@@ -1148,7 +1203,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     bookNow.setVisibility(GONE);
                     callNow.setVisibility(VISIBLE);
                     callNow.setOnClickListener(view -> {
-                        redirectToCall(context, content.boostedPhoneNo());
+                        redirectToCall(context, content.boostedPhoneNo(),loader,content.getPostId(),0);
                     });
 
                 }
@@ -1589,6 +1644,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView nameTv, nameParentTv, timeParentTv, postParentTxt, timeTv, postTxt, like_count, comment_count, share_count,tvDials,userNameTitle,goalType;
         ImageView profile, profileParent;
         View ownerView,goalTypeLayout,callNow,bookNow;
+        private CustomLoader loader;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
@@ -1616,6 +1672,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             goalType = itemView.findViewById(R.id.goalType);
             callNow = itemView.findViewById(R.id.callNow);
             bookNow = itemView.findViewById(R.id.bookNow);
+            loader = new CustomLoader(context, android.R.style.Theme_Translucent_NoTitleBar);
         }
 
         public void bind(ContentResult content, int position) {
@@ -1635,7 +1692,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     bookNow.setVisibility(VISIBLE);
                     callNow.setVisibility(GONE);
                     bookNow.setOnClickListener(view -> {
-                        openInAppWebView(context, content.boostedURL());
+                        openInAppWebView(context, content.boostedURL(),loader,content.getPostId(),1);
                     });
 
                 }
@@ -1648,7 +1705,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     bookNow.setVisibility(GONE);
                     callNow.setVisibility(VISIBLE);
                     callNow.setOnClickListener(view -> {
-                        redirectToCall(context, content.boostedPhoneNo());
+                        redirectToCall(context, content.boostedPhoneNo(),loader,content.getPostId(),0);
                     });
 
 
