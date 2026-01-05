@@ -30,6 +30,7 @@ import android.provider.Settings;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.EditText;
@@ -89,7 +90,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
     private File captureFile;
     private boolean isDeleteFileAllow = false;
     private boolean isProfile = false;
-    private String postId,pageId;
+    private String postId,pageId,groupId;
     private PackageResult packageSetting;
     int postType = 1;  //1=> Post, 2=> Stroy, 3=> Reel
     private ImagePicker imagePicker;
@@ -118,6 +119,11 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
             pageId = getIntent().getStringExtra("pageId");
         }else{
             pageId ="";
+        }
+        if(getIntent().getStringExtra("groupId")!=null && !Objects.requireNonNull(getIntent().getStringExtra("groupId")).isEmpty()){
+            groupId = getIntent().getStringExtra("groupId");
+        }else{
+            groupId ="";
         }
         postType = getIntent().getIntExtra("postType", 1);
         if (userDetailResponse == null) {
@@ -654,6 +660,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
         EndPointInterface service = ApiClient.getClient().create(EndPointInterface.class);
         RequestBody postIdPart = createPartFromString(postId);
         RequestBody pageIdPart = createPartFromString(pageId);
+        RequestBody groupIdPart = createPartFromString(groupId);
         RequestBody typeIdPart = createPartFromString(String.valueOf(typeId));
         RequestBody contentPart = createPartFromString(content == null ? "" : content);
         RequestBody captionPart = createPartFromString(caption == null ? "" : caption);
@@ -683,7 +690,8 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
             }
 
             durationPart = createPartFromString(Utility.INSTANCE.getFileDuration(this, file.getPath()) + "");
-        } else if (typeId == UtilMethods.INSTANCE.IMAGE_TYPE) {
+        }
+        else if (typeId == UtilMethods.INSTANCE.IMAGE_TYPE) {
             /*BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;  // Only load the bounds (dimensions)
 
@@ -703,7 +711,8 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
             heightPart = createPartFromString(imageHeight + "");
             widthPart = createPartFromString(imageWidth + "");
             durationPart = createPartFromString("30000");
-        } else {
+        }
+        else {
             heightPart = createPartFromString("0");
             widthPart = createPartFromString("0");
             durationPart = createPartFromString("30000");
@@ -747,6 +756,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
                     heightPart,
                     widthPart,
                     pageIdPart,
+                    groupIdPart,
                     durationPart,
                     extraParam
             );

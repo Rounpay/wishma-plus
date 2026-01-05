@@ -106,6 +106,7 @@ public interface EndPointInterface {
             @Part("Height") RequestBody height,
             @Part("Width") RequestBody width,
             @Part("PageId") RequestBody PageId,
+            @Part("GroupId") RequestBody GroupId,
             @Part("DurationInMs") RequestBody durationInMs,
             @Part MultipartBody.Part extraParam
     );
@@ -392,7 +393,9 @@ public interface EndPointInterface {
     @GET("api/Group/GetGroup")
     Call<GroupListResponse> getGroupsListing(
             @Header("Authorization") String token,
-            @Query("OnlyMyGroups") boolean OnlyMyGroups
+            @Query("OnlyMyGroups") boolean OnlyMyGroups,
+            @Query("OrderByName") Boolean OrderByName,
+            @Query("OrderByJoinDate") Boolean OrderByJoinDate
     );
 
 

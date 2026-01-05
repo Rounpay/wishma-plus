@@ -145,6 +145,8 @@
 
                 <!-- Buttons -->
                 <LinearLayout
+                    android:id="@+id/buttons"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -247,8 +249,13 @@
                         android:src="@drawable/user_icon"
                         android:background="@drawable/bg_circle"/>
                     <EditText
+                        android:id="@+id/editTextField"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:clickable="true"
+                        android:enabled="true"
                         android:layout_marginHorizontal="@dimen/_5sdp"
                         android:background="@drawable/bg_post_box"
                         android:hint="Write something..."

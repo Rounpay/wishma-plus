@@ -34,6 +34,8 @@ public class GroupListResponse {
         @SerializedName("groupId")
         private String groupId;
 
+        @SerializedName("totalMembers")
+        private int totalMembers;
         @SerializedName("ownerUserId")
         private String ownerUserId;
 
@@ -71,6 +73,9 @@ public class GroupListResponse {
             return groupId;
         }
 
+        public int getTotalMembers() {
+            return totalMembers;
+        }
         public String getOwnerUserId() {
             return ownerUserId;
         }

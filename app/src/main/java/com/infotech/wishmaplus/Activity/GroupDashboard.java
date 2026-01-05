@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.Settings;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,8 +31,10 @@ import com.infotech.wishmaplus.Adapter.UserListAdapter;
 import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
 import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 import com.wishmaplus.image.picker.ImagePicker;
 
@@ -58,6 +61,9 @@ public class GroupDashboard extends AppCompatActivity {
     private static final int REQUEST_PERMISSIONS_IMAGE = 7676;
     TextView tvGroupName,groupType;
     Button addPeople;
+    UserDetailResponse userDetailResponse;
+    PreferencesManager tokenManager;
+    View buttons,editTextField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +81,11 @@ public class GroupDashboard extends AppCompatActivity {
         }
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         groupType =findViewById(R.id.groupType);
+        buttons =findViewById(R.id.buttons);
         tvGroupName =findViewById(R.id.tvGroupName);
         ivProfile =findViewById(R.id.ivProfile);
         addPeople =findViewById(R.id.addPeople);
+        editTextField =findViewById(R.id.editTextField);
         findViewById(R.id.back_button).setOnClickListener(view -> {
 //            finish();
             Intent intent = new Intent();
@@ -86,6 +94,18 @@ public class GroupDashboard extends AppCompatActivity {
         });
         findViewById(R.id.btnEdit).setOnClickListener(view -> {
             selectCoverImage();
+        });
+        tokenManager = new PreferencesManager(GroupDashboard.this, 1);
+        if (userDetailResponse == null) {
+            userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+        }
+        editTextField.setOnClickListener(view -> {
+            Intent intent = new Intent(GroupDashboard.this, PostActivity.class);
+            intent.putExtra("userData", userDetailResponse);
+            intent.putExtra("postId", "0");
+            intent.putExtra("postType", 1);
+            intent.putExtra("groupId", groupId);
+            startActivity(intent);
         });
         cover_photo = findViewById(R.id.ivCover);
         setupImagePicker();
@@ -122,6 +142,12 @@ public class GroupDashboard extends AppCompatActivity {
                     }
                     else{
                         groupType.setText("Public group");
+                    }
+                    if(groupDetailsResponse.getResult().isAdmin()) {
+                        buttons.setVisibility(View.VISIBLE);
+                    }
+                    else{
+                        buttons.setVisibility(View.GONE);
                     }
 
                 }

@@ -41,6 +41,7 @@
 
         <!-- First option with subtitle -->
         <LinearLayout
+            android:visibility="gone"
             android:id="@+id/option_most_visited"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

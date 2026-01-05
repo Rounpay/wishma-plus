@@ -1246,10 +1246,10 @@ public enum UtilMethods {
         }
     }
 
-    public void getGroupsListing(boolean OnlyMyGroups,ApiCallBackMulti apiCallBack) {
+    public void getGroupsListing(boolean OnlyMyGroups,Boolean OrderByName, Boolean OrderByJoinDate,ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<GroupListResponse> call = git.getGroupsListing("Bearer " + tokenManager.getAccessToken(),OnlyMyGroups);
+            Call<GroupListResponse> call = git.getGroupsListing("Bearer " + tokenManager.getAccessToken(),OnlyMyGroups,OrderByName,OrderByJoinDate);
             call.enqueue(new Callback<GroupListResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<GroupListResponse> call, @NonNull Response<GroupListResponse> response) {

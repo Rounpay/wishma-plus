@@ -33,6 +33,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
+import com.infotech.wishmaplus.Adapter.ChooseGroupAdapter;
 import com.infotech.wishmaplus.Adapter.DialogReportBottomSheetAdapter;
 import com.infotech.wishmaplus.Adapter.GroupAdapter;
 import com.infotech.wishmaplus.Adapter.GroupAdapterManage;
@@ -40,6 +41,7 @@ import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
 import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
 import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
 import com.infotech.wishmaplus.Api.Response.GroupListResponse;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
@@ -55,12 +57,17 @@ public class GroupActivity extends AppCompatActivity {
     TextView tvYourGroups, tvJumpBack, manageGroup,tvSort,groupName,groupType,etSearch;
     LinearLayout layoutPosts,yourGroups,members,activeGroup;
     ScrollView layoutManage;
-    int selectedFilter = 0;
+    UserDetailResponse userDetailResponse;
+    int selectedFilter = 2;
     GroupAdapter adapter;
     private CustomLoader loader;
     GroupListResponse groupListResponse;
+    GroupListResponse groupListResponseChooseGroup;
     ImageView groupImage;
     PreferencesManager tokenManager;
+
+    Boolean sortByName = true;
+    Boolean sortByJoinedDate =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +97,14 @@ public class GroupActivity extends AppCompatActivity {
         tvYourGroups.setOnClickListener(v -> showYourGroups());
         tvJumpBack.setOnClickListener(v -> showPosts());
         manageGroup.setOnClickListener(v -> showManage());
+        if (userDetailResponse == null) {
+            userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
+        }
+        tvSort.setText("Sort by: Groups A-Z");
         findViewById(R.id.back_button).setOnClickListener(view -> finish());
         findViewById(R.id.addGroupButton).setOnClickListener(v -> openReportBottomSheetDialog(this));
         findViewById(R.id.sortSection).setOnClickListener(v -> openSortBottomSheetDialog(this));
+        tvSort.setOnClickListener(v -> openSortBottomSheetDialog(this));
         findViewById(R.id.groupBottom).setOnClickListener(v -> openGroupsBottomSheetDialog(this));
         members.setOnClickListener(view -> {
             String savedPageId = tokenManager.getString("ACTIVE_GROUP_ID");
@@ -142,7 +154,7 @@ public class GroupActivity extends AppCompatActivity {
 
     public void getGroupsListing(boolean OnlyMyGroups){
         loader.show();
-        UtilMethods.INSTANCE.getGroupsListing(OnlyMyGroups,new UtilMethods.ApiCallBackMulti() {
+        UtilMethods.INSTANCE.getGroupsListing(OnlyMyGroups,sortByName,sortByJoinedDate,new UtilMethods.ApiCallBackMulti() {
             @Override
             public void onSuccess(Object object) {
                 if (loader != null) {
@@ -151,6 +163,7 @@ public class GroupActivity extends AppCompatActivity {
                     }
                 }
                 GroupListResponse groupListResponse=(GroupListResponse) object;
+                groupListResponseChooseGroup=(GroupListResponse) object;
                 if(groupListResponse.getStatusCode()==1){
                     adapter = new GroupAdapter(GroupActivity.this, groupListResponse.getResult(),(item, pos) -> {
                         Intent intent = new Intent(GroupActivity.this, GroupDashboard.class);
@@ -175,7 +188,7 @@ public class GroupActivity extends AppCompatActivity {
     }
     public void getGroupsListingMy(boolean OnlyMyGroups){
         loader.show();
-        UtilMethods.INSTANCE.getGroupsListing(OnlyMyGroups,new UtilMethods.ApiCallBackMulti() {
+        UtilMethods.INSTANCE.getGroupsListing(OnlyMyGroups,null,null,new UtilMethods.ApiCallBackMulti() {
             @Override
             public void onSuccess(Object object) {
                 if (loader != null) {
@@ -222,6 +235,7 @@ public class GroupActivity extends AppCompatActivity {
     BottomSheetDialog bottomSheetDialogReport;
     BottomSheetDialog bottomSortDialogReport;
     BottomSheetDialog bottomGroupsDialogReport;
+    BottomSheetDialog bottomGroupsDialogReportGroups;
 
     public  void openReportBottomSheetDialog(Activity context){
         if (bottomSheetDialogReport != null && bottomSheetDialogReport.isShowing()) {
@@ -234,6 +248,7 @@ public class GroupActivity extends AppCompatActivity {
         LinearLayout btnCreatePost = sheetView.findViewById(R.id.btnCreatePost);
         LinearLayout btnCreateGroup = sheetView.findViewById(R.id.btnCreateGroup);
         btnCreatePost.setOnClickListener(v -> {
+            openGroupsBottomSheetDialogGroups(context);
             bottomSheetDialogReport.dismiss();
         });
 
@@ -286,12 +301,18 @@ public class GroupActivity extends AppCompatActivity {
             } else if (id == R.id.option_a_z) {
                 selectedFilter = 2;
                 tvSort.setText("Sort by: Groups A-Z");
+                sortByName = true;
+                sortByJoinedDate = null;
+
             } else if (id == R.id.option_recent) {
                 selectedFilter = 3;
                 tvSort.setText("Sort by: Recently joined");
+                sortByName = null;
+                sortByJoinedDate = true;
             }
 
             bottomSortDialogReport.dismiss();
+            getGroupsListing(false);
         };
 
         sheetView.findViewById(R.id.option_most_visited).setOnClickListener(clickListener);
@@ -345,6 +366,35 @@ public class GroupActivity extends AppCompatActivity {
                 .from(bottomGroupsDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet))
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomGroupsDialogReport.show();
+
+    }
+    public  void openGroupsBottomSheetDialogGroups(Activity context){
+        if (bottomGroupsDialogReportGroups != null && bottomGroupsDialogReportGroups.isShowing()) {
+            return;
+        }
+        bottomGroupsDialogReportGroups = new BottomSheetDialog(context, R.style.DialogStyle);
+        bottomGroupsDialogReportGroups.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View sheetView = inflater.inflate(R.layout.choose_group, null);
+        RecyclerView recyclerGroupsManage = sheetView.findViewById(R.id.recyclerGroupsManage);
+        ChooseGroupAdapter adapterManage = new ChooseGroupAdapter(this, groupListResponseChooseGroup.getResult(),tokenManager,(item, pos) -> {
+            Intent intent = new Intent(GroupActivity.this, PostActivity.class);
+            intent.putExtra("userData", userDetailResponse);
+            intent.putExtra("postId", "0");
+            intent.putExtra("postType", 1);
+            intent.putExtra("groupId", item.getGroupId());
+            startActivity(intent);
+            bottomGroupsDialogReportGroups.dismiss();
+        });
+        recyclerGroupsManage.setLayoutManager(new LinearLayoutManager(this));
+        recyclerGroupsManage.setAdapter(adapterManage);
+
+
+        bottomGroupsDialogReportGroups.setContentView(sheetView);
+        BottomSheetBehavior
+                .from(bottomGroupsDialogReportGroups.findViewById(com.google.android.material.R.id.design_bottom_sheet))
+                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        bottomGroupsDialogReportGroups.show();
 
     }
     private void showYourGroups() {

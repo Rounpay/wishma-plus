@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class GroupAdapterManage extends RecyclerView.Adapter<GroupAdapterManage.GroupViewHolder> {
+public class ChooseGroupAdapter extends RecyclerView.Adapter<ChooseGroupAdapter.GroupViewHolder> {
 
     private List<GroupListResponse.Result> list;
     private List<GroupListResponse.Result> originalList;
@@ -34,7 +34,7 @@ public class GroupAdapterManage extends RecyclerView.Adapter<GroupAdapterManage.
         void onItemClick(GroupListResponse.Result item, int pos);
     }
 
-    public GroupAdapterManage(Context context, List<GroupListResponse.Result> list, PreferencesManager tokenManager, OnItemClickListener listener) {
+    public ChooseGroupAdapter(Context context, List<GroupListResponse.Result> list, PreferencesManager tokenManager, OnItemClickListener listener) {
         this.context = context;
         this.list = new ArrayList<>(list);
         this.originalList = new ArrayList<>(list); // backup
@@ -54,10 +54,11 @@ public class GroupAdapterManage extends RecyclerView.Adapter<GroupAdapterManage.
         String savedPageId = tokenManager.getString("ACTIVE_GROUP_ID");
         GroupListResponse.Result model = list.get(position);
         holder.tvGroupName.setText(model.getTitle());
+        holder.txtGroupInfo.setVisibility(GONE);
         holder.txtGroupInfo.setText("Admin"+" · "+(model.getTotalMembers()+1)+" members");
         if(Objects.equals(savedPageId, model.getGroupId()))
         {
-            holder.imgSelected.setVisibility(VISIBLE);
+            holder.imgSelected.setVisibility(GONE);
         }
         else{
             holder.imgSelected.setVisibility(GONE);

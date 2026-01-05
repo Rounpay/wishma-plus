@@ -11,6 +11,7 @@ public class GroupResult {
     private boolean isPrivate;
     private boolean isVisible;
     private boolean isActive;
+    private boolean isAdmin;
     private String createdAt;
     private String ownerName;
     private String ownerProfileImage;
@@ -82,9 +83,15 @@ public class GroupResult {
     public boolean isActive() {
         return isActive;
     }
+    public boolean isAdmin() {
+        return isAdmin;
+    }
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
     }
 
     public String getCreatedAt() {
