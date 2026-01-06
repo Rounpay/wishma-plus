@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.infotech.wishmaplus.Api.Object.PackageResult;
+import com.infotech.wishmaplus.Api.Object.GroupResult;
 
 public class UserDetailResponse implements Parcelable {
 
@@ -152,6 +153,9 @@ public class UserDetailResponse implements Parcelable {
     @SerializedName("accountHolder")
     @Expose
     public String accountHolder;
+    @SerializedName("groupDetails")
+    @Expose
+    private GroupResult result;
 
 
 
@@ -204,6 +208,7 @@ public class UserDetailResponse implements Parcelable {
         accountNumber =in.readString();
         ifsc =in.readString();
         accountHolder =in.readString();
+        result = in.readParcelable(GroupResult.class.getClassLoader());
 
     }
 
@@ -256,6 +261,7 @@ public class UserDetailResponse implements Parcelable {
         dest.writeString(accountNumber);
         dest.writeString(ifsc);
         dest.writeString(accountHolder);
+        dest.writeParcelable(result, flags);
 
     }
 
@@ -502,5 +508,13 @@ public class UserDetailResponse implements Parcelable {
 
     public void setSelfProfile(boolean selfProfile) {
         isSelfProfile = selfProfile;
+    }
+
+    public GroupResult getResult() {
+        return result;
+    }
+
+    public void setResult(GroupResult result) {
+        this.result = result;
     }
 }

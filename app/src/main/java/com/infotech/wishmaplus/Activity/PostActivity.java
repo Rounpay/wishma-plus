@@ -90,7 +90,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
     private File captureFile;
     private boolean isDeleteFileAllow = false;
     private boolean isProfile = false;
-    private String postId,pageId,groupId;
+    private String postId,pageId,groupId="";
     private PackageResult packageSetting;
     int postType = 1;  //1=> Post, 2=> Stroy, 3=> Reel
     private ImagePicker imagePicker;
@@ -153,7 +153,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
                    setUserData();
                });
            }else{
-               UtilMethods.INSTANCE.userDetail(this,"0", loader, tokenManager, object -> {
+               UtilMethods.INSTANCE.userDetail(this,"0",groupId, loader, tokenManager, object -> {
                    userDetailResponse = (UserDetailResponse) object;
                    setUserData();
                });

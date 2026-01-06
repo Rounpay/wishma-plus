@@ -19,11 +19,11 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -59,6 +59,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.button.MaterialButton;
 import com.infotech.wishmaplus.Activity.Advertisement;
+import com.infotech.wishmaplus.Activity.GroupAddPeople;
 import com.infotech.wishmaplus.Activity.ImageZoomViewActivity;
 import com.infotech.wishmaplus.Activity.MainActivity;
 import com.infotech.wishmaplus.Activity.NotEligibleForProfessional;
@@ -69,6 +70,7 @@ import com.infotech.wishmaplus.Activity.VideoViewActivity;
 import com.infotech.wishmaplus.Activity.WebViewActivity;
 import com.infotech.wishmaplus.Adapter.Interfaces.CountChangeCallBack;
 import com.infotech.wishmaplus.Api.Object.ContentResult;
+import com.infotech.wishmaplus.Api.Object.GroupResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.EligibilityModel;
@@ -239,11 +241,12 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         AppCompatImageView profile_picture, profile, cover_photo, editProfileIcon, packageImage;
         ImageButton editCoverIcon;
 
-        View line_1;
+        View line_1,buttons,user_details;
+        Button manageGroup,addPeople;
 
         com.google.android.material.button.MaterialButton btnProfessionalDashboard,btnAdvertise;
         private CustomLoader loader;
-        /*MaterialButtonadd_story_button,edit_profile_button;*/ AppCompatTextView addPostTitle, user_name, storyAddBtn, packageTitle, packageName, bioTv, location, posts_tab, photos_tab, videos_tab, noDataTv, searchBar, edit_public_details, joiningDate, followers, subscribers, followersView, followingView, friendUnfriend, addFriend;
+        /*MaterialButtonadd_story_button,edit_profile_button;*/ AppCompatTextView addPostTitle, user_name, storyAddBtn, packageTitle, packageName, bioTv, location, posts_tab, photos_tab, videos_tab, noDataTv, searchBar, edit_public_details, joiningDate, followers, subscribers, followersView,dotView, followingView, friendUnfriend, addFriend;
 
         public ProfileViewHolder(View itemView) {
             super(itemView);
@@ -256,6 +259,11 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             editProfileIcon = itemView.findViewById(R.id.edit_profile_icon);
             editCoverIcon = itemView.findViewById(R.id.edit_cover_icon);
             followersView = itemView.findViewById(R.id.followersView);
+            buttons = itemView.findViewById(R.id.buttons);
+            manageGroup = itemView.findViewById(R.id.manageGroup);
+            addPeople = itemView.findViewById(R.id.addPeople);
+            dotView = itemView.findViewById(R.id.dotView);
+            user_details = itemView.findViewById(R.id.user_details);
             followingView = itemView.findViewById(R.id.followingView);
             friendUnfriend = itemView.findViewById(R.id.friendUnfriend);
             addFriend = itemView.findViewById(R.id.addFriend);
@@ -664,6 +672,51 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
             });
 
+            if(content.getUserDetail().getResult()!=null){
+                GroupResult groupResult =content.getUserDetail().getResult();
+                Glide.with(context).load(content.getUserDetail().getResult().getCoverImageUrl()).apply(requestOptionsCoverImage).into(cover_photo);
+                Glide.with(context).load(groupResult.getOwnerProfileImage()).apply(requestOptionsUserImage).into(profile);
+                profile_picture.setVisibility(GONE);
+                editProfileIcon.setVisibility(GONE);
+                storyAddBtn.setVisibility(GONE);
+                packageImage.setVisibility(GONE);
+                packageTitle.setVisibility(GONE);
+                packageName.setVisibility(GONE);
+                followersView.setVisibility(GONE);
+                dotView.setVisibility(GONE);
+                followingView.setVisibility(GONE);
+                user_details.setVisibility(GONE);
+                btnProfessionalDashboard.setVisibility(GONE);
+                location.setVisibility(GONE);
+                joiningDate.setVisibility(GONE);
+                edit_public_details.setVisibility(GONE);
+                user_name.setText(groupResult.getTitle());
+                if(groupResult.isPrivate())
+                {
+                    bioTv.setText("Private group");
+                }
+                else{
+                    bioTv.setText("Public group");
+                }
+                if(groupResult.isAdmin()) {
+                    buttons.setVisibility(View.VISIBLE);
+                    profile.setVisibility(View.VISIBLE);
+                    searchBar.setVisibility(View.VISIBLE);
+                    manageGroup.setOnClickListener(view -> {});
+                    addPeople.setOnClickListener(view -> {
+                        Intent intent = new Intent(context, GroupAddPeople.class);
+                        intent.putExtra("groupId",groupResult.getGroupId());
+                        intent.putExtra("screenType","dashboard");
+                        context.startActivity(intent);
+                    });
+                }
+                else{
+                    buttons.setVisibility(View.GONE);
+                    profile.setVisibility(View.GONE);
+                    searchBar.setVisibility(View.GONE);
+                }
+            }
+
         }
     }
 
@@ -773,7 +826,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             profile.setOnClickListener(view -> {
                 if (clickCallBack != null) {
-                    clickCallBack.onClickProfile(content.getUserDetail() != null ? content.getUserDetail().getUserId() : "");
+                    clickCallBack.onClickProfile(content.getUserDetail() != null ? content.getUserDetail().getUserId() : "",content);
                 }
             });
             searchBar.setOnClickListener(view -> {
@@ -1026,9 +1079,17 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 context.startActivity(intent);
             });
             profile.setOnClickListener(v -> {
-                Intent intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra("id", content.getUserId());
-                context.startActivity(intent);
+                if(!(content.getGroupId()==null) && !content.getGroupId().isEmpty()) {
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("groupId", content.getGroupId());
+                    context.startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("id", content.getUserId());
+                    intent.putExtra("pageId", content.getPageId());
+                    context.startActivity(intent);
+                }
             });
         }
     }
@@ -1630,9 +1691,17 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 context.startActivity(intent);
             });
             profile.setOnClickListener(v -> {
-                Intent intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra("id", content.getUserId());
-                context.startActivity(intent);
+                if(!(content.getGroupId()==null) && !content.getGroupId().isEmpty()) {
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("groupId", content.getGroupId());
+                    context.startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("id", content.getUserId());
+                    intent.putExtra("pageId", content.getPageId());
+                    context.startActivity(intent);
+                }
             });
         }
     }
@@ -1994,10 +2063,17 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             });
 
             profile.setOnClickListener(v -> {
-                Intent intent = new Intent(context, ProfileActivity.class);
-                intent.putExtra("id", content.getUserId());
-                intent.putExtra("pageId", content.getPageId());
-                context.startActivity(intent);
+                if(!(content.getGroupId()==null) && !content.getGroupId().isEmpty()) {
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("groupId", content.getGroupId());
+                    context.startActivity(intent);
+                }
+                else {
+                    Intent intent = new Intent(context, ProfileActivity.class);
+                    intent.putExtra("id", content.getUserId());
+                    intent.putExtra("pageId", content.getPageId());
+                    context.startActivity(intent);
+                }
             });
         }
     }
@@ -2370,7 +2446,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         void onClickCreateStory(String storyId);
 
-        void onClickProfile(String userId);
+        void onClickProfile(String userId, ContentResult content);
 
         void onOpenStory(ArrayList<StoryResult> list, int position, StoryResult result);
 

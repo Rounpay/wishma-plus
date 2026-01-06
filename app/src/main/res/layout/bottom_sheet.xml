@@ -25,6 +25,7 @@
         <LinearLayout
             android:id="@+id/btnCreatePost"
             android:orientation="horizontal"
+            android:visibility="gone"
             android:padding="12dp"
             android:gravity="center_vertical"
             android:layout_width="match_parent"

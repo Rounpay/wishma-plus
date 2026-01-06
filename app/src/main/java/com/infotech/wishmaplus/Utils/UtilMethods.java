@@ -364,11 +364,11 @@ public enum UtilMethods {
         }
     }
 
-    public void userDetail(Activity activity, String userID, final CustomLoader loader, PreferencesManager mAppPreferences, ApiCallBack apiCallBack) {
+    public void userDetail(Activity activity, String userID,String GroupId, final CustomLoader loader, PreferencesManager mAppPreferences, ApiCallBack apiCallBack) {
         try {
             tokenManager = new PreferencesManager(activity, 1);
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<UserDetailResponse> call = git.getUserDetail("Bearer " + tokenManager.getAccessToken(), userID);
+            Call<UserDetailResponse> call = git.getUserDetail("Bearer " + tokenManager.getAccessToken(), userID,GroupId);
             call.enqueue(new Callback<UserDetailResponse>() {
                 @Override
                 public void onResponse(Call<UserDetailResponse> call, Response<UserDetailResponse> response) {

@@ -183,7 +183,7 @@ public class VideoFragment extends Fragment {
             }
 
             @Override
-            public void onClickProfile(String userId) {
+            public void onClickProfile(String userId, ContentResult content) {
 
             }
 
@@ -215,7 +215,7 @@ public class VideoFragment extends Fragment {
             else{
                 page = pageId;
             }
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "","",pageNumber, 20, false,page, 2,false);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "","",pageNumber, 20, false,page,"", 2,false);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {

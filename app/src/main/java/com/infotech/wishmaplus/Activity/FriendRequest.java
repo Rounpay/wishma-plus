@@ -287,7 +287,7 @@ public class FriendRequest extends AppCompatActivity {
 
     }
     private void getUserDetail() {
-        UtilMethods.INSTANCE.userDetail(this, "0", loader, tokenManager, object -> {
+        UtilMethods.INSTANCE.userDetail(this, "0","", loader, tokenManager, object -> {
         });
     }
     public void respondOnRequest(Activity context, String userId, UtilMethods.ApiCallBackMulti apiCallBack, int type) {

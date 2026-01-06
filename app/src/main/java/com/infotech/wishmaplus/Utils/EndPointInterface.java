@@ -133,6 +133,7 @@ public interface EndPointInterface {
                                      @Query("pageSize") int pageSize,
                                      @Query("IsSelf") boolean IsSelf,
                                      @Query("PageId") String PageId,
+                                     @Query("GroupId") String GroupId,
                                      @Query("ContentTypeID") int contentTypeID,
                                      @Query("IsFromNotification") boolean IsFromNotification );
 
@@ -172,7 +173,9 @@ public interface EndPointInterface {
 
     @GET("api/GetUserDetails")
     Call<UserDetailResponse> getUserDetail(@Header("Authorization") String token,
-                                           @Query("UserId") String UserId);
+                                           @Query("UserId") String UserId,
+                                           @Query("GroupId") String GroupId
+                                           );
 
 
     @POST("api/DoFollow")

@@ -85,7 +85,7 @@ public class AddCoverPhotoGroup extends AppCompatActivity {
             selectCoverImage();
         });
         findViewById(R.id.search_button).setOnClickListener(view -> {
-            Intent intent = new Intent(AddCoverPhotoGroup.this, GroupDashboard.class);
+            Intent intent = new Intent(AddCoverPhotoGroup.this, ProfileActivity.class);
             intent.putExtra("groupId", groupId);
             startActivityForResult(
                     intent,

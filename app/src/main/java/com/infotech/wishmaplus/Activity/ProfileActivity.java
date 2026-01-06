@@ -55,7 +55,9 @@ import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
+import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
 import com.infotech.wishmaplus.Api.Response.SignUpResponse;
+import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.ApiClient;
@@ -94,6 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
     ImageButton logout;
     AppCompatImageView moreBtn;
     UserDetailResponse userDetailResponse;
+    GroupDetailsResponse groupDetailsResponse;
     private int pageNumber = 1;
     private int totalPost;
     public int buttonContentTypeId = 0;
@@ -107,6 +110,9 @@ public class ProfileActivity extends AppCompatActivity {
     String userId = "0";
     String pageId = null;
     boolean isProfile = false;
+    private String groupId="";
+
+    TextView user_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,12 +136,17 @@ public class ProfileActivity extends AppCompatActivity {
         if (userDetailResponse == null) {
             userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
         }
+        Intent intentParam = getIntent();
+        if (intentParam != null && intentParam.hasExtra("groupId")) {
+            groupId = intentParam.getStringExtra("groupId");
+        }
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         back_button = findViewById(R.id.back_button);
         profileView = findViewById(R.id.profileView);
         logout = findViewById(R.id.logout);
         moreBtn = findViewById(R.id.moreBTn);
         balance = findViewById(R.id.balance);
+        user_title = findViewById(R.id.user_title);
         moreBtn.setOnClickListener(view -> {
             showPopupMenu(view, this);
         });
@@ -234,7 +245,13 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });*/
-        back_button.setOnClickListener(v -> finish());
+        findViewById(R.id.back_button).setOnClickListener(view -> {
+//            finish();
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        });
+//        back_button.setOnClickListener(v -> finish());
         logout.setOnClickListener(v ->
                 signOut());
         /*editProfileIcon.setOnClickListener(v -> selectImage());*/
@@ -247,25 +264,119 @@ public class ProfileActivity extends AppCompatActivity {
                 //String filePath = FileUtils.getPath(this, imageUri);
                 //if (filePath != null) {
                 // File file = new File(filePath);
-                if (isCoverPhoto == 1) {
-                    userDetailResponse.setCoverPictureUrl(imageUri.getPath());
-                } else {
-                    userDetailResponse.setProfilePictureUrl(imageUri.getPath());
+                if(!(groupId==null) && !groupId.isEmpty()){
+                    if (isCoverPhoto == 1) {
+                        userDetailResponse.getResult().setCoverImageUrl(imageUri.getPath());
+                    }
+                }
+                else {
+                    if (isCoverPhoto == 1) {
+                        userDetailResponse.setCoverPictureUrl(imageUri.getPath());
+                    } else {
+                        userDetailResponse.setProfilePictureUrl(imageUri.getPath());
+                    }
                 }
 
                 contentList.get(0).setUserDetail(userDetailResponse);
                 adapter.notifyItemChanged(0);
-                updateProfile(new File(imageUri.getPath()));
+                if(!(groupId==null) && !groupId.isEmpty()){
+                    updateGroupProfilePicture(new File(imageUri.getPath()));
+                }else {
+                    updateProfile(new File(imageUri.getPath()));
+                }
                 //}
             }
         }).setWithImageCrop();
 
+        if(!(groupId==null) && !groupId.isEmpty())
+        {
+            balance.setVisibility(View.GONE);
+            logout.setVisibility(View.GONE);
+            user_title.setText("Group Dashboard");
+            getGroupById();
+        }
 
         loader.show();
         getUserDetail();
         showContent(false);
         getBalance();
 
+    }
+    public void getGroupById(){
+        loader.show();
+        UtilMethods.INSTANCE.getGroupById(groupId,new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+                groupDetailsResponse=(GroupDetailsResponse) object;
+                if(groupDetailsResponse.getStatusCode()==1){
+
+                    userDetailResponse.setResult(groupDetailsResponse.getResult());
+
+                }
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
+    }
+
+    public void updateGroupProfilePicture(File file){
+        loader.show();
+        MultipartBody.Part extraParam = null;
+
+        if (file != null) {
+            String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+            if (mimeType == null) {
+                mimeType = "application/octet-stream";
+            }
+            RequestBody requestFile = RequestBody.create(MediaType.parse(mimeType), file);
+            extraParam = MultipartBody.Part.createFormData("model", file.getName(), requestFile);
+
+        }
+        UtilMethods.INSTANCE.updateGroupProfilePicture(groupId,true,extraParam,new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                UploadGroupCoverResponse uploadGroupCoverResponse = (UploadGroupCoverResponse) object;
+                if(uploadGroupCoverResponse.getStatusCode()==1){
+                    setResult(RESULT_OK, new Intent().putExtra("RefreshType", 1));
+                    UtilMethods.INSTANCE.SuccessfulWithDismiss(ProfileActivity.this, uploadGroupCoverResponse.getResponseText());
+                    refresh();
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Failed to Update Cover Picture: " + uploadGroupCoverResponse.getResponseText(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
     }
 
     private void showPopupMenu(View view, Context context) {
@@ -340,12 +451,21 @@ public class ProfileActivity extends AppCompatActivity {
         adapter = new MultiContentAdapter(userId, contentList, selfRecyclerView, tokenManager, this, new MultiContentAdapter.ClickCallBack() {
             @Override
             public void onClickCreatePost(String postId) {
-
-                Intent intent = new Intent(ProfileActivity.this, PostActivity.class);
-                intent.putExtra("userData", userDetailResponse);
-                intent.putExtra("postId", postId);
-                intent.putExtra("postType", 1);
-                postActivityResultLauncher.launch(intent);
+                if(!(groupId==null) && !groupId.isEmpty()) {
+                    Intent intent = new Intent(ProfileActivity.this, PostActivity.class);
+                    intent.putExtra("userData", userDetailResponse);
+                    intent.putExtra("postId", postId);
+                    intent.putExtra("postType", 1);
+                    intent.putExtra("groupId", groupId);
+                    postActivityResultLauncher.launch(intent);
+                }
+                else {
+                    Intent intent = new Intent(ProfileActivity.this, PostActivity.class);
+                    intent.putExtra("userData", userDetailResponse);
+                    intent.putExtra("postId", postId);
+                    intent.putExtra("postType", 1);
+                    postActivityResultLauncher.launch(intent);
+                }
 
             }
 
@@ -359,7 +479,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onClickProfile(String userId) {
+            public void onClickProfile(String userId, ContentResult content) {
 
             }
 
@@ -383,6 +503,13 @@ public class ProfileActivity extends AppCompatActivity {
     public void refresh() {
         /*selfRecyclerView.pauseVideo();
           selfRecyclerView.destroyVideo();*/
+        if(!(groupId==null) && !groupId.isEmpty())
+        {
+            balance.setVisibility(View.GONE);
+            logout.setVisibility(View.GONE);
+            user_title.setText("Group Dashboard");
+            getGroupById();
+        }
         getUserDetail();
         pageNumber = 1;
         showContent(true);
@@ -569,6 +696,9 @@ public class ProfileActivity extends AppCompatActivity {
                 }
                 profileView.setVisibility(VISIBLE);
                 userDetailResponse = (UserDetailResponse) object;
+                if(!(groupId==null) && !groupId.isEmpty()){
+                    userDetailResponse.setResult(groupDetailsResponse.getResult());
+                }
                 contentList.set(0, new ContentResult(0, userDetailResponse, null));
                 adapter.notifyItemChanged(0);
             });
@@ -576,7 +706,7 @@ public class ProfileActivity extends AppCompatActivity {
             String finalId = (userId != null && !userId.isEmpty())
                     ? userId
                     : pageId;
-            UtilMethods.INSTANCE.userDetail(this, finalId, loader, tokenManager, object -> {
+            UtilMethods.INSTANCE.userDetail(this, finalId,groupId, loader, tokenManager, object -> {
                 if (loader != null) {
                     if (loader.isShowing()) {
                         loader.dismiss();
@@ -584,6 +714,9 @@ public class ProfileActivity extends AppCompatActivity {
                 }
                 profileView.setVisibility(VISIBLE);
                 userDetailResponse = (UserDetailResponse) object;
+                if(!(groupId==null) && !groupId.isEmpty()){
+                    userDetailResponse.setResult(groupDetailsResponse.getResult());
+                }
                 contentList.set(0, new ContentResult(0, userDetailResponse, null));
                 adapter.notifyItemChanged(0);
             });
@@ -758,7 +891,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void showContent(boolean isFromRefresh) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", userId, pageNumber, 20, true, pageId, buttonContentTypeId,false);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), "", userId, pageNumber, 20, true, pageId,groupId, buttonContentTypeId,false);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {

@@ -114,7 +114,7 @@ public class GroupActivity extends AppCompatActivity {
         });
         activeGroup.setOnClickListener(view -> {
             String savedPageId = tokenManager.getString("ACTIVE_GROUP_ID");
-            Intent intent = new Intent(GroupActivity.this, GroupDashboard.class);
+            Intent intent = new Intent(GroupActivity.this, ProfileActivity.class);
             intent.putExtra("groupId", savedPageId);
             startActivity(intent);
         });
@@ -166,7 +166,7 @@ public class GroupActivity extends AppCompatActivity {
                 groupListResponseChooseGroup=(GroupListResponse) object;
                 if(groupListResponse.getStatusCode()==1){
                     adapter = new GroupAdapter(GroupActivity.this, groupListResponse.getResult(),(item, pos) -> {
-                        Intent intent = new Intent(GroupActivity.this, GroupDashboard.class);
+                        Intent intent = new Intent(GroupActivity.this, ProfileActivity.class);
                         intent.putExtra("groupId", item.getGroupId());
                         startActivity(intent);
                     });

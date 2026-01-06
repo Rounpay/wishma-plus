@@ -1,4 +1,5 @@
 package com.infotech.wishmaplus.Api.Response;
+import com.infotech.wishmaplus.Api.Object.GroupResult;
 
 public class GroupDetailsResponse {
     private int statusCode;

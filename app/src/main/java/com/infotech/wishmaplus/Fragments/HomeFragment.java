@@ -225,12 +225,19 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onClickProfile(String userId) {
-                profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)
-                        .putExtra("userData", userDetailResponse)
-                        .putExtra("pageId", pageId)
-                        .putExtra("isProfile", isProfile)
-                );
+            public void onClickProfile(String userId, ContentResult content) {
+                if(!(content.getGroupId()==null) && !content.getGroupId().isEmpty()) {
+                    profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)
+                            .putExtra("groupId", content.getGroupId())
+                    );
+                }
+                else {
+                    profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)
+                            .putExtra("userData", userDetailResponse)
+                            .putExtra("pageId", pageId)
+                            .putExtra("isProfile", isProfile)
+                    );
+                }
             }
 
             @Override
@@ -264,7 +271,7 @@ public class HomeFragment extends Fragment {
 
             });
         } else {
-            UtilMethods.INSTANCE.userDetail(requireActivity(), pageId, loader, tokenManager, object -> {
+            UtilMethods.INSTANCE.userDetail(requireActivity(), pageId,"", loader, tokenManager, object -> {
                 userDetailResponse = (UserDetailResponse) object;
                 contentlist.set(0, new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
                 adapter.notifyItemChanged(0);
@@ -360,7 +367,7 @@ public class HomeFragment extends Fragment {
         boolean isFromNotification = !main.postId.isEmpty();
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), postId, "", pageNumber, 20, false, pageId, 0,isFromNotification);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), postId, "", pageNumber, 20, false, pageId, "",0,isFromNotification);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {

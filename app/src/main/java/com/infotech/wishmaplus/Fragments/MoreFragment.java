@@ -187,7 +187,7 @@ public class MoreFragment extends Fragment {
                 setUserData();
             });
         } else{
-            UtilMethods.INSTANCE.userDetail(requireActivity(), "0", null, tokenManager, object -> {
+            UtilMethods.INSTANCE.userDetail(requireActivity(), "0","", null, tokenManager, object -> {
                 userDetailResponse = (UserDetailResponse) object;
                 setUserData();
             });

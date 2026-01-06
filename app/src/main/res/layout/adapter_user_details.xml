@@ -268,12 +268,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnProfessionalDashboard" />
     <LinearLayout
+        android:id="@+id/buttons"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnProfessionalDashboard">
+
+        <Button
+            android:id="@+id/manageGroup"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:backgroundTint="#1877F2"
+            android:text="Manage"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="1dp" />
+
+        <Button
+            android:id="@+id/addPeople"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:backgroundTint="#E4E6EB"
+            android:text="Add People"
+            android:textAllCaps="false"
+            android:textColor="#000" />
+    </LinearLayout>
+    <LinearLayout
+        android:visibility="visible"
         android:id="@+id/buttonsLayout"
         android:layout_width="wrap_content"
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnAdvertise">
+        app:layout_constraintTop_toBottomOf="@id/buttons">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/friendUnfriend"

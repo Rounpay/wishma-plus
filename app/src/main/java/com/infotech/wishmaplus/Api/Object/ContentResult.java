@@ -112,6 +112,12 @@ public class ContentResult implements Parcelable {
     @SerializedName("pageId")
     @Expose
     private String pageId;
+    @SerializedName("groupId")
+    @Expose
+    private String groupId;
+    @SerializedName("groupName")
+    @Expose
+    private String groupName;
 
     @SerializedName("requestSentStatus")
     @Expose
@@ -147,6 +153,8 @@ public class ContentResult implements Parcelable {
         totalStory = in.readInt();
         caption = in.readString();
         pageId = in.readString();
+        groupId = in.readString();
+        groupName = in.readString();
         boostedURL = in.readString();
         boostedPhoneNo = in.readString();
         isLiked = in.readByte() != 0;
@@ -184,6 +192,8 @@ public class ContentResult implements Parcelable {
         dest.writeInt(totalStory);
         dest.writeString(caption);
         dest.writeString(pageId);
+        dest.writeString(groupId);
+        dest.writeString(groupName);
         dest.writeString(boostedURL);
         dest.writeString(boostedPhoneNo);
         dest.writeByte((byte) (isLiked ? 1 : 0));
@@ -396,5 +406,19 @@ public class ContentResult implements Parcelable {
 
     public void setPageId(String pageId) {
         this.pageId = pageId;
+    }
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

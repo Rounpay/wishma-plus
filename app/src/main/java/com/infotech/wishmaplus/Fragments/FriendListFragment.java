@@ -176,7 +176,7 @@ public class FriendListFragment extends Fragment {
         });
     }
     private void getUserDetail() {
-        UtilMethods.INSTANCE.userDetail(requireActivity(), "0", loader, tokenManager, object -> {
+        UtilMethods.INSTANCE.userDetail(requireActivity(), "0","", loader, tokenManager, object -> {
         });
     }
     private void addFriend(String userId) {

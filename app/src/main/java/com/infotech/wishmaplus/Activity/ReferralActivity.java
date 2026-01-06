@@ -78,7 +78,7 @@ public class ReferralActivity extends AppCompatActivity {
     }
 
     private void getUserDetail() {
-        UtilMethods.INSTANCE.userDetail(this,"0", loader, tokenManager, object -> {
+        UtilMethods.INSTANCE.userDetail(this,"0","", loader, tokenManager, object -> {
             userDetailResponse = (UserDetailResponse) object;
             setUiData();
         });
