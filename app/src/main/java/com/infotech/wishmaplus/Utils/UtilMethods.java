@@ -80,6 +80,7 @@ import com.infotech.wishmaplus.Api.Response.GroupMembersResponse;
 import com.infotech.wishmaplus.Api.Response.GroupMembersUpdateResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
+import com.infotech.wishmaplus.Api.Response.InsightsStatsResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.LinkClickResponse;
 import com.infotech.wishmaplus.Api.Response.NotificationResponse;
@@ -1287,6 +1288,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<GroupMembersResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getPostStats(String postId,int dateRange,ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<InsightsStatsResponse> call = git.getPostStats("Bearer " + tokenManager.getAccessToken(),postId,dateRange);
+            call.enqueue(new Callback<InsightsStatsResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<InsightsStatsResponse> call, @NonNull Response<InsightsStatsResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<InsightsStatsResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });

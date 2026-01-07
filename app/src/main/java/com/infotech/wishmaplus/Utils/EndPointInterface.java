@@ -46,6 +46,7 @@ import com.infotech.wishmaplus.Api.Response.GroupMembersResponse;
 import com.infotech.wishmaplus.Api.Response.GroupMembersUpdateResponse;
 import com.infotech.wishmaplus.Api.Response.Income;
 import com.infotech.wishmaplus.Api.Response.InsightResponse;
+import com.infotech.wishmaplus.Api.Response.InsightsStatsResponse;
 import com.infotech.wishmaplus.Api.Response.LikeResponse;
 import com.infotech.wishmaplus.Api.Response.LinkClickResponse;
 import com.infotech.wishmaplus.Api.Response.LoginResponse;
@@ -406,6 +407,13 @@ public interface EndPointInterface {
     Call<GroupMembersResponse> getGroupsMembers(
             @Header("Authorization") String token,
             @Query("GroupId") String GroupId
+    );
+
+    @GET("api/Content/PostStats")
+    Call<InsightsStatsResponse> getPostStats(
+            @Header("Authorization") String token,
+            @Query("PostId") String PostId,
+            @Query("DateRange") int DateRange
     );
 
     @POST("api/Group/UpdateGroupMembers")
