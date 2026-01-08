@@ -24,15 +24,9 @@ public class Advertisement extends AppCompatActivity {
             return insets;
         });
         findViewById(R.id.back_button).setOnClickListener(v -> finish());
-        findViewById(R.id.boostContent).setOnClickListener(v ->{
-            startActivity(new Intent(this, BoostContent.class));
-        });
-        findViewById(R.id.createNewAd).setOnClickListener(v ->{
-            startActivity(new Intent(this, CreateNewAd.class));
-        });
-        findViewById(R.id.moreBTn).setOnClickListener(v ->{
-            startActivity(new Intent(this, ManageAds.class));
-        });
+        findViewById(R.id.boostContent).setOnClickListener(v -> startActivity(new Intent(this, BoostContent.class)));
+        findViewById(R.id.createNewAd).setOnClickListener(v -> startActivity(new Intent(this, CreateNewAd.class)));
+        findViewById(R.id.moreBTn).setOnClickListener(v -> startActivity(new Intent(this, ManageAds.class)));
 
     }
 }

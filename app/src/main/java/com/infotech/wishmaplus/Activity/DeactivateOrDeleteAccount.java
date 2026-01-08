@@ -3,9 +3,7 @@ package com.infotech.wishmaplus.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -55,18 +53,6 @@ public class DeactivateOrDeleteAccount extends AppCompatActivity {
             startActivity(intent);
         });
         findViewById(R.id.btnCancel).setOnClickListener(view -> finish());
-        RadioGroup radioGroup = findViewById(R.id.radioGroup);
-        Button btnContinue = findViewById(R.id.btnContinue);
-
-//        btnContinue.setEnabled(false);
-//        btnContinue.setAlpha(0.4f);
-//
-//        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-//            if (checkedId != -1) {
-//                btnContinue.setEnabled(true);
-//                btnContinue.setAlpha(1f);
-//            }
-//        });
 
     }
     private void setCardState(View view, boolean enable) {

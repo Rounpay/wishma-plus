@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.activity.EdgeToEdge;
@@ -18,6 +19,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.infotech.wishmaplus.R;
 
 public class ProfessionalDashBoardPersonal extends AppCompatActivity {
+    LinearLayout analyticsHead,contentHead;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -37,6 +39,8 @@ public class ProfessionalDashBoardPersonal extends AppCompatActivity {
         });
         AppCompatTextView tvPercent = findViewById(R.id.tv_percent);
         ProgressBar progressCircle = findViewById(R.id.progress_circle);
+        analyticsHead = findViewById(R.id.analyticsHead);
+        contentHead = findViewById(R.id.contentHead);
         int progress = 60;
         ObjectAnimator anim = ObjectAnimator.ofInt(progressCircle, "progress", progress);
         anim.setDuration(700);
@@ -62,6 +66,16 @@ public class ProfessionalDashBoardPersonal extends AppCompatActivity {
         findViewById(R.id.creator_support_card).setOnClickListener(v -> {
             Intent intent = new Intent(ProfessionalDashBoardPersonal.this,
                     CreatorSupportActivity.class);
+            startActivity(intent);
+        });
+        analyticsHead.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfessionalDashBoardPersonal.this,
+                    AnalyticsDashboard.class);
+            startActivity(intent);
+        });
+        contentHead.setOnClickListener(v -> {
+            Intent intent = new Intent(ProfessionalDashBoardPersonal.this,
+                    AnalyticsContent.class);
             startActivity(intent);
         });
     }

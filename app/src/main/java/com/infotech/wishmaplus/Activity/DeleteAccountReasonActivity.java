@@ -2,7 +2,6 @@ package com.infotech.wishmaplus.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -15,31 +14,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
-import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
-import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class DeleteAccountReasonActivity extends AppCompatActivity {
     RadioGroup radioGroup;
-
-    LinearLayout rowOne;
-    LinearLayout rowTwo;
-    LinearLayout rowThree;
-    LinearLayout rowFour;
-    LinearLayout rowFive;
-
-    RadioButton rbOne;
-    RadioButton rbTwo;
-    RadioButton rbThree;
-    RadioButton rbFour;
-    RadioButton rbFive;
+    LinearLayout rowOne,rowTwo,rowThree,rowFour,rowFive;
+    RadioButton rbOne,rbTwo,rbThree,rbFour,rbFive;
     MaterialButton btnContinue;
     private CustomLoader loader;
     private PreferencesManager tokenManager;

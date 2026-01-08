@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -163,12 +162,8 @@ public class AnalyticsContent extends AppCompatActivity {
                 .setTitle("Confirmation")
                 .setMessage("Are you sure you want to continue?")
                 .setCancelable(false)
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    updateBoostStatus(user.getBoostId(),status,context);
-                })
-                .setNegativeButton("No", (dialog, which) -> {
-                    dialog.dismiss();
-                })
+                .setPositiveButton("Yes", (dialog, which) -> updateBoostStatus(user.getBoostId(),status,context))
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
@@ -219,8 +214,8 @@ public class AnalyticsContent extends AppCompatActivity {
                 .inflate(R.layout.bottom_sheet_filters, null);
         TextView tvSubtitle = sheetView.findViewById(R.id.tvSubtitle);
         TextView tvDateSubtitle = sheetView.findViewById(R.id.tvDateSubtitle);
-        tvSubtitle.setText(dateRangeText);
-        tvDateSubtitle.setText(postTypeText);
+        tvSubtitle.setText(postTypeText);
+        tvDateSubtitle.setText(dateRangeText);
 
 
 

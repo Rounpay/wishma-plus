@@ -68,13 +68,9 @@ public class CreateNewProfilePage extends AppCompatActivity {
             optionOneLayout.setBackgroundResource(R.drawable.gray_border);
         });
 
-        optionOneRadio.setOnClickListener(v -> {
-            optionOneLayout.performClick();
-        });
+        optionOneRadio.setOnClickListener(v -> optionOneLayout.performClick());
 
-        optionTwoRadio.setOnClickListener(v -> {
-            optionTwoLayout.performClick();
-        });
+        optionTwoRadio.setOnClickListener(v -> optionTwoLayout.performClick());
         AppCompatTextView nextButton = findViewById(R.id.nextButton);
 
         nextButton.setOnClickListener(v -> {

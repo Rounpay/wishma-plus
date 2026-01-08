@@ -187,8 +187,8 @@
                     android:id="@+id/verified_badge"
                     android:layout_width="@dimen/_10sdp"
                     android:layout_height="@dimen/_10sdp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginBottom="2dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
                     android:background="@drawable/badge_white_circle"
                     android:elevation="6dp"
                     android:padding="2dp"
@@ -335,6 +335,7 @@
 
                 <!-- Header -->
                 <LinearLayout
+                    android:id="@+id/analyticsHead"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -452,6 +453,7 @@
 
                 <!-- Header -->
                 <LinearLayout
+                    android:id="@+id/contentHead"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"

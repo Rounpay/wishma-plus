@@ -71,7 +71,6 @@ import com.infotech.wishmaplus.Api.Response.EligibilityModel;
 import com.infotech.wishmaplus.Api.Response.EnableDashboardResponse;
 import com.infotech.wishmaplus.Api.Response.EstimateResponse;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
-import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
 import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
 import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;

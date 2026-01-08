@@ -1,7 +1,5 @@
 package com.infotech.wishmaplus.Activity;
 
-import static com.google.android.material.internal.ViewUtils.dpToPx;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -55,9 +53,7 @@ public class CreateProfessionalPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_create_professional_page);
-        findViewById(R.id.back_button).setOnClickListener(v -> {
-            finish();
-        });
+        findViewById(R.id.back_button).setOnClickListener(v -> finish());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

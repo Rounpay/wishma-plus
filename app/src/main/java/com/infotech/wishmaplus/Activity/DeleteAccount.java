@@ -3,9 +3,6 @@ package com.infotech.wishmaplus.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,17 +12,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.infotech.wishmaplus.Adapter.UserPagesAdapter;
 import com.infotech.wishmaplus.Adapter.UserProfilesAdapter;
 import com.infotech.wishmaplus.Api.Response.PageData;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
-import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
-import com.infotech.wishmaplus.Utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +49,6 @@ public class DeleteAccount extends AppCompatActivity {
         getPagesList();
 
         findViewById(R.id.back_button).setOnClickListener(view -> finish());
-//        findViewById(R.id.cardAccount1).setOnClickListener(view -> {
-//            startActivity(new Intent(this, DeactivateOrDeleteAccount.class));
-//        });
     }
     private void getPagesList() {
         loader.show();

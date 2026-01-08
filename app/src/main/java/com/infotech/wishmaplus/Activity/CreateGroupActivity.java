@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,14 +22,12 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.infotech.wishmaplus.Adapter.ProfessionalPostAdapter;
 import com.infotech.wishmaplus.Api.Response.CreateGroupResponse;
-import com.infotech.wishmaplus.Api.Response.PostItem;
-import com.infotech.wishmaplus.Api.Response.PostsResponse;
-import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.UtilMethods;
+
+import java.util.Objects;
 
 public class CreateGroupActivity extends AppCompatActivity {
 
@@ -38,7 +35,7 @@ public class CreateGroupActivity extends AppCompatActivity {
     //    Spinner spinnerPrivacy;
     Button btnCreateGroup;
     private CustomLoader loader;
-    TextView privacyTextView, learnMore, spinnerPrivacy,tvSelectedVisibility;
+    TextView privacyTextView, spinnerPrivacy,tvSelectedVisibility;
 
     LinearLayout visibilityLayout;
 
@@ -64,30 +61,16 @@ public class CreateGroupActivity extends AppCompatActivity {
         visibilityLayout = findViewById(R.id.visibilitySpinner);
         tvSelectedVisibility = findViewById(R.id.tvSelectedVisibility);
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
-//        loader.show();
-//        if (loader != null) {
-//            if (loader.isShowing()) {
-//                loader.dismiss();
-//            }
-//        }
         findViewById(R.id.spinnerPrivacy).setOnClickListener(view -> openPrivacyBottomSheetDialog(this));
         findViewById(R.id.visibility).setOnClickListener(view -> openVisibilityBottomSheetDialog(this));
         etGroupName = findViewById(R.id.etGroupName);
         findViewById(R.id.btnCreateGroup).setOnClickListener(view -> {
-//            Intent intent = new Intent(CreateGroupActivity.this, GroupAddPeople.class);
-//            intent.putExtra("groupId","31E1B0C1-B0B7-401B-95AD-36F9BDB07E40");
 ////            startActivity(intent);
-//            startActivityForResult(
-//                    intent,
-//                    101
-//            );
             if (validateForm()) {
                 createUpdateGroup();
                 // API call or next step
 //                Toast.makeText(this, "Group Created Successfully", Toast.LENGTH_SHORT).show();
             }
-//            Intent intent = new Intent(CreateGroupActivity.this, GroupAddPeople.class);
-//            startActivity(intent);
         });
 //        spinnerPrivacy = findViewById(R.id.spinnerPrivacy);
         btnCreateGroup = findViewById(R.id.btnCreateGroup);
@@ -113,17 +96,11 @@ public class CreateGroupActivity extends AppCompatActivity {
         };
         etGroupName.addTextChangedListener(watcher);
 
-//        spinnerPrivacy.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                validate();
-//            }
-//            @Override public void onNothingSelected(AdapterView<?> parent) {}
-//        });
     }
     public void createUpdateGroup(){
         String groupName = etGroupName.getText().toString().trim();
-        boolean isPrivacySelected = selectedPrivacy == 2 ? true : false;
-        Boolean isVisibilitySelected = isPrivacySelected ? selectedVisibility == 1 ? true : false:null;
+        boolean isPrivacySelected = selectedPrivacy == 2;
+        Boolean isVisibilitySelected = isPrivacySelected ? selectedVisibility == 1 :null;
 
         loader.show();
         UtilMethods.INSTANCE.createUpdateGroup("",groupName,"",isPrivacySelected,isVisibilitySelected, new UtilMethods.ApiCallBackMulti() {
@@ -184,8 +161,8 @@ public class CreateGroupActivity extends AppCompatActivity {
 
         bottomPrivacyDialogReport.setContentView(sheetView);
         BottomSheetBehavior.from(
-                        bottomPrivacyDialogReport.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
+                        Objects.requireNonNull(bottomPrivacyDialogReport.findViewById(
+                                com.google.android.material.R.id.design_bottom_sheet)))
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomPrivacyDialogReport.show();
@@ -244,7 +221,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         }
 
         bottomVisibilityDialogReport = new BottomSheetDialog(context, R.style.DialogStyle);
-        bottomVisibilityDialogReport.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        Objects.requireNonNull(bottomVisibilityDialogReport.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
 
         View view = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_visibility, null);
         bottomVisibilityDialogReport.setContentView(view);
@@ -268,7 +245,7 @@ public class CreateGroupActivity extends AppCompatActivity {
         rbHidden.setOnClickListener(v -> updateVisibility(2, "Hidden"));
 
         BottomSheetBehavior.from(
-                bottomVisibilityDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet)
+                Objects.requireNonNull(bottomVisibilityDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet))
         ).setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomVisibilityDialogReport.show();

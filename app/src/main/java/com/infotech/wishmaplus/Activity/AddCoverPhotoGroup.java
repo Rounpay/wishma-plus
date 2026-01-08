@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.provider.Settings;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -18,7 +17,6 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -30,8 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
 import com.infotech.wishmaplus.Adapter.CoverAdapter;
-import com.infotech.wishmaplus.Adapter.UserListAdapter;
-import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
@@ -57,9 +53,8 @@ public class AddCoverPhotoGroup extends AppCompatActivity {
     private static final int REQUEST_PERMISSIONS_IMAGE = 7676;
     private RecyclerView rvCovers;
     private int isCoverPhoto = 0;
-    private File profileImageFile = null;
     private File coverImageFile = null;
-    private ImageView cover_photo, profile_picture;
+    private ImageView cover_photo;
     private String groupId;
     private CustomLoader loader;
 
@@ -77,13 +72,9 @@ public class AddCoverPhotoGroup extends AppCompatActivity {
         if (intentParam != null && intentParam.hasExtra("groupId")) {
             groupId = intentParam.getStringExtra("groupId");
         }
-        findViewById(R.id.back_button).setOnClickListener(view -> {
-            finish();
-        });
+        findViewById(R.id.back_button).setOnClickListener(view -> finish());
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
-        findViewById(R.id.btnEdit).setOnClickListener(view -> {
-            selectCoverImage();
-        });
+        findViewById(R.id.btnEdit).setOnClickListener(view -> selectCoverImage());
         findViewById(R.id.search_button).setOnClickListener(view -> {
             Intent intent = new Intent(AddCoverPhotoGroup.this, ProfileActivity.class);
             intent.putExtra("groupId", groupId);
@@ -147,7 +138,7 @@ public class AddCoverPhotoGroup extends AppCompatActivity {
             }
 
 
-            MultipartBody.Part profilePart = null;
+            MultipartBody.Part profilePart;
             // Update UI & assign file
             if (isCoverPhoto == 1) {
                 coverImageFile = selectedFile;
@@ -161,10 +152,10 @@ public class AddCoverPhotoGroup extends AppCompatActivity {
                     updateGroupProfilePicture(profilePart);
                 }
                 Glide.with(this).load(selectedFile).into(cover_photo);
-            } else {
+            }/* else {
                 profileImageFile = selectedFile;
                 Glide.with(this).load(selectedFile).into(profile_picture);
-            }
+            }*/
 
         }).setWithImageCrop(); // cropping enabled
     }

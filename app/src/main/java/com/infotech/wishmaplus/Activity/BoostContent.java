@@ -52,9 +52,6 @@ public class BoostContent extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         findViewById(R.id.back_button).setOnClickListener(v -> finish());
-//        findViewById(R.id.postCard).setOnClickListener(v -> {
-//            startActivity(new Intent(this, CreateNewAd.class));
-//        });
         boostContentList();
 
     }
@@ -124,12 +121,8 @@ public class BoostContent extends AppCompatActivity {
                 .setTitle("Confirmation")
                 .setMessage("Are you sure you want to continue?")
                 .setCancelable(false)
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    updateBoostStatus(user.getBoostId(),status,context);
-                })
-                .setNegativeButton("No", (dialog, which) -> {
-                    dialog.dismiss();
-                })
+                .setPositiveButton("Yes", (dialog, which) -> updateBoostStatus(user.getBoostId(),status,context))
+                .setNegativeButton("No", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 

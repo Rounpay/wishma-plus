@@ -24,12 +24,10 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.infotech.wishmaplus.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class AnalyticsDashboard extends AppCompatActivity {
@@ -104,21 +102,21 @@ public class AnalyticsDashboard extends AppCompatActivity {
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                switch ((int) value) {
-                    case 0: return "Nov 18";
-                    case 1: return "Nov 21";
-                    case 2: return "Nov 24";
-                    case 3: return "Nov 27";
-                    case 4: return "Nov 30";
-                    case 5: return "Dec 3";
-                    case 6: return "Dec 6";
-                    case 7: return "Dec 9";
-                    case 8: return "Dec 12";
-                    case 9: return "Dec 15";
-                    case 10: return "Dec 18";
-                    case 11: return "Dec 21";
-                    default: return "";
-                }
+                return switch ((int) value) {
+                    case 0 -> "Nov 18";
+                    case 1 -> "Nov 21";
+                    case 2 -> "Nov 24";
+                    case 3 -> "Nov 27";
+                    case 4 -> "Nov 30";
+                    case 5 -> "Dec 3";
+                    case 6 -> "Dec 6";
+                    case 7 -> "Dec 9";
+                    case 8 -> "Dec 12";
+                    case 9 -> "Dec 15";
+                    case 10 -> "Dec 18";
+                    case 11 -> "Dec 21";
+                    default -> "";
+                };
             }
         });
 
@@ -163,11 +161,11 @@ public class AnalyticsDashboard extends AppCompatActivity {
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                switch ((int) value) {
-                    case 0: return "Text";
-                    case 1: return "Photo";
-                    default: return "";
-                }
+                return switch ((int) value) {
+                    case 0 -> "Text";
+                    case 1 -> "Photo";
+                    default -> "";
+                };
             }
         });
 //        xAxis.setValueFormatter(new IndexAxisValueFormatter(Arrays.asList("Text", "Photo")));

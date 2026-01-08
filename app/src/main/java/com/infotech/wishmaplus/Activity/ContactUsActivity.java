@@ -2,9 +2,7 @@ package com.infotech.wishmaplus.Activity;
 
 import android.os.Bundle;
 import android.text.Html;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
-import android.text.method.MovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,13 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.infotech.wishmaplus.Adapter.LevelCountAdapter;
-import com.infotech.wishmaplus.Api.Object.LevelCountResult;
-import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.CompanyDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.ApiClient;
@@ -29,7 +21,6 @@ import com.infotech.wishmaplus.Utils.EndPointInterface;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;

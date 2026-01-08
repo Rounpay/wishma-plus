@@ -12,16 +12,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -32,14 +28,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.button.MaterialButton;
 import com.infotech.wishmaplus.Adapter.ChooseGroupAdapter;
-import com.infotech.wishmaplus.Adapter.DialogReportBottomSheetAdapter;
 import com.infotech.wishmaplus.Adapter.GroupAdapter;
 import com.infotech.wishmaplus.Adapter.GroupAdapterManage;
-import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
-import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
-import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
 import com.infotech.wishmaplus.Api.Response.GroupListResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
@@ -47,13 +38,11 @@ import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 public class GroupActivity extends AppCompatActivity {
     RecyclerView recyclerView;
-    List<GroupModel> list;
     TextView tvYourGroups, tvJumpBack, manageGroup,tvSort,groupName,groupType,etSearch;
     LinearLayout layoutPosts,yourGroups,members,activeGroup;
     ScrollView layoutManage;
@@ -242,7 +231,7 @@ public class GroupActivity extends AppCompatActivity {
             return;
         }
         bottomSheetDialogReport = new BottomSheetDialog(context, R.style.DialogStyle);
-        bottomSheetDialogReport.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        Objects.requireNonNull(bottomSheetDialogReport.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View sheetView = inflater.inflate(R.layout.bottom_sheet, null);
         LinearLayout btnCreatePost = sheetView.findViewById(R.id.btnCreatePost);
@@ -261,7 +250,7 @@ public class GroupActivity extends AppCompatActivity {
 
         bottomSheetDialogReport.setContentView(sheetView);
         BottomSheetBehavior
-                .from(bottomSheetDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet))
+                .from(Objects.requireNonNull(bottomSheetDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet)))
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetDialogReport.show();
 
@@ -320,9 +309,9 @@ public class GroupActivity extends AppCompatActivity {
         sheetView.findViewById(R.id.option_recent).setOnClickListener(clickListener);
 
         BottomSheetBehavior.from(
-                bottomSortDialogReport.findViewById(
+                Objects.requireNonNull(bottomSortDialogReport.findViewById(
                         com.google.android.material.R.id.design_bottom_sheet
-                )
+                ))
         ).setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomSortDialogReport.show();
@@ -333,7 +322,7 @@ public class GroupActivity extends AppCompatActivity {
             return;
         }
         bottomGroupsDialogReport = new BottomSheetDialog(context, R.style.DialogStyle);
-        bottomGroupsDialogReport.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        Objects.requireNonNull(bottomGroupsDialogReport.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View sheetView = inflater.inflate(R.layout.bottom_sheet_groups, null);
         RecyclerView recyclerGroupsManage = sheetView.findViewById(R.id.recyclerGroupsManage);
@@ -351,9 +340,7 @@ public class GroupActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (adapterManage != null) {
-                    adapterManage.filter(s.toString());
-                }
+                adapterManage.filter(s.toString());
             }
 
             @Override
@@ -363,7 +350,7 @@ public class GroupActivity extends AppCompatActivity {
 
         bottomGroupsDialogReport.setContentView(sheetView);
         BottomSheetBehavior
-                .from(bottomGroupsDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet))
+                .from(Objects.requireNonNull(bottomGroupsDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet)))
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomGroupsDialogReport.show();
 
@@ -373,7 +360,7 @@ public class GroupActivity extends AppCompatActivity {
             return;
         }
         bottomGroupsDialogReportGroups = new BottomSheetDialog(context, R.style.DialogStyle);
-        bottomGroupsDialogReportGroups.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        Objects.requireNonNull(bottomGroupsDialogReportGroups.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View sheetView = inflater.inflate(R.layout.choose_group, null);
         RecyclerView recyclerGroupsManage = sheetView.findViewById(R.id.recyclerGroupsManage);
@@ -392,7 +379,7 @@ public class GroupActivity extends AppCompatActivity {
 
         bottomGroupsDialogReportGroups.setContentView(sheetView);
         BottomSheetBehavior
-                .from(bottomGroupsDialogReportGroups.findViewById(com.google.android.material.R.id.design_bottom_sheet))
+                .from(Objects.requireNonNull(bottomGroupsDialogReportGroups.findViewById(com.google.android.material.R.id.design_bottom_sheet)))
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomGroupsDialogReportGroups.show();
 

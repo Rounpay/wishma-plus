@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.Api.Response.GroupListResponse;
-import com.infotech.wishmaplus.Api.Response.GroupMembersResponse;
 import com.infotech.wishmaplus.R;
 
 import java.util.ArrayList;
@@ -22,9 +21,9 @@ import java.util.List;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
 
-    private List<GroupListResponse.Result> list;
-    private List<GroupListResponse.Result> originalList;
-    private Context context;
+    private final List<GroupListResponse.Result> list;
+    private final List<GroupListResponse.Result> originalList;
+    private final Context context;
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
@@ -57,13 +56,13 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         // for image from url
         Glide.with(context).load(model.getCoverImageUrl()).placeholder(R.drawable.user_icon).into(holder.imgGroup);
         holder.itemView.setOnClickListener(view -> {
-            if (listener != null) listener.onItemClick(model, holder.getAdapterPosition());
+            if (listener != null) listener.onItemClick(model, holder.getAbsoluteAdapterPosition());
         });
     }
 
     @Override
     public int getItemCount() {
-        return list == null ? 0 : list.size();
+        return list.size();
     }
 
 
@@ -84,7 +83,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
         notifyDataSetChanged();
     }
 
-    class GroupViewHolder extends RecyclerView.ViewHolder {
+    static class GroupViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgGroup;
         TextView tvGroupName, tvPosts;

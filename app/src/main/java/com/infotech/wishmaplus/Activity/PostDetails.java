@@ -53,7 +53,7 @@ public class PostDetails extends AppCompatActivity {
     VideoView videoView;
     String postId ="";
     LineChart lineChart;
-    TextView tvViews,viewsValue,tvEarning,earnValue,tvEngage,engageValue,tvClick,clickValue,totalViewer,tvReactions,tvComments,tvShares,tvClicks;
+    TextView tvViews,viewsValue,tvEarning,earnValue,tvEngage,engageValue,tvClick,clickValue,totalViewer,tvReactions,tvComments,tvShares,tvClicks,notEnoughData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +91,7 @@ public class PostDetails extends AppCompatActivity {
         tvComments = findViewById(R.id.tvComments);
         tvShares = findViewById(R.id.tvShares);
         tvClicks = findViewById(R.id.tvClicks);
+        notEnoughData = findViewById(R.id.notEnoughData);
         getContentDetailsToBoostResponse(postId);
         getPostStats(postId);
         setupPieChart();
@@ -307,7 +308,15 @@ public class PostDetails extends AppCompatActivity {
                 }
                 insightsStatsResponse =(InsightsStatsResponse) object;
                 if(insightsStatsResponse.getStatusCode()==1){
-                    setupLineChart(insightsStatsResponse.getResult().getInsightsDateWise());
+                    if(insightsStatsResponse.getResult().getInsightsDateWise().size()>1){
+                        setupLineChart(insightsStatsResponse.getResult().getInsightsDateWise());
+                        notEnoughData.setVisibility(GONE);
+                        lineChart.setVisibility(VISIBLE);
+                    }else{
+                        notEnoughData.setVisibility(VISIBLE);
+                        lineChart.setVisibility(GONE);
+                    }
+
                     viewsValue.setText(insightsStatsResponse.getResult().getTotalInsights().getTotalViews()+"");
                     earnValue.setText(insightsStatsResponse.getResult().getTotalInsights().getTotalEarning()+"");
                     engageValue.setText(insightsStatsResponse.getResult().getTotalInsights().getEngagement()+"");

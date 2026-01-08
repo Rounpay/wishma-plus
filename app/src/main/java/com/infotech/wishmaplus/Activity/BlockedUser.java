@@ -1,6 +1,5 @@
 package com.infotech.wishmaplus.Activity;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.RenderEffect;
@@ -26,6 +25,7 @@ import com.infotech.wishmaplus.Api.Response.UserModel;
 import com.infotech.wishmaplus.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class BlockedUser extends AppCompatActivity {
 
@@ -50,12 +50,7 @@ public class BlockedUser extends AppCompatActivity {
         list.add(new UserModel("User Name 1", R.drawable.user_icon));
         list.add(new UserModel("User Name 2", R.drawable.user_icon));
 
-        adapter = new BlockedAdapter(this, list,new BlockedAdapter.UnblockClickListener() {
-            @Override
-            public void onUnblockClicked(int position) {
-                showUnblockDialog();
-            }
-        });
+        adapter = new BlockedAdapter(this, list, position -> showUnblockDialog());
 
 
 
@@ -69,12 +64,12 @@ public class BlockedUser extends AppCompatActivity {
         Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_unblock);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(true);
 
         TextView btnCancel = dialog.findViewById(R.id.btnCancel);
         TextView btnUnblock = dialog.findViewById(R.id.btnUnblock);
-        TextView txtTitle = dialog.findViewById(R.id.txtTitle);
+//        TextView txtTitle = dialog.findViewById(R.id.txtTitle);
 
         dialog.setOnDismissListener(dialogInterface -> removeBlur(rootView));
         btnCancel.setOnClickListener(v -> dialog.dismiss());
