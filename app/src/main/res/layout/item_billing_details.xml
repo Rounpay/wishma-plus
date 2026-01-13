@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:padding="16dp"
+    android:background="@drawable/card_border">
+
+
+    <!-- Payment Summary Label -->
+    <TextView
+        android:id="@+id/tvPaymentSummary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Billing summary"
+        android:textColor="#000"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Summary subtitle -->
+    <TextView
+        android:id="@+id/tvSummarySubtitle"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your ad will run until you turn it off."
+        android:textSize="13sp"
+        android:textColor="#858585"
+        android:layout_marginTop="2dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvPaymentSummary"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Daily Text -->
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Billing Date"
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvSummarySubtitle"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Price -->
+    <TextView
+        android:id="@+id/tvDateValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvSummarySubtitle"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Daily Text -->
+    <TextView
+        android:id="@+id/tvPlacement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Placement"
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvDate"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Price -->
+    <TextView
+        android:id="@+id/tvPlacementValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvDate"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <!-- Daily Text -->
+    <TextView
+        android:id="@+id/tvBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Budget"
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvPlacement"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Price -->
+    <TextView
+        android:id="@+id/tvBudgetPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvPlacement"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <TextView
+        android:id="@+id/tvCostBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Estimated Cost"
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvBudget"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Price -->
+    <TextView
+        android:id="@+id/tvCostPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvBudgetPrice"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvSubBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sub Total"
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvCostBudget"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Price -->
+    <TextView
+        android:id="@+id/tvSubPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvCostPrice"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvGstBudget"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GST"
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubBudget"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Price -->
+    <TextView
+        android:id="@+id/tvGstPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="13sp"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubPrice"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <View
+        android:id="@+id/divider1"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginTop="8dp"
+        android:background="#15000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvGstBudget" />
+    <!-- Daily Text -->
+    <TextView
+        android:id="@+id/tvDaily"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total"
+        android:textSize="15sp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/divider1"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- Price -->
+    <TextView
+        android:id="@+id/tvPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/divider1"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvDownload"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Download PDF"-->
+<!--        android:textColor="#0521F6"-->
+<!--        android:textSize="15sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tvPrice" />-->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnProfessionalDashboard"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginVertical="@dimen/_10sdp"
+        android:visibility="visible"
+        android:backgroundTint="#1B74E4"
+        android:gravity="center"
+        android:text="Download PDF"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        android:textAllCaps="false"
+        app:cornerRadius="6dp"
+        app:icon="@drawable/arrow_downward"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        app:iconSize="20dp"
+        app:iconTint="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPrice" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

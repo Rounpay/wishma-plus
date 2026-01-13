@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.LineChart;
@@ -28,6 +30,8 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.infotech.wishmaplus.Adapter.BillingDetailsAdapter;
+import com.infotech.wishmaplus.Api.Response.BoostBillingResponse;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
 import com.infotech.wishmaplus.Api.Response.InsightsStatsResponse;
 import com.infotech.wishmaplus.R;
@@ -53,8 +57,9 @@ public class PostDetails extends AppCompatActivity {
     VideoView videoView;
     String postId ="";
     LineChart lineChart;
-    TextView tvViews,viewsValue,tvEarning,earnValue,tvEngage,engageValue,tvClick,clickValue,totalViewer,tvReactions,tvComments,tvShares,tvClicks,notEnoughData;
-
+    TextView tvViews,viewsValue,tvEarning,earnValue,tvEngage,engageValue,tvClick,clickValue,totalViewer,tvReactions,tvComments,tvShares,tvClicks,notEnoughData,billingDetails;
+    RecyclerView recyclerView;
+    BillingDetailsAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,8 +97,11 @@ public class PostDetails extends AppCompatActivity {
         tvShares = findViewById(R.id.tvShares);
         tvClicks = findViewById(R.id.tvClicks);
         notEnoughData = findViewById(R.id.notEnoughData);
+        billingDetails = findViewById(R.id.billingDetails);
+        recyclerView = findViewById(R.id.recyclerView);
         getContentDetailsToBoostResponse(postId);
         getPostStats(postId);
+        getBoostBillingInfo(postId);
         setupPieChart();
 
     }
@@ -326,6 +334,50 @@ public class PostDetails extends AppCompatActivity {
                     tvComments.setText(insightsStatsResponse.getResult().getTotalInsights().getTotalComments()+"");
                     tvShares.setText(insightsStatsResponse.getResult().getTotalInsights().getTotalShares()+"");
                     tvClicks.setText(insightsStatsResponse.getResult().getTotalInsights().getClick()+"");
+                }
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
+    }
+    public void getBoostBillingInfo(String postId){
+        loader.show();
+        UtilMethods.INSTANCE.getBoostBillingInfo(postId, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                BoostBillingResponse boostBillingResponse =(BoostBillingResponse) object;
+                if(boostBillingResponse.getStatusCode()==1){
+                    if(!boostBillingResponse.getResult().isEmpty()){
+                        billingDetails.setVisibility(VISIBLE);
+                        recyclerView.setVisibility(VISIBLE);
+                        recyclerView.setLayoutManager(
+                                new LinearLayoutManager(PostDetails.this));
+
+                        adapter = new BillingDetailsAdapter(
+                                PostDetails.this,
+                                boostBillingResponse.getResult() // API result list
+                        );
+
+                        recyclerView.setAdapter(adapter);
+                    }else{
+                        billingDetails.setVisibility(GONE);
+                        recyclerView.setVisibility(GONE);
+                    }
                 }
 
 

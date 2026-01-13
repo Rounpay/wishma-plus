@@ -25,6 +25,7 @@ import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.BoostBillingResponse;
 import com.infotech.wishmaplus.Api.Response.BoostResponse;
 import com.infotech.wishmaplus.Api.Response.BoostedPostStatusChangeResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
@@ -414,6 +415,11 @@ public interface EndPointInterface {
             @Header("Authorization") String token,
             @Query("PostId") String PostId,
             @Query("DateRange") int DateRange
+    );
+    @GET("api/GetBoostBillingInfo")
+    Call<BoostBillingResponse> getBoostBillingInfo(
+            @Header("Authorization") String token,
+            @Query("PostId") String PostId
     );
 
     @POST("api/Group/UpdateGroupMembers")
