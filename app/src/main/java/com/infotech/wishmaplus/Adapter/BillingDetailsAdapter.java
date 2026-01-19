@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.infotech.wishmaplus.Api.Response.BoostBillingResponse;
+import com.infotech.wishmaplus.Api.Response.GroupMembersResponse;
 import com.infotech.wishmaplus.R;
 
 import java.util.List;
@@ -21,10 +22,16 @@ public class BillingDetailsAdapter
 
     private final Context context;
     private final List<BoostBillingResponse.Result> billingList;
+    private OnAdapterButtonsClick listener;
 
-    public BillingDetailsAdapter(Context context, List<BoostBillingResponse.Result> billingList) {
+    public BillingDetailsAdapter(Context context, List<BoostBillingResponse.Result> billingList, OnAdapterButtonsClick listener) {
         this.context = context;
         this.billingList = billingList;
+        this.listener = listener;
+    }
+
+    public interface OnAdapterButtonsClick {
+        void onDownloadClick(BoostBillingResponse.Result item, int position);
     }
 
     @NonNull
@@ -54,8 +61,9 @@ public class BillingDetailsAdapter
 
 
         holder.btnDownload.setOnClickListener(v -> {
-            // Handle PDF download here
-            Toast.makeText(context, "We are working on it", Toast.LENGTH_SHORT).show();
+            if (listener != null) {
+                listener.onDownloadClick(item, position);
+            }
         });
     }
 

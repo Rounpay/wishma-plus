@@ -3,15 +3,28 @@ package com.infotech.wishmaplus.Activity;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -34,16 +47,24 @@ import com.infotech.wishmaplus.Adapter.BillingDetailsAdapter;
 import com.infotech.wishmaplus.Api.Response.BoostBillingResponse;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
 import com.infotech.wishmaplus.Api.Response.InsightsStatsResponse;
+import com.infotech.wishmaplus.BuildConfig;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.ResponseBody;
 
 public class PostDetails extends AppCompatActivity {
 
@@ -370,7 +391,12 @@ public class PostDetails extends AppCompatActivity {
 
                         adapter = new BillingDetailsAdapter(
                                 PostDetails.this,
-                                boostBillingResponse.getResult() // API result list
+                                boostBillingResponse.getResult(), new BillingDetailsAdapter.OnAdapterButtonsClick() {
+                            @Override
+                            public void onDownloadClick(BoostBillingResponse.Result item, int position) {
+                                getDownloadBillingPdf(item.getBoostId());
+                            }
+                        } // API result list
                         );
 
                         recyclerView.setAdapter(adapter);
@@ -379,6 +405,35 @@ public class PostDetails extends AppCompatActivity {
                         recyclerView.setVisibility(GONE);
                     }
                 }
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
+    }
+
+    public void getDownloadBillingPdf(int boostId){
+        loader.show();
+        UtilMethods.INSTANCE.getDownloadBillingPdf(boostId, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                ResponseBody responseBody =(ResponseBody) object;
+                new SaveAndViewPdfTaskUser().execute(responseBody);
+
 
 
             }
@@ -423,6 +478,30 @@ public class PostDetails extends AppCompatActivity {
 
         pieChart.invalidate(); // refresh
     }
+    private class SaveAndViewPdfTaskUser extends AsyncTask<ResponseBody, Void, File> {
+
+        @Override
+        protected File doInBackground(ResponseBody... params) {
+            try {
+                ResponseBody body = params[0];
+                File pdfFile = savePdfToFileUser(body);
+                return pdfFile;
+            } catch (IOException e) {
+                Log.e("SaveAndViewPdfTask", "IOException: " + e.getMessage());
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(File pdfFile) {
+            if (pdfFile != null) {
+                Toast.makeText(PostDetails.this, "Downloaded successfully", Toast.LENGTH_SHORT).show();
+                sendNotification(pdfFile);
+            } else {
+                Toast.makeText(PostDetails.this, "Failed to save PDF", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     public static String minusDaysFromDate(String dateStr, int daysToMinus) {
         try {
@@ -441,5 +520,83 @@ public class PostDetails extends AppCompatActivity {
             e.printStackTrace();
             return dateStr; // fallback
         }
+    }
+    private File savePdfToFileUser(ResponseBody body) throws IOException {
+        // Current Date-Time for unique filename
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).format(new Date());
+        String fileName = "Billing_" + timeStamp + ".pdf";
+
+        // Save in Public Downloads folder
+        File pdfFile = new File(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
+                fileName
+        );
+
+        InputStream inputStream = null;
+        OutputStream outputStream = null;
+
+        try {
+            byte[] fileReader = new byte[4096];
+            inputStream = body.byteStream();
+            outputStream = new FileOutputStream(pdfFile);
+
+            int read;
+            while ((read = inputStream.read(fileReader)) != -1) {
+                outputStream.write(fileReader, 0, read);
+            }
+
+            outputStream.flush();
+
+            // Media scanner notify so file shows immediately in Downloads app
+            MediaScannerConnection.scanFile(
+                    this,
+                    new String[]{pdfFile.getAbsolutePath()},
+                    new String[]{"application/pdf"},
+                    null
+            );
+
+            return pdfFile;
+        } finally {
+            if (inputStream != null) inputStream.close();
+            if (outputStream != null) outputStream.close();
+        }
+    }
+    private void sendNotification(File pdfFile) {
+        Uri fileUri = FileProvider.getUriForFile(
+                this,
+                BuildConfig.APPLICATION_ID + ".pg.provider",
+                pdfFile);
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(fileUri, "application/pdf");
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this,
+                0,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE
+        );
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "channel_id")
+                .setSmallIcon(R.drawable.arrow_downward)
+                .setContentTitle("Download Complete")
+                .setContentText("File downloaded successfully")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel channel = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            channel = new NotificationChannel(
+                    "channel_id",
+                    "Download Notifications",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(channel);
+        }
+        manager.notify(0, builder.build());
     }
 }

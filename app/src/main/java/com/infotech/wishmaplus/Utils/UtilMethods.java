@@ -107,6 +107,7 @@ import java.util.concurrent.TimeoutException;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -1338,6 +1339,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<BoostBillingResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getDownloadBillingPdf(int boostId,ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<ResponseBody> call = git.getDownloadBillingPdf("Bearer " + tokenManager.getAccessToken(),boostId);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });

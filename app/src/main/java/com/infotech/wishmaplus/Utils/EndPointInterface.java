@@ -67,6 +67,7 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -420,6 +421,11 @@ public interface EndPointInterface {
     Call<BoostBillingResponse> getBoostBillingInfo(
             @Header("Authorization") String token,
             @Query("PostId") String PostId
+    );
+    @GET("api/DownloadBillingPdf")
+    Call<ResponseBody> getDownloadBillingPdf(
+            @Header("Authorization") String token,
+            @Query("BoostId") int BoostId
     );
 
     @POST("api/Group/UpdateGroupMembers")
