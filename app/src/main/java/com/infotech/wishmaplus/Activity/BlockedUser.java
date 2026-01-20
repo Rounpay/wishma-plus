@@ -1,6 +1,7 @@
 package com.infotech.wishmaplus.Activity;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.RenderEffect;
 import android.graphics.Shader;
@@ -9,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ public class BlockedUser extends AppCompatActivity {
     RecyclerView recyclerBlocked;
     ArrayList<UserModel> list;
     BlockedAdapter adapter;
+    LinearLayout btnAddBlocked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +48,18 @@ public class BlockedUser extends AppCompatActivity {
             return insets;
         });
         recyclerBlocked = findViewById(R.id.recyclerBlocked);
+        btnAddBlocked = findViewById(R.id.btnAddBlocked);
 
         list = new ArrayList<>();
         list.add(new UserModel("User Name 1", R.drawable.user_icon));
         list.add(new UserModel("User Name 2", R.drawable.user_icon));
 
         adapter = new BlockedAdapter(this, list, position -> showUnblockDialog());
-
-
-
+        btnAddBlocked.setOnClickListener(view -> {
+            Intent intent = new Intent(this, YourFriends.class);
+            intent.putExtra("isFromBlockList", true);
+            startActivity(intent);
+        });
         recyclerBlocked.setLayoutManager(new LinearLayoutManager(this));
         recyclerBlocked.setAdapter(adapter);
     }

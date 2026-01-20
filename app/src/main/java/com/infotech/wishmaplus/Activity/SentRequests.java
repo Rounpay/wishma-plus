@@ -19,13 +19,8 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.infotech.wishmaplus.Adapter.FriendAdapter;
-import com.infotech.wishmaplus.Adapter.FriendsListAdapter;
 import com.infotech.wishmaplus.Adapter.SentRequestAdapter;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
-import com.infotech.wishmaplus.Api.Response.FriendListResponse;
-import com.infotech.wishmaplus.Api.Response.FriendRequestResponse;
-import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
@@ -33,15 +28,11 @@ import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SentRequests extends AppCompatActivity {
     RecyclerView recyclerView;
     private CustomLoader loader;
     SentRequestAdapter adapter;
     View noDataLayout;
-    List<FriendRequestResponse> list;
 
     TextView tvTitle;
     public PreferencesManager tokenManager;
@@ -153,17 +144,5 @@ public class SentRequests extends AppCompatActivity {
     ActivityResultLauncher<Intent> profileActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-//                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-//                    int refreshType = result.getData().getIntExtra("RefreshType", 0);
-//                    if (refreshType == 1) {
-//
-//                    } else if (refreshType == 2) {
-//
-//                    } else {
-//
-//                    }
-//
-//
-//                }
             });
 }

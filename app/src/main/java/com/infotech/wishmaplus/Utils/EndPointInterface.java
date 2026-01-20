@@ -14,6 +14,7 @@ import com.infotech.wishmaplus.Api.Object.StoryResult;
 import com.infotech.wishmaplus.Api.Request.AddFriendsRequest;
 import com.infotech.wishmaplus.Api.Request.BasicRequest;
 import com.infotech.wishmaplus.Api.Request.CommentRequest;
+import com.infotech.wishmaplus.Api.Request.ComplaintRequest;
 import com.infotech.wishmaplus.Api.Request.InitiateBoostRequest;
 import com.infotech.wishmaplus.Api.Request.LikeRequest;
 import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
@@ -30,6 +31,7 @@ import com.infotech.wishmaplus.Api.Response.BoostResponse;
 import com.infotech.wishmaplus.Api.Response.BoostedPostStatusChangeResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.CompanyDetailResponse;
+import com.infotech.wishmaplus.Api.Response.ComplaintSubmitResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
 import com.infotech.wishmaplus.Api.Response.CreateGroupResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
@@ -57,6 +59,7 @@ import com.infotech.wishmaplus.Api.Response.PostsResponse;
 import com.infotech.wishmaplus.Api.Response.ReadNotificationResponse;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.SignUpResponse;
+import com.infotech.wishmaplus.Api.Response.SupportCategoryResponse;
 import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
@@ -422,6 +425,10 @@ public interface EndPointInterface {
             @Header("Authorization") String token,
             @Query("PostId") String PostId
     );
+    @GET("api/Support/GetComplaintCategory")
+    Call<SupportCategoryResponse> getComplaintCategory(
+            @Header("Authorization") String token
+    );
     @GET("api/DownloadBillingPdf")
     Call<ResponseBody> getDownloadBillingPdf(
             @Header("Authorization") String token,
@@ -432,6 +439,10 @@ public interface EndPointInterface {
     Call<GroupMembersUpdateResponse> updateGroupMembers(
             @Header("Authorization") String authorization,
             @Body UpdateGroupMemberRequest request);
+    @POST("api/Support/SubmitComplaint")
+    Call<ComplaintSubmitResponse> submitComplaint(
+            @Header("Authorization") String authorization,
+            @Body ComplaintRequest request);
 
     @POST("api/InsertLinkClick")
     Call<LinkClickResponse> insertLinkClick(

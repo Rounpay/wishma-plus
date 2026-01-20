@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
-import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.R;
 
 import java.util.List;
@@ -26,18 +25,21 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
     private final List<FriendUserModel> list;
     private final Context ctx;
+    private final boolean isFromBlockList;
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(FriendUserModel user, int pos);
         void onMoreClicked(View anchor, FriendUserModel user, int pos);
         void onProfileClick(FriendUserModel user, int position);
+        void onBlockClick(FriendUserModel user, int position);
     }
 
-    public FriendsListAdapter(Context ctx, List<FriendUserModel> list, OnItemClickListener listener) {
+    public FriendsListAdapter(Context ctx, List<FriendUserModel> list,boolean isFromBlockList, OnItemClickListener listener) {
         this.ctx = ctx;
         this.list = list;
         this.listener = listener;
+        this.isFromBlockList =isFromBlockList;
     }
 
     @NonNull
@@ -59,6 +61,14 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             holder.tvSub.setText("");
 
         }
+        if(isFromBlockList){
+            holder.ivMore.setVisibility(GONE);
+            holder.btnBlock.setVisibility(VISIBLE);
+        }
+        else {
+            holder.btnBlock.setVisibility(GONE);
+            holder.ivMore.setVisibility(VISIBLE);
+        }
 
 
         // load avatar (Glide recommended); fallback to placeholder
@@ -68,6 +78,10 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(u, holder.getAdapterPosition());
+        });
+
+        holder.btnBlock.setOnClickListener(view -> {
+            if (listener != null) listener.onBlockClick(u, holder.getAdapterPosition());
         });
 
         holder.ivMore.setOnClickListener(v -> {
@@ -103,13 +117,14 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
 
     static class UserVH extends RecyclerView.ViewHolder {
         AppCompatImageView img;
-        TextView tvName, tvSub;
+        TextView tvName, tvSub,btnBlock;
         ImageView ivMore;
 
         public UserVH(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.img_avatar);
             tvName = itemView.findViewById(R.id.tv_name);
+            btnBlock = itemView.findViewById(R.id.btnBlock);
             tvSub = itemView.findViewById(R.id.tv_sub);
             ivMore = itemView.findViewById(R.id.iv_more);
         }

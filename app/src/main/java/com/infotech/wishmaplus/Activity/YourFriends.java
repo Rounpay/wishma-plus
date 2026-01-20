@@ -24,17 +24,15 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.infotech.wishmaplus.Adapter.FriendsListAdapter;
-import com.infotech.wishmaplus.Adapter.UsersAdapter;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
-import com.infotech.wishmaplus.Api.Response.User;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
-import java.util.ArrayList;
+import java.util.Objects;
 
 public class YourFriends extends AppCompatActivity {
 
@@ -46,6 +44,7 @@ public class YourFriends extends AppCompatActivity {
     UserDetailResponse userDetailResponse;
     FriendListResponse friendListResponse = new FriendListResponse();
     BottomSheetDialog bottomSheetDialog;
+    boolean isFromBlockList = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +56,11 @@ public class YourFriends extends AppCompatActivity {
         tokenManager = new PreferencesManager(this,1);
         userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
+        Intent intent = getIntent();
+        if(intent.getBooleanExtra("isFromBlockList",false))
+        {
+            isFromBlockList = intent.getBooleanExtra("isFromBlockList",false);
+        }
         pullToRefresh.setOnRefreshListener(() -> {
 //            hitApi();
             pullToRefresh.setRefreshing(false);
@@ -83,7 +87,7 @@ public class YourFriends extends AppCompatActivity {
 
                 friendListResponse = (FriendListResponse) object;
                 if(friendListResponse.getStatusCode()==1){
-                    adapter = new FriendsListAdapter(YourFriends.this, friendListResponse.getResult(), new FriendsListAdapter.OnItemClickListener() {
+                    adapter = new FriendsListAdapter(YourFriends.this, friendListResponse.getResult(),isFromBlockList, new FriendsListAdapter.OnItemClickListener() {
                         @Override
                         public void onItemClick(FriendUserModel user, int pos) {
 
@@ -100,6 +104,12 @@ public class YourFriends extends AppCompatActivity {
                             profileActivityResultLauncher.launch(new Intent(YourFriends.this, ProfileActivity.class)
                                     .putExtra("userData", userDetailResponse)
                                     .putExtra("id", user.getUserId()));
+                        }
+
+                        @Override
+                        public void onBlockClick(FriendUserModel user, int position) {
+                            finish();
+
                         }
                     });
                     recyclerView.setLayoutManager(new LinearLayoutManager(YourFriends.this));
@@ -151,8 +161,8 @@ public class YourFriends extends AppCompatActivity {
 
         bottomSheetDialog.setContentView(sheetView);
         BottomSheetBehavior.from(
-                        bottomSheetDialog.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
+                        Objects.requireNonNull(bottomSheetDialog.findViewById(
+                                com.google.android.material.R.id.design_bottom_sheet)))
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomSheetDialog.show();
@@ -161,17 +171,5 @@ public class YourFriends extends AppCompatActivity {
     ActivityResultLauncher<Intent> profileActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-//                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-//                    int refreshType = result.getData().getIntExtra("RefreshType", 0);
-//                    if (refreshType == 1) {
-//
-//                    } else if (refreshType == 2) {
-//
-//                    } else {
-//
-//                    }
-//
-//
-//                }
             });
 }

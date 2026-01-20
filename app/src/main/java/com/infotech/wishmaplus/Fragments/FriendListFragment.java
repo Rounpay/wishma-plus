@@ -7,7 +7,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,20 +25,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.infotech.wishmaplus.Activity.FriendRequest;
-import com.infotech.wishmaplus.Activity.MainActivity;
 import com.infotech.wishmaplus.Activity.ProfileActivity;
 import com.infotech.wishmaplus.Activity.SentRequests;
-import com.infotech.wishmaplus.Activity.SettingsAndPrivacy;
 import com.infotech.wishmaplus.Activity.YourFriends;
-import com.infotech.wishmaplus.Adapter.FriendListAdapter;
 import com.infotech.wishmaplus.Adapter.FriendSuggestionAdapter;
 import com.infotech.wishmaplus.Adapter.FriendSuggestionItem;
 import com.infotech.wishmaplus.Adapter.FriendSuggestionResponse;
-import com.infotech.wishmaplus.Adapter.SentRequestAdapter;
-import com.infotech.wishmaplus.Adapter.UsersAdapter;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
-import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
-import com.infotech.wishmaplus.Api.Response.User;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
@@ -50,6 +41,7 @@ import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class FriendListFragment extends Fragment {
@@ -60,7 +52,6 @@ public class FriendListFragment extends Fragment {
 //    FriendListAdapter adapter;
     FriendSuggestionAdapter adapter;
     FriendSuggestionResponse friendSuggestionResponse = new FriendSuggestionResponse();
-    ArrayList<User> data = new ArrayList<>();
 
     public PreferencesManager tokenManager;
     UserDetailResponse userDetailResponse;
@@ -84,35 +75,10 @@ public class FriendListFragment extends Fragment {
         notificationDot = view.findViewById(R.id.notification_dot);
         loader = new CustomLoader(requireContext(), android.R.style.Theme_Translucent_NoTitleBar);
 
-        view.findViewById(R.id.content).setOnClickListener(view1 -> {
-            startActivity(new Intent(requireActivity(), YourFriends.class));
-        });
-        view.findViewById(R.id.sentRequest).setOnClickListener(view1 -> {
-            startActivity(new Intent(requireActivity(), SentRequests.class));
-        });
-        view.findViewById(R.id.insights).setOnClickListener(view1 -> {
-            startActivity(new Intent(requireActivity(), FriendRequest.class));
-        });
-//        adapter = new FriendListAdapter(getContext(), list, new UtilMethods.FriendActionListener() {
-//            @Override
-//            public void onAddClicked(UserListFriends user, int position) {
-//                callAddFriendApi(user, position);
-//            }
-//
-//            @Override
-//            public void onProfileClick(UserListFriends user, int position) {
-//
-//            }
-//
-//            @Override
-//            public void onRemoveClicked(UserListFriends user, int position) {
-//                callRemoveFriendApi(user, position);
-//            }
-//        },false);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-//        recyclerView.setAdapter(adapter);
+        view.findViewById(R.id.content).setOnClickListener(view1 -> startActivity(new Intent(requireActivity(), YourFriends.class)));
+        view.findViewById(R.id.sentRequest).setOnClickListener(view1 -> startActivity(new Intent(requireActivity(), SentRequests.class)));
+        view.findViewById(R.id.insights).setOnClickListener(view1 -> startActivity(new Intent(requireActivity(), FriendRequest.class)));
         getFriendSuggestionList(false);
-//        updateEmptyView();
         hitApi();
         return view;
     }
@@ -225,18 +191,6 @@ public class FriendListFragment extends Fragment {
     ActivityResultLauncher<Intent> profileActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-//                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-//                    int refreshType = result.getData().getIntExtra("RefreshType", 0);
-//                    if (refreshType == 1) {
-//
-//                    } else if (refreshType == 2) {
-//
-//                    } else {
-//
-//                    }
-//
-//
-//                }
             });
 
     public void openBottomSheet(Activity context) {
@@ -258,8 +212,8 @@ public class FriendListFragment extends Fragment {
 
         bottomSheetDialog.setContentView(sheetView);
         BottomSheetBehavior.from(
-                        bottomSheetDialog.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
+                        Objects.requireNonNull(bottomSheetDialog.findViewById(
+                                com.google.android.material.R.id.design_bottom_sheet)))
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomSheetDialog.show();
@@ -327,8 +281,6 @@ public class FriendListFragment extends Fragment {
                     else{
                         notificationDot.setVisibility(GONE);
                     }
-//                    adapter.notifyDataSetChanged();
-//                    updateEmptyView();
                 }
             }
 

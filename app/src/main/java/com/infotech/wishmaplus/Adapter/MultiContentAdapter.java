@@ -330,7 +330,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 context.startActivity(intent);
 
             });
-            if(isProfessionalDashboard){
+            if(!isProfessionalDashboard){
                 btnProfessionalDashboard.setText("Professional Dashboard");
                 btnProfessionalDashboard.setOnClickListener(v -> {
                     Intent intent = new Intent(context, ProfessionalDashBoardPersonal.class);
@@ -599,7 +599,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 addFriend.setVisibility(VISIBLE);
 
             }
-            if(content.getUserDetail().getUserId().equals(userId))
+            if(content.getUserDetail().getUserId().equals(userId) || content.getUserDetail().isSelfProfile())
             {
                 addFriend.setVisibility(GONE);
             }

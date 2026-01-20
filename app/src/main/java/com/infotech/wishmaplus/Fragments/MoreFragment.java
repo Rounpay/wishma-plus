@@ -34,7 +34,6 @@ import com.infotech.wishmaplus.Activity.IncomeReportActivity;
 import com.infotech.wishmaplus.Activity.LevelCountActivity;
 import com.infotech.wishmaplus.Activity.MainActivity;
 import com.infotech.wishmaplus.Activity.PackageActivity;
-import com.infotech.wishmaplus.Activity.ProfessionalDashBoardPersonal;
 import com.infotech.wishmaplus.Activity.ProfessionalDashboardActivity;
 import com.infotech.wishmaplus.Activity.ProfileActivity;
 import com.infotech.wishmaplus.Activity.ReferralActivity;
@@ -118,6 +117,11 @@ public class MoreFragment extends Fragment {
         if (tokenManager == null) {
             tokenManager = new PreferencesManager(requireActivity(), 1);
         }
+            pageId = tokenManager.getString("ACTIVE_PAGE_ID");
+            isProfileType = tokenManager.getBooleanNonRemoval("PROFILE_TYPE");
+        if(isProfileType){
+            pageId = "";
+        }
         getPagesList();
 
         profileIcon = v.findViewById(R.id.profileIcon);
@@ -141,7 +145,8 @@ public class MoreFragment extends Fragment {
         });
         v.findViewById(R.id.profileIcon).setOnClickListener(view -> {
             profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)
-                    .putExtra("userData", userDetailResponse));
+                    .putExtra("userData", userDetailResponse).putExtra("pageId", pageId)
+                    .putExtra("isProfile", isProfileType));
         });
         v.findViewById(R.id.userArrow).setOnClickListener(v1 -> {
             openUserBottomSheetDialog(requireActivity(),
@@ -312,7 +317,7 @@ public class MoreFragment extends Fragment {
 
         if (userDetailResponse != null) {
             userName.setText(userDetailResponse.getFisrtName() + userDetailResponse.getLastName());
-            Glide.with(activity)
+            Glide.with(requireContext())
                     .load(userDetailResponse.getProfilePictureUrl())
                     .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                     .apply(UtilMethods.INSTANCE.getRequestOption_With_UserIcon())
@@ -329,7 +334,7 @@ public class MoreFragment extends Fragment {
         bottomSheetUser.setCancelable(true);
         bottomSheetUser.setContentView(sheetView);
         BottomSheetBehavior
-                .from(bottomSheetUser.findViewById(com.google.android.material.R.id.design_bottom_sheet))
+                .from(Objects.requireNonNull(bottomSheetUser.findViewById(com.google.android.material.R.id.design_bottom_sheet)))
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetUser.show();
 

@@ -54,6 +54,7 @@ import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
 import com.infotech.wishmaplus.Api.Request.AddFriendsRequest;
 import com.infotech.wishmaplus.Api.Request.BasicRequest;
 import com.infotech.wishmaplus.Api.Request.CommentRequest;
+import com.infotech.wishmaplus.Api.Request.ComplaintRequest;
 import com.infotech.wishmaplus.Api.Request.InitiateBoostRequest;
 import com.infotech.wishmaplus.Api.Request.LikeRequest;
 import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
@@ -66,6 +67,7 @@ import com.infotech.wishmaplus.Api.Response.BoostBillingResponse;
 import com.infotech.wishmaplus.Api.Response.BoostResponse;
 import com.infotech.wishmaplus.Api.Response.BoostedPostStatusChangeResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
+import com.infotech.wishmaplus.Api.Response.ComplaintSubmitResponse;
 import com.infotech.wishmaplus.Api.Response.CreateGroupResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
 import com.infotech.wishmaplus.Api.Response.EligibilityModel;
@@ -88,6 +90,7 @@ import com.infotech.wishmaplus.Api.Response.PagesResponse;
 import com.infotech.wishmaplus.Api.Response.PostsResponse;
 import com.infotech.wishmaplus.Api.Response.ReadNotificationResponse;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
+import com.infotech.wishmaplus.Api.Response.SupportCategoryResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
@@ -1347,6 +1350,30 @@ public enum UtilMethods {
             apiCallBack.onError(e.getMessage());
         }
     }
+    public void getComplaintCategory(ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<SupportCategoryResponse> call = git.getComplaintCategory("Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<SupportCategoryResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<SupportCategoryResponse> call, @NonNull Response<SupportCategoryResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<SupportCategoryResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
 
     public void getDownloadBillingPdf(int boostId,ApiCallBackMulti apiCallBack) {
         try {
@@ -1389,6 +1416,30 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<GroupMembersUpdateResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+    public void submitComplaint(ComplaintRequest complaintRequest , ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<ComplaintSubmitResponse> call = git.submitComplaint("Bearer " + tokenManager.getAccessToken(),complaintRequest);
+            call.enqueue(new Callback<ComplaintSubmitResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<ComplaintSubmitResponse> call, @NonNull Response<ComplaintSubmitResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ComplaintSubmitResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });
