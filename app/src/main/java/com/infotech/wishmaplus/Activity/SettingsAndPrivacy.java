@@ -19,15 +19,9 @@ public class SettingsAndPrivacy extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_settings_and_privacy);
         findViewById(R.id.back_button).setOnClickListener(view -> finish());
-        findViewById(R.id.blockingButton).setOnClickListener(view -> {
-            startActivity(new Intent(this, BlockedUser.class));
-        });
-        findViewById(R.id.deleteButton).setOnClickListener(view -> {
-            startActivity(new Intent(this, DeleteAccount.class));
-        });
-        findViewById(R.id.adsButton).setOnClickListener(view -> {
-            startActivity(new Intent(this, Advertisement.class));
-        });
+        findViewById(R.id.blockingButton).setOnClickListener(view -> startActivity(new Intent(this, BlockedUser.class)));
+        findViewById(R.id.deleteButton).setOnClickListener(view -> startActivity(new Intent(this, DeleteAccount.class)));
+        findViewById(R.id.adsButton).setOnClickListener(view -> startActivity(new Intent(this, Advertisement.class)));
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);

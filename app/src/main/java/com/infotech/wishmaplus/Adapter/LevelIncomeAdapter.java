@@ -1,6 +1,5 @@
 package com.infotech.wishmaplus.Adapter;
 
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +12,10 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
-import com.infotech.wishmaplus.Activity.LevelIncomeActivity;
 import com.infotech.wishmaplus.Api.Object.LevelCountResult;
 import com.infotech.wishmaplus.Api.Object.PackageResult;
 import com.infotech.wishmaplus.R;
-import com.infotech.wishmaplus.Utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;

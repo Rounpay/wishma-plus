@@ -1,7 +1,6 @@
 package com.infotech.wishmaplus.Adapter;
 
 import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,16 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
-import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
 
 import java.util.List;
-import java.util.Objects;
 
 public class SentRequestAdapter extends RecyclerView.Adapter<SentRequestAdapter.UserVH> {
 

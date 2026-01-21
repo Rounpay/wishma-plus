@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class IncomeReportActivity extends AppCompatActivity {
 
-    ArrayList<Income> incomeList = new ArrayList<Income>();
+    ArrayList<Income> incomeList = new ArrayList<>();
     IncomeAdapter adapter = new IncomeAdapter(incomeList);
 
     @Override

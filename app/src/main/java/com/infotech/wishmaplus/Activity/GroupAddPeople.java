@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -47,9 +46,7 @@ public class GroupAddPeople extends AppCompatActivity {
         });
         rv = findViewById(R.id.rvPeople);
         etSearch = findViewById(R.id.etSearch);
-        findViewById(R.id.back_button).setOnClickListener(view -> {
-            finish();
-        });
+        findViewById(R.id.back_button).setOnClickListener(view -> finish());
         rv.setLayoutManager(new LinearLayoutManager(this));
         Intent intentParam = getIntent();
         if (intentParam != null && intentParam.hasExtra("groupId")) {

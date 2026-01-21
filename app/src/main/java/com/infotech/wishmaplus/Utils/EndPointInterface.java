@@ -31,6 +31,7 @@ import com.infotech.wishmaplus.Api.Response.BoostResponse;
 import com.infotech.wishmaplus.Api.Response.BoostedPostStatusChangeResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
 import com.infotech.wishmaplus.Api.Response.CompanyDetailResponse;
+import com.infotech.wishmaplus.Api.Response.ComplaintResponse;
 import com.infotech.wishmaplus.Api.Response.ComplaintSubmitResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
 import com.infotech.wishmaplus.Api.Response.CreateGroupResponse;
@@ -433,6 +434,10 @@ public interface EndPointInterface {
     Call<ResponseBody> getDownloadBillingPdf(
             @Header("Authorization") String token,
             @Query("BoostId") int BoostId
+    );
+    @GET("api/Support/GetMyComplaint")
+    Call<ComplaintResponse> getMyComplaint(
+            @Header("Authorization") String token
     );
 
     @POST("api/Group/UpdateGroupMembers")

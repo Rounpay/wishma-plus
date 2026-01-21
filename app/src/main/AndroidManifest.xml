@@ -38,6 +38,11 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
+            android:name=".Activity.ComplaintList"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
             android:name=".Activity.GroupMembers"
             android:exported="false"
             android:theme="@style/Appnew"
@@ -452,6 +457,7 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.pg.provider"
@@ -468,7 +474,6 @@
             android:authorities="${applicationId}.provider_smart_image_picker"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />

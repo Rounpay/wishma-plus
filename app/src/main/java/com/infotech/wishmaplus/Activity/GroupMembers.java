@@ -16,11 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.wishmaplus.Adapter.MembersListAdapter;
-import com.infotech.wishmaplus.Adapter.UserListAdapter;
-import com.infotech.wishmaplus.Api.Request.AddFriendsRequest;
 import com.infotech.wishmaplus.Api.Request.UpdateGroupMemberRequest;
-import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
-import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
 import com.infotech.wishmaplus.Api.Response.GroupMembersResponse;
 import com.infotech.wishmaplus.Api.Response.GroupMembersUpdateResponse;
 import com.infotech.wishmaplus.R;
@@ -48,9 +44,7 @@ public class GroupMembers extends AppCompatActivity {
         });
         rv = findViewById(R.id.rvPeople);
         etSearch = findViewById(R.id.etSearch);
-        findViewById(R.id.back_button).setOnClickListener(view -> {
-            finish();
-        });
+        findViewById(R.id.back_button).setOnClickListener(view -> finish());
         rv.setLayoutManager(new LinearLayoutManager(this));
         Intent intentParam = getIntent();
         if (intentParam != null && intentParam.hasExtra("groupId")) {

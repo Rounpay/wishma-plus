@@ -1,7 +1,6 @@
 package com.infotech.wishmaplus.Adapter;
 
 import android.content.Context;
-import android.os.Build;
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;

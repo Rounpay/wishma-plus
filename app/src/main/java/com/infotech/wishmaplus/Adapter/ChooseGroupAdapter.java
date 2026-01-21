@@ -1,7 +1,6 @@
 package com.infotech.wishmaplus.Adapter;
 
 import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 import android.content.Context;
 import android.view.LayoutInflater;

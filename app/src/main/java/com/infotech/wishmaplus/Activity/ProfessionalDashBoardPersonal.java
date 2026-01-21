@@ -65,7 +65,7 @@ public class ProfessionalDashBoardPersonal extends AppCompatActivity {
         });
         findViewById(R.id.creator_support_card).setOnClickListener(v -> {
             Intent intent = new Intent(ProfessionalDashBoardPersonal.this,
-                    CreatorSupportActivity.class);
+                    ComplaintList.class);
             startActivity(intent);
         });
         analyticsHead.setOnClickListener(v -> {

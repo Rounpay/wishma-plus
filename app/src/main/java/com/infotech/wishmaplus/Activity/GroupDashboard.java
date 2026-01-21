@@ -27,8 +27,6 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
-import com.infotech.wishmaplus.Adapter.UserListAdapter;
-import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
 import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;

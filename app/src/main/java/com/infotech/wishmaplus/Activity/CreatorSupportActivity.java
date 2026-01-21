@@ -1,8 +1,5 @@
 package com.infotech.wishmaplus.Activity;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,21 +19,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.infotech.wishmaplus.Adapter.BillingDetailsAdapter;
 import com.infotech.wishmaplus.Adapter.ComplaintTypeAdapter;
 import com.infotech.wishmaplus.Api.Request.ComplaintRequest;
-import com.infotech.wishmaplus.Api.Request.UpdateGroupMemberRequest;
-import com.infotech.wishmaplus.Api.Response.BoostBillingResponse;
 import com.infotech.wishmaplus.Api.Response.ComplaintSubmitResponse;
-import com.infotech.wishmaplus.Api.Response.ComplaintType;
-import com.infotech.wishmaplus.Api.Response.GroupMembersUpdateResponse;
 import com.infotech.wishmaplus.Api.Response.SupportCategoryResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.UtilMethods;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CreatorSupportActivity extends AppCompatActivity {
     com.google.android.material.button.MaterialButton btcSubmit;
@@ -77,13 +66,10 @@ public class CreatorSupportActivity extends AppCompatActivity {
         String complaintType = tvSelected.getText().toString().trim();
         String complaintText = complaintDetails.getText().toString().trim();
 
-        // 🔴 Complaint type validation
         if (complaintType.equalsIgnoreCase("Select") || selectedCategoryId == -1) {
             Toast.makeText(this, "Please select complaint type", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        // 🔴 Complaint text validation
         if (complaintText.isEmpty()) {
             complaintDetails.setError("Please enter complaint");
             complaintDetails.requestFocus();
@@ -96,7 +82,6 @@ public class CreatorSupportActivity extends AppCompatActivity {
             return;
         }
 
-        // ✅ Valid data
         submitComplaint(selectedCategoryId, complaintText);
     }
 
@@ -112,9 +97,6 @@ public class CreatorSupportActivity extends AppCompatActivity {
                     }
                 }
                 supportCategoryResponse =(SupportCategoryResponse) object;
-                if(supportCategoryResponse.getStatusCode()==1){
-
-                }
 
 
             }
@@ -147,6 +129,7 @@ public class CreatorSupportActivity extends AppCompatActivity {
                 ComplaintSubmitResponse complaintSubmitResponse=(ComplaintSubmitResponse) object;
                 if(complaintSubmitResponse.getStatusCode()==1){
                     Toast.makeText(CreatorSupportActivity.this, complaintSubmitResponse.getResponseText(), Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK);
                     finish();
                 }
 
@@ -174,11 +157,6 @@ public class CreatorSupportActivity extends AppCompatActivity {
         RecyclerView recyclerView = view.findViewById(R.id.rvComplaintType);
         TextView tvDone = view.findViewById(R.id.tvDone);
 
-//        List<ComplaintType> list = new ArrayList<>();
-//        list.add(new ComplaintType("Spam", "Unwanted or repeated messages"));
-//        list.add(new ComplaintType("Abuse", "Harassment or hate speech"));
-//        list.add(new ComplaintType("Fraud", "Scam or misleading content"));
-
         ComplaintTypeAdapter adapter = new ComplaintTypeAdapter(supportCategoryResponse.getResult(),(item, position) -> {
             tvSelected.setText(item.getCategoryName());
             selectedCategoryId = item.getCategoryId();
@@ -189,10 +167,7 @@ public class CreatorSupportActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
 
-        tvDone.setOnClickListener(v -> {
-//            ComplaintType selected = adapter.getSelectedItem();
-            dialog.dismiss();
-        });
+        tvDone.setOnClickListener(v -> dialog.dismiss());
 
         dialog.setContentView(view);
         dialog.show();

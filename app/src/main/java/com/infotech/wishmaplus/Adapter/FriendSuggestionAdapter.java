@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.R;
 
 import java.util.List;

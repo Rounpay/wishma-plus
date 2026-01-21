@@ -1,16 +1,11 @@
 package com.infotech.wishmaplus.Activity;
 
-import static android.view.View.GONE;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RadioButton;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,19 +21,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.button.MaterialButton;
-import com.infotech.wishmaplus.Adapter.FriendAdapter;
 import com.infotech.wishmaplus.Adapter.FriendListAdapter;
-import com.infotech.wishmaplus.Adapter.MultiContentAdapter;
-import com.infotech.wishmaplus.Api.Object.ContentResult;
-import com.infotech.wishmaplus.Api.Response.FriendRequestResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
-import com.payu.ui.model.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,13 +66,9 @@ public class FriendRequest extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
         userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
-        findViewById(R.id.moreBTn).setOnClickListener(view -> {
-            openBottomSheet(this,true);
-        });
+        findViewById(R.id.moreBTn).setOnClickListener(view -> openBottomSheet(this,true));
 
-        findViewById(R.id.sort).setOnClickListener(view -> {
-            openBottomSheet(this,false);
-        });
+        findViewById(R.id.sort).setOnClickListener(view -> openBottomSheet(this,false));
         adapter = new FriendListAdapter(this, list, new UtilMethods.FriendActionListener() {
             @Override
             public void onAddClicked(UserListFriends user, int position) {
@@ -172,18 +157,6 @@ public class FriendRequest extends AppCompatActivity {
     ActivityResultLauncher<Intent> profileActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-//                if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
-//                    int refreshType = result.getData().getIntExtra("RefreshType", 0);
-//                    if (refreshType == 1) {
-//
-//                    } else if (refreshType == 2) {
-//
-//                    } else {
-//
-//                    }
-//
-//
-//                }
             });
 
     private void updateEmptyView() {
@@ -240,8 +213,8 @@ public class FriendRequest extends AppCompatActivity {
 
         bottomSheetDialog.setContentView(sheetView);
         BottomSheetBehavior.from(
-                        bottomSheetDialog.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
+                        Objects.requireNonNull(bottomSheetDialog.findViewById(
+                                com.google.android.material.R.id.design_bottom_sheet)))
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomSheetDialog.show();

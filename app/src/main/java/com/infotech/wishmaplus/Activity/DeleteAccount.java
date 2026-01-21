@@ -17,14 +17,12 @@ import com.infotech.wishmaplus.Api.Response.PageData;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
-import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteAccount extends AppCompatActivity {
-    private PreferencesManager tokenManager;
     List<PageData> list = new ArrayList<>();
     UserProfilesAdapter adapter;
     RecyclerView rvProfiles;
@@ -44,7 +42,7 @@ public class DeleteAccount extends AppCompatActivity {
         });
         rvProfiles = findViewById(R.id.rvProfiles);
         loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen);
-        tokenManager = new PreferencesManager(this,1);
+//        PreferencesManager tokenManager = new PreferencesManager(this, 1);
         setRecyclerView();
         getPagesList();
 

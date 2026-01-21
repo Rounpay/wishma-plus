@@ -24,8 +24,6 @@ public class SuccessProfessional extends AppCompatActivity {
             return insets;
         });
         findViewById(R.id.back_button).setOnClickListener(v -> finish());
-        findViewById(R.id.btnProfessionalDashboard).setOnClickListener(v -> {
-            startActivity(new Intent(this, ProfessionalDashBoardPersonal.class));
-        });
+        findViewById(R.id.btnProfessionalDashboard).setOnClickListener(v -> startActivity(new Intent(this, ProfessionalDashBoardPersonal.class)));
     }
 }

@@ -11,7 +11,6 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.infotech.wishmaplus.Adapter.LevelCountAdapter;
 import com.infotech.wishmaplus.Adapter.LevelIncomeAdapter;
 import com.infotech.wishmaplus.Api.Object.LevelCountResult;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;

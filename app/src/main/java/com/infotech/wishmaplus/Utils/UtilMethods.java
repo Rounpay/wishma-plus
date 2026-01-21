@@ -67,6 +67,7 @@ import com.infotech.wishmaplus.Api.Response.BoostBillingResponse;
 import com.infotech.wishmaplus.Api.Response.BoostResponse;
 import com.infotech.wishmaplus.Api.Response.BoostedPostStatusChangeResponse;
 import com.infotech.wishmaplus.Api.Response.CategoryResponse;
+import com.infotech.wishmaplus.Api.Response.ComplaintResponse;
 import com.infotech.wishmaplus.Api.Response.ComplaintSubmitResponse;
 import com.infotech.wishmaplus.Api.Response.CreateGroupResponse;
 import com.infotech.wishmaplus.Api.Response.DeleteAccountResponse;
@@ -1342,6 +1343,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<BoostBillingResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getMyComplaint(ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<ComplaintResponse> call = git.getMyComplaint("Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<ComplaintResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<ComplaintResponse> call, @NonNull Response<ComplaintResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ComplaintResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });
