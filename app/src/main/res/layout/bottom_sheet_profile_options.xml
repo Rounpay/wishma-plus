@@ -24,6 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:visibility="gone"
         android:paddingVertical="12dp">
 
         <ImageView
@@ -99,7 +100,7 @@
         <ImageView
             android:layout_width="22dp"
             android:layout_height="22dp"
-            android:src="@drawable/add_user" />
+            android:src="@drawable/person_remove" />
 
         <TextView
             android:text="Unfriend User"

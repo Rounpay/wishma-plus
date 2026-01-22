@@ -28,6 +28,7 @@ import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NotificationFragment extends Fragment {
 
@@ -109,8 +110,8 @@ public class NotificationFragment extends Fragment {
 
         bottomSheetNotification.setContentView(sheetView);
         BottomSheetBehavior.from(
-                        bottomSheetNotification.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
+                        Objects.requireNonNull(bottomSheetNotification.findViewById(
+                                com.google.android.material.R.id.design_bottom_sheet)))
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomSheetNotification.show();

@@ -64,6 +64,7 @@ import com.infotech.wishmaplus.Api.Response.ReadNotificationResponse;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.SignUpResponse;
 import com.infotech.wishmaplus.Api.Response.SupportCategoryResponse;
+import com.infotech.wishmaplus.Api.Response.UnfriendResponse;
 import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
@@ -460,6 +461,10 @@ public interface EndPointInterface {
     Call<ComplaintSubmitResponse> submitComplaint(
             @Header("Authorization") String authorization,
             @Body ComplaintRequest request);
+    @POST("api/UserProfile/UnFriendUser/{ToUserId}")
+    Call<UnfriendResponse> unFriendUser(
+            @Header("Authorization") String authorization,
+            @Path("ToUserId") String ToUserId);
 
     @POST("api/InsertLinkClick")
     Call<LinkClickResponse> insertLinkClick(

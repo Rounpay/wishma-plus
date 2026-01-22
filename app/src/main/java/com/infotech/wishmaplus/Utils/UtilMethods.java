@@ -95,6 +95,7 @@ import com.infotech.wishmaplus.Api.Response.PostsResponse;
 import com.infotech.wishmaplus.Api.Response.ReadNotificationResponse;
 import com.infotech.wishmaplus.Api.Response.SentRequestResponse;
 import com.infotech.wishmaplus.Api.Response.SupportCategoryResponse;
+import com.infotech.wishmaplus.Api.Response.UnfriendResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
@@ -1528,6 +1529,31 @@ public enum UtilMethods {
         }
     }
 
+    public void unFriendUser(String ToUserId, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<UnfriendResponse> call = git.unFriendUser("Bearer " + tokenManager.getAccessToken(),ToUserId);
+            call.enqueue(new Callback<UnfriendResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<UnfriendResponse> call, @NonNull Response<UnfriendResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<UnfriendResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
     public void insertLinkClick(String PostId,int ClickType, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
@@ -1734,9 +1760,9 @@ public enum UtilMethods {
             unfollowBtn.setText("Confirm");
             cancelBtn.setText("Delete");
         } else if (type == 4) {
-            confirmMessage.setVisibility(GONE);
-            unfollowBtn.setText("Cancel Request");
-            cancelBtn.setText("Edit friend list");
+            confirmMessage.setText("Are you sure you want to remove "+name+" as your friend?");
+            unfollowBtn.setText("Remove");
+            cancelBtn.setText("Cancel");
         } else {
             confirmMessage.setText("Are you sure want to cancel this friend request?");
             unfollowBtn.setText("Cancel friend request");
@@ -1748,7 +1774,9 @@ public enum UtilMethods {
                 doFollow(context, userId, apiCallBack);
             } else if (type == 3) {
                 AcceptOrRejectRequest(context, userId, 2, apiCallBack);
-            } else {
+            } else if (type == 4) {
+                unFriendUser(userId,apiCallBack);
+            }else {
                 removeRequest(context, userId, apiCallBack);
             }
             AcceptRequestDialog.dismiss();

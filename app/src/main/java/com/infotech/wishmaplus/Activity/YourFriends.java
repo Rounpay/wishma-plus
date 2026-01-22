@@ -5,6 +5,7 @@ import static android.view.View.VISIBLE;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.RenderEffect;
@@ -35,9 +36,12 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.infotech.wishmaplus.Adapter.FriendsListAdapter;
 import com.infotech.wishmaplus.Api.Request.BlockUserRequest;
+import com.infotech.wishmaplus.Api.Request.ComplaintRequest;
 import com.infotech.wishmaplus.Api.Response.BlockUserResponse;
+import com.infotech.wishmaplus.Api.Response.ComplaintSubmitResponse;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
+import com.infotech.wishmaplus.Api.Response.UnfriendResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.Utils.CustomLoader;
@@ -172,7 +176,10 @@ public class YourFriends extends AppCompatActivity {
             openBlockDialog(user);
             bottomSheetDialog.dismiss();
         });
-        unfriend.setOnClickListener(v -> bottomSheetDialog.dismiss());
+        unfriend.setOnClickListener(v -> {
+            showUnfriendDialog(context,user);
+            bottomSheetDialog.dismiss();
+        });
 
         bottomSheetDialog.setContentView(sheetView);
         BottomSheetBehavior.from(
@@ -181,6 +188,30 @@ public class YourFriends extends AppCompatActivity {
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomSheetDialog.show();
+    }
+    private void showUnfriendDialog(Context context,FriendUserModel user) {
+
+        Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.dialog_unfriend);
+        dialog.setCancelable(true);
+
+        TextView btnCancel = dialog.findViewById(R.id.btnCancel);
+        TextView btnConfirm = dialog.findViewById(R.id.btnConfirm);
+        TextView tvTitle = dialog.findViewById(R.id.tvTitle);
+        TextView tvMessage = dialog.findViewById(R.id.tvMessage);
+
+        tvTitle.setText("Unfriend "+user.getFullName());
+        tvMessage.setText("Are you sure you want to remove "+user.getFullName()+" as your friend?");
+
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnConfirm.setOnClickListener(v -> {
+            unFriendUser(user.getUserId());
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
     private void openBlockDialog(FriendUserModel user) {
         View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
@@ -214,6 +245,38 @@ public class YourFriends extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    public void unFriendUser(String userId){
+        loader.show();
+        UtilMethods.INSTANCE.unFriendUser(userId,new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+                UnfriendResponse unfriendResponse=(UnfriendResponse) object;
+                if(unfriendResponse.getStatusCode()==1){
+                    Toast.makeText(YourFriends.this, unfriendResponse.getResponseText(), Toast.LENGTH_SHORT).show();
+                    getFriendList();
+                }
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
     }
     public void blockUser(String userId, int blockedId){
         loader.show();
