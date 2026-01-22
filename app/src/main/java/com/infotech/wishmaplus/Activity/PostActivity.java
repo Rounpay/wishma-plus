@@ -90,7 +90,7 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
     private boolean isProfile = false;
     private String postId,pageId,groupId="";
     private PackageResult packageSetting;
-    int postType = 1;  //1=> Post, 2=> Stroy, 3=> Reel
+    int postType = 1;  //1=> Post, 2=> Story, 3=> Reel
     private ImagePicker imagePicker;
     private int REQUEST_PERMISSIONS_CAMERA = 7676;
     private int REQUEST_PERMISSIONS_GALLERY = 4545;

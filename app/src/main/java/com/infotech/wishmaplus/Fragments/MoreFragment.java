@@ -27,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.infotech.wishmaplus.Activity.Advertisement;
 import com.infotech.wishmaplus.Activity.ContactUsActivity;
 import com.infotech.wishmaplus.Activity.CreateNewProfilePage;
 import com.infotech.wishmaplus.Activity.GroupActivity;
@@ -181,6 +182,9 @@ public class MoreFragment extends Fragment {
         });
         v.findViewById(R.id.settingView).setOnClickListener(view -> {
             startActivity(new Intent(requireActivity(), SettingsAndPrivacy.class));
+        });
+        v.findViewById(R.id.adsButton).setOnClickListener(view -> {
+            startActivity(new Intent(requireActivity(), Advertisement.class));
         });
         return v;
     }

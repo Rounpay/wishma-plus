@@ -53,6 +53,7 @@ import com.infotech.wishmaplus.Api.Object.CommentResult;
 import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
 import com.infotech.wishmaplus.Api.Request.AddFriendsRequest;
 import com.infotech.wishmaplus.Api.Request.BasicRequest;
+import com.infotech.wishmaplus.Api.Request.BlockUserRequest;
 import com.infotech.wishmaplus.Api.Request.CommentRequest;
 import com.infotech.wishmaplus.Api.Request.ComplaintRequest;
 import com.infotech.wishmaplus.Api.Request.InitiateBoostRequest;
@@ -63,6 +64,8 @@ import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.BlockUserResponse;
+import com.infotech.wishmaplus.Api.Response.BlockedUserListResponse;
 import com.infotech.wishmaplus.Api.Response.BoostBillingResponse;
 import com.infotech.wishmaplus.Api.Response.BoostResponse;
 import com.infotech.wishmaplus.Api.Response.BoostedPostStatusChangeResponse;
@@ -1129,6 +1132,31 @@ public enum UtilMethods {
         }
     }
 
+    public void blockUser(BlockUserRequest request, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BlockUserResponse> call = git.blockUser("Bearer " + tokenManager.getAccessToken(),request);
+            call.enqueue(new Callback<BlockUserResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BlockUserResponse> call, @NonNull Response<BlockUserResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BlockUserResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
     public void updateBoostStatus(int boostId,int status, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
@@ -1442,6 +1470,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<GroupMembersUpdateResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getBlockedUserList( ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BlockedUserListResponse> call = git.getBlockedUserList("Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<BlockedUserListResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BlockedUserListResponse> call, @NonNull Response<BlockedUserListResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BlockedUserListResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });

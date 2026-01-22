@@ -16,24 +16,27 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.infotech.wishmaplus.Api.Response.BlockedUserListResponse;
 import com.infotech.wishmaplus.Api.Response.UserModel;
 import com.infotech.wishmaplus.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BlockedAdapter extends RecyclerView.Adapter<BlockedAdapter.ViewHolder> {
 
     Context context;
-    ArrayList<UserModel> list;
+    List<BlockedUserListResponse.Result> list;
     UnblockClickListener unblockClickListener;
 
-    public BlockedAdapter(Context context, ArrayList<UserModel> list,UnblockClickListener listener) {
+    public BlockedAdapter(Context context, List<BlockedUserListResponse.Result> list, UnblockClickListener listener) {
         this.context = context;
         this.list = list;
         this.unblockClickListener = listener;
     }
     public interface UnblockClickListener {
-        void onUnblockClicked(int position);
+        void onUnblockClicked(int position, BlockedUserListResponse.Result model);
     }
 
     @NonNull
@@ -46,13 +49,13 @@ public class BlockedAdapter extends RecyclerView.Adapter<BlockedAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        UserModel model = list.get(position);
+        BlockedUserListResponse.Result model = list.get(position);
 
-        holder.txtName.setText(model.getName());
-        holder.imgUser.setImageResource(model.getImage());
+        holder.txtName.setText(model.getFullName());
+        Glide.with(context).load(model.getProfilePictureUrl()).placeholder(R.drawable.user_icon).into(holder.imgUser);
         holder.btnUnblock.setOnClickListener(v -> {
             if (unblockClickListener != null) {
-                unblockClickListener.onUnblockClicked(position);
+                unblockClickListener.onUnblockClicked(position,model);
             }
         });
     }

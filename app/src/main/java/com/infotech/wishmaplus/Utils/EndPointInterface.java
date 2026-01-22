@@ -13,6 +13,7 @@ import com.infotech.wishmaplus.Api.Object.StateResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
 import com.infotech.wishmaplus.Api.Request.AddFriendsRequest;
 import com.infotech.wishmaplus.Api.Request.BasicRequest;
+import com.infotech.wishmaplus.Api.Request.BlockUserRequest;
 import com.infotech.wishmaplus.Api.Request.CommentRequest;
 import com.infotech.wishmaplus.Api.Request.ComplaintRequest;
 import com.infotech.wishmaplus.Api.Request.InitiateBoostRequest;
@@ -26,6 +27,8 @@ import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.BlockUserResponse;
+import com.infotech.wishmaplus.Api.Response.BlockedUserListResponse;
 import com.infotech.wishmaplus.Api.Response.BoostBillingResponse;
 import com.infotech.wishmaplus.Api.Response.BoostResponse;
 import com.infotech.wishmaplus.Api.Response.BoostedPostStatusChangeResponse;
@@ -361,6 +364,12 @@ public interface EndPointInterface {
             @Body InitiateBoostRequest request
     );
 
+    @POST("api/UserProfile/BlockUser")
+    Call<BlockUserResponse> blockUser(
+            @Header("Authorization") String token,
+            @Body BlockUserRequest request
+    );
+
     @POST("api/UpdateBoostStatus")
     Call<BoostedPostStatusChangeResponse> updateBoostStatus(
             @Header("Authorization") String authorization,
@@ -444,6 +453,9 @@ public interface EndPointInterface {
     Call<GroupMembersUpdateResponse> updateGroupMembers(
             @Header("Authorization") String authorization,
             @Body UpdateGroupMemberRequest request);
+    @POST("api/UserProfile/BlockedUserList")
+    Call<BlockedUserListResponse> getBlockedUserList(
+            @Header("Authorization") String authorization);
     @POST("api/Support/SubmitComplaint")
     Call<ComplaintSubmitResponse> submitComplaint(
             @Header("Authorization") String authorization,

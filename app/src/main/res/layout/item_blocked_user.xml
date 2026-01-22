@@ -3,16 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:orientation="horizontal"
-    android:padding="8dp"
+    android:paddingRight="8dp"
     android:gravity="center_vertical">
 
-    <ImageView
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imgUser"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@android:drawable/ic_menu_camera"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:scaleType="centerCrop"
-        android:background="@android:color/darker_gray" />
+        android:src="@drawable/user_icon"
+        android:background="@drawable/circle_background"
+        android:clipToOutline="true"/>
 
     <TextView
         android:id="@+id/txtName"

@@ -16,10 +16,19 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.PreferencesManager;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 
 public class ProfessionalDashBoardPersonal extends AppCompatActivity {
     LinearLayout analyticsHead,contentHead;
+    private CustomLoader loader;
+    private PreferencesManager tokenManager;
+    androidx.appcompat.widget.AppCompatImageView profile_image;
+    androidx.appcompat.widget.AppCompatTextView profile_name;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -33,6 +42,11 @@ public class ProfessionalDashBoardPersonal extends AppCompatActivity {
             return insets;
         });
         AppCompatImageButton back_button = findViewById(R.id.back_button);
+        loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
+        profile_image = findViewById(R.id.profile_image);
+        profile_name = findViewById(R.id.profile_name);
+
+        tokenManager = new PreferencesManager(this, 1);
         back_button.setOnClickListener(v -> {
             setResult(RESULT_OK);
             finish();
@@ -78,5 +92,24 @@ public class ProfessionalDashBoardPersonal extends AppCompatActivity {
                     AnalyticsContent.class);
             startActivity(intent);
         });
+//        getUserDetail();
+    }
+    private void getUserDetail() {
+        loader.show();
+            UtilMethods.INSTANCE.userDetail(this, "0","", loader, tokenManager, object -> {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                UserDetailResponse userDetailResponse = (UserDetailResponse) object;
+                profile_name.setText(userDetailResponse.getFisrtName() + " " + userDetailResponse.getLastName());
+                Glide.with(ProfessionalDashBoardPersonal.this)
+                        .load(userDetailResponse.getProfilePictureUrl())
+                        .apply(UtilMethods.INSTANCE.getRequestOption_With_UserIcon())
+                        .into(profile_image);
+
+
+            });
     }
 }

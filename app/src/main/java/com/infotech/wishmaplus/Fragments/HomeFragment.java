@@ -638,6 +638,7 @@ public class HomeFragment extends Fragment {
                     if (refreshType == 1) {
                         //UserDetails
                         getUserDetail(pageId, isProfile);
+                        refresh();
                     } else if (refreshType == 2) {
                         //Story
                         refreshStory();
@@ -672,6 +673,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         getUserDetail(pageId, isProfile);
+        refresh();
         recyclerView.playVideo();
         super.onResume();
     }

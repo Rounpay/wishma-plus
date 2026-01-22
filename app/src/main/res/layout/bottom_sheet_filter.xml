@@ -45,6 +45,7 @@
         android:paddingBottom="24dp" />
 
     <RelativeLayout
+        android:id="@+id/layout7"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="5dp">
@@ -59,21 +60,23 @@
             android:layout_centerVertical="true"/>
 
         <RadioButton
+            android:id="@+id/rbLast7Days"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:padding="0dp"
             android:layout_margin="0dp"
             android:buttonTint="@color/colorPrimary"
+            android:clickable="false"
             android:gravity="center_vertical"
             android:includeFontPadding="false"
-            android:text=""
             android:minWidth="0dp"
-            android:minHeight="0dp"/>
+            android:minHeight="0dp"
+            android:padding="0dp"
+            android:text="" />
 
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/layout30"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="5dp">
@@ -88,6 +91,7 @@
             android:layout_centerVertical="true"/>
 
         <RadioButton
+            android:id="@+id/rbLast30Days"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -98,11 +102,13 @@
             android:gravity="center_vertical"
             android:includeFontPadding="false"
             android:text=""
+            android:clickable="false"
             android:minWidth="0dp"
             android:minHeight="0dp"/>
 
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/layout60"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="5dp">
@@ -117,6 +123,7 @@
             android:layout_centerVertical="true"/>
 
         <RadioButton
+            android:id="@+id/rbLast60Days"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -127,11 +134,13 @@
             android:gravity="center_vertical"
             android:includeFontPadding="false"
             android:text=""
+            android:clickable="false"
             android:minWidth="0dp"
             android:minHeight="0dp"/>
 
     </RelativeLayout>
     <RelativeLayout
+        android:id="@+id/layout90"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingVertical="5dp">
@@ -146,6 +155,7 @@
             android:layout_centerVertical="true"/>
 
         <RadioButton
+            android:id="@+id/rbLast90Days"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -156,6 +166,7 @@
             android:gravity="center_vertical"
             android:includeFontPadding="false"
             android:text=""
+            android:clickable="false"
             android:minWidth="0dp"
             android:minHeight="0dp"/>
 

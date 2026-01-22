@@ -53,7 +53,9 @@ import com.infotech.wishmaplus.Adapter.MultiContentAdapter;
 import com.infotech.wishmaplus.Api.Object.BalanceResult;
 import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
+import com.infotech.wishmaplus.Api.Request.BlockUserRequest;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
+import com.infotech.wishmaplus.Api.Response.BlockUserResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
 import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
 import com.infotech.wishmaplus.Api.Response.SignUpResponse;
@@ -427,11 +429,44 @@ public class ProfileActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(v -> dialog.dismiss());
 
         btnBlock.setOnClickListener(v -> {
-            Toast.makeText(this, "User Blocked", Toast.LENGTH_SHORT).show();
+            blockUser(userDetailResponse.getUserId(), 0);
             dialog.dismiss();
         });
 
         dialog.show();
+    }
+    public void blockUser(String userId, int blockedId){
+        loader.show();
+        BlockUserRequest request = new BlockUserRequest(userId,blockedId);
+        UtilMethods.INSTANCE.blockUser(request, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                BlockUserResponse blockUserResponse =(BlockUserResponse) object;
+                if(blockUserResponse.getStatusCode()==1){
+                    Toast.makeText(ProfileActivity.this, blockUserResponse.getResponseText(), Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK, new Intent().putExtra("RefreshType", 1));
+                    finish();
+                }
+
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
     }
 
     private void blurBackground(View rootView) {

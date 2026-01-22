@@ -4,10 +4,20 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.RenderEffect;
+import android.graphics.Shader;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,6 +34,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.infotech.wishmaplus.Adapter.FriendsListAdapter;
+import com.infotech.wishmaplus.Api.Request.BlockUserRequest;
+import com.infotech.wishmaplus.Api.Response.BlockUserResponse;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
@@ -95,7 +107,7 @@ public class YourFriends extends AppCompatActivity {
 
                         @Override
                         public void onMoreClicked(View anchor, FriendUserModel user, int pos) {
-                            openBottomSheet(YourFriends.this);
+                            openBottomSheet(YourFriends.this,user);
                         }
 
                         @Override
@@ -142,7 +154,7 @@ public class YourFriends extends AppCompatActivity {
             noDataLayout.setVisibility(GONE);
         }
     }
-    public void openBottomSheet(Activity context) {
+    public void openBottomSheet(Activity context,FriendUserModel user) {
 
         if (bottomSheetDialog != null && bottomSheetDialog.isShowing())
             return;
@@ -156,7 +168,10 @@ public class YourFriends extends AppCompatActivity {
         View unfriend = sheetView.findViewById(R.id.unfriend);
 
         unfollow.setOnClickListener(v -> bottomSheetDialog.dismiss());
-        block.setOnClickListener(v -> bottomSheetDialog.dismiss());
+        block.setOnClickListener(v -> {
+            openBlockDialog(user);
+            bottomSheetDialog.dismiss();
+        });
         unfriend.setOnClickListener(v -> bottomSheetDialog.dismiss());
 
         bottomSheetDialog.setContentView(sheetView);
@@ -167,7 +182,84 @@ public class YourFriends extends AppCompatActivity {
 
         bottomSheetDialog.show();
     }
+    private void openBlockDialog(FriendUserModel user) {
+        View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
+        blurBackground(rootView);
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_block_user);
 
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView btnCancel = dialog.findViewById(R.id.btnCancel);
+        TextView btnBlock = dialog.findViewById(R.id.btnBlock);
+        TextView txtTitle = dialog.findViewById(R.id.txtTitle);
+        TextView txtDesc = dialog.findViewById(R.id.txtDesc);
+        TextView friendUnfriend = dialog.findViewById(R.id.friendUnfriend);
+        TextView takeABreak = dialog.findViewById(R.id.takeABreak);
+
+        txtTitle.setText("Are you sure you want to block " + user.getFullName() +"?");
+        txtDesc.setText(user.getFullName() +" will no longer be able to:");
+        friendUnfriend.setText("If you're friends, blocking " + user.getFullName() +" will also unfriend him/her.");
+        takeABreak.setText("If you just want to limit what you share with " + user.getFullName() + " or see less of him, you can take a break instead. ");
+
+        dialog.setOnDismissListener(dialogInterface -> removeBlur(rootView));
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnBlock.setOnClickListener(v -> {
+            blockUser(user.getUserId(), 0);
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+    public void blockUser(String userId, int blockedId){
+        loader.show();
+        BlockUserRequest request = new BlockUserRequest(userId,blockedId);
+        UtilMethods.INSTANCE.blockUser(request, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                BlockUserResponse blockUserResponse =(BlockUserResponse) object;
+                if(blockUserResponse.getStatusCode()==1){
+                    Toast.makeText(YourFriends.this, blockUserResponse.getResponseText(), Toast.LENGTH_SHORT).show();
+                    setResult(RESULT_OK, new Intent().putExtra("RefreshType", 1));
+                    finish();
+                }
+
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
+    }
+    private void blurBackground(View rootView) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            RenderEffect blurEffect = RenderEffect.createBlurEffect(20f, 20f, Shader.TileMode.CLAMP);
+            rootView.setRenderEffect(blurEffect);
+        }
+    }
+
+    private void removeBlur(View rootView) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            rootView.setRenderEffect(null);
+        }
+    }
     ActivityResultLauncher<Intent> profileActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
