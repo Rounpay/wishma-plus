@@ -359,6 +359,7 @@
 
                 <!-- Tabs -->
                 <LinearLayout
+                    android:id="@+id/tabContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -371,9 +372,7 @@
                         android:text="28 days"
                         android:paddingHorizontal="16dp"
                         android:paddingVertical="8dp"
-                        android:textSize="14sp"
-                        android:textColor="#1A73E8"
-                        android:background="@drawable/bg_tab_selected" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tab7"
@@ -381,8 +380,9 @@
                         android:layout_height="wrap_content"
                         android:text="7 days"
                         android:layout_marginStart="12dp"
-                        android:textSize="14sp"
-                        android:textColor="#000000" />
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="8dp"
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tabToday"
@@ -390,8 +390,9 @@
                         android:layout_height="wrap_content"
                         android:text="Today"
                         android:layout_marginStart="12dp"
-                        android:textSize="14sp"
-                        android:textColor="#000000" />
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="8dp"
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <!-- Cards Grid -->
@@ -402,19 +403,117 @@
                     android:orientation="horizontal"
                     android:layout_marginTop="16dp">
 
-                    <include
-                        layout="@layout/item_analytics_card"
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
-                        android:layout_marginHorizontal="@dimen/_5sdp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
+                        android:layout_margin="6dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="#FFFFFF">
 
-                    <include
-                        layout="@layout/item_analytics_card"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="8dp"
+                            android:paddingHorizontal="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvLike"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Likes"
+                                android:textSize="12sp"
+                                android:textColor="#757575" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="6dp"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:id="@+id/tvLikeValue"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#000000" />
+
+                                <TextView
+                                    android:id="@+id/tvGrowth1"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="↑ 100%"
+                                    android:visibility="gone"
+                                    android:layout_marginStart="8dp"
+                                    android:textSize="14sp"
+                                    android:textColor="#1E8E3E" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
-                        android:layout_marginHorizontal="@dimen/_5sdp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
+                        android:layout_margin="6dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="#FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="8dp"
+                            android:paddingHorizontal="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvComments"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Comments"
+                                android:textSize="12sp"
+                                android:textColor="#757575" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="6dp"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:id="@+id/tvCommentsValue"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#000000" />
+
+                                <TextView
+                                    android:id="@+id/tvGrowth2"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="↑ 100%"
+                                    android:visibility="gone"
+                                    android:layout_marginStart="8dp"
+                                    android:textSize="14sp"
+                                    android:textColor="#1E8E3E" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
                 <!-- Row 2 -->
@@ -424,19 +523,116 @@
                     android:orientation="horizontal"
                     android:layout_marginTop="12dp">
 
-                    <include
-                        layout="@layout/item_analytics_card"
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
-                        android:layout_marginHorizontal="@dimen/_5sdp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
+                        android:layout_margin="6dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="#FFFFFF">
 
-                    <include
-                        layout="@layout/item_analytics_card"
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="8dp"
+                            android:paddingHorizontal="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvShares"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Shares"
+                                android:textSize="12sp"
+                                android:textColor="#757575" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="6dp"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:id="@+id/tvSharesValue"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#000000" />
+
+                                <TextView
+                                    android:id="@+id/tvGrowth3"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="↑ 100%"
+                                    android:layout_marginStart="8dp"
+                                    android:textSize="14sp"
+                                    android:visibility="gone"
+                                    android:textColor="#1E8E3E" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="0dp"
-                        android:layout_marginHorizontal="@dimen/_5sdp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
+                        android:layout_margin="6dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="#FFFFFF">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="8dp"
+                            android:paddingHorizontal="12dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvEngagement"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Engagement"
+                                android:textSize="12sp"
+                                android:textColor="#757575" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="6dp"
+                                android:gravity="center_vertical">
+
+                                <TextView
+                                    android:id="@+id/tvEngagementValue"
+                                    android:layout_width="0dp"
+                                    android:layout_weight="1"
+                                    android:layout_height="wrap_content"
+                                    android:text="0"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    android:textColor="#000000" />
+
+                                <TextView
+                                    android:id="@+id/tvGrowth4"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="↑ 100%"
+                                    android:visibility="gone"
+                                    android:layout_marginStart="8dp"
+                                    android:textSize="14sp"
+                                    android:textColor="#1E8E3E" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
 
 
@@ -504,20 +700,43 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
-                            <ImageView
-                                android:src="@drawable/start"
-                                android:layout_width="match_parent"
-                                android:layout_height="150dp"
-                                android:layout_gravity="center_horizontal"/>
+                            <!-- Profile Image -->
+                            <LinearLayout
+                                android:id="@+id/imgProfile"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+                                <ImageView
+                                    android:id="@+id/imagePost"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="160dp"
+                                    android:src="@drawable/app_logo"
+                                    android:scaleType="centerCrop"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"/>
+                                <VideoView
+                                    android:id="@+id/videoPost"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="160dp"
+                                    android:clipToOutline="true"
+                                    android:scaleType="centerCrop"
+                                    android:visibility="gone"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </LinearLayout>
 
                             <!-- Bottom Row -->
                             <TextView
+                                android:id="@+id/postCaption"
                                 android:text="Hii"
                                 android:textSize="13sp"
                                 android:textColor="#000"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                             <LinearLayout
+                                android:visibility="gone"
                                 android:orientation="horizontal"
                                 android:gravity="center_vertical"
                                 android:layout_width="match_parent"
@@ -567,12 +786,13 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Views"
+                                    android:text="Likes"
                                     android:textSize="10sp"
                                     android:textColor="#666"/>
 
                                 <TextView
-                                    android:text="3"
+                                    android:id="@+id/likesValue"
+                                    android:text="0"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textSize="14sp"
@@ -602,7 +822,8 @@
                                     android:textColor="#666"/>
 
                                 <TextView
-                                    android:text="$0.00"
+                                    android:id="@+id/earningsValue"
+                                    android:text="0"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textSize="14sp"
@@ -633,6 +854,7 @@
                                     android:textColor="#666"/>
 
                                 <TextView
+                                    android:id="@+id/engagementValue"
                                     android:text="0"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -657,12 +879,13 @@
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Net follows"
+                                    android:text="Comments"
                                     android:textSize="10sp"
                                     android:textColor="#666"/>
 
                                 <TextView
-                                    android:text="$0.00"
+                                    android:id="@+id/commentsValue"
+                                    android:text="0"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:textSize="14sp"

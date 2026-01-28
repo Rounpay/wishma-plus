@@ -24,6 +24,7 @@ import com.infotech.wishmaplus.Api.Request.SignUpRequest;
 import com.infotech.wishmaplus.Api.Request.UpdateGroupMemberRequest;
 import com.infotech.wishmaplus.Api.Request.UpdateUserRequest;
 import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
+import com.infotech.wishmaplus.Api.Response.AnalyticsResponse;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
@@ -448,6 +449,11 @@ public interface EndPointInterface {
     @GET("api/Support/GetMyComplaint")
     Call<ComplaintResponse> getMyComplaint(
             @Header("Authorization") String token
+    );
+    @GET("api/UserReport/ProfessionalDahboardAnalytic")
+    Call<AnalyticsResponse> getProfessionalDahboardAnalytic(
+            @Header("Authorization") String token,
+            @Query("DateRange") int DateRange
     );
 
     @POST("api/Group/UpdateGroupMembers")

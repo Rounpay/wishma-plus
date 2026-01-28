@@ -61,6 +61,7 @@ import com.infotech.wishmaplus.Api.Request.LikeRequest;
 import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
 import com.infotech.wishmaplus.Api.Request.UpdateGroupMemberRequest;
 import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
+import com.infotech.wishmaplus.Api.Response.AnalyticsResponse;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
@@ -1446,6 +1447,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getProfessionalDahboardAnalytic(int dateRange,ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<AnalyticsResponse> call = git.getProfessionalDahboardAnalytic("Bearer " + tokenManager.getAccessToken(),dateRange);
+            call.enqueue(new Callback<AnalyticsResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<AnalyticsResponse> call, @NonNull Response<AnalyticsResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<AnalyticsResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });
