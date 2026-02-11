@@ -64,6 +64,7 @@ public class PageProfilePicture extends AppCompatActivity {
     private AppCompatTextView tvName;
     private CustomLoader loader;
     private PreferencesManager tokenManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +138,7 @@ public class PageProfilePicture extends AppCompatActivity {
 
         }).setWithImageCrop(); // cropping enabled
     }
+
     /* -----------------------------------------------------------
      *        Convert Uri → Permanent File (NO ENOENT EVER)
      * ----------------------------------------------------------- */
@@ -186,7 +188,6 @@ public class PageProfilePicture extends AppCompatActivity {
     }
 
 
-
     public void selectProfileImage() {
         isCoverPhoto = 0;
         checkPermissionAndOpenPicker();
@@ -234,14 +235,7 @@ public class PageProfilePicture extends AppCompatActivity {
         return ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==REQUEST_PERMISSIONS_IMAGE)
-         if (imagePicker != null) {
-             imagePicker.handleActivityResult(resultCode, requestCode, data);
-           }
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -351,9 +345,9 @@ public class PageProfilePicture extends AppCompatActivity {
                     hideLoader();
                     if (response.isSuccessful()) {
                         Toast.makeText(PageProfilePicture.this, "Page Created Successfully", Toast.LENGTH_SHORT).show();
-                       Intent intent = new Intent(PageProfilePicture.this,MainActivity.class);
-                       startActivity(intent);
-                       finish();
+                        Intent intent = new Intent(PageProfilePicture.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     } else {
 
                         Toast.makeText(PageProfilePicture.this, "Error: " + response.code(), Toast.LENGTH_SHORT).show();
@@ -363,8 +357,8 @@ public class PageProfilePicture extends AppCompatActivity {
                 @Override
                 public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
                     hideLoader();
-                    Log.e("fdadafafa", "onFailureImage: "+t.getMessage() );
-                    Log.d("imageUploadError", "onResponse: "+t.getMessage());
+                    Log.e("fdadafafa", "onFailureImage: " + t.getMessage());
+                    Log.d("imageUploadError", "onResponse: " + t.getMessage());
                     Toast.makeText(PageProfilePicture.this, "Failed: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -387,5 +381,25 @@ public class PageProfilePicture extends AppCompatActivity {
 
     private RequestBody createText(String data) {
         return RequestBody.create(MediaType.parse("text/plain"), data == null ? "" : data);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Uri uri = null;
+        if (data != null) {
+            uri = data.getData();
+        }
+        if (uri != null) {
+            Log.d("INTENT_DEBUG", "URI: " + uri.toString());
+            Log.d("INTENT_DEBUG", "URI Path: " + uri.getPath());
+            Log.d("INTENT_DEBUG", "Scheme: " + uri.getScheme());
+            Log.d("INTENT_DEBUG", "Authority: " + uri.getAuthority());
+        } else {
+            Log.d("INTENT_DEBUG", "URI is NULL");
+        }
+        if (imagePicker != null) {
+            imagePicker.handleActivityResult(resultCode, requestCode, data);
+        }
     }
 }
