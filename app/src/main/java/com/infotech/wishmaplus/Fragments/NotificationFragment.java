@@ -88,9 +88,6 @@ public class NotificationFragment extends Fragment {
 //                "3d",
 //                false
 //        ));
-
-
-
         rvNotifications = view.findViewById(R.id.rvNotifications);
         getNotification();
 
@@ -104,10 +101,6 @@ public class NotificationFragment extends Fragment {
         bottomSheetNotification = new BottomSheetDialog(context, R.style.DialogStyle);
         View sheetView = LayoutInflater.from(context)
                 .inflate(R.layout.bottom_sheet_notification, null);
-
-
-
-
         bottomSheetNotification.setContentView(sheetView);
         BottomSheetBehavior.from(
                         Objects.requireNonNull(bottomSheetNotification.findViewById(
@@ -150,7 +143,9 @@ public class NotificationFragment extends Fragment {
 
                                 @Override
                                 public void onItem(NotificationResponse.NotificationItem item, int position) {
+                                    if (!isAdded()) return;
                                     MainActivity main = (MainActivity) requireActivity();
+                                    main.fromNotification = true;
                                     main.postId = item.getPostId();
 //                                    main.navigateToHome();
                                     getMarkNotificationRead(item.getNotificationId());

@@ -1,9 +1,9 @@
 package com.infotech.wishmaplus.Fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -66,6 +67,7 @@ public class HomeFragment extends Fragment {
     int totalPost = 0;
     public boolean isScreenPause;
     ArrayList<StoryResult> storyList = new ArrayList<>();
+    private String postId;
 
     public static HomeFragment newInstance(String pageId, boolean isProfileType) {
         HomeFragment fragment = new HomeFragment();
@@ -103,6 +105,9 @@ public class HomeFragment extends Fragment {
         userDetailResponse = UtilMethods.INSTANCE.getUserDetailResponse(tokenManager);
         final SwipeRefreshLayout pullToRefresh = v.findViewById(R.id.pullToRefresh);
         pullToRefresh.setOnRefreshListener(() -> {
+            MainActivity main = (MainActivity) requireActivity();
+            main.postId = "";
+            main.fromNotification = false;
             refresh();
             getStory(true);
             getUserDetail(pageId, isProfile);
@@ -199,7 +204,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void setAdapter() {
-        adapter = new MultiContentAdapter("0", contentlist, recyclerView, tokenManager, requireActivity(), new MultiContentAdapter.ClickCallBack() {
+        FragmentActivity activity = getActivity();
+        if (activity == null) return;
+        adapter = new MultiContentAdapter("0", contentlist, recyclerView, tokenManager, activity, new MultiContentAdapter.ClickCallBack() {
             @Override
             public void onClickCreatePost(String postId) {
 
@@ -226,12 +233,11 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onClickProfile(String userId, ContentResult content) {
-                if(!(content.getGroupId()==null) && !content.getGroupId().isEmpty()) {
+                if (!(content.getGroupId() == null) && !content.getGroupId().isEmpty()) {
                     profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)
                             .putExtra("groupId", content.getGroupId())
                     );
-                }
-                else {
+                } else {
                     profileActivityResultLauncher.launch(new Intent(requireActivity(), ProfileActivity.class)
                             .putExtra("userData", userDetailResponse)
                             .putExtra("pageId", pageId)
@@ -256,7 +262,7 @@ public class HomeFragment extends Fragment {
                 totalPost = totalPost - 1;
 
             }
-        },true);
+        }, true);
         recyclerView.setAdapter(adapter);
     }
 
@@ -271,7 +277,7 @@ public class HomeFragment extends Fragment {
 
             });
         } else {
-            UtilMethods.INSTANCE.userDetail(requireActivity(), pageId,"", loader, tokenManager, object -> {
+            UtilMethods.INSTANCE.userDetail(requireActivity(), pageId, "", loader, tokenManager, object -> {
                 userDetailResponse = (UserDetailResponse) object;
                 contentlist.set(0, new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
                 adapter.notifyItemChanged(0);
@@ -363,11 +369,11 @@ public class HomeFragment extends Fragment {
      }*/
     private void showContent(boolean isFromRefresh) {
         MainActivity main = (MainActivity) requireActivity();
-        String postId = main.postId;
+        postId = main.postId;
         boolean isFromNotification = !main.postId.isEmpty();
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), postId, "", pageNumber, 20, false, pageId, "",0,isFromNotification);
+            Call<ContentResponse> call = git.getContent("Bearer " + tokenManager.getAccessToken(), postId, "", pageNumber, 20, false, pageId, "", 0, isFromNotification);
             call.enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ContentResponse> call, @NonNull Response<ContentResponse> response) {
@@ -437,7 +443,7 @@ public class HomeFragment extends Fragment {
                     loader.dismiss();
             }
         }
-        main.postId = "";
+        //   main.postId = "";
     }
 
     private void getStory(boolean isFromRefresh) {
@@ -464,11 +470,15 @@ public class HomeFragment extends Fragment {
                             for (StoryResult item : storyResponse.getResult()) {
                                 for (ContentResult content : item.getStories()) {
                                     if (content.getContentTypeId() == UtilMethods.INSTANCE.VIDEO_TYPE) {
-                                        String savePath = VideoUtils.getString(requireActivity(), content.getPostContent());
-                                        if (savePath == null || !new File(savePath).exists()) {
-                                            Intent serviceIntent = new Intent(requireActivity(), DownloadManagerService.class);
-                                            requireActivity().startService(serviceIntent);
-                                            new VideoUtils().startDownloadInBackground(requireActivity(), content.getPostContent(), requireActivity().getExternalCacheDir() + "/MyVideo/");
+                                        Context context = getContext();
+                                        if (context != null && content.getPostContent() != null) {
+                                            String savePath = VideoUtils.getString(context, content.getPostContent());
+                                            //  String savePath = VideoUtils.getString(requireActivity(), content.getPostContent());
+                                            if (savePath == null || !new File(savePath).exists()) {
+                                                Intent serviceIntent = new Intent(requireActivity(), DownloadManagerService.class);
+                                                requireActivity().startService(serviceIntent);
+                                                new VideoUtils().startDownloadInBackground(requireActivity(), content.getPostContent(), requireActivity().getExternalCacheDir() + "/MyVideo/");
+                                            }
                                         }
                                     }
                                 }
@@ -672,7 +682,14 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onResume() {
+        if (!isAdded()) return;
         getUserDetail(pageId, isProfile);
+        MainActivity main = (MainActivity) getActivity();
+        if (main == null) return;
+        if (!main.fromNotification) {
+            main.postId = "";
+        }
+        main.fromNotification = false;
         refresh();
         recyclerView.playVideo();
         super.onResume();

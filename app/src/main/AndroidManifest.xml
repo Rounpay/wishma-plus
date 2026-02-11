@@ -458,9 +458,9 @@
             </intent-filter>
         </receiver>
 
-        <provider
+     <!--   <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="${applicationId}.pg.provider"
+            android:authorities="${applicationId}.provider_smart_image_picker"
             android:exported="false"
             android:grantUriPermissions="true"
             tools:replace="android:authorities">
@@ -468,7 +468,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"
                 tools:replace="android:resource" />
-        </provider>
+        </provider>-->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider_smart_image_picker"

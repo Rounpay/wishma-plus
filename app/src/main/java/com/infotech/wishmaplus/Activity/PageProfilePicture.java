@@ -237,9 +237,10 @@ public class PageProfilePicture extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (imagePicker != null) {
-            imagePicker.handleActivityResult(resultCode, requestCode, data);
-        }
+        if(requestCode==REQUEST_PERMISSIONS_IMAGE)
+         if (imagePicker != null) {
+             imagePicker.handleActivityResult(resultCode, requestCode, data);
+           }
     }
 
     @Override

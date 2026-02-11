@@ -76,7 +76,9 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
     UserDetailResponse userDetailResponse;
     private RequestOptions requestOptionsUserImage;
     private TextView nameTv, dailyPostLimit, postTitle;
+
     private ImageView profileIv;
+
     private EditText textInputEt;
     private MaterialButton btn;
     private ImageButton clearImage;

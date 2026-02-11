@@ -82,6 +82,22 @@
                 android:text="@string/report"
                 android:textColor="@android:color/black"
                 app:drawableStartCompat="@drawable/ic_report" />
+            <View
+                android:id="@+id/videoQualityLine"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:background="@color/grey_3" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/videoQuality"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/_7sdp"
+                android:fontFamily="sans-serif-medium"
+                android:padding="@dimen/_12sdp"
+                android:text="Quality Settings"
+                android:textColor="@android:color/black"
+                app:drawableStartCompat="@drawable/ic_report" />
         </LinearLayout>
 
 

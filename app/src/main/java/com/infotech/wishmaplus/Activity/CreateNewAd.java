@@ -88,10 +88,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CreateNewAd extends AppCompatActivity {
-    BottomSheetDialog bottomGoalDialogReport,bottomSpecialCatDialogReport,bottomChooseAudienceCatDialogReport,bottomIsSecureCatDialogReport,bottomPlacementsCatDialogReport,bottomBudgetCatDialogReport,bottomPaymentCatDialogReport;
-    androidx.appcompat.widget.AppCompatImageView profile,containerImage;
-    androidx.appcompat.widget.AppCompatTextView nameTv,timeTv,postTxt;
-    View containerVideo,rbContinuous,rbChoose,goalTypeLayout;
+    BottomSheetDialog bottomGoalDialogReport, bottomSpecialCatDialogReport, bottomChooseAudienceCatDialogReport, bottomIsSecureCatDialogReport, bottomPlacementsCatDialogReport, bottomBudgetCatDialogReport, bottomPaymentCatDialogReport;
+    androidx.appcompat.widget.AppCompatImageView profile, containerImage;
+    androidx.appcompat.widget.AppCompatTextView nameTv, timeTv, postTxt;
+    View containerVideo, rbContinuous, rbChoose, goalTypeLayout;
     VideoView videoView;
     private CustomLoader loader;
     GetContentDetailsToBoostResponse getContentDetailsToBoostResponse = new GetContentDetailsToBoostResponse();
@@ -99,38 +99,38 @@ public class CreateNewAd extends AppCompatActivity {
     BoostResponse boostResponse = new BoostResponse();
 
     EstimateResponse estimateResponse = new EstimateResponse();
-    String postId ="";
-    RecyclerView rvGoals,rvAudience;
+    String postId = "";
+    RecyclerView rvGoals, rvAudience;
     GoalAdapter adapter;
     AudienceAdapter audienceAdapter;
-    TextView linkClicks,postEngagements,peopleReached,textView,tvPeopleReached,tvBudgetPrice,tvCostPrice,tvSubPrice,tvGstPrice,tvPrice,tvDials,userNameTitle,tvAdd;
+    TextView linkClicks, postEngagements, peopleReached, textView, tvPeopleReached, tvBudgetPrice, tvCostPrice, tvSubPrice, tvGstPrice, tvPrice, tvDials, userNameTitle, tvAdd;
 
-    LinearLayout layoutCall,layoutUrl,tvBudgetValue;
+    LinearLayout layoutCall, layoutUrl, tvBudgetValue;
     SeekBar seekBar;
 
-    RadioButton rbChooseAd,rbRun;
+    RadioButton rbChooseAd, rbRun;
 
     int audienceId = 1;
     private long mLastClickTime;
     private PreferencesManager tokenManager;
 
 
-    private TextView tvDays, tvDate, tvInfo,tvLine1,textView3,textView2,tvSummarySubtitle;
+    private TextView tvDays, tvDate, tvInfo, tvLine1, textView3, textView2, tvSummarySubtitle;
     private ImageButton btnPlus, btnMinus;
-    private LinearLayout layoutDate,daysPicker,llInfo,editTextLayout,callNow,bookNow;
+    private LinearLayout layoutDate, daysPicker, llInfo, editTextLayout, callNow, bookNow;
 
     private int days = 1;
     private Calendar startDate;
     private Calendar endDate;
-    EditText etBudget,etPhone,etUrl;
+    EditText etBudget, etPhone, etUrl;
     int minAge = 18;
     int maxAge = 65;
     String gender = "All";
     String xmlType = "";
     double budgetGlobal = 0.0;
-    double estimatedCost =0.0;
-    double gstAmount =0.0;
-    double subTotal =0.0;
+    double estimatedCost = 0.0;
+    double gstAmount = 0.0;
+    double subTotal = 0.0;
     double total = 0.0;
     Button btnPromoteNow;
 
@@ -147,7 +147,7 @@ public class CreateNewAd extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        tokenManager = new PreferencesManager(this,1);
+        tokenManager = new PreferencesManager(this, 1);
         rvGoals = findViewById(R.id.rvGoals);
         rvAudience = findViewById(R.id.rvAudience);
         seekBar = findViewById(R.id.budgetSeekBar);
@@ -184,25 +184,29 @@ public class CreateNewAd extends AppCompatActivity {
         goalTypeLayout.setVisibility(GONE);
 
         textView.setText("₹" + seekBar.getProgress());
-        etBudget.setText(""+seekBar.getProgress());
+        etBudget.setText("" + seekBar.getProgress());
         editTextLayout.setVisibility(GONE);
-
+        findViewById(R.id.tvGiveFeedback).setOnClickListener(v -> {
+            Intent intent = new Intent(this, ComplaintList.class);
+            startActivity(intent);
+        });
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 textView.setText("₹" + progress);
-                etBudget.setText(""+seekBar.getProgress());
+                etBudget.setText("" + seekBar.getProgress());
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                getEstimateBoostReach((double) seekBar.getProgress(),days,audienceId);
+                getEstimateBoostReach((double) seekBar.getProgress(), days, audienceId);
             }
         });
-        btnPromoteNow.setOnClickListener(view -> getInitiatePostBoost(null,null,null,null));
+        btnPromoteNow.setOnClickListener(view -> getInitiatePostBoost(null, null, null, null));
 
 
         // RecyclerView setup
@@ -225,11 +229,7 @@ public class CreateNewAd extends AppCompatActivity {
         layoutUrl = findViewById(R.id.layoutUrl);
         Spinner spinner = findViewById(R.id.spCountry);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_dropdown_item,
-                new String[]{"India (+91)"}
-        );
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, new String[]{"India (+91)"});
 
         spinner.setAdapter(adapter);
         findViewById(R.id.back_button).setOnClickListener(v -> finish());
@@ -289,11 +289,11 @@ public class CreateNewAd extends AppCompatActivity {
             days = -1;
             rbRun.setChecked(true);
             rbChooseAd.setChecked(false);
-            getEstimateBoostReach((double) seekBar.getProgress(),days,audienceId);
+            getEstimateBoostReach((double) seekBar.getProgress(), days, audienceId);
 
         });
         tvBudgetValue.setOnClickListener(view -> {
-            etBudget.setText(""+seekBar.getProgress());
+            etBudget.setText("" + seekBar.getProgress());
             tvBudgetValue.setVisibility(GONE);
             textView3.setVisibility(GONE);
             seekBar.setVisibility(GONE);
@@ -311,7 +311,7 @@ public class CreateNewAd extends AppCompatActivity {
                 }
 
                 int budget = Integer.parseInt(value);
-                if (budget >= 500 && budget<=10000) {
+                if (budget >= 500 && budget <= 10000) {
                     seekBar.setProgress(budget);
                     textView.setText("₹" + budget);
                 }
@@ -320,11 +320,10 @@ public class CreateNewAd extends AppCompatActivity {
                 seekBar.setVisibility(VISIBLE);
                 textView2.setVisibility(VISIBLE);
                 editTextLayout.setVisibility(GONE);
-                getEstimateBoostReach((double) seekBar.getProgress(),days,audienceId);
+                getEstimateBoostReach((double) seekBar.getProgress(), days, audienceId);
 
                 // Hide keyboard
-                InputMethodManager imm =
-                        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(etBudget.getWindowToken(), 0);
 
                 return true;
@@ -333,21 +332,19 @@ public class CreateNewAd extends AppCompatActivity {
         });
 
     }
-    ActivityResultLauncher<Intent> editAudienceLauncher =
-            registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(),
-                    result -> {
 
-                        if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+    ActivityResultLauncher<Intent> editAudienceLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
 
-                            Intent data = result.getData();
+        if (result.getResultCode() == RESULT_OK && result.getData() != null) {
 
-                            int minAge = data.getIntExtra("minAge", 18);
-                            int maxAge = data.getIntExtra("maxAge", 65);
-                            String gender = data.getStringExtra("gender");
-                            audienceAdapter.updateAudience(minAge, maxAge, gender);
-                        }
-                    });
+            Intent data = result.getData();
+
+            int minAge = data.getIntExtra("minAge", 18);
+            int maxAge = data.getIntExtra("maxAge", 65);
+            String gender = data.getStringExtra("gender");
+            audienceAdapter.updateAudience(minAge, maxAge, gender);
+        }
+    });
 
 
     private void updateFromDays() {
@@ -372,14 +369,9 @@ public class CreateNewAd extends AppCompatActivity {
     private void updateUI() {
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.getDefault());
         tvDate.setText(sdf.format(endDate.getTime()));
-        getEstimateBoostReach((double) seekBar.getProgress(),days,audienceId);
+        getEstimateBoostReach((double) seekBar.getProgress(), days, audienceId);
 
-        tvInfo.setText(
-                "Your ad will be published today and run for "
-                        + days + " day"
-                        + (days > 1 ? "s" : "")
-                        + " ending on "
-                        + sdf.format(endDate.getTime())+ "."
+        tvInfo.setText("Your ad will be published today and run for " + days + " day" + (days > 1 ? "s" : "") + " ending on " + sdf.format(endDate.getTime()) + "."
 
         );
     }
@@ -389,24 +381,18 @@ public class CreateNewAd extends AppCompatActivity {
         Calendar minDate = Calendar.getInstance();
         minDate.add(Calendar.DAY_OF_YEAR, 1); // tomorrow
 
-        DatePickerDialog dialog = new DatePickerDialog(
-                this,
-                (view, year, month, dayOfMonth) -> {
+        DatePickerDialog dialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
 
-                    endDate.set(year, month, dayOfMonth);
+            endDate.set(year, month, dayOfMonth);
 
-                    // Safety check (extra protection)
-                    if (!endDate.after(startDate)) {
-                        endDate = (Calendar) startDate.clone();
-                        endDate.add(Calendar.DAY_OF_YEAR, 1);
-                    }
+            // Safety check (extra protection)
+            if (!endDate.after(startDate)) {
+                endDate = (Calendar) startDate.clone();
+                endDate.add(Calendar.DAY_OF_YEAR, 1);
+            }
 
-                    updateFromDate();
-                },
-                endDate.get(Calendar.YEAR),
-                endDate.get(Calendar.MONTH),
-                endDate.get(Calendar.DAY_OF_MONTH)
-        );
+            updateFromDate();
+        }, endDate.get(Calendar.YEAR), endDate.get(Calendar.MONTH), endDate.get(Calendar.DAY_OF_MONTH));
 
         // 🚫 Disable today and past dates
         dialog.getDatePicker().setMinDate(minDate.getTimeInMillis());
@@ -414,7 +400,7 @@ public class CreateNewAd extends AppCompatActivity {
         dialog.show();
     }
 
-    public void getContentDetailsToBoostResponse(String postId){
+    public void getContentDetailsToBoostResponse(String postId) {
         loader.show();
         UtilMethods.INSTANCE.getContentDetailsToBoost(postId, new UtilMethods.ApiCallBackMulti() {
             @Override
@@ -424,51 +410,45 @@ public class CreateNewAd extends AppCompatActivity {
                         loader.dismiss();
                     }
                 }
-                getContentDetailsToBoostResponse =(GetContentDetailsToBoostResponse) object;
-                if(getContentDetailsToBoostResponse.getStatusCode()==1){
-                    if (getContentDetailsToBoostResponse.getAudience() != null
-                            && !getContentDetailsToBoostResponse.getAudience().isEmpty()) {
+                getContentDetailsToBoostResponse = (GetContentDetailsToBoostResponse) object;
+                if (getContentDetailsToBoostResponse.getStatusCode() == 1) {
+                    if (getContentDetailsToBoostResponse.getAudience() != null && !getContentDetailsToBoostResponse.getAudience().isEmpty()) {
 
-                        audienceId = getContentDetailsToBoostResponse
-                                .getAudience()
-                                .get(0)
-                                .getAudienceId();
+                        audienceId = getContentDetailsToBoostResponse.getAudience().get(0).getAudienceId();
                     }
-                    getEstimateBoostReach((double) seekBar.getProgress(),days,audienceId);
+                    getEstimateBoostReach((double) seekBar.getProgress(), days, audienceId);
                     GetContentDetailsToBoostResponse.PostInsights postInsights = getContentDetailsToBoostResponse.getPostInsights();
                     Glide.with(CreateNewAd.this).load(postInsights.getProfilePictureUrl()).placeholder(R.drawable.user_icon).into(profile);
                     nameTv.setText(postInsights.getUserName());
                     userNameTitle.setText(postInsights.getUserName());
                     timeTv.setText("Sponsored");
-                    if(postInsights.getCaption()!=null) {
+                    if (postInsights.getCaption() != null) {
                         postTxt.setText(postInsights.getCaption());
                     }
-                    if(postInsights.getContentTypeId()==1){//text
+                    if (postInsights.getContentTypeId() == 1) {//text
                         containerVideo.setVisibility(GONE);
                         containerImage.setVisibility(GONE);
-                    }
-                    else if(postInsights.getContentTypeId()==2) {//video
+                    } else if (postInsights.getContentTypeId() == 2) {//video
                         containerVideo.setVisibility(VISIBLE);
                         containerImage.setVisibility(GONE);
                         videoView.setVideoPath(postInsights.getPostContent());
-                    }
-                    else if(postInsights.getContentTypeId()==3) {//IMAGE
+                    } else if (postInsights.getContentTypeId() == 3) {//IMAGE
                         containerVideo.setVisibility(GONE);
                         containerImage.setVisibility(VISIBLE);
                         Glide.with(CreateNewAd.this).load(postInsights.getPostContent()).placeholder(R.drawable.app_logo).into(containerImage);
                     }
-                    peopleReached.setText(""+getContentDetailsToBoostResponse.getPostInsights().getPeopleReach());
-                    postEngagements.setText(""+getContentDetailsToBoostResponse.getPostInsights().getEngagement());
+                    peopleReached.setText("" + getContentDetailsToBoostResponse.getPostInsights().getPeopleReach());
+                    postEngagements.setText("" + getContentDetailsToBoostResponse.getPostInsights().getEngagement());
 
                     adapter = new GoalAdapter(CreateNewAd.this, getContentDetailsToBoostResponse.getGoal(), (position, goal) -> {
-                        if(Objects.equals(goal.getIconName().toLowerCase(), "visitors")){
+                        if (Objects.equals(goal.getIconName().toLowerCase(), "visitors")) {
                             layoutCall.setVisibility(GONE);
                             layoutUrl.setVisibility(VISIBLE);
                             goalTypeLayout.setVisibility(VISIBLE);
                             tvDials.setText("VISIT");
                             callNow.setVisibility(GONE);
                             bookNow.setVisibility(VISIBLE);
-                            xmlType= "url";
+                            xmlType = "url";
 
 
                         } else if (Objects.equals(goal.getIconName().toLowerCase(), "calls")) {
@@ -478,13 +458,12 @@ public class CreateNewAd extends AppCompatActivity {
                             tvDials.setText("DIALS");
                             callNow.setVisibility(VISIBLE);
                             bookNow.setVisibility(GONE);
-                            xmlType= "call";
-                        }
-                        else{
+                            xmlType = "call";
+                        } else {
                             layoutCall.setVisibility(GONE);
                             layoutUrl.setVisibility(GONE);
                             goalTypeLayout.setVisibility(GONE);
-                            xmlType= "";
+                            xmlType = "";
                         }
                     });
 
@@ -493,12 +472,12 @@ public class CreateNewAd extends AppCompatActivity {
                         @Override
                         public void onAudienceClick(int position, GetContentDetailsToBoostResponse.Audience goal) {
                             audienceId = goal.getAudienceId();
-                            getEstimateBoostReach((double) seekBar.getProgress(),days,audienceId);
+                            getEstimateBoostReach((double) seekBar.getProgress(), days, audienceId);
 
                         }
 
                         @Override
-                        public void onAudienceEditClick(int position, GetContentDetailsToBoostResponse.Audience goal,int minAge, int maxAge, String gender) {
+                        public void onAudienceEditClick(int position, GetContentDetailsToBoostResponse.Audience goal, int minAge, int maxAge, String gender) {
                             Intent intent = new Intent(CreateNewAd.this, EditAudience.class);
                             intent.putExtra("minAge", minAge);
                             intent.putExtra("maxAge", maxAge);
@@ -509,7 +488,7 @@ public class CreateNewAd extends AppCompatActivity {
 
 
                         }
-                    },minAge, maxAge, gender);
+                    }, minAge, maxAge, gender);
                     rvAudience.setAdapter(audienceAdapter);
 
 
@@ -529,13 +508,12 @@ public class CreateNewAd extends AppCompatActivity {
             }
         });
     }
+
     public static String formatDate(String inputDate) {
         try {
-            SimpleDateFormat inputFormat =
-                    new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.ENGLISH);
+            SimpleDateFormat inputFormat = new SimpleDateFormat("EEEE, dd MMMM yyyy", Locale.ENGLISH);
 
-            SimpleDateFormat outputFormat =
-                    new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH);
 
             Date date = inputFormat.parse(inputDate);
             return outputFormat.format(date);
@@ -547,49 +525,26 @@ public class CreateNewAd extends AppCompatActivity {
     }
 
 
-    public void getInitiatePostBoost(String tid, String hashData, String hashName, PayUHashGenerationListener hashGenerationListener){
-        String phoneNo ="";
-        if(!etPhone.getText().toString().isEmpty())
-        {
+    public void getInitiatePostBoost(String tid, String hashData, String hashName, PayUHashGenerationListener hashGenerationListener) {
+        String phoneNo = "";
+        if (!etPhone.getText().toString().isEmpty()) {
             phoneNo = "+91" + etPhone.getText().toString();
-        }
-        else{
-            phoneNo ="";
+        } else {
+            phoneNo = "";
         }
         String url = etUrl.getText().toString();
         String endDate = formatDate(tvDate.getText().toString());
         int genderType = 0;
         if (gender.equals("All")) {
             genderType = 0;
-        }
-        else if (gender.equals("Male")) {
+        } else if (gender.equals("Male")) {
             genderType = 1;
-        }
-        else if (gender.equals("Female")) {
+        } else if (gender.equals("Female")) {
             genderType = 1;
         }
 
         loader.show();
-        InitiateBoostRequest request = new InitiateBoostRequest(
-                tid,
-                hashData,
-                boostId,
-                postId,
-                url,
-                phoneNo,
-                xmlType,
-                budgetGlobal,
-                estimatedCost,
-                subTotal,
-                gstAmount,
-                total,
-                days,
-                endDate,
-                audienceId,
-                minAge,
-                maxAge,
-                genderType,
-                "Wishma Plus"
+        InitiateBoostRequest request = new InitiateBoostRequest(tid, hashData, boostId, postId, url, phoneNo, xmlType, budgetGlobal, estimatedCost, subTotal, gstAmount, total, days, endDate, audienceId, minAge, maxAge, genderType, "Wishma Plus"
 
         );
         UtilMethods.INSTANCE.initiateBoostPost(request, new UtilMethods.ApiCallBackMulti() {
@@ -600,21 +555,21 @@ public class CreateNewAd extends AppCompatActivity {
                         loader.dismiss();
                     }
                 }
-                boostResponse =(BoostResponse) object;
-                if(boostResponse.getStatusCode()==1){
+                boostResponse = (BoostResponse) object;
+                if (boostResponse.getStatusCode() == 1) {
 
                 }
                 if (boostResponse != null) {
                     if (boostResponse.getStatusCode() == 1) {
                         boostId = boostResponse.getBoostId();
 
-                        if(boostResponse.isPgActive() && boostResponse.getData()!=null){
-                            if(boostResponse.getData().getStatusCode()==1 && boostResponse.getData().getPgResponse()!=null){
-                                if(boostResponse.getData().getPgResponse().getKeyVals()!=null){
+                        if (boostResponse.isPgActive() && boostResponse.getData() != null) {
+                            if (boostResponse.getData().getStatusCode() == 1 && boostResponse.getData().getPgResponse() != null) {
+                                if (boostResponse.getData().getPgResponse().getKeyVals() != null) {
                                     if (hashData == null || hashData.isEmpty()) {
                                         startPayUPayment(boostResponse.getData().getPgResponse().getKeyVals());
                                     } else {
-                                        if (boostResponse.getData().getPgResponse().getKeyVals().getHash() != null && !boostResponse.getData().getPgResponse().getKeyVals().getHash().isEmpty()){
+                                        if (boostResponse.getData().getPgResponse().getKeyVals().getHash() != null && !boostResponse.getData().getPgResponse().getKeyVals().getHash().isEmpty()) {
                                             // hashPayUSDkPro = packageResponse.getData().getPgResponse().getKeyVals().getHash();
                                             HashMap<String, String> dataMap = new HashMap<>();
                                             dataMap.put(hashName, boostResponse.getData().getPgResponse().getKeyVals().getHash());
@@ -627,15 +582,14 @@ public class CreateNewAd extends AppCompatActivity {
                                     }
 
 
-
-                                }else{
+                                } else {
                                     UtilMethods.INSTANCE.Error(CreateNewAd.this, "Transaction data is not available");
                                 }
                                 //call Gatway
-                            }else {
+                            } else {
                                 UtilMethods.INSTANCE.Error(CreateNewAd.this, boostResponse.getData().getResponseText());
                             }
-                        }else {
+                        } else {
 //                            getPackage();
                             Toast.makeText(CreateNewAd.this, boostResponse.getResponseText(), Toast.LENGTH_SHORT).show();
                         }
@@ -659,41 +613,43 @@ public class CreateNewAd extends AppCompatActivity {
             }
         });
     }
+
     private void startPayUPayment(PgKeyVals keyVals) {
-        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000)
-            return;
+        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000) return;
         mLastClickTime = SystemClock.elapsedRealtime();
         if (validateSDKParams(keyVals)) {
             //hashPayUSDkPro = keyVals.getHash();
             initUiSdk(preparePayUBizParams(keyVals), keyVals);
         }
     }
+
     private boolean validateSDKParams(PgKeyVals mKeyVals) {
         if (mKeyVals.getKey() == null || TextUtils.isEmpty(mKeyVals.getKey())) {
-            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Key");
+            UtilMethods.INSTANCE.Error(CreateNewAd.this, "Invalid or empty Key");
             return false;
         } else if (mKeyVals.getHash() == null || TextUtils.isEmpty(mKeyVals.getHash())) {
-            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Hash");
+            UtilMethods.INSTANCE.Error(CreateNewAd.this, "Invalid or empty Hash");
             return false;
         } else if (mKeyVals.getTxnid() == null || TextUtils.isEmpty(mKeyVals.getTxnid())) {
-            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Transaction Id");
+            UtilMethods.INSTANCE.Error(CreateNewAd.this, "Invalid or empty Transaction Id");
             return false;
         } else if (mKeyVals.getEmail() == null || TextUtils.isEmpty(mKeyVals.getEmail())) {
-            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Mail Id");
+            UtilMethods.INSTANCE.Error(CreateNewAd.this, "Invalid or empty Mail Id");
             return false;
         } else if (mKeyVals.getFirstname() == null || TextUtils.isEmpty(mKeyVals.getFirstname())) {
-            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Name");
+            UtilMethods.INSTANCE.Error(CreateNewAd.this, "Invalid or empty Name");
             return false;
         } else if (mKeyVals.getSurl() == null || TextUtils.isEmpty(mKeyVals.getSurl())) {
-            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Success URL");
+            UtilMethods.INSTANCE.Error(CreateNewAd.this, "Invalid or empty Success URL");
             return false;
         } else if (mKeyVals.getFurl() == null || TextUtils.isEmpty(mKeyVals.getFurl())) {
-            UtilMethods.INSTANCE.Error(CreateNewAd.this,"Invalid or empty Fail URL");
+            UtilMethods.INSTANCE.Error(CreateNewAd.this, "Invalid or empty Fail URL");
             return false;
         }
 
         return true;
     }
+
     private PayUPaymentParams preparePayUBizParams(PgKeyVals mKeyVals) {
 
         HashMap<String, Object> additionalParams = new HashMap<>();
@@ -704,55 +660,40 @@ public class CreateNewAd extends AppCompatActivity {
         additionalParams.put(PayUCheckoutProConstants.CP_UDF5, "udf5");
 
         PayUPaymentParams.Builder builder = new PayUPaymentParams.Builder();
-        builder.setAmount(mKeyVals.getAmount())
-                .setIsProduction(mKeyVals.isProdcution())
-                .setProductInfo(mKeyVals.getProductinfo())
-                .setKey(mKeyVals.getKey())
-                .setPhone(mKeyVals.getPhone())
-                .setTransactionId(mKeyVals.getTxnid())
-                .setFirstName(mKeyVals.getFirstname())
-                .setEmail(mKeyVals.getEmail())
-                .setSurl(mKeyVals.getSurl())
-                .setFurl(mKeyVals.getFurl())
-                .setAdditionalParams(additionalParams)
-                .setUserCredential(mKeyVals.getKey() + mKeyVals.getEmail())
-                .setPayUSIParams(null);
+        builder.setAmount(mKeyVals.getAmount()).setIsProduction(mKeyVals.isProdcution()).setProductInfo(mKeyVals.getProductinfo()).setKey(mKeyVals.getKey()).setPhone(mKeyVals.getPhone()).setTransactionId(mKeyVals.getTxnid()).setFirstName(mKeyVals.getFirstname()).setEmail(mKeyVals.getEmail()).setSurl(mKeyVals.getSurl()).setFurl(mKeyVals.getFurl()).setAdditionalParams(additionalParams).setUserCredential(mKeyVals.getKey() + mKeyVals.getEmail()).setPayUSIParams(null);
         PayUPaymentParams payUPaymentParams = builder.build();
         return payUPaymentParams;
     }
+
     private void initUiSdk(PayUPaymentParams payUPaymentParams, PgKeyVals mKeyVals) {
-        PayUCheckoutPro.open(
-                this,
-                payUPaymentParams,
-                getCheckoutProConfig(mKeyVals),
-                new PayUCheckoutProListener() {
+        PayUCheckoutPro.open(this, payUPaymentParams, getCheckoutProConfig(mKeyVals), new PayUCheckoutProListener() {
 
-                    @Override
-                    public void onPaymentSuccess(@NotNull Object response) {
+            @Override
+            public void onPaymentSuccess(@NotNull Object response) {
 
-                        //HashMap<String, Object> result = (HashMap<String, Object>) response;
-                        // Log.e("PAYUProResp", "Payu's Data : " + result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE) + "\n\n\n Merchant's Data: " + result.get(PayUCheckoutProConstants.CP_MERCHANT_RESPONSE));
-                        // Object payuResponse = result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE);
-                        // PayUCheckProResponse itemResponse = new Gson().fromJson((String) payuResponse, PayUCheckProResponse.class);
-                        //JSONObject payuCheckProJObject  = new JSONObject((String)payuResponse); // json
-                        //Log.e("PAYUProResp", "Payu's Success : " + itemResponse);
-                        payuStatusUpdate(mKeyVals.getTxnid()/*,itemResponse.getStatus()*/);
-                        //PayUCheckProCallBackApi(PayUCheckProSuccessData(mKeyVals, payuResponse, 2));
-                    }
+                //HashMap<String, Object> result = (HashMap<String, Object>) response;
+                // Log.e("PAYUProResp", "Payu's Data : " + result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE) + "\n\n\n Merchant's Data: " + result.get(PayUCheckoutProConstants.CP_MERCHANT_RESPONSE));
+                // Object payuResponse = result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE);
+                // PayUCheckProResponse itemResponse = new Gson().fromJson((String) payuResponse, PayUCheckProResponse.class);
+                //JSONObject payuCheckProJObject  = new JSONObject((String)payuResponse); // json
+                //Log.e("PAYUProResp", "Payu's Success : " + itemResponse);
+                payuStatusUpdate(mKeyVals.getTxnid()/*,itemResponse.getStatus()*/);
+                //PayUCheckProCallBackApi(PayUCheckProSuccessData(mKeyVals, payuResponse, 2));
+            }
 
-                    @Override
-                    public void onPaymentFailure(Object response) {
-                      //  HashMap<String, Object> result = (HashMap<String, Object>) response;
-                        //Log.e("PAYUProResp", "Payu's Data : " + result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE) + "\n\n\n Merchant's Data: " + result.get(PayUCheckoutProConstants.CP_MERCHANT_RESPONSE));
-                        //Object payuResponse = result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE);
-                      //  try {
-                           // PayUCheckProResponse itemResponse = new Gson().fromJson((String) payuResponse, PayUCheckProResponse.class);
-                            payuStatusUpdate(mKeyVals.getTxnid()/*,itemResponse.getStatus()*/);
-                            // Log.e("PAYUProResp", "Payu's Error : " + itemResponse);
-                          //  PayUCheckProCallBackApi(PayUCheckProFailedData(mKeyVals, 3, itemResponse.getStatus(), itemResponse.getErrorMessage()));
-                       // } catch (Exception exception) {
-                            //  Log.e("PAYUProResp", "Payu's Error : " + exception.getMessage());
-                       // }
+            @Override
+            public void onPaymentFailure(Object response) {
+                //  HashMap<String, Object> result = (HashMap<String, Object>) response;
+                //Log.e("PAYUProResp", "Payu's Data : " + result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE) + "\n\n\n Merchant's Data: " + result.get(PayUCheckoutProConstants.CP_MERCHANT_RESPONSE));
+                //Object payuResponse = result.get(PayUCheckoutProConstants.CP_PAYU_RESPONSE);
+                //  try {
+                // PayUCheckProResponse itemResponse = new Gson().fromJson((String) payuResponse, PayUCheckProResponse.class);
+                payuStatusUpdate(mKeyVals.getTxnid()/*,itemResponse.getStatus()*/);
+                // Log.e("PAYUProResp", "Payu's Error : " + itemResponse);
+                //  PayUCheckProCallBackApi(PayUCheckProFailedData(mKeyVals, 3, itemResponse.getStatus(), itemResponse.getErrorMessage()));
+                // } catch (Exception exception) {
+                //  Log.e("PAYUProResp", "Payu's Error : " + exception.getMessage());
+                // }
 
                        /*   UtilMethods.INSTANCE.Balancecheck(AddMoneyActivity.this, loader, object -> {
                                         balanceCheckResponse = (BalanceResponse) object;
@@ -761,53 +702,53 @@ public class CreateNewAd extends AppCompatActivity {
                                         }
                                     });*/
 
-                    }
+            }
 
-                    @Override
-                    public void onPaymentCancel(boolean isTxnInitiated) {
-                        showSnackBar(getResources().getString(R.string.transaction_cancelled_by_user));
-                    }
+            @Override
+            public void onPaymentCancel(boolean isTxnInitiated) {
+                showSnackBar(getResources().getString(R.string.transaction_cancelled_by_user));
+            }
 
-                    @Override
-                    public void onError(ErrorResponse errorResponse) {
-                        String errorMessage = errorResponse.getErrorMessage();
-                        if (TextUtils.isEmpty(errorMessage))
-                            errorMessage = getResources().getString(R.string.some_thing_error);
-                        showSnackBar(errorMessage);
-                    }
+            @Override
+            public void onError(ErrorResponse errorResponse) {
+                String errorMessage = errorResponse.getErrorMessage();
+                if (TextUtils.isEmpty(errorMessage))
+                    errorMessage = getResources().getString(R.string.some_thing_error);
+                showSnackBar(errorMessage);
+            }
 
-                    @Override
-                    public void setWebViewProperties(@Nullable WebView webView, @Nullable Object o) {
-                        //For setting webview properties, if any. Check Customized Integration section for more details on this
-                        webView.setWebChromeClient(new CheckoutProWebChromeClient((Bank) o));
-                        webView.setWebViewClient(new CheckoutProWebViewClient((Bank) o, mKeyVals.getKey()));
-                    }
+            @Override
+            public void setWebViewProperties(@Nullable WebView webView, @Nullable Object o) {
+                //For setting webview properties, if any. Check Customized Integration section for more details on this
+                webView.setWebChromeClient(new CheckoutProWebChromeClient((Bank) o));
+                webView.setWebViewClient(new CheckoutProWebViewClient((Bank) o, mKeyVals.getKey()));
+            }
 
-                    @Override
-                    public void generateHash(HashMap<String, String> valueMap, PayUHashGenerationListener hashGenerationListener) {
-                        String hashName = valueMap.get(PayUCheckoutProConstants.CP_HASH_NAME);
-                        String hashData = valueMap.get(PayUCheckoutProConstants.CP_HASH_STRING);
-                        if (!TextUtils.isEmpty(hashName) && !TextUtils.isEmpty(hashData)) {
-                             Log.e("CP_HASH_STRING", hashData);
-                             Log.e("CP_HASH_NAME", hashName);
+            @Override
+            public void generateHash(HashMap<String, String> valueMap, PayUHashGenerationListener hashGenerationListener) {
+                String hashName = valueMap.get(PayUCheckoutProConstants.CP_HASH_NAME);
+                String hashData = valueMap.get(PayUCheckoutProConstants.CP_HASH_STRING);
+                if (!TextUtils.isEmpty(hashName) && !TextUtils.isEmpty(hashData)) {
+                    Log.e("CP_HASH_STRING", hashData);
+                    Log.e("CP_HASH_NAME", hashName);
 
-                            //Generate Hash Key From Server End---
-                            //GatewayTransaction(hashData, hashName, hashGenerationListener);
-                           /* String hash = hashString;*/
-                            getInitiatePostBoost(mKeyVals.getTxnid(),hashData, hashName, hashGenerationListener);
+                    //Generate Hash Key From Server End---
+                    //GatewayTransaction(hashData, hashName, hashGenerationListener);
+                    /* String hash = hashString;*/
+                    getInitiatePostBoost(mKeyVals.getTxnid(), hashData, hashName, hashGenerationListener);
                             /*if (!TextUtils.isEmpty(hashPayUSDkPro)) {
                                 HashMap hashMap = new HashMap();
                                 hashMap.put(hashName, hashPayUSDkPro);
                                 hashGenerationListener.onHashGenerated(hashMap);
                             }*/
-                        }
-                    }
-
                 }
-        );
+            }
+
+        });
 
         /*Log.e("PayUPaymentParams", new Gson().toJson(payUPaymentParams));*/
     }
+
     private PayUCheckoutProConfig getCheckoutProConfig(PgKeyVals mKeyVals) {
         PayUCheckoutProConfig checkoutProConfig = new PayUCheckoutProConfig();
         checkoutProConfig.setMerchantName(getString(R.string.app_name));
@@ -831,6 +772,7 @@ public class CreateNewAd extends AppCompatActivity {
             checkoutProConfig.setCartDetails(reviewOrderAdapter.getOrderDetailsList());*/
         return checkoutProConfig;
     }
+
     private ArrayList<HashMap<String, String>> getEnforcePaymentList(PgKeyVals mKeyVals) {
         ArrayList<HashMap<String, String>> enforceList = new ArrayList();
 
@@ -857,13 +799,13 @@ public class CreateNewAd extends AppCompatActivity {
 
         return enforceList;
     }
+
     public void payuStatusUpdate(String tid/*, String status*/) {
         try {
 
             loader.show();
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<UpgradePackageResponse> call = git.payUTransactionUpdate("Bearer " + tokenManager.getAccessToken(),
-                    tid);
+            Call<UpgradePackageResponse> call = git.payUTransactionUpdate("Bearer " + tokenManager.getAccessToken(), tid);
             call.enqueue(new Callback<UpgradePackageResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<UpgradePackageResponse> call, @NonNull Response<UpgradePackageResponse> response) {
@@ -877,7 +819,7 @@ public class CreateNewAd extends AppCompatActivity {
                         if (packageResponse != null) {
                             if (packageResponse.getStatusCode() == 1) {
 //                                getPackage();
-                                UtilMethods.INSTANCE.SuccessWithOkay(CreateNewAd.this, packageResponse.getResponseText(),false);
+                                UtilMethods.INSTANCE.SuccessWithOkay(CreateNewAd.this, packageResponse.getResponseText(), false);
                             } else {
                                 UtilMethods.INSTANCE.Error(CreateNewAd.this, packageResponse.getResponseText());
                             }
@@ -916,9 +858,10 @@ public class CreateNewAd extends AppCompatActivity {
 
         }
     }
-    public void getEstimateBoostReach(double budget,int days,int audienceId){
+
+    public void getEstimateBoostReach(double budget, int days, int audienceId) {
         loader.show();
-        UtilMethods.INSTANCE.getEstimateBoostReach(budget,days,audienceId, new UtilMethods.ApiCallBackMulti() {
+        UtilMethods.INSTANCE.getEstimateBoostReach(budget, days, audienceId, new UtilMethods.ApiCallBackMulti() {
             @Override
             public void onSuccess(Object object) {
                 if (loader != null) {
@@ -926,21 +869,21 @@ public class CreateNewAd extends AppCompatActivity {
                         loader.dismiss();
                     }
                 }
-                estimateResponse =(EstimateResponse) object;
-                if(estimateResponse.getStatusCode()==1){
-                    tvLine1.setText("Your ad will run continuously with a daily budget of ₹"+seekBar.getProgress()+". Actual amount spent daily may vary.");
+                estimateResponse = (EstimateResponse) object;
+                if (estimateResponse.getStatusCode() == 1) {
+                    tvLine1.setText("Your ad will run continuously with a daily budget of ₹" + seekBar.getProgress() + ". Actual amount spent daily may vary.");
                     tvPeopleReached.setText(estimateResponse.getResult().getReach());
-                    tvAdd.setText("₹"+estimateResponse.getResult().getUserBalance());
-                    tvBudgetPrice.setText("₹"+estimateResponse.getResult().getBudget()+"");
-                    tvCostPrice.setText("₹"+estimateResponse.getResult().getEstimatedCost()+"");
-                    tvSubPrice.setText("₹"+estimateResponse.getResult().getSubTotal()+"");
-                    tvGstPrice.setText("₹"+estimateResponse.getResult().getGst()+"");
-                    tvPrice.setText("₹"+estimateResponse.getResult().getTotal()+"");
+                    tvAdd.setText("₹" + estimateResponse.getResult().getUserBalance());
+                    tvBudgetPrice.setText("₹" + estimateResponse.getResult().getBudget() + "");
+                    tvCostPrice.setText("₹" + estimateResponse.getResult().getEstimatedCost() + "");
+                    tvSubPrice.setText("₹" + estimateResponse.getResult().getSubTotal() + "");
+                    tvGstPrice.setText("₹" + estimateResponse.getResult().getGst() + "");
+                    tvPrice.setText("₹" + estimateResponse.getResult().getTotal() + "");
 
                     budgetGlobal = estimateResponse.getResult().getBudget();
                     estimatedCost = estimateResponse.getResult().getEstimatedCost();
-                    gstAmount =estimateResponse.getResult().getGst();
-                    subTotal =estimateResponse.getResult().getSubTotal();
+                    gstAmount = estimateResponse.getResult().getGst();
+                    subTotal = estimateResponse.getResult().getSubTotal();
                     total = estimateResponse.getResult().getTotal();
                 }
 
@@ -958,23 +901,17 @@ public class CreateNewAd extends AppCompatActivity {
             }
         });
     }
+
     public void openGoalBottomSheetDialog(Activity context) {
 
-        if (bottomGoalDialogReport != null && bottomGoalDialogReport.isShowing())
-            return;
+        if (bottomGoalDialogReport != null && bottomGoalDialogReport.isShowing()) return;
 
         bottomGoalDialogReport = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.bottom_sheet_goal_list, null);
-
-
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_goal_list, null);
 
 
         bottomGoalDialogReport.setContentView(sheetView);
-        BottomSheetBehavior.from(
-                        bottomGoalDialogReport.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(bottomGoalDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet)).setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomGoalDialogReport.show();
     }
@@ -985,120 +922,89 @@ public class CreateNewAd extends AppCompatActivity {
             return;
 
         bottomSpecialCatDialogReport = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.bottom_sheet_special_category, null);
-
-
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_special_category, null);
 
 
         bottomSpecialCatDialogReport.setContentView(sheetView);
-        BottomSheetBehavior.from(
-                        bottomSpecialCatDialogReport.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(bottomSpecialCatDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet)).setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomSpecialCatDialogReport.show();
     }
+
     public void openChooseAudienceBottomSheetDialog(Activity context) {
 
         if (bottomChooseAudienceCatDialogReport != null && bottomChooseAudienceCatDialogReport.isShowing())
             return;
 
         bottomChooseAudienceCatDialogReport = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.bottom_sheet_choose_audience, null);
-
-
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_choose_audience, null);
 
 
         bottomChooseAudienceCatDialogReport.setContentView(sheetView);
-        BottomSheetBehavior.from(
-                        bottomChooseAudienceCatDialogReport.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(bottomChooseAudienceCatDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet)).setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomChooseAudienceCatDialogReport.show();
     }
+
     public void openIsSecureBottomSheetDialog(Activity context) {
 
         if (bottomIsSecureCatDialogReport != null && bottomIsSecureCatDialogReport.isShowing())
             return;
 
         bottomIsSecureCatDialogReport = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.bottom_sheet_is_secure, null);
-
-
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_is_secure, null);
 
 
         bottomIsSecureCatDialogReport.setContentView(sheetView);
-        BottomSheetBehavior.from(
-                        bottomIsSecureCatDialogReport.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(bottomIsSecureCatDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet)).setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomIsSecureCatDialogReport.show();
     }
+
     public void openPlacementsBottomSheetDialog(Activity context) {
 
         if (bottomPlacementsCatDialogReport != null && bottomPlacementsCatDialogReport.isShowing())
             return;
 
         bottomPlacementsCatDialogReport = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.bottom_sheet_placements, null);
-
-
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_placements, null);
 
 
         bottomPlacementsCatDialogReport.setContentView(sheetView);
-        BottomSheetBehavior.from(
-                        bottomPlacementsCatDialogReport.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(bottomPlacementsCatDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet)).setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomPlacementsCatDialogReport.show();
     }
+
     public void openBudgetBottomSheetDialog(Activity context) {
 
-        if (bottomBudgetCatDialogReport != null && bottomBudgetCatDialogReport.isShowing())
-            return;
+        if (bottomBudgetCatDialogReport != null && bottomBudgetCatDialogReport.isShowing()) return;
 
         bottomBudgetCatDialogReport = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.bottom_sheet_budget, null);
-
-
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_budget, null);
 
 
         bottomBudgetCatDialogReport.setContentView(sheetView);
-        BottomSheetBehavior.from(
-                        bottomBudgetCatDialogReport.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(bottomBudgetCatDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet)).setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomBudgetCatDialogReport.show();
     }
+
     public void openPaymentBottomSheetDialog(Activity context) {
 
         if (bottomPaymentCatDialogReport != null && bottomPaymentCatDialogReport.isShowing())
             return;
 
         bottomPaymentCatDialogReport = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.bottom_sheet_payment, null);
-
-
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_payment, null);
 
 
         bottomPaymentCatDialogReport.setContentView(sheetView);
-        BottomSheetBehavior.from(
-                        bottomPaymentCatDialogReport.findViewById(
-                                com.google.android.material.R.id.design_bottom_sheet))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(bottomPaymentCatDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet)).setState(BottomSheetBehavior.STATE_EXPANDED);
 
         bottomPaymentCatDialogReport.show();
     }
+
     private void showSnackBar(String message) {
         Snackbar.make(findViewById(R.id.main), message, Snackbar.LENGTH_LONG).show();
     }

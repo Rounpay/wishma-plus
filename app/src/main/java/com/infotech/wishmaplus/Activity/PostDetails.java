@@ -564,7 +564,7 @@ public class PostDetails extends AppCompatActivity {
     private void sendNotification(File pdfFile) {
         Uri fileUri = FileProvider.getUriForFile(
                 this,
-                BuildConfig.APPLICATION_ID + ".pg.provider",
+                BuildConfig.APPLICATION_ID + ".provider_smart_image_picker",
                 pdfFile);
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(fileUri, "application/pdf");

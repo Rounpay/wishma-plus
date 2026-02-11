@@ -3,4 +3,5 @@
     <external-path name="storage/emulated/0" path="."/>
     <external-path name="external_files" path="."/>
     <external-path name="download" path="Download/"/>
+    <cache-path name="cache" path="." />
 </paths>

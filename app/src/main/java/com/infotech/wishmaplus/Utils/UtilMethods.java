@@ -1752,7 +1752,9 @@ public enum UtilMethods {
         @SuppressLint("InflateParams") View sheetView = inflater.inflate(R.layout.professional_information_dialog, null);
 
         ImageButton closeBtn = sheetView.findViewById(R.id.closeBtn);
+        AppCompatTextView nextButton = sheetView.findViewById(R.id.nextButton);
         closeBtn.setOnClickListener(v -> personalInformation.dismiss());
+        nextButton.setOnClickListener(v -> personalInformation.dismiss());
         personalInformation.setCancelable(true);
         personalInformation.setContentView(sheetView);
         BottomSheetBehavior

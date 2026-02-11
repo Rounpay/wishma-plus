@@ -25,8 +25,13 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.media3.common.C;
+import androidx.media3.common.Format;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.Player;
+import androidx.media3.common.TrackSelectionOverride;
+import androidx.media3.common.TrackSelectionParameters;
+import androidx.media3.common.Tracks;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.DefaultRenderersFactory;
@@ -34,6 +39,8 @@ import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.common.collect.ImmutableSet;
 import com.infotech.wishmaplus.Adapter.Interfaces.CountChangeCallBack;
 import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Response.BasicResponse;
@@ -51,6 +58,9 @@ import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.DownloadManagerServ
 import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.VideoUtils;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -137,6 +147,7 @@ public class VideoViewActivity extends AppCompatActivity {
                 //Player.Listener.super.onIsPlayingChanged(isPlaying);
             }
         });
+
         ImageView profile = findViewById(R.id.profile);
         TextView nameTv = findViewById(R.id.nameTv);
         TextView timeTv = findViewById(R.id.timeTv);
@@ -407,6 +418,9 @@ public class VideoViewActivity extends AppCompatActivity {
         });
     }
 
+    // ===== AUTO QUALITY UPDATE =====
+
+
 
     private void showPopupMenu(View view, ContentResult content, int position) {
 
@@ -424,7 +438,6 @@ public class VideoViewActivity extends AppCompatActivity {
         View editLine = popupView.findViewById(R.id.editLine);
         View deleteLine = popupView.findViewById(R.id.deleteLine);
         View copyLinkLine = popupView.findViewById(R.id.copyLinkLine);
-
         if (content.getUserId().equalsIgnoreCase(userId)|| content.getParsedSharedData()!=null && content.getParsedSharedData().getUserId().equalsIgnoreCase(userId)) {
             report.setVisibility(View.GONE);
             copyLinkLine.setVisibility(View.GONE);
@@ -457,6 +470,7 @@ public class VideoViewActivity extends AppCompatActivity {
         view.getLocationOnScreen(location);
         popupWindow.showAsDropDown(view,  0, 0,Gravity.BOTTOM);
     }
+
 
     private void showDeleteConfirmationDialog(ContentResult content, int position) {
         new AlertDialog.Builder(this)

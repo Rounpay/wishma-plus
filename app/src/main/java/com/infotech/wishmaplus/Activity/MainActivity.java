@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isProfileType;
 
     public String postId = "";
+    public boolean fromNotification  = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

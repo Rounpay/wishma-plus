@@ -54,6 +54,7 @@ public class CreateProfessionalPage extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_create_professional_page);
         findViewById(R.id.back_button).setOnClickListener(v -> finish());
+        findViewById(R.id.cancelButton).setOnClickListener(v -> finish());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
