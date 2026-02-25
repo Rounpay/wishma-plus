@@ -650,7 +650,31 @@ public class PostActivity extends AppCompatActivity implements CustomAlertDialog
                 .load(userDetailResponse.getProfilePictureUrl())
                 .apply(requestOptionsUserImage)
                 .into(profileIv);
-        nameTv.setText(userDetailResponse.getFisrtName() + " " + userDetailResponse.getLastName());
+        if (userDetailResponse != null) {
+
+            String firstName = userDetailResponse.getFisrtName();
+            String lastName = userDetailResponse.getLastName();
+
+            StringBuilder fullName = new StringBuilder();
+
+            if (firstName != null && !firstName.trim().isEmpty()) {
+                fullName.append(firstName.trim());
+            }
+
+            if (lastName != null && !lastName.trim().isEmpty()) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+                    if (!fullName.isEmpty()) {
+                        fullName.append(" ");
+                    }
+                }
+                fullName.append(lastName.trim());
+            }
+
+            nameTv.setText(fullName.toString());
+        }
+
+
+        //  nameTv.setText(userDetailResponse.getFisrtName() + " " + userDetailResponse.getLastName());
 
     }
 
