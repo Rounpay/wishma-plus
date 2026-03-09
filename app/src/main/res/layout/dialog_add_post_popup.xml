@@ -45,6 +45,42 @@
                 android:text="@string/story"
                 android:textColor="@android:color/black"
                 app:drawableStartCompat="@drawable/ic_story" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:background="@color/grey_3"
+                android:visibility="gone"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/liveVideo"
+                android:visibility="gone"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/_7sdp"
+                android:fontFamily="sans-serif-medium"
+                android:padding="@dimen/_12sdp"
+                android:text="Live video"
+                android:textColor="@android:color/black"
+                app:drawableStartCompat="@drawable/ic_camera" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:background="@color/grey_3"
+                android:visibility="gone"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/joinNow"
+                android:visibility="gone"
+                style="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/_7sdp"
+                android:fontFamily="sans-serif-medium"
+                android:padding="@dimen/_12sdp"
+                android:text="Join now"
+                android:textColor="@android:color/black"
+                app:drawableStartCompat="@drawable/ic_camera" />
         </LinearLayout>
 
 

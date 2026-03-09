@@ -19,7 +19,20 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.providers.media.MediaProvider" />
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" /> <!-- Permissions required by the SDK -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> <!-- Permissions required by the Demo App -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="false"
@@ -38,244 +51,310 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
-            android:name=".Activity.ComplaintList"
+            android:name=".zego.PreviewActivity"
             android:exported="false"
             android:theme="@style/Appnew"
-            android:windowSoftInputMode="adjustResize"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".zego.HomePageActivity"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".zego.LivePageActivity"
+            android:exported="false"
+            android:theme="@style/Appnew"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.ComplaintList"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.GroupMembers"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.GroupDashboard"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.AddCoverPhotoGroup"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.GroupAddPeople"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.WebViewActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.PostDetails"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.AnalyticsContent"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.AnalyticsDashboard"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.EditAudience"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.NotEligibleForProfessional"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SuccessProfessional"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.ProfessionalTools"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.MonetizationProfessional"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.AudienceProfessional"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.WelcomeProfessional"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.TurnOnProfessionalMode"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.ManageAds"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.CreateNewAd"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.BoostContent"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.Advertisement"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.CreatorSupportActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.DashBoardPersonalInformation"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.ProfessionalDashBoardPersonal"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.AdvertiseActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SwitchPages"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.PageProfilePicture"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SettingUpYourPage"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.YourFriends"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.CreateProfessionalPage"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SentRequests"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.FriendRequest"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.BlockedUser"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SettingsAndPrivacy"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.ProfessionalDashboardActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.WebViewInformationActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.CreateGroupActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.GroupActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.DeleteAccountReasonActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.DeactivateOrDeleteAccount"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.DeleteAccount"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.OtpActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.TermAndCondition"
             android:exported="false"
             android:theme="@style/Appnew"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.CreatePersonalProfileActivity"
             android:exported="false"
             android:theme="@style/Appnew"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.ProfessionalProfileActivity"
             android:exported="false"
             android:theme="@style/Appnew"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.PersonalProfileActivity"
             android:exported="false"
             android:theme="@style/Appnew"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.CreateNewProfilePage"
             android:exported="false"
             android:theme="@style/Appnew"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.IncomeReportActivity"
             android:exported="false"
             android:theme="@style/Appnew"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.ShareRedirectActivity"

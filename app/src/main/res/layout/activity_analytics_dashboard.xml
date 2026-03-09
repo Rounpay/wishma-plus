@@ -42,7 +42,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/back_button"
-            app:layout_constraintEnd_toStartOf="@id/search_button"
+            app:layout_constraintEnd_toStartOf="@id/filter_button"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -50,17 +50,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Last 28 days"
+            android:text="Lifetime"
             android:textColor="@android:color/darker_gray"
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/back_button"
-            app:layout_constraintEnd_toStartOf="@id/search_button"
+            app:layout_constraintEnd_toStartOf="@id/filter_button"
             app:layout_constraintTop_toBottomOf="@+id/user_title" />
 
         <!-- Search Button -->
         <ImageButton
-            android:id="@+id/search_button"
+            android:id="@+id/filter_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -97,15 +97,210 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/totalLikes"
+                android:layout_width="160dp"
+                android:layout_height="90dp"
+                android:layout_marginEnd="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#1A73E8">
 
-            <!-- Views Card -->
-            <include layout="@layout/item_metric_card" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    >
 
-            <!-- Engagement Card -->
-            <include layout="@layout/item_metric_card" />
 
-            <!-- Audience Card -->
-            <include layout="@layout/item_metric_card" />
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Likes"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
+
+                    <!-- Bottom Row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:gravity="bottom">
+
+                        <TextView
+                            android:id="@+id/totalLikesValue"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="0"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/totalComments"
+                android:layout_width="160dp"
+                android:layout_height="90dp"
+                android:layout_marginEnd="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#1A73E8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    >
+
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Comments"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
+
+                    <!-- Bottom Row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:gravity="bottom">
+
+                        <TextView
+                            android:id="@+id/totalCommentsValue"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="0"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/totalShare"
+                android:layout_width="160dp"
+                android:layout_height="90dp"
+                android:layout_marginEnd="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#1A73E8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    >
+
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Shares"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
+
+                    <!-- Bottom Row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:gravity="bottom">
+
+                        <TextView
+                            android:id="@+id/totalShareValue"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="0"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/totalEngagement"
+                android:layout_width="160dp"
+                android:layout_height="90dp"
+                android:layout_marginEnd="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1.5dp"
+                app:strokeColor="#1A73E8">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="6dp"
+                    >
+
+
+                    <TextView
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Engagement"
+                        android:layout_marginTop="5dp"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold"
+                        android:textSize="14sp" />
+
+                    <!-- Bottom Row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:gravity="bottom">
+
+                        <TextView
+                            android:id="@+id/totalEngagementValue"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="0"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="#000000" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
@@ -132,6 +327,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -184,6 +380,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:visibility="gone"
                 android:id="@+id/infoButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -221,13 +418,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Views breakdown"
+                    android:text="Content breakdown"
                     android:textColor="#000000"
                     android:textSize="18sp"
                     android:textStyle="bold" />
                 <!-- Info Button -->
                 <ImageButton
-                    android:id="@+id/btnInfo"
+                    android:id="@+id/btnInfo1"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:layout_centerInParent="true"
@@ -242,26 +439,30 @@
                     android:tint="@color/cb_dark_grey" />
             </LinearLayout>
 
-            <HorizontalScrollView
-                android:id="@+id/horizontalScrollView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/breakdown">
+<!--            <HorizontalScrollView-->
+<!--                android:id="@+id/horizontalScrollView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:scrollbars="none"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/breakdown">-->
 
                 <!-- Container -->
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:id="@+id/horizontalScrollView"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_5sdp"
                     android:orientation="horizontal"
-                    android:paddingStart="12dp">
+                    android:paddingStart="12dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/breakdown">
 
                     <!-- Card -->
                     <androidx.cardview.widget.CardView
-                        android:layout_width="320dp"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="12dp"
                         android:layout_marginVertical="2dp"
@@ -279,113 +480,24 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="Views type"
+                                android:text="Content type"
                                 android:textColor="#000000"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
-                            <!-- Views row -->
-                            <LinearLayout
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvContentSummary"
+                                android:paddingTop="@dimen/_4sdp"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp"
-                                android:gravity="center_vertical"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Views"
-                                    android:textSize="14sp" />
-
-
-                                <TextView
-                                    android:id="@+id/tvViewsCount"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="17"
-                                    android:textSize="14sp" />
-                            </LinearLayout>
-
-                            <ProgressBar
-                                android:id="@+id/progressViews1"
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="6dp"
-                                android:layout_marginVertical="@dimen/_5sdp"
-                                android:layout_weight="1"
-                                android:backgroundTint="#E0E0E0"
-                                android:max="100"
-                                android:progress="70"
-                                android:progressTint="#1A73E8" />
-
-                            <!-- 3-second views -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="3-second views" />
-
-                                <TextView
-                                    android:id="@+id/tv3Sec"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="30" />
-                            </LinearLayout>
-
-                            <ProgressBar
-                                android:id="@+id/progressViews2"
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="6dp"
-                                android:layout_marginVertical="@dimen/_5sdp"
-                                android:layout_weight="1"
-                                android:backgroundTint="#E0E0E0"
-                                android:max="100"
-                                android:progress="30"
-                                android:progressTint="#1A73E8" />
-
-                            <!-- 1-minute views -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="1-minute views" />
-
-                                <TextView
-                                    android:id="@+id/tv1Min"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="50" />
-                            </LinearLayout>
-
-                            <ProgressBar
-                                android:id="@+id/progressViews3"
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="match_parent"
-                                android:layout_height="6dp"
-                                android:layout_marginVertical="@dimen/_5sdp"
-                                android:layout_weight="1"
-                                android:backgroundTint="#E0E0E0"
-                                android:max="100"
-                                android:progress="50"
-                                android:progressTint="#1A73E8" />
+                                android:layout_height="match_parent"
+                                tools:itemCount="3"
+                                tools:listitem="@layout/item_content_summary"/>
 
                         </LinearLayout>
 
                     </androidx.cardview.widget.CardView>
                     <androidx.cardview.widget.CardView
+                        android:visibility="gone"
                         android:layout_width="320dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="12dp"
@@ -443,6 +555,7 @@
 
                     </androidx.cardview.widget.CardView>
                     <androidx.cardview.widget.CardView
+                        android:visibility="gone"
                         android:layout_width="320dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="12dp"
@@ -562,7 +675,7 @@
 
                 </LinearLayout>
 
-            </HorizontalScrollView>
+<!--            </HorizontalScrollView>-->
 
             <LinearLayout
                 android:id="@+id/linearLayout5"
@@ -592,64 +705,86 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="12dp"
                 android:paddingBottom="15dp"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout5">
 
                 <!-- Left Card -->
                 <com.google.android.material.card.MaterialCardView
+                    android:layout_weight="1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:cardBackgroundColor="#FFFFFF"
                     app:cardCornerRadius="12dp"
+                    app:cardBackgroundColor="#FFFFFF"
                     app:cardElevation="2dp">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:orientation="vertical"
-                        android:padding="12dp">
+                        android:padding="12dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/start" />
+                        <!-- Profile Image -->
+                        <LinearLayout
+                            android:id="@+id/imgProfile"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+                            <ImageView
+                                android:id="@+id/imagePost"
+                                android:layout_width="match_parent"
+                                android:layout_height="160dp"
+                                android:src="@drawable/app_logo"
+                                android:scaleType="centerCrop"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"/>
+                            <VideoView
+                                android:id="@+id/videoPost"
+                                android:layout_width="match_parent"
+                                android:layout_height="160dp"
+                                android:clipToOutline="true"
+                                android:scaleType="centerCrop"
+                                android:visibility="gone"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </LinearLayout>
 
                         <!-- Bottom Row -->
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:id="@+id/postCaption"
                             android:text="Hii"
+                            android:textSize="13sp"
                             android:textColor="#000"
-                            android:textSize="13sp" />
-
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:orientation="horizontal"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal">
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
                             <ImageView
+                                android:src="@drawable/globe"
                                 android:layout_width="10dp"
-                                android:layout_height="10dp"
-                                android:src="@drawable/globe" />
+                                android:layout_height="10dp"/>
 
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
                                 android:text="Dec 12 at 9:55 AM"
+                                android:textSize="12sp"
                                 android:textColor="#999"
-                                android:textSize="12sp" />
+                                android:layout_marginStart="8dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
                         </LinearLayout>
 
                     </LinearLayout>
@@ -657,12 +792,11 @@
 
                 <!-- Right Stats -->
                 <LinearLayout
-                    android:visibility="invisible"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:layout_marginStart="12dp"
+                    android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content">
 
                     <!-- Reusable Stat Card -->
                     <com.google.android.material.card.MaterialCardView
@@ -673,26 +807,27 @@
                         app:cardElevation="1dp">
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
+                            android:paddingVertical="6dp"
                             android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp">
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Views"
-                                android:textColor="#666"
-                                android:textSize="10sp" />
+                                android:text="Likes"
+                                android:textSize="10sp"
+                                android:textColor="#666"/>
 
                             <TextView
+                                android:id="@+id/likesValue"
+                                android:text="0"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="3"
-                                android:textColor="#000"
                                 android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:textColor="#000"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
@@ -702,28 +837,28 @@
                         android:layout_marginBottom="8dp"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="1dp">
-
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
+                            android:paddingVertical="6dp"
                             android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp">
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Earnings"
-                                android:textColor="#666"
-                                android:textSize="10sp" />
+                                android:textSize="10sp"
+                                android:textColor="#666"/>
 
                             <TextView
+                                android:id="@+id/earningsValue"
+                                android:text="0"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="$0.00"
-                                android:textColor="#000"
                                 android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:textColor="#000"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
@@ -735,26 +870,27 @@
                         app:cardElevation="1dp">
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
+                            android:paddingVertical="6dp"
                             android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp">
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Engagement"
-                                android:textColor="#666"
-                                android:textSize="10sp" />
+                                android:textSize="10sp"
+                                android:textColor="#666"/>
 
                             <TextView
+                                android:id="@+id/engagementValue"
+                                android:text="0"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0"
-                                android:textColor="#000"
                                 android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:textColor="#000"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
@@ -763,28 +899,28 @@
                         android:layout_height="wrap_content"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="1dp">
-
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="vertical"
+                            android:paddingVertical="6dp"
                             android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp">
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Net follows"
-                                android:textColor="#666"
-                                android:textSize="10sp" />
+                                android:text="Comments"
+                                android:textSize="10sp"
+                                android:textColor="#666"/>
 
                             <TextView
+                                android:id="@+id/commentsValue"
+                                android:text="0"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="$0.00"
-                                android:textColor="#000"
                                 android:textSize="14sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:textColor="#000"/>
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/liveView"
+    android:layout_height="match_parent">
+
+    <!-- Host's own video preview (large view) -->
+    <TextureView
+        android:id="@+id/hostView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Waiting for Host Message -->
+    <LinearLayout
+        android:id="@+id/waitingForHostText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp"
+        android:background="#80000000"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⏳"
+            android:textSize="48sp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Waiting for host to start the stream..."
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="The host will join shortly"
+            android:textColor="#CCCCCC"
+            android:textSize="14sp"
+            android:textAlignment="center"/>
+
+    </LinearLayout>
+
+    <!-- Participant's video view (picture-in-picture style) -->
+    <TextureView
+        android:id="@+id/participantView"
+        android:layout_width="120dp"
+        android:layout_height="160dp"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- LIVE badge -->
+        <LinearLayout
+            android:id="@+id/liveIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:background="@drawable/bg_live"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <View
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_live_dot" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LIVE"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- View count -->
+        <LinearLayout
+            android:id="@+id/layoutViewers"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_viewers"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="10dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/liveIndicator"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="6dp"
+                android:src="@drawable/ic_eye"
+                app:tint="@android:color/white" />
+
+            <TextView
+                android:id="@+id/viewerCountText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@android:color/white"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Refresh -->
+        <ImageButton
+            android:id="@+id/flipCameraButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_circle_gray"
+            android:src="@drawable/ic_flip_camera"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@id/speakerButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@android:color/white" />
+
+        <ImageButton
+            android:id="@+id/speakerButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/bg_circle_gray"
+            android:contentDescription="Video"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@id/beautyFilterButton"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_speaker_on" />
+
+
+        <!-- Magic -->
+        <ImageButton
+            android:id="@+id/beautyFilterButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_circle_gray"
+            android:src="@drawable/ic_magic"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@id/leaveButton"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- More -->
+        <ImageButton
+            android:id="@+id/leaveButton"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_circle_gray"
+            android:src="@drawable/ic_end_call"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@android:color/white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Bottom control bar -->
+    <LinearLayout
+        android:id="@+id/streamControls"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/hostView">
+
+        <!-- Mic Toggle -->
+        <ImageButton
+            android:id="@+id/micButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_mic_on"
+            app:tint="@android:color/white"
+            android:visibility="gone"
+            android:background="@drawable/bg_circle_gray"/>
+
+
+        <!-- Video Toggle -->
+        <ImageButton
+            android:id="@+id/cameraButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:background="@drawable/bg_circle_gray"
+            android:contentDescription="Video"
+            android:padding="12dp"
+            android:visibility="gone"
+            android:src="@drawable/ic_video_on" />
+
+
+
+        <!-- End Stream -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/endLiveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="58dp"
+            android:layout_marginStart="14dp"
+            android:text="End Stream"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            app:backgroundTint="#F44336"
+            app:cornerRadius="24dp"
+            android:visibility="gone"/>
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

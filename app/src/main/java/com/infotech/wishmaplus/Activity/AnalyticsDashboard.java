@@ -1,7 +1,15 @@
 package com.infotech.wishmaplus.Activity;
 
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.view.animation.DecelerateInterpolator;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,7 +17,10 @@ import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -25,7 +36,12 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.infotech.wishmaplus.Adapter.ContentSummaryAdapter;
+import com.infotech.wishmaplus.Api.Response.AnalyticsDetailsResponse;
+import com.infotech.wishmaplus.Api.Response.AnalyticsResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +49,16 @@ import java.util.List;
 public class AnalyticsDashboard extends AppCompatActivity {
     BarChart barChart;
     PieChart pieChart;
+    androidx.appcompat.widget.AppCompatTextView dateRange;
+    int days=0;
 
+    ImageButton filterButton;
+    private CustomLoader loader;
+    ImageView imgPost;
+    VideoView videoPost;
+    TextView postCaption, commentsValue, engagementValue, earningsValue, likesValue,totalEngagementValue,totalShareValue,totalCommentsValue,totalLikesValue;
+    AnalyticsDetailsResponse analyticsResponse = new AnalyticsDetailsResponse();
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +75,31 @@ public class AnalyticsDashboard extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        dateRange = findViewById(R.id.subTitle);
+        filterButton = findViewById(R.id.filter_button);
+        imgPost = findViewById(R.id.imagePost);
+        videoPost = findViewById(R.id.videoPost);
+        postCaption = findViewById(R.id.postCaption);
+        commentsValue = findViewById(R.id.commentsValue);
+        engagementValue = findViewById(R.id.engagementValue);
+        earningsValue = findViewById(R.id.earningsValue);
+        likesValue = findViewById(R.id.likesValue);
+        totalEngagementValue = findViewById(R.id.totalEngagementValue);
+        totalShareValue = findViewById(R.id.totalShareValue);
+        totalCommentsValue = findViewById(R.id.totalCommentsValue);
+        totalLikesValue = findViewById(R.id.totalLikesValue);
+        recyclerView = findViewById(R.id.rvContentSummary);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        filterButton.setOnClickListener(view -> UtilMethods.INSTANCE.selectDateRangeBottomSheetNew(this, dateRange, this::updateDateFilter,true));
         barChart = findViewById(R.id.barChart);
         setupChart();
         pieChart = findViewById(R.id.pieChart);
+        loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
 
         setupPieChart();
 
         LineChart lineChart = findViewById(R.id.lineChart);
+        getDateWiseAnalytic(days);
 
         /* DATA POINTS (replicates the spikes in image) */
         List<Entry> entries = new ArrayList<>();
@@ -132,6 +175,12 @@ public class AnalyticsDashboard extends AppCompatActivity {
         /* REFRESH */
         lineChart.invalidate();
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateDateFilter(int days) {
+        this.days = days;
+        getDateWiseAnalytic(days);
     }
     private void setupChart() {
 
@@ -222,4 +271,114 @@ public class AnalyticsDashboard extends AppCompatActivity {
 
         pieChart.invalidate(); // refresh
     }
+
+    public void getDateWiseAnalytic(int dateRange){
+        loader.show();
+        UtilMethods.INSTANCE.getDateWiseAnalytic(dateRange, new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+                analyticsResponse = (AnalyticsDetailsResponse) object;
+                if(analyticsResponse.getStatusCode()==1){
+                    totalLikesValue.setText(analyticsResponse.getResult().getAnalytic().getTotalLikes()+"");
+                    totalCommentsValue.setText(analyticsResponse.getResult().getAnalytic().getTotalComments()+"");
+                    totalShareValue.setText(analyticsResponse.getResult().getAnalytic().getTotalShares()+"");
+                    totalEngagementValue.setText(analyticsResponse.getResult().getAnalytic().getTotalEngagement()+"");
+                    setContentSummary(analyticsResponse.getResult().getContent());
+//                    profile_name.setText(analyticsResponse.getResult().getProfile().getFullName());
+//                    Glide.with(ProfessionalDashBoardPersonal.this)
+//                            .load(analyticsResponse.getResult().getProfile().getProfilePictureUrl())
+//                            .apply(UtilMethods.INSTANCE.getRequestOption_With_UserIcon())
+//                            .into(profile_image);
+//                    int progress = analyticsResponse.getResult().getProfile().getWeelkyProgress();
+//                    ObjectAnimator anim = ObjectAnimator.ofInt(progressCircle, "progress", progress);
+//                    anim.setDuration(700);
+//                    anim.setInterpolator(new DecelerateInterpolator());
+//                    anim.start();
+//                    tvPercent.setText(progress + "%");
+//                    progressCircle.setProgress(progress);
+//                    tvLikeValue.setText(analyticsResponse.getResult().getAnalytic().getTotalLikes()+"");
+//                    tvCommentsValue.setText(analyticsResponse.getResult().getAnalytic().getTotalComments()+"");
+//                    tvSharesValue.setText(analyticsResponse.getResult().getAnalytic().getTotalShares()+"");
+//                    tvEngagementValue.setText(analyticsResponse.getResult().getAnalytic().getTotalEngagement()+"");
+                    imgPost.setVisibility(View.GONE);
+                    videoPost.setVisibility(View.GONE);
+
+                    if (analyticsResponse.getResult().getLatestPosts().getContentTypeId() == 3) {  // IMAGE
+                        imgPost.setVisibility(View.VISIBLE);
+                        if(analyticsResponse.getResult().getLatestPosts().getCaption() != null)
+                            postCaption.setText(analyticsResponse.getResult().getLatestPosts().getCaption());
+                        Glide.with(AnalyticsDashboard.this)
+                                .load(analyticsResponse.getResult().getLatestPosts().getPostContent())
+                                .placeholder(R.drawable.app_logo)
+                                .into(imgPost);
+                    }
+
+                    else if (analyticsResponse.getResult().getLatestPosts().getContentTypeId() == 2) {  // VIDEO
+                        videoPost.setVisibility(View.VISIBLE);
+                        videoPost.setVideoPath(analyticsResponse.getResult().getLatestPosts().getPostContent());
+                        videoPost.seekTo(1); // show first frame
+                        if(analyticsResponse.getResult().getLatestPosts().getCaption() != null)
+                            postCaption.setText(analyticsResponse.getResult().getLatestPosts().getCaption());
+                    }
+
+                    else if (analyticsResponse.getResult().getLatestPosts().getContentTypeId() == 1) {  // TEXT
+                        imgPost.setVisibility(View.VISIBLE);
+                        postCaption.setText(analyticsResponse.getResult().getLatestPosts().getCaption());
+                        Glide.with(AnalyticsDashboard.this)
+                                .load(analyticsResponse.getResult().getLatestPosts().getPostContent())
+                                .placeholder(R.drawable.app_logo)
+                                .into(imgPost);
+
+                    }
+
+                    likesValue.setText(analyticsResponse.getResult().getLatestPosts().getTotalLikes()+"");
+                    earningsValue.setText("₹"+analyticsResponse.getResult().getLatestPosts().getPostEarning()+"");
+                    engagementValue.setText(analyticsResponse.getResult().getLatestPosts().getEngagement()+"");
+                    commentsValue.setText(analyticsResponse.getResult().getLatestPosts().getTotalComments()+"");
+
+
+                }
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if (loader != null) {
+                    if (loader.isShowing()) {
+                        loader.dismiss();
+                    }
+                }
+
+            }
+        });
+    }
+    private void setContentSummary(
+            List<AnalyticsDetailsResponse.ContentSummary> list
+    ) {
+        int maxValue = getMaxValue(list);
+
+        ContentSummaryAdapter adapter =
+                new ContentSummaryAdapter(list, maxValue);
+
+        recyclerView.setAdapter(adapter);
+    }
+
+    private int getMaxValue(
+            List<AnalyticsDetailsResponse.ContentSummary> list
+    ) {
+        int max = 0;
+        for (AnalyticsDetailsResponse.ContentSummary item : list) {
+            if (item.getTotal() > max) {
+                max = item.getTotal();
+            }
+        }
+        return max;
+    }
+
 }

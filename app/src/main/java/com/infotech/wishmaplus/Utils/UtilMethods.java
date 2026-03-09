@@ -61,6 +61,7 @@ import com.infotech.wishmaplus.Api.Request.LikeRequest;
 import com.infotech.wishmaplus.Api.Request.ReportPostRequest;
 import com.infotech.wishmaplus.Api.Request.UpdateGroupMemberRequest;
 import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
+import com.infotech.wishmaplus.Api.Response.AnalyticsDetailsResponse;
 import com.infotech.wishmaplus.Api.Response.AnalyticsResponse;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
@@ -1472,6 +1473,31 @@ public enum UtilMethods {
 
                 @Override
                 public void onFailure(@NonNull Call<AnalyticsResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getDateWiseAnalytic(int dateRange,ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<AnalyticsDetailsResponse> call = git.getDateWiseAnalytic("Bearer " + tokenManager.getAccessToken(),dateRange);
+            call.enqueue(new Callback<AnalyticsDetailsResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<AnalyticsDetailsResponse> call, @NonNull Response<AnalyticsDetailsResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<AnalyticsDetailsResponse> call, @NonNull Throwable t) {
                     apiCallBack.onError(t.getMessage());
                 }
             });

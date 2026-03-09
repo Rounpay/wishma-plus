@@ -24,6 +24,7 @@ import com.infotech.wishmaplus.Api.Request.SignUpRequest;
 import com.infotech.wishmaplus.Api.Request.UpdateGroupMemberRequest;
 import com.infotech.wishmaplus.Api.Request.UpdateUserRequest;
 import com.infotech.wishmaplus.Api.Response.AddPeopleResponse;
+import com.infotech.wishmaplus.Api.Response.AnalyticsDetailsResponse;
 import com.infotech.wishmaplus.Api.Response.AnalyticsResponse;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
 import com.infotech.wishmaplus.Api.Response.BasicObjectResponse;
@@ -452,6 +453,12 @@ public interface EndPointInterface {
     );
     @GET("api/UserReport/ProfessionalDahboardAnalytic")
     Call<AnalyticsResponse> getProfessionalDahboardAnalytic(
+            @Header("Authorization") String token,
+            @Query("DateRange") int DateRange
+    );
+
+    @GET("api/UserReport/DateWiseAnalytic")
+    Call<AnalyticsDetailsResponse> getDateWiseAnalytic(
             @Header("Authorization") String token,
             @Query("DateRange") int DateRange
     );

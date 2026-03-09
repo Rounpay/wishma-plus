@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Participant Name -->
+    <TextView
+        android:id="@+id/participantName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Participant Name"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="#212121"
+        android:maxLines="1"
+        android:ellipsize="end" />
+
+    <!-- Co-Host Badge -->
+    <TextView
+        android:id="@+id/coHostBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp"
+        android:text="CO-HOST"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/bg_cohost_badge"
+        android:visibility="gone" />
+
+    <!-- More Options -->
+    <ImageButton
+        android:id="@+id/moreOptionsButton"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_more_vert_24"
+        android:contentDescription="More options"
+        app:tint="#616161" />
+
+</LinearLayout>

@@ -2,9 +2,11 @@ package com.infotech.wishmaplus.Activity;
 
 import static android.content.ContentValues.TAG;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -43,6 +46,19 @@ import com.infotech.wishmaplus.Utils.ApplicationConstant;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
+import com.infotech.wishmaplus.zego.LivePageActivity;
+import com.infotech.wishmaplus.zego.PreviewActivity;
+import com.permissionx.guolindev.PermissionX;
+import com.permissionx.guolindev.callback.RequestCallback;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
+import im.zego.zegoexpress.ZegoExpressEngine;
+import im.zego.zegoexpress.constants.ZegoScenario;
+import im.zego.zegoexpress.entity.ZegoEngineProfile;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -58,6 +74,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isProfileType;
 
     public String postId = "";
+    private long appID = 1481330104 ;
+    private String appSign = "feaffdef861ae4d24300952320aeb17e8e4c14557380c19e1aa64d26d5985200" ;
     public boolean fromNotification  = false;
 
     @Override
@@ -84,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             finalPageId = null;
         }
+        createEngine();
 
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(task -> {
@@ -181,6 +200,98 @@ public class MainActivity extends AppCompatActivity {
             selectedLine = homeLine;
             getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId,isProfileType), "Home").commit();
         }
+    }
+
+    void createEngine() {
+        ZegoEngineProfile profile = new ZegoEngineProfile();
+
+        // Get your AppID and AppSign from ZEGOCLOUD Console
+        //[My Projects -> AppID] : https://console.zegocloud.com/project
+        profile.appID = appID;
+        profile.appSign = appSign;
+        profile.scenario = ZegoScenario.BROADCAST; // General scenario.
+        profile.application = getApplication();
+        ZegoExpressEngine.createEngine(profile, null);
+    }
+    private void destroyEngine() {
+        ZegoExpressEngine.destroyEngine(null);
+    }
+
+    private static String generateRandomID() {
+        StringBuilder builder = new StringBuilder();
+        Random random = new Random();
+        while (builder.length() < 6) {
+            int nextInt = random.nextInt(10);
+            if (builder.length() == 0 && nextInt == 0) {
+                continue;
+            }
+            builder.append(nextInt);
+        }
+        return builder.toString();
+    }
+
+    private void requestPermissionIfNeeded(List<String> permissions, RequestCallback requestCallback) {
+        boolean allGranted = true;
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                allGranted = false;
+            }
+        }
+        if (allGranted) {
+            requestCallback.onResult(true, permissions, new ArrayList<>());
+            return;
+        }
+
+        PermissionX.init(this).permissions(permissions).onExplainRequestReason((scope, deniedList) -> {
+            String message = "";
+            if (permissions.size() == 1) {
+                if (deniedList.contains(Manifest.permission.CAMERA)) {
+                    message = this.getString(R.string.permission_explain_camera);
+                } else if (deniedList.contains(Manifest.permission.RECORD_AUDIO)) {
+                    message = this.getString(R.string.permission_explain_mic);
+                }
+            } else {
+                if (deniedList.size() == 1) {
+                    if (deniedList.contains(Manifest.permission.CAMERA)) {
+                        message = this.getString(R.string.permission_explain_camera);
+                    } else if (deniedList.contains(Manifest.permission.RECORD_AUDIO)) {
+                        message = this.getString(R.string.permission_explain_mic);
+                    }
+                } else {
+                    message = this.getString(R.string.permission_explain_camera_mic);
+                }
+            }
+            scope.showRequestReasonDialog(deniedList, message, getString(R.string.ok));
+        }).onForwardToSettings((scope, deniedList) -> {
+            String message = "";
+            if (permissions.size() == 1) {
+                if (deniedList.contains(Manifest.permission.CAMERA)) {
+                    message = this.getString(R.string.settings_camera);
+                } else if (deniedList.contains(Manifest.permission.RECORD_AUDIO)) {
+                    message = this.getString(R.string.settings_mic);
+                }
+            } else {
+                if (deniedList.size() == 1) {
+                    if (deniedList.contains(Manifest.permission.CAMERA)) {
+                        message = this.getString(R.string.settings_camera);
+                    } else if (deniedList.contains(Manifest.permission.RECORD_AUDIO)) {
+                        message = this.getString(R.string.settings_mic);
+                    }
+                } else {
+                    message = this.getString(R.string.settings_camera_mic);
+                }
+            }
+            scope.showForwardToSettingsDialog(deniedList, message, getString(R.string.settings),
+                    getString(R.string.cancel));
+        }).request(new RequestCallback() {
+            @Override
+            public void onResult(boolean allGranted, @NonNull List<String> grantedList,
+                                 @NonNull List<String> deniedList) {
+                if (requestCallback != null) {
+                    requestCallback.onResult(allGranted, grantedList, deniedList);
+                }
+            }
+        });
     }
 
     @Override
@@ -413,6 +524,8 @@ public class MainActivity extends AppCompatActivity {
         // Set up views in popup layout
         TextView addPost = popupView.findViewById(R.id.addPost);
         TextView addStory = popupView.findViewById(R.id.addStory);
+        TextView liveVideo = popupView.findViewById(R.id.liveVideo);
+        TextView joinNow = popupView.findViewById(R.id.joinNow);
         addPost.setOnClickListener(v -> {
             popupWindow.dismiss();
             Intent intent = new Intent(MainActivity.this, PostActivity.class);
@@ -433,6 +546,55 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("pageId", finalPageId);
             intent.putExtra("isProfileType", isProfileType);
             storyActivityResultLauncher.launch(intent);
+        });
+        liveVideo.setOnClickListener(v -> {
+
+            popupWindow.dismiss();
+// Before starting a live streaming, request the camera and recording permissions.
+            requestPermissionIfNeeded(Arrays.asList(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO), new RequestCallback() {
+                @Override
+                public void onResult(boolean allGranted, @NonNull List<String> grantedList, @NonNull List<String> deniedList) {
+                    if (allGranted) {
+                        Toast.makeText(MainActivity.this, "All permissions have been granted.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
+                        String userID = generateRandomID();
+                        String userName = "Udit";//"user_" + userID;
+                        intent.putExtra("userID", userID);
+                        intent.putExtra("userName", userName);
+                        intent.putExtra("roomID", "12345");
+                        intent.putExtra("isHost", true);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Some permissions have not been granted.", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        });
+        joinNow.setOnClickListener(v -> {
+
+            popupWindow.dismiss();
+// Before starting a live streaming, request the camera and recording permissions.
+            requestPermissionIfNeeded(Arrays.asList(Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO), new RequestCallback() {
+                @Override
+                public void onResult(boolean allGranted, @NonNull List<String> grantedList, @NonNull List<String> deniedList) {
+                    if (allGranted) {
+                        Toast.makeText(MainActivity.this, "All permissions have been granted.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(MainActivity.this, LivePageActivity.class);
+                        String userID = generateRandomID();
+                        String userName = "Shivam";//"user_" + userID;
+                        intent.putExtra("userID", userID);
+                        intent.putExtra("userName", userName);
+                        intent.putExtra("roomID", "12345");
+                        intent.putExtra("isHost", false);
+                        intent.putExtra("isMicEnabled", false);
+                        intent.putExtra("isCameraEnabled", false);
+                        intent.putExtra("isFrontCamera", false);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(MainActivity.this, "Some permissions have not been granted.", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         });
 
         // Display the popup window at the center of the screen
