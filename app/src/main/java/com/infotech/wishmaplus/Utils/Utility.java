@@ -75,6 +75,21 @@ public enum Utility {
         }
 
     }
+    public static String getFullName(String firstName, String lastName) {
+
+        if(firstName == null) firstName = "";
+        if(lastName == null) lastName = "";
+
+        firstName = firstName.trim();
+        lastName = lastName.trim();
+
+        // If first or last name already contains space
+        if(firstName.contains(" ") || lastName.contains(" ")){
+            return firstName + lastName;
+        }
+
+        return firstName + " " + lastName;
+    }
 
     public double convertStringToDouble(String data) {
         try {

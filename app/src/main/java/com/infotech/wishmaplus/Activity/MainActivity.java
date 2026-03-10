@@ -36,16 +36,21 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.infotech.wishmaplus.Api.Response.GetRoomIdResponse;
+import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Fragments.FriendListFragment;
 import com.infotech.wishmaplus.Fragments.HomeFragment;
 import com.infotech.wishmaplus.Fragments.MoreFragment;
 import com.infotech.wishmaplus.Fragments.NotificationFragment;
 import com.infotech.wishmaplus.Fragments.VideoFragment;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.ApiClient;
 import com.infotech.wishmaplus.Utils.ApplicationConstant;
 import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.EndPointInterface;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
 import com.infotech.wishmaplus.Utils.UtilMethods;
+import com.infotech.wishmaplus.Utils.Utility;
 import com.infotech.wishmaplus.zego.LivePageActivity;
 import com.infotech.wishmaplus.zego.PreviewActivity;
 import com.permissionx.guolindev.PermissionX;
@@ -59,6 +64,9 @@ import java.util.Random;
 import im.zego.zegoexpress.ZegoExpressEngine;
 import im.zego.zegoexpress.constants.ZegoScenario;
 import im.zego.zegoexpress.entity.ZegoEngineProfile;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -77,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     private long appID = 1481330104 ;
     private String appSign = "feaffdef861ae4d24300952320aeb17e8e4c14557380c19e1aa64d26d5985200" ;
     public boolean fromNotification  = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -556,14 +565,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onResult(boolean allGranted, @NonNull List<String> grantedList, @NonNull List<String> deniedList) {
                     if (allGranted) {
                         Toast.makeText(MainActivity.this, "All permissions have been granted.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
-                        String userID = generateRandomID();
-                        String userName = "Udit";//"user_" + userID;
-                        intent.putExtra("userID", userID);
-                        intent.putExtra("userName", userName);
-                        intent.putExtra("roomID", "12345");
-                        intent.putExtra("isHost", true);
-                        startActivity(intent);
+                        GetRoomId();
+
                     } else {
                         Toast.makeText(MainActivity.this, "Some permissions have not been granted.", Toast.LENGTH_LONG).show();
                     }
@@ -599,6 +602,49 @@ public class MainActivity extends AppCompatActivity {
 
         // Display the popup window at the center of the screen
         popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM);
+    }
+
+
+
+    public void GetRoomId(){
+        loader.show();
+        UtilMethods.INSTANCE.getRoomId(new UtilMethods.ApiCallBackMulti() {
+             @Override
+            public void onSuccess(Object object) {
+                 if(loader != null && loader.isShowing()){
+                    loader.dismiss();
+                 }
+
+                GetRoomIdResponse response = (GetRoomIdResponse) object;
+                if(response.getStatusCode() == 1){
+                    if(response.getResult() != null){
+                        String roomId = response.getResult().getRoomId();
+                        Log.d("ROOM_ID", roomId);
+                        openLiveActivity(roomId);
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                  if(loader != null && loader.isShowing()){
+                    loader.dismiss();
+                }
+
+            }
+        });
+    }
+
+    private void openLiveActivity(String roomId){
+        Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
+        intent.putExtra("userID", tokenManager.getUserId());
+        intent.putExtra("userName", Utility.INSTANCE.getFullName(tokenManager.getFirstName(), tokenManager.getLastName()));
+        intent.putExtra("roomID", roomId);
+        intent.putExtra("isHost", true);
+        startActivity(intent);
+
     }
 
     @SuppressLint("GestureBackNavigation")

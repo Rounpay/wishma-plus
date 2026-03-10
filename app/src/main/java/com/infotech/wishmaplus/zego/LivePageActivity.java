@@ -224,9 +224,17 @@ public class LivePageActivity extends AppCompatActivity {
     // ========== Stream Management ==========
 
     void startPreview() {
-        ZegoCanvas previewCanvas = new ZegoCanvas(findViewById(R.id.hostView));
-        previewCanvas.viewMode = ZegoViewMode.ASPECT_FILL;
-        ZegoExpressEngine.getEngine().startPreview(previewCanvas);
+        // Stop any existing preview first to clear old canvas
+        ZegoExpressEngine.getEngine().stopPreview();
+
+        new android.os.Handler(getMainLooper()).postDelayed(() -> {
+            View hostView = findViewById(R.id.hostView);
+            hostView.setVisibility(View.VISIBLE);
+
+            ZegoCanvas previewCanvas = new ZegoCanvas(hostView);
+            previewCanvas.viewMode = ZegoViewMode.ASPECT_FILL;
+            ZegoExpressEngine.getEngine().startPreview(previewCanvas);
+        }, 100);
     }
 
     void stopPreview() {
@@ -244,10 +252,16 @@ public class LivePageActivity extends AppCompatActivity {
 
                 if (isHost) {
                     isHostPresent = true;
-                    initializeHostSettings();
-                    startPreview();
-                    startPublish();
-                    notifyHostPresence(true);
+
+                    new android.os.Handler(getMainLooper()).postDelayed(() -> {
+                        initializeHostSettings();
+                        startPreview();
+
+                        new android.os.Handler(getMainLooper()).postDelayed(() -> {
+                            startPublish();
+                            notifyHostPresence(true);
+                        }, 500);
+                    }, 500);
                 }
             } else {
                 Toast.makeText(this, "Login failed. error = " + error, Toast.LENGTH_LONG).show();

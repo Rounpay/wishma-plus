@@ -48,6 +48,7 @@ import com.infotech.wishmaplus.Api.Response.FollowersResponse;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.FriendUserModel;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
+import com.infotech.wishmaplus.Api.Response.GetRoomIdResponse;
 import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
 import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
 import com.infotech.wishmaplus.Api.Response.GroupListResponse;
@@ -77,6 +78,7 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -484,5 +486,21 @@ public interface EndPointInterface {
             @Header("Authorization") String authorization,
             @Query("PostId") String PostId,
             @Query("ClickType") int ClickType);
+
+    @GET("api/zego/getroomId")
+    Call<GetRoomIdResponse> getRoomId(
+            @Header("Authorization") String authorization);
+
+    @GET("api/zego/startlive")
+    Call<BasicResponse> startLive(
+            @Header("Authorization") String authorization,
+            @Query("RoomId") String RoomId
+    );
+
+    @GET("api/zego/endlive")
+    Call<BasicResponse> endLive(
+            @Header("Authorization") String authorization,
+            @Query("RoomId") String RoomId
+    );
 
 }

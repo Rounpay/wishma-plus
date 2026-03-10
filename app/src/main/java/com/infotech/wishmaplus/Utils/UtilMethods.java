@@ -81,6 +81,7 @@ import com.infotech.wishmaplus.Api.Response.EnableDashboardResponse;
 import com.infotech.wishmaplus.Api.Response.EstimateResponse;
 import com.infotech.wishmaplus.Api.Response.FriendListResponse;
 import com.infotech.wishmaplus.Api.Response.GetContentDetailsToBoostResponse;
+import com.infotech.wishmaplus.Api.Response.GetRoomIdResponse;
 import com.infotech.wishmaplus.Api.Response.GetUserListResponse;
 import com.infotech.wishmaplus.Api.Response.GroupDetailsResponse;
 import com.infotech.wishmaplus.Api.Response.GroupListResponse;
@@ -2509,6 +2510,81 @@ public enum UtilMethods {
                 .setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetDialogReport.show();
 
+    }
+
+    public void getRoomId( ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<GetRoomIdResponse> call = git.getRoomId("Bearer " + tokenManager.getAccessToken());
+            call.enqueue(new Callback<GetRoomIdResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<GetRoomIdResponse> call, @NonNull Response<GetRoomIdResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<GetRoomIdResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void startLive(String RoomId, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BasicResponse> call = git.startLive("Bearer " + tokenManager.getAccessToken(),RoomId.toString());
+            call.enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void endLive(String RoomId, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BasicResponse> call = git.endLive("Bearer " + tokenManager.getAccessToken(),RoomId.toString());
+            call.enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
     }
 
 

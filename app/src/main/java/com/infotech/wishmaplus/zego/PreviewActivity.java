@@ -2,6 +2,7 @@ package com.infotech.wishmaplus.zego;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -13,7 +14,11 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.infotech.wishmaplus.Api.Response.BasicResponse;
+import com.infotech.wishmaplus.Api.Response.GetRoomIdResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import im.zego.zegoexpress.ZegoExpressEngine;
 import im.zego.zegoexpress.constants.ZegoVideoMirrorMode;
@@ -31,6 +36,7 @@ public class PreviewActivity extends AppCompatActivity {
     private ImageButton cameraButton;
     private ImageButton flipCameraButton;
     private MaterialButton startLiveButton;
+    public CustomLoader loader;
 
     private boolean isMicEnabled = true;
     private boolean isCameraEnabled = true;
@@ -53,6 +59,7 @@ public class PreviewActivity extends AppCompatActivity {
         userName = getIntent().getStringExtra("userName");
         roomID = getIntent().getStringExtra("roomID");
         isHost = getIntent().getBooleanExtra("isHost", false);
+        loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
 
         initializeViews();
         setupClickListeners();
@@ -143,26 +150,60 @@ public class PreviewActivity extends AppCompatActivity {
 
     private void startLive() {
         // Stop preview before starting live
-        ZegoExpressEngine.getEngine().stopPreview();
+//        ZegoExpressEngine.getEngine().stopPreview();
 
         // Start live activity with current settings
-        Intent intent = new Intent(this, LivePageActivity.class);
-        intent.putExtra("userID", userID);
-        intent.putExtra("userName", userName);
-        intent.putExtra("roomID", roomID);
-        intent.putExtra("isHost", isHost);
-        intent.putExtra("isMicEnabled", isMicEnabled);
-        intent.putExtra("isCameraEnabled", isCameraEnabled);
-        intent.putExtra("isFrontCamera", isFrontCamera);
 
-        startActivity(intent);
-        finish();
+
+            loader.show();
+            UtilMethods.INSTANCE.startLive(roomID,new UtilMethods.ApiCallBackMulti() {
+                @Override
+                public void onSuccess(Object object) {
+                    if(loader != null && loader.isShowing()){
+                        loader.dismiss();
+                    }
+
+                    BasicResponse response = (BasicResponse) object;
+                    if(response.getStatusCode() == 1){
+                        Intent intent = new Intent(PreviewActivity.this, LivePageActivity.class);
+                            intent.putExtra("userID", userID);
+                            intent.putExtra("userName", userName);
+                            intent.putExtra("roomID", roomID);
+                            intent.putExtra("isHost", isHost);
+                            intent.putExtra("isMicEnabled", isMicEnabled);
+                            intent.putExtra("isCameraEnabled", isCameraEnabled);
+                            intent.putExtra("isFrontCamera", isFrontCamera);
+                        Toast.makeText(PreviewActivity.this, response.getResponseText(), Toast.LENGTH_SHORT).show();
+
+                            startActivity(intent);
+                            finish();
+
+
+                    }
+
+                }
+
+                @Override
+                public void onError(String msg) {
+                    if(loader != null && loader.isShowing()){
+                        loader.dismiss();
+                    }
+
+                }
+            });
+
+
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ZegoExpressEngine.getEngine().stopPreview();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Stop preview when activity is destroyed
-        ZegoExpressEngine.getEngine().stopPreview();
     }
 }
