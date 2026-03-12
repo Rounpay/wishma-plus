@@ -147,8 +147,7 @@ public class PreviewActivity extends AppCompatActivity {
 
     private void startLive() {
         // Stop preview before starting live
-//        ZegoExpressEngine.getEngine().stopPreview();
-
+        //  ZegoExpressEngine.getEngine().stopPreview();
         // Start live activity with current settings
 
 
@@ -170,7 +169,7 @@ public class PreviewActivity extends AppCompatActivity {
                             intent.putExtra("isMicEnabled", isMicEnabled);
                             intent.putExtra("isCameraEnabled", isCameraEnabled);
                             intent.putExtra("isFrontCamera", isFrontCamera);
-                        Toast.makeText(PreviewActivity.this, response.getResponseText(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PreviewActivity.this,"Live stream started", Toast.LENGTH_SHORT).show();
 
                             startActivity(intent);
                             finish();

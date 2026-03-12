@@ -70,6 +70,7 @@
                 android:id="@+id/joinNow"
                 style="@style/TextAppearance.AppCompat.Subhead"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:drawablePadding="@dimen/_7sdp"
                 android:fontFamily="sans-serif-medium"

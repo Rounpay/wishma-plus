@@ -3,10 +3,12 @@ package com.infotech.wishmaplus.Adapter;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -89,9 +91,13 @@ import com.infotech.wishmaplus.Utils.Utility;
 import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.CustomRecyclerView;
 import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.DownloadManagerService;
 import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.VideoUtils;
+import com.infotech.wishmaplus.zego.LivePageActivity;
+import com.permissionx.guolindev.PermissionX;
+import com.permissionx.guolindev.callback.RequestCallback;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -114,6 +120,7 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public static final int VIEW_TYPE_LOADING = 111;
     public static final int VIEW_TYPE_PROFILE = 222;
     public static final int VIEW_TYPE_POST = 333;
+
 
     private static final int VIEW_TYPE_TEXT = 1;
     private static final int VIEW_TYPE_VIDEO = 2;
@@ -180,10 +187,13 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (viewType == VIEW_TYPE_LOADING) {
             View view = inflater.inflate(R.layout.adapter_loading, parent, false);
             return new LoadingViewHolder(view);
-        } else if (viewType == VIEW_TYPE_POST) {
+        }
+        else if (viewType == VIEW_TYPE_POST) {
             View view = inflater.inflate(R.layout.adapter_post, parent, false);
             return new PostViewHolder(view);
-        } else if (viewType == VIEW_TYPE_PROFILE) {
+        }
+
+        else if (viewType == VIEW_TYPE_PROFILE) {
             View view = inflater.inflate(R.layout.adapter_user_details, parent, false);
             return new ProfileViewHolder(view);
         } else if (viewType == VIEW_TYPE_TEXT) {
@@ -207,7 +217,8 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if (holder instanceof LoadingViewHolder) {
             ((LoadingViewHolder) holder).bind(content);
-        } else if (holder instanceof PostViewHolder) {
+        }
+      else if (holder instanceof PostViewHolder) {
             ((PostViewHolder) holder).bind(content);
         } else if (holder instanceof ProfileViewHolder) {
             ((ProfileViewHolder) holder).bind(content, position);
@@ -2452,6 +2463,8 @@ public class MultiContentAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         void onDelete(int position);
     }
+
+
 
 
    /* public interface ApiCallBack {

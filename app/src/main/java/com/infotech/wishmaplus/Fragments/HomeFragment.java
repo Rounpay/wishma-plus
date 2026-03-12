@@ -26,6 +26,7 @@ import com.infotech.wishmaplus.Adapter.StoryAdapter;
 import com.infotech.wishmaplus.Api.Object.ContentResult;
 import com.infotech.wishmaplus.Api.Object.StoryResult;
 import com.infotech.wishmaplus.Api.Response.BasicListResponse;
+import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.ContentResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
@@ -37,11 +38,18 @@ import com.infotech.wishmaplus.Utils.UtilMethods;
 import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.CustomRecyclerView;
 import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.DownloadManagerService;
 import com.infotech.wishmaplus.Utils.VideoEdit.AutoPlayVideo.VideoUtils;
+import com.infotech.wishmaplus.zego.LivePageActivity;
+import com.infotech.wishmaplus.zego.ParticipantInfo;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import im.zego.zegoexpress.ZegoExpressEngine;
+import im.zego.zegoexpress.entity.ZegoUser;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,6 +75,7 @@ public class HomeFragment extends Fragment {
     int totalPost = 0;
     public boolean isScreenPause;
     ArrayList<StoryResult> storyList = new ArrayList<>();
+
     private String postId;
 
     public static HomeFragment newInstance(String pageId, boolean isProfileType) {
@@ -464,7 +473,9 @@ public class HomeFragment extends Fragment {
                             storyList.clear();
                             storyList.add(new StoryResult(StoryAdapter.VIEW_TYPE_CREATE));
                             storyList.addAll(storyResponse.getResult());
-                            contentlist.set(0, new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
+                            contentlist.set(0,new ContentResult(MultiContentAdapter.VIEW_TYPE_POST, userDetailResponse, storyList));
+
+
                             adapter.notifyItemChanged(0);
 
                             for (StoryResult item : storyResponse.getResult()) {
@@ -694,6 +705,8 @@ public class HomeFragment extends Fragment {
         recyclerView.playVideo();
         super.onResume();
     }
+
+
 
     public void refreshStory() {
         getStory(true);

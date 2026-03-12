@@ -22,7 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,6 +64,7 @@ public class LivePageActivity extends AppCompatActivity {
     // Track multiple playing streams
     private Map<String, String> playingStreams = new HashMap<>(); // streamID -> userID
     private String mainStreamID = null; // Primary stream to show in hostView
+    public CustomLoader loader;
 
     // UI Controls
     private ImageButton micButton;
@@ -103,6 +107,7 @@ public class LivePageActivity extends AppCompatActivity {
         userName = getIntent().getStringExtra("userName");
         roomID = getIntent().getStringExtra("roomID");
         isHost = getIntent().getBooleanExtra("isHost", false);
+        loader = new CustomLoader(this, android.R.style.Theme_Translucent_NoTitleBar);
 
         initializeViews();
         setupClickListeners();
@@ -248,8 +253,6 @@ public class LivePageActivity extends AppCompatActivity {
 
         ZegoExpressEngine.getEngine().loginRoom(roomID, user, roomConfig, (int error, JSONObject extendedData) -> {
             if (error == 0) {
-                Toast.makeText(this, "Login successful.", Toast.LENGTH_SHORT).show();
-
                 if (isHost) {
                     isHostPresent = true;
 
@@ -530,24 +533,53 @@ public class LivePageActivity extends AppCompatActivity {
 
     private void endLiveStream() {
         // Notify all participants that the live stream is ending
-        try {
-            JSONObject commandData = new JSONObject();
-            commandData.put("action", "END_LIVE");
 
-            // Send to all users in the room using custom command to all participants
-            for (ParticipantInfo participant : participants.values()) {
-                ArrayList<ZegoUser> targetUsers = new ArrayList<>();
-                targetUsers.add(new ZegoUser(participant.userID));
 
-                ZegoExpressEngine.getEngine().sendCustomCommand(roomID, commandData.toString(), targetUsers, null);
+        loader.show();
+        UtilMethods.INSTANCE.endLive(roomID,new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if(loader != null && loader.isShowing()){
+                    loader.dismiss();
+                }
+
+                BasicResponse response = (BasicResponse) object;
+                if(response.getStatusCode() == 1){
+                    try {
+                        JSONObject commandData = new JSONObject();
+                        commandData.put("action", "END_LIVE");
+
+                        // Send to all users in the room using custom command to all participants
+                        for (ParticipantInfo participant : participants.values()) {
+                            ArrayList<ZegoUser> targetUsers = new ArrayList<>();
+                            targetUsers.add(new ZegoUser(participant.userID));
+
+                            ZegoExpressEngine.getEngine().sendCustomCommand(roomID, commandData.toString(), targetUsers, null);
+                        }
+
+                        Toast.makeText(LivePageActivity.this, "Live stream ended", Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    // End the stream and leave the room
+
+
+
+
+
+                }
+
             }
 
-            Toast.makeText(this, "Live stream ended", Toast.LENGTH_SHORT).show();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onError(String msg) {
+                if(loader != null && loader.isShowing()){
+                    loader.dismiss();
+                }
 
-        // End the stream and leave the room
+            }
+        });
         stopPreview();
         stopPublish();
 
@@ -556,6 +588,9 @@ public class LivePageActivity extends AppCompatActivity {
 
         // Close the activity after a brief delay to ensure messages are sent
         new android.os.Handler().postDelayed(this::finish, 500);
+
+
+
     }
 
     private void notifyHostPresence(boolean isPresent) {
@@ -672,6 +707,18 @@ public class LivePageActivity extends AppCompatActivity {
             Toast.makeText(this, "Error removing participant", Toast.LENGTH_SHORT).show();
         }
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        endLiveStream();
+    }
+
+/*    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        endLiveStream();
+    }*/
 
     private void promoteToCoHost(ParticipantInfo participant) {
         try {

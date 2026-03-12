@@ -12,9 +12,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 import com.permissionx.guolindev.PermissionX;
 import com.permissionx.guolindev.callback.RequestCallback;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +29,7 @@ import java.util.Random;
 import im.zego.zegoexpress.ZegoExpressEngine;
 import im.zego.zegoexpress.constants.ZegoScenario;
 import im.zego.zegoexpress.entity.ZegoEngineProfile;
+import im.zego.zegoexpress.entity.ZegoUser;
 
 public class HomePageActivity extends AppCompatActivity {
     
@@ -87,6 +93,7 @@ public class HomePageActivity extends AppCompatActivity {
             }
         });
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

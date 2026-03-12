@@ -36,6 +36,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.infotech.wishmaplus.Api.Response.BasicResponse;
 import com.infotech.wishmaplus.Api.Response.GetRoomIdResponse;
 import com.infotech.wishmaplus.Fragments.FriendListFragment;
 import com.infotech.wishmaplus.Fragments.HomeFragment;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     private long appID = 1481330104 ;
     private String appSign = "feaffdef861ae4d24300952320aeb17e8e4c14557380c19e1aa64d26d5985200" ;
     public boolean fromNotification  = false;
+    String roomId="";
 
 
     @Override
@@ -559,7 +561,8 @@ public class MainActivity extends AppCompatActivity {
                 public void onResult(boolean allGranted, @NonNull List<String> grantedList, @NonNull List<String> deniedList) {
                     if (allGranted) {
                         Toast.makeText(MainActivity.this, "All permissions have been granted.", Toast.LENGTH_SHORT).show();
-                        GetRoomId();
+//                        GetRoomId();
+                        openLiveActivity(roomId);
 
                     } else {
                         Toast.makeText(MainActivity.this, "Some permissions have not been granted.", Toast.LENGTH_LONG).show();
@@ -598,7 +601,35 @@ public class MainActivity extends AppCompatActivity {
         popupWindow.showAsDropDown(view, 0, 0, Gravity.BOTTOM);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GetRoomId();
+        endLiveStream(roomId);
+    }
 
+    private void endLiveStream(String roomID) {
+        UtilMethods.INSTANCE.endLive(roomID,new UtilMethods.ApiCallBackMulti() {
+            @Override
+            public void onSuccess(Object object) {
+                if(loader != null && loader.isShowing()){
+                    loader.dismiss();
+                }
+
+                BasicResponse response = (BasicResponse) object;
+
+
+            }
+
+            @Override
+            public void onError(String msg) {
+                if(loader != null && loader.isShowing()){
+                    loader.dismiss();
+                }
+
+            }
+        });
+    }
 
     public void GetRoomId(){
         loader.show();
@@ -612,9 +643,9 @@ public class MainActivity extends AppCompatActivity {
                 GetRoomIdResponse response = (GetRoomIdResponse) object;
                 if(response.getStatusCode() == 1){
                     if(response.getResult() != null){
-                        String roomId = response.getResult().getRoomId();
+                         roomId = response.getResult().getRoomId();
                         Log.d("ROOM_ID", roomId);
-                        openLiveActivity(roomId);
+//                        openLiveActivity(roomId);
                     }
 
                 }

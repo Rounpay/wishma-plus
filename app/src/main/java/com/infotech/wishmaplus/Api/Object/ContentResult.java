@@ -70,6 +70,10 @@ public class ContentResult implements Parcelable {
     @SerializedName("caption")
     @Expose
     private String caption;
+
+    @SerializedName("roomId")
+    @Expose
+    private String roomId;
     @SerializedName("isLiked")
     @Expose
     private boolean isLiked;
@@ -152,6 +156,7 @@ public class ContentResult implements Parcelable {
         postContent = in.readString();
         totalStory = in.readInt();
         caption = in.readString();
+        roomId = in.readString();
         pageId = in.readString();
         groupId = in.readString();
         groupName = in.readString();
@@ -191,6 +196,7 @@ public class ContentResult implements Parcelable {
         dest.writeString(postContent);
         dest.writeInt(totalStory);
         dest.writeString(caption);
+        dest.writeString(roomId);
         dest.writeString(pageId);
         dest.writeString(groupId);
         dest.writeString(groupName);
@@ -304,6 +310,10 @@ public class ContentResult implements Parcelable {
 
     public String getCaption() {
         return caption;
+    }
+
+    public String getRoomId() {
+        return roomId;
     }
 
     public boolean isLiked() {
