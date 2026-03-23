@@ -1,6 +1,7 @@
 package com.infotech.wishmaplus.Activity;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -530,6 +531,7 @@ public class MainActivity extends AppCompatActivity {
         TextView addPost = popupView.findViewById(R.id.addPost);
         TextView addStory = popupView.findViewById(R.id.addStory);
         TextView liveVideo = popupView.findViewById(R.id.liveVideo);
+        TextView reel = popupView.findViewById(R.id.reel);
         TextView joinNow = popupView.findViewById(R.id.joinNow);
         addPost.setOnClickListener(v -> {
             popupWindow.dismiss();
@@ -595,6 +597,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             });
+        });
+
+        reel.setOnClickListener(v->{
+            Intent intent =new Intent(MainActivity.this, CreateReelActivity.class);
+            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+
+
         });
 
         // Display the popup window at the center of the screen

@@ -20,6 +20,7 @@
     <color name="grey_6">#665f5f</color>
     <color name="light_blue">#D8EEFF</color>
     <color name="black_alpha_55">#8C000000</color>
+    <color name="black">#000000</color>
     <color name="color_green">#4caf50</color>
 
     <color name="progress_secondary">#8affffff</color>

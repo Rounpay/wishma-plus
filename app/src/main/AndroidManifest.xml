@@ -51,22 +51,25 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
+            android:name=".Activity.CreateReelActivity"
+            android:exported="false" />
+        <activity
             android:name=".zego.PreviewActivity"
             android:exported="false"
-            android:theme="@style/Appnew"
             android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".zego.HomePageActivity"
             android:exported="false"
-            android:theme="@style/Appnew"
             android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".zego.LivePageActivity"
             android:exported="false"
-            android:theme="@style/Appnew"
             android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.ComplaintList"
@@ -323,38 +326,38 @@
         <activity
             android:name=".Activity.TermAndCondition"
             android:exported="false"
-            android:theme="@style/Appnew"
             android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.CreatePersonalProfileActivity"
             android:exported="false"
-            android:theme="@style/Appnew"
             android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.ProfessionalProfileActivity"
             android:exported="false"
-            android:theme="@style/Appnew"
             android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.PersonalProfileActivity"
             android:exported="false"
-            android:theme="@style/Appnew"
             android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.CreateNewProfilePage"
             android:exported="false"
-            android:theme="@style/Appnew"
             android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.IncomeReportActivity"
             android:exported="false"
-            android:theme="@style/Appnew"
             android:screenOrientation="portrait"
+            android:theme="@style/Appnew"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.ShareRedirectActivity"
@@ -536,8 +539,8 @@
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
         </receiver>
-
-     <!--   <provider
+        <!--
+   <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider_smart_image_picker"
             android:exported="false"
@@ -547,7 +550,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"
                 tools:replace="android:resource" />
-        </provider>-->
+        </provider>
+        -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider_smart_image_picker"
