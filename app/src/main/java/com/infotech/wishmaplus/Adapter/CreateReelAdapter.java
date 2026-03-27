@@ -20,6 +20,12 @@ import java.util.List;
 public class CreateReelAdapter extends RecyclerView.Adapter<CreateReelAdapter.MyViewHolder> {
     CreateReelActivity context;
     List<MediaModel> videoList;
+    private boolean isMultiSelect = false;
+
+    public void setMultiSelect(boolean value) {
+        isMultiSelect = value;
+        notifyDataSetChanged();
+    }
 
 
     public CreateReelAdapter(CreateReelActivity context, List<MediaModel> videoList) {
@@ -44,6 +50,23 @@ public class CreateReelAdapter extends RecyclerView.Adapter<CreateReelAdapter.My
         Glide.with(context)
                 .load(model.getPath())
                 .into(holder.thumbnail);
+
+        holder.itemView.setOnClickListener(v -> {
+            if (isMultiSelect) {
+                model.setSelected(!model.isSelected());
+
+                if (model.isSelected()) {
+                    videoList.add(model);
+                } else {
+                    videoList.remove(model);
+                }
+
+                notifyItemChanged(position);
+
+            } else {
+                // normal click (single select / preview)
+            }
+        });
 
 
         if (model.isVideo()) {

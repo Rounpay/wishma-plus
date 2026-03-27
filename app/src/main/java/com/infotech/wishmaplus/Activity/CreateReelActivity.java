@@ -6,11 +6,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -18,9 +23,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.infotech.wishmaplus.Adapter.CreateReelAdapter;
+import com.infotech.wishmaplus.Adapter.FolderSpinnerAdapter;
+import com.infotech.wishmaplus.Api.Response.FolderModel;
 import com.infotech.wishmaplus.Api.Response.MediaModel;
 import com.infotech.wishmaplus.R;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -28,8 +36,13 @@ import java.util.List;
 public class CreateReelActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     List<MediaModel> mediaList = new ArrayList<>();
+    ArrayList<FolderModel> folderList = new ArrayList<>();
     CreateReelAdapter adapter;
     LinearLayout galleryLayout;
+    CardView multipleSelectBtn;
+    Spinner spinnerTxt;
+    private boolean isMultiSelect = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,18 +62,24 @@ public class CreateReelActivity extends AppCompatActivity {
              recyclerView = findViewById(R.id.videoRecycler);
             ImageView back = findViewById(R.id.back);
              galleryLayout = findViewById(R.id.galleryLayout);
+            spinnerTxt = findViewById(R.id.spinnerTxt);
+            multipleSelectBtn = findViewById(R.id.multipleSelectBtn);
 
             back.setOnClickListener(v1 -> finish());
             galleryLayout.setOnClickListener((view)->{
                 loadFolders();
             });
 
+           /* multipleSelectBtn.setOnClickListener((v1 -> {
+                isMultiSelect = true;
+                mediaList.clear();
+                adapter.setMultiSelect(true);
+            }));*/
+
             recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
             adapter = new CreateReelAdapter(this, mediaList);
             recyclerView.setAdapter(adapter);
             loadAllMedia();
-
-
 
             return insets;
         });
@@ -68,34 +87,131 @@ public class CreateReelActivity extends AppCompatActivity {
 
     private void loadFolders() {
 
-        HashSet<String> folderSet = new HashSet<>();
-        List<String> folderList = new ArrayList<>();
-        Uri uri = MediaStore.Files.getContentUri("external");
+        folderList.clear();
+
+        Uri collection = MediaStore.Files.getContentUri("external");
+
         String[] projection = {
-                MediaStore.Files.FileColumns.DATA,
-                MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME
+                MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME,
+                MediaStore.Files.FileColumns.DATA
         };
 
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        Cursor cursor = getContentResolver().query(
+                collection,
+                projection,
+                null,
+                null,
+                MediaStore.Files.FileColumns.DATE_ADDED + " DESC"
+        );
+
+        HashSet<String> folderSet = new HashSet<>();
 
         if (cursor != null) {
-
-            int folderIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME);
+            int folderNameIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME);
+            int pathIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA);
 
             while (cursor.moveToNext()) {
 
-                String folder = cursor.getString(folderIndex);
+                String folderName = cursor.getString(folderNameIndex);
+                String path = cursor.getString(pathIndex);
 
-                if (!folderSet.contains(folder)) {
-                    folderSet.add(folder);
-                    folderList.add(folder);
+                if (!folderSet.contains(folderName)) {
+                    folderSet.add(folderName);
+
+                    File file = new File(path);
+                    String folderPath = file.getParent();
+
+                    folderList.add(new FolderModel(folderName, folderPath));
                 }
             }
 
             cursor.close();
         }
 
-        // show in dropdown (Spinner / BottomSheet)
+        setupSpinner();
+    }
+
+
+    private void setupSpinner() {
+
+        List<String> folderNames = new ArrayList<>();
+
+        for (FolderModel folder : folderList) {
+            folderNames.add(folder.getFolderName());
+        }
+
+        /*ArrayAdapter<String> adapterSpinner = new ArrayAdapter<>(
+                this,
+                android.R.layout.simple_spinner_dropdown_item,
+                folderNames
+        );*/
+        FolderSpinnerAdapter adapterSpinner = new FolderSpinnerAdapter(this, folderList);
+        spinnerTxt.setAdapter(adapterSpinner);
+
+
+        spinnerTxt.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String selectedPath = folderList.get(position).getFolderPath();
+                loadMediaByFolder(selectedPath);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    private void loadMediaByFolder(String folderPath) {
+
+        mediaList.clear();
+
+        Uri collection = MediaStore.Files.getContentUri("external");
+
+        String[] projection = {
+                MediaStore.Files.FileColumns.DATA,
+                MediaStore.Files.FileColumns.MEDIA_TYPE,
+                MediaStore.Video.Media.DURATION
+        };
+
+        String selection =
+                "(" + MediaStore.Files.FileColumns.MEDIA_TYPE + "=" + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE +
+                        " OR " +
+                        MediaStore.Files.FileColumns.MEDIA_TYPE + "=" + MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO + ")"
+                        + " AND " +
+                        MediaStore.Files.FileColumns.DATA + " LIKE ?";
+
+        String[] selectionArgs = new String[]{ folderPath + "%" };
+
+        Cursor cursor = getContentResolver().query(
+                collection,
+                projection,
+                selection,
+                selectionArgs,
+                MediaStore.Files.FileColumns.DATE_ADDED + " DESC"
+        );
+
+        if (cursor != null) {
+
+            int pathIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA);
+            int typeIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MEDIA_TYPE);
+            int durationIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
+
+            while (cursor.moveToNext()) {
+
+                String path = cursor.getString(pathIndex);
+                int type = cursor.getInt(typeIndex);
+
+                boolean isVideo = type == MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+                long duration = isVideo ? cursor.getLong(durationIndex) : 0;
+
+                mediaList.add(new MediaModel(path, isVideo, duration));
+            }
+
+            cursor.close();
+        }
+
+        adapter.notifyDataSetChanged();
     }
     private void loadAllMedia() {
 
@@ -145,30 +261,5 @@ public class CreateReelActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();
     }
 
-    /*private void loadVideos() {
-        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {
-                MediaStore.Video.Media.DATA,
-                MediaStore.Video.Media.DURATION
-        };
-        Cursor cursor = getContentResolver().query(
-                uri,
-                projection,
-                null,
-                null,
-                MediaStore.Video.Media.DATE_ADDED + " DESC"
-        );
-        if (cursor != null) {
-            int pathIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-            int durationIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
 
-            while (cursor.moveToNext()) {
-                String path = cursor.getString(pathIndex);
-                long duration = cursor.getLong(durationIndex);
-                videoList.add(new VideoModel(path, duration));
-            }
-            cursor.close();
-        }
-        adapter.notifyDataSetChanged();
-    }*/
 }

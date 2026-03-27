@@ -256,6 +256,14 @@
                 android:id="@+id/galleryLayout"
                 android:orientation="horizontal"
                 >
+                <Spinner
+                    android:id="@+id/spinnerTxt"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:spinnerMode="dropdown"
+                    android:paddingStart="12dp"
+                    android:visibility="gone"
+                    android:paddingEnd="36dp"/>
                 <TextView
                     android:text="Gallery"
                     android:textStyle="bold"
@@ -274,6 +282,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 app:cardCornerRadius="@dimen/dimen_8dp"
+                android:id="@+id/multipleSelectBtn"
                 app:cardBackgroundColor="@color/grey_2"
                 android:layout_height="wrap_content">
                 <LinearLayout
