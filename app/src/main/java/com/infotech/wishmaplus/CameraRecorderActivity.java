@@ -304,7 +304,7 @@ public class CameraRecorderActivity extends AppCompatActivity {
         activeRecording = videoCapture.getOutput().prepareRecording(this, outputOptions).withAudioEnabled().start(ContextCompat.getMainExecutor(this), videoRecordEvent -> {
 
             if (videoRecordEvent instanceof VideoRecordEvent.Start) {
-                // Recording shuru hua
+                // Recording
                 isRecording = true;
                 runOnUiThread(this::onRecordingStarted);
 
@@ -378,7 +378,7 @@ public class CameraRecorderActivity extends AppCompatActivity {
         // Navigate to ReelEditorActivity
         // ───────────────────────────────────────────────────────────────────
         Intent intent = new Intent(this, ReelEditorActivity.class);
-        MediaModel recordedClip = new MediaModel(videoPath, true, recordingSeconds);
+        MediaModel recordedClip = new MediaModel(videoPath, true, recordingSeconds * 1000L);
         ArrayList<MediaModel> mediaList = new ArrayList<>();
         mediaList.add(recordedClip);
         intent.putExtra("media_list", mediaList);
@@ -511,7 +511,7 @@ public class CameraRecorderActivity extends AppCompatActivity {
         if (requestCode == PERMISSION_REQUEST_CODE && hasAllPermissions()) {
             startCamera();
         } else {
-            Toast.makeText(this, "Camera aur Mic permission chahiye", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Camera or mic permission is required", Toast.LENGTH_LONG).show();
             finish();
         }
     }

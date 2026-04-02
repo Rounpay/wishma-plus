@@ -71,6 +71,9 @@ import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
+import com.infotech.wishmaplus.GetReelResponse;
+import com.infotech.wishmaplus.HashtagResponse;
+import com.infotech.wishmaplus.SaveReelResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -500,5 +503,32 @@ public interface EndPointInterface {
             @Header("Authorization") String authorization,
             @Query("RoomId") String RoomId
     );
+    // ─── Hashtag Suggestions ───────────────────────────────────────────────────
+    @GET("api/Content/GetReelHasTagSuggestions")
+    Call<HashtagResponse> getHashtagSuggestions(
+            @Header("Authorization") String authorization,
+            @Query("q") String query,
+            @Query("topN") int topN
+    );
 
+    // ─── Save Reel ─────────────────────────────────────────────────────────────
+    @Multipart
+    @POST("api/Content/SaveReel")
+    Call<SaveReelResponse> saveReel(
+            @Header("Authorization") String authorization,
+            @Query("Caption") String caption,
+            @Query("Duration") int duration,
+            @Query("Hashtags") String hashtags,
+            @Part MultipartBody.Part video,
+            @Part MultipartBody.Part thumbnail
+    );
+
+    //-------------GetReel---------------------------
+    @GET("api/content/GetReel")
+    Call<GetReelResponse> getReels(
+            @Header("Authorization") String authorization,
+            @Query("PageNumber") int page,
+            @Query("PageSize") int size,
+            @Query("SortBy") String sortBy
+    );
 }

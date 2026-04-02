@@ -149,14 +149,6 @@ public class ReelsFeedAdapter extends RecyclerView.Adapter<ReelsFeedAdapter.Reel
             // ── Author ───────────────────────────────────────────────────
             authorName.setText(reel.getUserName());
             descriptionTxt.setText(reel.getDescription());
-
-            if (reel.getLocation() != null && !reel.getLocation().isEmpty()) {
-                locationTxt.setVisibility(View.VISIBLE);
-                locationTxt.setText("📍 " + reel.getLocation());
-            } else {
-                locationTxt.setVisibility(View.GONE);
-            }
-
             Glide.with(context)
                     .load(reel.getUserAvatar())
                     .transform(new CircleCrop())
@@ -164,9 +156,9 @@ public class ReelsFeedAdapter extends RecyclerView.Adapter<ReelsFeedAdapter.Reel
                     .into(authorAvatar);
 
             // ── Follow ───────────────────────────────────────────────────
-            btnFollow.setVisibility(reel.isFollowing() ? View.GONE : View.VISIBLE);
+          //  btnFollow.setVisibility(reel.isFollowing() ? View.GONE : View.VISIBLE);
             btnFollow.setOnClickListener(v -> {
-                reel.setFollowing(true);
+              //  reel.setFollowing(true);
                 btnFollow.setVisibility(View.GONE);
                 animateBounce(btnFollow);
             });
@@ -174,13 +166,13 @@ public class ReelsFeedAdapter extends RecyclerView.Adapter<ReelsFeedAdapter.Reel
             // ── Counts ───────────────────────────────────────────────────
             likeCount.setText(formatCount(reel.getLikes()));
             commentCount.setText(formatCount(reel.getComments()));
-            shareCount.setText(formatCount(reel.getShares()));
+         //   shareCount.setText(formatCount(reel.getShares()));
 
             // ── Like ─────────────────────────────────────────────────────
             updateLikeState(reel);
             btnLike.setOnClickListener(v -> {
                 reel.setLiked(!reel.isLiked());
-                reel.setLikes(reel.isLiked() ? reel.getLikes() + 1 : reel.getLikes() - 1);
+             //   reel.setLikes(reel.isLiked() ? reel.getLikes() + 1 : reel.getLikes() - 1);
                 updateLikeState(reel);
                 animateBounce(btnLike);
                 if (reel.isLiked()) showHeartAnimation();
@@ -193,7 +185,7 @@ public class ReelsFeedAdapter extends RecyclerView.Adapter<ReelsFeedAdapter.Reel
                 public void onDoubleTap() {
                     if (!reel.isLiked()) {
                         reel.setLiked(true);
-                        reel.setLikes(reel.getLikes() + 1);
+                       // reel.setLikes(reel.getLikes() + 1);
                         updateLikeState(reel);
                     }
                     showHeartAnimation();
@@ -216,7 +208,7 @@ public class ReelsFeedAdapter extends RecyclerView.Adapter<ReelsFeedAdapter.Reel
             btnComment.setOnClickListener(v -> {
                 if (context instanceof androidx.fragment.app.FragmentActivity) {
                     CommentsBottomSheet sheet =
-                            CommentsBottomSheet.newInstance(reel.getId());
+                            CommentsBottomSheet.newInstance(String.valueOf(reel.getReelId()));
                     sheet.show(
                             ((androidx.fragment.app.FragmentActivity) context)
                                     .getSupportFragmentManager(), "comments");
@@ -225,8 +217,8 @@ public class ReelsFeedAdapter extends RecyclerView.Adapter<ReelsFeedAdapter.Reel
 
             // ── Share ────────────────────────────────────────────────────
             btnShare.setOnClickListener(v -> {
-                reel.setShares(reel.getShares() + 1);
-                shareCount.setText(formatCount(reel.getShares()));
+              //  reel.setShares(reel.getShares() + 1);
+               // shareCount.setText(formatCount(reel.getShares()));
                 animateBounce(btnShare);
                 // Share intent
                 android.content.Intent shareIntent =

@@ -102,7 +102,10 @@ import com.infotech.wishmaplus.Api.Response.UnfriendResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
+import com.infotech.wishmaplus.GetReelResponse;
+import com.infotech.wishmaplus.HashtagResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.SaveReelResponse;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -157,7 +160,7 @@ public enum UtilMethods {
 
     public void SuccessfulWithFinsh(final Activity context, boolean isCancelable, final String message, int typeId, String pageId) {
         CustomAlertDialog customAlertDialog = new CustomAlertDialog(context, true);
-        customAlertDialog.SuccessfulWithFinsh(isCancelable, message, typeId,pageId);
+        customAlertDialog.SuccessfulWithFinsh(isCancelable, message, typeId, pageId);
     }
 
     public void SuccessfulWithDismiss(final Activity context, final String message) {
@@ -179,9 +182,10 @@ public enum UtilMethods {
         CustomAlertDialog customAlertDialog = new CustomAlertDialog(context, true);
         customAlertDialog.Successful(message);
     }
+
     public void SuccessWithOkay(final Activity context, final String message, boolean isCancelable) {
         CustomAlertDialog customAlertDialog = new CustomAlertDialog(context, true);
-        customAlertDialog.SuccessfulWithOkay(isCancelable,message);
+        customAlertDialog.SuccessfulWithOkay(isCancelable, message);
     }
 
     public void NetworkError(final Activity context, String title, final String message) {
@@ -377,11 +381,11 @@ public enum UtilMethods {
         }
     }
 
-    public void userDetail(Activity activity, String userID,String GroupId, final CustomLoader loader, PreferencesManager mAppPreferences, ApiCallBack apiCallBack) {
+    public void userDetail(Activity activity, String userID, String GroupId, final CustomLoader loader, PreferencesManager mAppPreferences, ApiCallBack apiCallBack) {
         try {
             tokenManager = new PreferencesManager(activity, 1);
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<UserDetailResponse> call = git.getUserDetail("Bearer " + tokenManager.getAccessToken(), userID,GroupId);
+            Call<UserDetailResponse> call = git.getUserDetail("Bearer " + tokenManager.getAccessToken(), userID, GroupId);
             call.enqueue(new Callback<UserDetailResponse>() {
                 @Override
                 public void onResponse(Call<UserDetailResponse> call, Response<UserDetailResponse> response) {
@@ -761,12 +765,12 @@ public enum UtilMethods {
         }
     }
 
-    public void deleteAccountRequest(Activity activity, ApiCallBackMulti apiCallBack,int AccountType,String AccountId ) {
+    public void deleteAccountRequest(Activity activity, ApiCallBackMulti apiCallBack, int AccountType, String AccountId) {
 
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
 
-            Call<DeleteAccountResponse> call = git.deleteAccount("Bearer " + tokenManager.getAccessToken(),AccountType,AccountId);
+            Call<DeleteAccountResponse> call = git.deleteAccount("Bearer " + tokenManager.getAccessToken(), AccountType, AccountId);
 
             call.enqueue(new Callback<DeleteAccountResponse>() {
                 @Override
@@ -1012,10 +1016,10 @@ public enum UtilMethods {
         }
     }
 
-    public void getContentToBoost(String pageId, Activity activity, ApiCallBackMulti apiCallBack,int DateRange,int ContentType) {
+    public void getContentToBoost(String pageId, Activity activity, ApiCallBackMulti apiCallBack, int DateRange, int ContentType) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<PostsResponse> call = git.getContentToBoost(pageId,DateRange,ContentType,"Bearer " + tokenManager.getAccessToken());
+            Call<PostsResponse> call = git.getContentToBoost(pageId, DateRange, ContentType, "Bearer " + tokenManager.getAccessToken());
             call.enqueue(new Callback<PostsResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<PostsResponse> call, @NonNull Response<PostsResponse> response) {
@@ -1036,10 +1040,11 @@ public enum UtilMethods {
             apiCallBack.onError(e.getMessage());
         }
     }
+
     public void getMarkNotificationRead(int notificationId, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ReadNotificationResponse> call = git.getMarkNotificationRead(notificationId,"Bearer " + tokenManager.getAccessToken());
+            Call<ReadNotificationResponse> call = git.getMarkNotificationRead(notificationId, "Bearer " + tokenManager.getAccessToken());
             call.enqueue(new Callback<ReadNotificationResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ReadNotificationResponse> call, @NonNull Response<ReadNotificationResponse> response) {
@@ -1064,7 +1069,7 @@ public enum UtilMethods {
     public void getContentDetailsToBoost(String PostId, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<GetContentDetailsToBoostResponse> call = git.getContentDetailsToBoost(PostId,"Bearer " + tokenManager.getAccessToken());
+            Call<GetContentDetailsToBoostResponse> call = git.getContentDetailsToBoost(PostId, "Bearer " + tokenManager.getAccessToken());
             call.enqueue(new Callback<GetContentDetailsToBoostResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<GetContentDetailsToBoostResponse> call, @NonNull Response<GetContentDetailsToBoostResponse> response) {
@@ -1086,10 +1091,10 @@ public enum UtilMethods {
         }
     }
 
-    public void getEstimateBoostReach(double budget,int days,int audienceId, ApiCallBackMulti apiCallBack) {
+    public void getEstimateBoostReach(double budget, int days, int audienceId, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<EstimateResponse> call = git.getEstimateBoostReach(budget,days,audienceId,"Bearer " + tokenManager.getAccessToken());
+            Call<EstimateResponse> call = git.getEstimateBoostReach(budget, days, audienceId, "Bearer " + tokenManager.getAccessToken());
             call.enqueue(new Callback<EstimateResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<EstimateResponse> call, @NonNull Response<EstimateResponse> response) {
@@ -1114,7 +1119,7 @@ public enum UtilMethods {
     public void initiateBoostPost(InitiateBoostRequest request, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<BoostResponse> call = git.initiateBoostPost("Bearer " + tokenManager.getAccessToken(),request);
+            Call<BoostResponse> call = git.initiateBoostPost("Bearer " + tokenManager.getAccessToken(), request);
             call.enqueue(new Callback<BoostResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<BoostResponse> call, @NonNull Response<BoostResponse> response) {
@@ -1139,7 +1144,7 @@ public enum UtilMethods {
     public void blockUser(BlockUserRequest request, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<BlockUserResponse> call = git.blockUser("Bearer " + tokenManager.getAccessToken(),request);
+            Call<BlockUserResponse> call = git.blockUser("Bearer " + tokenManager.getAccessToken(), request);
             call.enqueue(new Callback<BlockUserResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<BlockUserResponse> call, @NonNull Response<BlockUserResponse> response) {
@@ -1161,10 +1166,10 @@ public enum UtilMethods {
         }
     }
 
-    public void updateBoostStatus(int boostId,int status, ApiCallBackMulti apiCallBack) {
+    public void updateBoostStatus(int boostId, int status, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<BoostedPostStatusChangeResponse> call = git.updateBoostStatus("Bearer " + tokenManager.getAccessToken(),boostId,status);
+            Call<BoostedPostStatusChangeResponse> call = git.updateBoostStatus("Bearer " + tokenManager.getAccessToken(), boostId, status);
             call.enqueue(new Callback<BoostedPostStatusChangeResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<BoostedPostStatusChangeResponse> call, @NonNull Response<BoostedPostStatusChangeResponse> response) {
@@ -1186,10 +1191,10 @@ public enum UtilMethods {
         }
     }
 
-    public void createUpdateGroup(String GroupId,String Title,String Description, boolean IsPrivate, Boolean IsVisible,ApiCallBackMulti apiCallBack) {
+    public void createUpdateGroup(String GroupId, String Title, String Description, boolean IsPrivate, Boolean IsVisible, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<CreateGroupResponse> call = git.createUpdateGroup("Bearer " + tokenManager.getAccessToken(),GroupId,Title,Description,IsPrivate,IsVisible);
+            Call<CreateGroupResponse> call = git.createUpdateGroup("Bearer " + tokenManager.getAccessToken(), GroupId, Title, Description, IsPrivate, IsVisible);
             call.enqueue(new Callback<CreateGroupResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<CreateGroupResponse> call, @NonNull Response<CreateGroupResponse> response) {
@@ -1211,10 +1216,10 @@ public enum UtilMethods {
         }
     }
 
-    public void updateGroupProfilePicture(String groupId, boolean isCoverPicture, MultipartBody.Part model,ApiCallBackMulti apiCallBack) {
+    public void updateGroupProfilePicture(String groupId, boolean isCoverPicture, MultipartBody.Part model, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<UploadGroupCoverResponse> call = git.updateGroupProfilePicture("Bearer " + tokenManager.getAccessToken(),groupId,isCoverPicture,model);
+            Call<UploadGroupCoverResponse> call = git.updateGroupProfilePicture("Bearer " + tokenManager.getAccessToken(), groupId, isCoverPicture, model);
             call.enqueue(new Callback<UploadGroupCoverResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<UploadGroupCoverResponse> call, @NonNull Response<UploadGroupCoverResponse> response) {
@@ -1235,6 +1240,7 @@ public enum UtilMethods {
             apiCallBack.onError(e.getMessage());
         }
     }
+
     public void getUsersList(ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
@@ -1259,10 +1265,11 @@ public enum UtilMethods {
             apiCallBack.onError(e.getMessage());
         }
     }
-    public void getGroupById(String groupId,ApiCallBackMulti apiCallBack) {
+
+    public void getGroupById(String groupId, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<GroupDetailsResponse> call = git.getGroupById("Bearer " + tokenManager.getAccessToken(),groupId);
+            Call<GroupDetailsResponse> call = git.getGroupById("Bearer " + tokenManager.getAccessToken(), groupId);
             call.enqueue(new Callback<GroupDetailsResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<GroupDetailsResponse> call, @NonNull Response<GroupDetailsResponse> response) {
@@ -1284,10 +1291,10 @@ public enum UtilMethods {
         }
     }
 
-    public void getGroupsListing(boolean OnlyMyGroups,Boolean OrderByName, Boolean OrderByJoinDate,ApiCallBackMulti apiCallBack) {
+    public void getGroupsListing(boolean OnlyMyGroups, Boolean OrderByName, Boolean OrderByJoinDate, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<GroupListResponse> call = git.getGroupsListing("Bearer " + tokenManager.getAccessToken(),OnlyMyGroups,OrderByName,OrderByJoinDate);
+            Call<GroupListResponse> call = git.getGroupsListing("Bearer " + tokenManager.getAccessToken(), OnlyMyGroups, OrderByName, OrderByJoinDate);
             call.enqueue(new Callback<GroupListResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<GroupListResponse> call, @NonNull Response<GroupListResponse> response) {
@@ -1309,10 +1316,10 @@ public enum UtilMethods {
         }
     }
 
-    public void getGroupsMembers(String groupId,ApiCallBackMulti apiCallBack) {
+    public void getGroupsMembers(String groupId, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<GroupMembersResponse> call = git.getGroupsMembers("Bearer " + tokenManager.getAccessToken(),groupId);
+            Call<GroupMembersResponse> call = git.getGroupsMembers("Bearer " + tokenManager.getAccessToken(), groupId);
             call.enqueue(new Callback<GroupMembersResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<GroupMembersResponse> call, @NonNull Response<GroupMembersResponse> response) {
@@ -1334,10 +1341,10 @@ public enum UtilMethods {
         }
     }
 
-    public void getPostStats(String postId,int dateRange,ApiCallBackMulti apiCallBack) {
+    public void getPostStats(String postId, int dateRange, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<InsightsStatsResponse> call = git.getPostStats("Bearer " + tokenManager.getAccessToken(),postId,dateRange);
+            Call<InsightsStatsResponse> call = git.getPostStats("Bearer " + tokenManager.getAccessToken(), postId, dateRange);
             call.enqueue(new Callback<InsightsStatsResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<InsightsStatsResponse> call, @NonNull Response<InsightsStatsResponse> response) {
@@ -1359,10 +1366,10 @@ public enum UtilMethods {
         }
     }
 
-    public void getBoostBillingInfo(String postId,ApiCallBackMulti apiCallBack) {
+    public void getBoostBillingInfo(String postId, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<BoostBillingResponse> call = git.getBoostBillingInfo("Bearer " + tokenManager.getAccessToken(),postId);
+            Call<BoostBillingResponse> call = git.getBoostBillingInfo("Bearer " + tokenManager.getAccessToken(), postId);
             call.enqueue(new Callback<BoostBillingResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<BoostBillingResponse> call, @NonNull Response<BoostBillingResponse> response) {
@@ -1408,6 +1415,7 @@ public enum UtilMethods {
             apiCallBack.onError(e.getMessage());
         }
     }
+
     public void getComplaintCategory(ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
@@ -1433,10 +1441,10 @@ public enum UtilMethods {
         }
     }
 
-    public void getDownloadBillingPdf(int boostId,ApiCallBackMulti apiCallBack) {
+    public void getDownloadBillingPdf(int boostId, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ResponseBody> call = git.getDownloadBillingPdf("Bearer " + tokenManager.getAccessToken(),boostId);
+            Call<ResponseBody> call = git.getDownloadBillingPdf("Bearer " + tokenManager.getAccessToken(), boostId);
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -1458,10 +1466,10 @@ public enum UtilMethods {
         }
     }
 
-    public void getProfessionalDahboardAnalytic(int dateRange,ApiCallBackMulti apiCallBack) {
+    public void getProfessionalDahboardAnalytic(int dateRange, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<AnalyticsResponse> call = git.getProfessionalDahboardAnalytic("Bearer " + tokenManager.getAccessToken(),dateRange);
+            Call<AnalyticsResponse> call = git.getProfessionalDahboardAnalytic("Bearer " + tokenManager.getAccessToken(), dateRange);
             call.enqueue(new Callback<AnalyticsResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<AnalyticsResponse> call, @NonNull Response<AnalyticsResponse> response) {
@@ -1483,10 +1491,10 @@ public enum UtilMethods {
         }
     }
 
-    public void getDateWiseAnalytic(int dateRange,ApiCallBackMulti apiCallBack) {
+    public void getDateWiseAnalytic(int dateRange, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<AnalyticsDetailsResponse> call = git.getDateWiseAnalytic("Bearer " + tokenManager.getAccessToken(),dateRange);
+            Call<AnalyticsDetailsResponse> call = git.getDateWiseAnalytic("Bearer " + tokenManager.getAccessToken(), dateRange);
             call.enqueue(new Callback<AnalyticsDetailsResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<AnalyticsDetailsResponse> call, @NonNull Response<AnalyticsDetailsResponse> response) {
@@ -1508,10 +1516,10 @@ public enum UtilMethods {
         }
     }
 
-    public void updateGroupMembers(UpdateGroupMemberRequest updateGroupMemberRequest , ApiCallBackMulti apiCallBack) {
+    public void updateGroupMembers(UpdateGroupMemberRequest updateGroupMemberRequest, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<GroupMembersUpdateResponse> call = git.updateGroupMembers("Bearer " + tokenManager.getAccessToken(),updateGroupMemberRequest);
+            Call<GroupMembersUpdateResponse> call = git.updateGroupMembers("Bearer " + tokenManager.getAccessToken(), updateGroupMemberRequest);
             call.enqueue(new Callback<GroupMembersUpdateResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<GroupMembersUpdateResponse> call, @NonNull Response<GroupMembersUpdateResponse> response) {
@@ -1533,7 +1541,7 @@ public enum UtilMethods {
         }
     }
 
-    public void getBlockedUserList( ApiCallBackMulti apiCallBack) {
+    public void getBlockedUserList(ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
             Call<BlockedUserListResponse> call = git.getBlockedUserList("Bearer " + tokenManager.getAccessToken());
@@ -1557,10 +1565,11 @@ public enum UtilMethods {
             apiCallBack.onError(e.getMessage());
         }
     }
-    public void submitComplaint(ComplaintRequest complaintRequest , ApiCallBackMulti apiCallBack) {
+
+    public void submitComplaint(ComplaintRequest complaintRequest, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<ComplaintSubmitResponse> call = git.submitComplaint("Bearer " + tokenManager.getAccessToken(),complaintRequest);
+            Call<ComplaintSubmitResponse> call = git.submitComplaint("Bearer " + tokenManager.getAccessToken(), complaintRequest);
             call.enqueue(new Callback<ComplaintSubmitResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ComplaintSubmitResponse> call, @NonNull Response<ComplaintSubmitResponse> response) {
@@ -1585,7 +1594,7 @@ public enum UtilMethods {
     public void unFriendUser(String ToUserId, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<UnfriendResponse> call = git.unFriendUser("Bearer " + tokenManager.getAccessToken(),ToUserId);
+            Call<UnfriendResponse> call = git.unFriendUser("Bearer " + tokenManager.getAccessToken(), ToUserId);
             call.enqueue(new Callback<UnfriendResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<UnfriendResponse> call, @NonNull Response<UnfriendResponse> response) {
@@ -1607,10 +1616,10 @@ public enum UtilMethods {
         }
     }
 
-    public void insertLinkClick(String PostId,int ClickType, ApiCallBackMulti apiCallBack) {
+    public void insertLinkClick(String PostId, int ClickType, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<LinkClickResponse> call = git.insertLinkClick("Bearer " + tokenManager.getAccessToken(),PostId.toString(),ClickType);
+            Call<LinkClickResponse> call = git.insertLinkClick("Bearer " + tokenManager.getAccessToken(), PostId.toString(), ClickType);
             call.enqueue(new Callback<LinkClickResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<LinkClickResponse> call, @NonNull Response<LinkClickResponse> response) {
@@ -1632,10 +1641,10 @@ public enum UtilMethods {
         }
     }
 
-    public void addPeopleInGroup(AddFriendsRequest request,ApiCallBackMulti apiCallBack) {
+    public void addPeopleInGroup(AddFriendsRequest request, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<AddPeopleResponse> call = git.addMultipleFriendsToGroup("Bearer " + tokenManager.getAccessToken(),request);
+            Call<AddPeopleResponse> call = git.addMultipleFriendsToGroup("Bearer " + tokenManager.getAccessToken(), request);
             call.enqueue(new Callback<AddPeopleResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<AddPeopleResponse> call, @NonNull Response<AddPeopleResponse> response) {
@@ -1656,7 +1665,6 @@ public enum UtilMethods {
             apiCallBack.onError(e.getMessage());
         }
     }
-
 
 
     public void submitReportReason(Activity activity, String postId, int reasonId, ApiCallBack apiCallBack) {
@@ -1815,7 +1823,7 @@ public enum UtilMethods {
             unfollowBtn.setText("Confirm");
             cancelBtn.setText("Delete");
         } else if (type == 4) {
-            confirmMessage.setText("Are you sure you want to remove "+name+" as your friend?");
+            confirmMessage.setText("Are you sure you want to remove " + name + " as your friend?");
             unfollowBtn.setText("Remove");
             cancelBtn.setText("Cancel");
         } else {
@@ -1830,8 +1838,8 @@ public enum UtilMethods {
             } else if (type == 3) {
                 AcceptOrRejectRequest(context, userId, 2, apiCallBack);
             } else if (type == 4) {
-                unFriendUser(userId,apiCallBack);
-            }else {
+                unFriendUser(userId, apiCallBack);
+            } else {
                 removeRequest(context, userId, apiCallBack);
             }
             AcceptRequestDialog.dismiss();
@@ -1896,10 +1904,10 @@ public enum UtilMethods {
         }
     }
 
-    public void addInsight(Activity context, String userId,String postId,int accountType,int insightTypeID, ApiCallBackMulti apiCallBack) {
+    public void addInsight(Activity context, String userId, String postId, int accountType, int insightTypeID, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<InsightResponse> call = git.addInsight("Bearer " + tokenManager.getAccessToken(), userId,postId,accountType,insightTypeID);
+            Call<InsightResponse> call = git.addInsight("Bearer " + tokenManager.getAccessToken(), userId, postId, accountType, insightTypeID);
             call.enqueue(new Callback<InsightResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<InsightResponse> call, @NonNull Response<InsightResponse> response) {
@@ -1934,7 +1942,7 @@ public enum UtilMethods {
         }
     }
 
-    public void selectDateRangeBottomSheet(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback,boolean showLifetime) {
+    public void selectDateRangeBottomSheet(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback, boolean showLifetime) {
 
         if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
             return;
@@ -2006,7 +2014,7 @@ public enum UtilMethods {
                 idSelected = 90;
                 selectedDateRange = 90;
                 tvDropdownText.setText("Last 90 days");
-            }else if (id == R.id.rbLastLifetime) {
+            } else if (id == R.id.rbLastLifetime) {
                 idSelected = 100;
                 selectedDateRange = 100;
                 tvDropdownText.setText("Lifetime");
@@ -2026,7 +2034,8 @@ public enum UtilMethods {
         sheetView.findViewById(R.id.rbLastLifetime).setOnClickListener(listener);
         bottomDateDialogDateRange.show();
     }
-    public void selectDateRangeBottomSheetNew(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback,boolean showLifetime) {
+
+    public void selectDateRangeBottomSheetNew(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback, boolean showLifetime) {
 
         if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
             return;
@@ -2098,7 +2107,7 @@ public enum UtilMethods {
                 idSelected = 5;
                 selectedDateRangeNew = 5;
                 tvDropdownText.setText("Last 90 days");
-            }else if (id == R.id.rbLastLifetime) {
+            } else if (id == R.id.rbLastLifetime) {
                 idSelected = 0;
                 selectedDateRangeNew = 0;
                 tvDropdownText.setText("Lifetime");
@@ -2188,6 +2197,7 @@ public enum UtilMethods {
         sheetView.findViewById(R.id.rbLast28).setOnClickListener(listener);
         bottomDateDialogDateRange.show();
     }
+
     public void selectPostTypeBottomSheet(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback) {
 
         if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
@@ -2512,7 +2522,7 @@ public enum UtilMethods {
 
     }
 
-    public void getRoomId( ApiCallBackMulti apiCallBack) {
+    public void getRoomId(ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
             Call<GetRoomIdResponse> call = git.getRoomId("Bearer " + tokenManager.getAccessToken());
@@ -2540,7 +2550,7 @@ public enum UtilMethods {
     public void startLive(String RoomId, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<BasicResponse> call = git.startLive("Bearer " + tokenManager.getAccessToken(),RoomId.toString());
+            Call<BasicResponse> call = git.startLive("Bearer " + tokenManager.getAccessToken(), RoomId.toString());
             call.enqueue(new Callback<BasicResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
@@ -2565,7 +2575,7 @@ public enum UtilMethods {
     public void endLive(String RoomId, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<BasicResponse> call = git.endLive("Bearer " + tokenManager.getAccessToken(),RoomId.toString());
+            Call<BasicResponse> call = git.endLive("Bearer " + tokenManager.getAccessToken(), RoomId.toString());
             call.enqueue(new Callback<BasicResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
@@ -2587,5 +2597,145 @@ public enum UtilMethods {
         }
     }
 
+    // ─── Get Hashtag Suggestions ───────────────────────────────────────────────
+    public void getHashtagSuggestions(CustomLoader loader, String query, int topN, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
+            Call<HashtagResponse> call = api.getHashtagSuggestions("Bearer " + tokenManager.getAccessToken(), query, topN);
+            call.enqueue(new Callback<HashtagResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<HashtagResponse> call, @NonNull Response<HashtagResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
 
+                @Override
+                public void onFailure(@NonNull Call<HashtagResponse> call, @NonNull Throwable t) {
+                    if (loader != null) {
+                        if (loader.isShowing()) {
+                            loader.dismiss();
+                        }
+                    }
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            if (loader != null) {
+                if (loader.isShowing()) {
+                    loader.dismiss();
+                }
+            }
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    // ─── Save Reel ─────────────────────────────────────────────────────────────
+    public void saveReel(CustomLoader loader, String caption, int duration, String hashtags,
+                         MultipartBody.Part video, MultipartBody.Part thumbnail,
+                         ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
+            Call<SaveReelResponse> call = api.saveReel("Bearer " + tokenManager.getAccessToken(), caption, duration, hashtags, video, thumbnail);
+            call.enqueue(new Callback<SaveReelResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<SaveReelResponse> call, @NonNull Response<SaveReelResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                        apiCallBack.onSuccess(response.body());
+                    } else {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                        apiCallBack.onError("Server returned error: " + response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<SaveReelResponse> call, @NonNull Throwable t) {
+                    if (loader != null) {
+                        if (loader.isShowing()) {
+                            loader.dismiss();
+                        }
+                    }
+                    apiCallBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            if (loader != null) {
+                if (loader.isShowing()) {
+                    loader.dismiss();
+                }
+            }
+            e.printStackTrace();
+            apiCallBack.onError(e.getMessage());
+        }
+    }
+
+    public void getReels(
+            CustomLoader loader,
+            int page,
+            int size,
+            String sortBy,
+            ApiCallBackMulti callBack) {
+        EndPointInterface apiService = ApiClient.getClient().create(EndPointInterface.class);
+        apiService.getReels("Bearer " + tokenManager.getAccessToken(), page, size, sortBy)
+                .enqueue(new Callback<GetReelResponse>() {
+                    @Override
+                    public void onResponse(
+                            @NonNull Call<GetReelResponse> call,
+                            @NonNull Response<GetReelResponse> response) {
+
+                        if (response.isSuccessful()
+                                && response.body() != null
+                                && response.body().statusCode == 1) {
+                            if (loader != null) {
+                                if (loader.isShowing()) {
+                                    loader.dismiss();
+                                }
+                            }
+                            callBack.onSuccess(response.body());
+
+                        } else {
+                            if (loader != null) {
+                                if (loader.isShowing()) {
+                                    loader.dismiss();
+                                }
+                            }
+                            callBack.onError("Failed to load reels");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(
+                            @NonNull Call<GetReelResponse> call,
+                            @NonNull Throwable t) {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                        callBack.onError(t.getMessage());
+                    }
+                });
+    }
 }

@@ -45,6 +45,7 @@ import com.infotech.wishmaplus.Api.Response.PageData;
 import com.infotech.wishmaplus.Api.Response.PagesResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.ReelsFeedActivity;
 import com.infotech.wishmaplus.Utils.CustomAlertDialog;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
@@ -74,7 +75,7 @@ public class MoreFragment extends Fragment {
     private boolean isProfileType;
     public static BottomSheetDialog bottomSheetUser;
 
-    View referralView;
+    View referralView,reelsView;
 
     public static MoreFragment newInstance(String pageId, boolean isProfileType) {
         MoreFragment fragment = new MoreFragment();
@@ -159,11 +160,15 @@ public class MoreFragment extends Fragment {
             startActivity(new Intent(requireActivity(), PackageActivity.class));
         });
         referralView = v.findViewById(R.id.referralView);
+        reelsView = v.findViewById(R.id.reelsView);
         if (pageId == null) {
             referralView.setVisibility(GONE);
         } else {
             referralView.setVisibility(VISIBLE);
         }
+        v.findViewById(R.id.reelsView).setOnClickListener(view -> {
+            startActivity(new Intent(requireActivity(), ReelsFeedActivity.class));
+        });
         v.findViewById(R.id.referralView).setOnClickListener(view -> {
             startActivity(new Intent(requireActivity(), ReferralActivity.class)
                     .putExtra("userData", userDetailResponse));

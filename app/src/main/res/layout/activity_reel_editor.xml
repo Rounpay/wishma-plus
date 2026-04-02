@@ -6,39 +6,56 @@
     android:background="#000000"
     android:fitsSystemWindows="false">
 
-    <!-- LAYER 1: Media Container (tap to pause) -->
+    <!-- ═══ LAYER 1: compositeCanvas — video + overlay ek saath yahan hain
+         Screenshot/merge ke liye isi FrameLayout ko capture karenge ═══ -->
     <FrameLayout
-        android:id="@+id/mediaContainer"
+        android:id="@+id/compositeCanvas"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true">
+        android:layout_height="match_parent">
 
-        <!-- VideoView for video playback -->
-        <VideoView
-            android:id="@+id/videoView"
+        <!-- Media Container (tap to pause) -->
+        <FrameLayout
+            android:id="@+id/mediaContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone" />
+            android:clickable="true"
+            android:focusable="true">
 
-        <!-- ImageView for photo -->
-        <ImageView
-            android:id="@+id/imagePreview"
+            <!--
+                VIDEO CENTER FIX:
+                layout_width/height = match_parent
+                layout_gravity = center
+                Android VideoView apne aap aspect ratio maintain karta hai
+                Isse video screen ke center mein aayega with black bars
+            -->
+            <VideoView
+                android:id="@+id/videoView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imagePreview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+        <!-- Draggable overlay canvas — text/emoji/sticker yahan add hote hain -->
+        <FrameLayout
+            android:id="@+id/overlayCanvas"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:visibility="gone" />
+            android:clickable="true"
+            android:focusable="true" />
+
     </FrameLayout>
 
-    <!-- LAYER 2: Draggable overlay canvas -->
-    <FrameLayout
-        android:id="@+id/overlayCanvas"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true" />
-
-    <!-- LAYER 3: Play/Pause center indicator -->
+    <!-- ═══ LAYER 2: Play/Pause indicator ═══ -->
     <FrameLayout
         android:id="@+id/playPauseIndicator"
         android:layout_width="72dp"
@@ -56,7 +73,7 @@
             app:tint="#FFFFFF" />
     </FrameLayout>
 
-    <!-- LAYER 4: Top bar with gradient fade -->
+    <!-- ═══ LAYER 3: Top bar ═══ -->
     <LinearLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
@@ -87,7 +104,6 @@
             android:layout_height="1dp"
             android:layout_weight="1" />
 
-        <!-- Music pill -->
         <LinearLayout
             android:id="@+id/btnMusic"
             android:layout_width="wrap_content"
@@ -125,8 +141,8 @@
             android:layout_width="wrap_content"
             android:layout_height="34dp"
             android:background="@drawable/rounded_blue_bg"
-            android:clickable="true"
             android:backgroundTint="@color/colorAccent"
+            android:clickable="true"
             android:focusable="true"
             android:gravity="center"
             android:paddingHorizontal="20dp"
@@ -136,7 +152,7 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <!-- LAYER 5: Right tools panel -->
+    <!-- ═══ LAYER 4: Right tools ═══ -->
     <LinearLayout
         android:layout_width="58dp"
         android:layout_height="wrap_content"
@@ -242,7 +258,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- LAYER 6: Bottom panel (clip strip + buttons) -->
+    <!-- ═══ LAYER 5: Bottom panel ═══ -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -325,7 +341,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- LAYER 7: TRASH ZONE (drag here to delete) -->
+    <!-- ═══ LAYER 6: Trash zone ═══ -->
     <FrameLayout
         android:id="@+id/trashZone"
         android:layout_width="70dp"
@@ -343,7 +359,7 @@
             app:tint="#FF4444" />
     </FrameLayout>
 
-    <!-- LAYER 8: TEXT EDITOR OVERLAY -->
+    <!-- ═══ LAYER 7: TEXT EDITOR PANEL ═══ -->
     <FrameLayout
         android:id="@+id/textEditorPanel"
         android:layout_width="match_parent"
@@ -351,7 +367,6 @@
         android:background="#E5000000"
         android:visibility="gone">
 
-        <!-- Top tools -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -408,7 +423,6 @@
                     app:tint="#FFFFFF" />
             </LinearLayout>
 
-            <!-- Font strip -->
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -425,7 +439,6 @@
             </HorizontalScrollView>
         </LinearLayout>
 
-        <!-- Center text input -->
         <EditText
             android:id="@+id/textInput"
             android:layout_width="300dp"
@@ -435,16 +448,15 @@
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:hint="Tap to type..."
-            android:textColorHint="#55FFFFFF"
             android:imeOptions="actionDone"
             android:inputType="textMultiLine|textCapSentences"
             android:maxLines="5"
             android:padding="12dp"
             android:textColor="#FFFFFF"
+            android:textColorHint="#55FFFFFF"
             android:textSize="26sp"
             android:textStyle="bold" />
 
-        <!-- Bottom: size + colors -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -481,7 +493,7 @@
         </LinearLayout>
     </FrameLayout>
 
-    <!-- LAYER 9: EMOJI PANEL -->
+    <!-- ═══ LAYER 8: EMOJI PANEL ═══ -->
     <FrameLayout
         android:id="@+id/emojiPanel"
         android:layout_width="match_parent"
@@ -534,7 +546,7 @@
         </LinearLayout>
     </FrameLayout>
 
-    <!-- LAYER 10: STICKER PANEL -->
+    <!-- ═══ LAYER 9: STICKER PANEL ═══ -->
     <FrameLayout
         android:id="@+id/stickerPanel"
         android:layout_width="match_parent"

@@ -4,106 +4,60 @@ import java.io.Serializable;
 
 public class ReelModel implements Serializable {
 
-    private String id;
-    private String userName;
-    private String userAvatar;
-    private String videoPath;
-    private String description;
-    private String location;
-    private long likes;
-    private long comments;
-    private long shares;
+    private int reelId;
+    private String userId;
+    private String fullName;
+    private String profilePictureUrl;
+    private int viewCount;
+    private int likeCount;
+    private int commentCount;
     private boolean isLiked;
-    private boolean isFollowing;
-    private String musicName;
+    private String videoUrl;
+    private String thumbnailUrl;
+    private String caption;
+    private int duration;
+    private String hashtags;
 
-    public ReelModel(String id, String userName, String userAvatar,
-                     String videoPath, String description, String location,
-                     long likes, long comments, long shares,
-                     boolean isLiked, boolean isFollowing) {
-        this.id = id;
-        this.userName = userName;
-        this.userAvatar = userAvatar;
-        this.videoPath = videoPath;
-        this.description = description;
-        this.location = location;
-        this.likes = likes;
-        this.comments = comments;
-        this.shares = shares;
-        this.isLiked = isLiked;
-        this.isFollowing = isFollowing;
-        this.musicName = "Original Audio";
-    }
+    // Getter methods
 
-    public String getId() {
-        return id;
+    public int getReelId() {
+        return reelId;
     }
 
     public String getUserName() {
-        return userName;
+        return fullName;
     }
 
     public String getUserAvatar() {
-        return userAvatar;
+        return profilePictureUrl;
     }
 
     public String getVideoPath() {
-        return videoPath;
+        return videoUrl;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
     }
 
     public String getDescription() {
-        return description;
-    }
-
-    public String getLocation() {
-        return location;
+        return caption;
     }
 
     public long getLikes() {
-        return likes;
+        return likeCount;
     }
 
     public long getComments() {
-        return comments;
-    }
-
-    public long getShares() {
-        return shares;
+        return commentCount;
     }
 
     public boolean isLiked() {
         return isLiked;
     }
 
-    public boolean isFollowing() {
-        return isFollowing;
+    public void setLiked(boolean liked) {
+        isLiked = liked;
     }
 
-    public String getMusicName() {
-        return musicName;
-    }
-
-    public void setLikes(long l) {
-        this.likes = l;
-    }
-
-    public void setComments(long c) {
-        this.comments = c;
-    }
-
-    public void setShares(long s) {
-        this.shares = s;
-    }
-
-    public void setLiked(boolean b) {
-        this.isLiked = b;
-    }
-
-    public void setFollowing(boolean b) {
-        this.isFollowing = b;
-    }
-
-    public void setMusicName(String m) {
-        this.musicName = m;
-    }
 }

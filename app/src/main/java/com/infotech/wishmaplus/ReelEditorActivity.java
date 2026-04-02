@@ -1,9 +1,13 @@
 package com.infotech.wishmaplus;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,12 +39,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.Api.Response.MediaModel;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ReelEditorActivity extends AppCompatActivity {
 
-    // ── Font definitions ────────────────────────────────────────────────────
+    // ── Font definitions ─────────────────────────────────────────────────────
     private static final String[] FONT_FAMILIES = {
             "sans-serif-medium", "serif", "sans-serif-condensed",
             "monospace", "sans-serif-light", "casual"
@@ -49,22 +57,24 @@ public class ReelEditorActivity extends AppCompatActivity {
             "Modern", "Serif", "Condensed", "Mono", "Light", "Casual"
     };
 
-    // ── Color palette ───────────────────────────────────────────────────────
+    // ── Color palette ─────────────────────────────────────────────────────────
     private static final int[] TEXT_COLORS = {
             0xFFFFFFFF, 0xFF000000, 0xFFFF3B30, 0xFFFF9500, 0xFFFFCC00,
             0xFF34C759, 0xFF00C7BE, 0xFF007AFF, 0xFF5856D6, 0xFFFF2D55,
             0xFFFF6B6B, 0xFFFFE66D, 0xFF4ECDC4, 0xFF45B7D1, 0xFF96CEB4,
             0xFFDDA0DD, 0xFFF7DC6F, 0xFFBB8FCE, 0xFFF0B27A, 0xFF82E0AA
     };
-
-    // ── Views ────────────────────────────────────────────────────────────────
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    // ── Views ─────────────────────────────────────────────────────────────────
     private VideoView videoView;
     private ImageView imagePreview;
-    private FrameLayout overlayCanvas;
+    private FrameLayout compositeCanvas;   // video + overlay — merge ke liye
+    private FrameLayout overlayCanvas;     // text/emoji/sticker yahan
     private FrameLayout textEditorPanel;
     private FrameLayout emojiPanel;
     private FrameLayout stickerPanel;
-    private FrameLayout trashZone;           // drag-to-delete zone
+    private FrameLayout trashZone;
     private LinearLayout clipStrip;
     private EditText textInput;
     private LinearLayout colorStripLayout;
@@ -79,28 +89,25 @@ public class ReelEditorActivity extends AppCompatActivity {
     private StickerAdapter stickerAdapter;
     private View playPauseIndicator;
     private ImageView playPauseIcon;
-
-    // ── State ────────────────────────────────────────────────────────────────
+    // ── State ─────────────────────────────────────────────────────────────────
     private List<MediaModel> mediaList = new ArrayList<>();
     private int currentMediaIndex = 0;
     private int currentTextColor = Color.WHITE;
     private int currentTextAlign = Gravity.CENTER;
-    private int currentTextBgMode = 0;   // 0=none 1=dark 2=outline
+    private int currentTextBgMode = 0;
     private int currentFontIndex = 0;
     private float currentTextSize = 26f;
     private boolean isVideoPlaying = false;
     private boolean isTrashVisible = false;
-
-    private final Handler handler = new Handler(Looper.getMainLooper());
     private TextView editingTextView = null;
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // LIFECYCLE
+    // ─────────────────────────────────────────────────────────────────────────
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // True full-screen immersive
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
         WindowInsetsControllerCompat ctrl = WindowCompat.getInsetsController(
@@ -108,9 +115,7 @@ public class ReelEditorActivity extends AppCompatActivity {
         ctrl.hide(WindowInsetsCompat.Type.systemBars());
         ctrl.setSystemBarsBehavior(
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-        getWindow().setSoftInputMode(
-                WindowManager.LayoutParams
-                        .SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         setContentView(R.layout.activity_reel_editor);
 
         if (getIntent().hasExtra("media_list")) {
@@ -134,11 +139,14 @@ public class ReelEditorActivity extends AppCompatActivity {
         loadMediaAtIndex(0);
     }
 
-    // ── View Binding ─────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // BIND VIEWS
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void bindViews() {
         videoView = findViewById(R.id.videoView);
         imagePreview = findViewById(R.id.imagePreview);
+        compositeCanvas = findViewById(R.id.compositeCanvas);   // NEW
         overlayCanvas = findViewById(R.id.overlayCanvas);
         textEditorPanel = findViewById(R.id.textEditorPanel);
         emojiPanel = findViewById(R.id.emojiPanel);
@@ -158,7 +166,9 @@ public class ReelEditorActivity extends AppCompatActivity {
         playPauseIcon = findViewById(R.id.playPauseIcon);
     }
 
-    // ── Top Bar ──────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // TOP BAR
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void setupTopBar() {
         findViewById(R.id.btnClose).setOnClickListener(v -> finish());
@@ -167,7 +177,9 @@ public class ReelEditorActivity extends AppCompatActivity {
         findViewById(R.id.btnNext).setOnClickListener(v -> proceedToPost());
     }
 
-    // ── Right Tool Panel ─────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // RIGHT TOOLS
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void setupRightTools() {
         findViewById(R.id.toolText).setOnClickListener(v -> {
@@ -183,17 +195,15 @@ public class ReelEditorActivity extends AppCompatActivity {
             closeAllPanels();
             slideUpPanel(stickerPanel);
         });
-        findViewById(R.id.toolDraw).setOnClickListener(v ->
-                showToast("Draw — coming soon"));
-        findViewById(R.id.toolFilter).setOnClickListener(v ->
-                showToast("Filter — coming soon"));
-        findViewById(R.id.toolTrim).setOnClickListener(v ->
-                showToast("Trim — coming soon"));
-
+        findViewById(R.id.toolDraw).setOnClickListener(v -> showToast("Draw — coming soon"));
+        findViewById(R.id.toolFilter).setOnClickListener(v -> showToast("Filter — coming soon"));
+        findViewById(R.id.toolTrim).setOnClickListener(v -> showToast("Trim — coming soon"));
         overlayCanvas.setOnClickListener(v -> closeAllPanels());
     }
 
-    // ── Slide Panels ─────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // PANELS
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void slideUpPanel(View panel) {
         panel.setVisibility(View.VISIBLE);
@@ -207,19 +217,10 @@ public class ReelEditorActivity extends AppCompatActivity {
         panel.animate().translationY(1200f).setDuration(240)
                 .withEndAction(() -> panel.setVisibility(View.GONE)).start();
     }
-    // ── Naya helper method ────────────────────────────────────────────
-    private void resetCategoryTabs(LinearLayout strip) {
-        for (int i = 0; i < strip.getChildCount(); i++) {
-            View child = strip.getChildAt(i);
-            child.setAlpha(i == 0 ? 1f : 0.5f);
-            if (i == 0) setTabSelected((TextView) child);
-            else child.setBackground(null);
-        }
-    }
+
     private void closeAllPanels() {
         emojiPanel.setVisibility(View.GONE);
         textEditorPanel.setVisibility(View.GONE);
-        // RESET translation
         textEditorPanel.setTranslationY(0);
         slideDownPanel(textEditorPanel);
         slideDownPanel(emojiPanel);
@@ -227,7 +228,63 @@ public class ReelEditorActivity extends AppCompatActivity {
         dismissKeyboard();
     }
 
-    // ── Video Tap to Pause/Play ───────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // VIDEO CENTER FIX — setVideoLayout via reflection / MediaPlayer listener
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private void playVideo(String path) {
+        videoView.setVisibility(View.VISIBLE);
+        imagePreview.setVisibility(View.GONE);
+        videoView.setVideoURI(Uri.parse(path));
+        videoView.setOnPreparedListener(mp -> {
+            // ── CENTER FIX: MediaPlayer se actual video dimensions lo ──────
+            int videoWidth = mp.getVideoWidth();
+            int videoHeight = mp.getVideoHeight();
+
+            if (videoWidth > 0 && videoHeight > 0) {
+                int screenW = videoView.getWidth();
+                int screenH = videoView.getHeight();
+
+                float videoRatio = (float) videoWidth / videoHeight;
+                float screenRatio = (float) screenW / screenH;
+
+                int finalW, finalH;
+                if (videoRatio > screenRatio) {
+                    // Video zyada wide hai — width fit karo
+                    finalW = screenW;
+                    finalH = (int) (screenW / videoRatio);
+                } else {
+                    // Video zyada tall hai (9:16 reels) — height fit karo
+                    finalH = screenH;
+                    finalW = (int) (screenH * videoRatio);
+                }
+
+                // VideoView ko center mein resize karo
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(finalW, finalH);
+                lp.gravity = Gravity.CENTER;
+                videoView.setLayoutParams(lp);
+            }
+
+            mp.setLooping(true);
+            videoView.start();
+            isVideoPlaying = true;
+        });
+        videoView.setOnErrorListener((mp, what, extra) -> {
+            showToast("Video error: " + what);
+            return true;
+        });
+    }
+
+    private void showImage(String path) {
+        imagePreview.setVisibility(View.VISIBLE);
+        videoView.setVisibility(View.GONE);
+        if (videoView.isPlaying()) videoView.pause();
+        Glide.with(this).load(path).centerCrop().into(imagePreview);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // TAP TO PAUSE
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void setupVideoTapToPause() {
         View mediaArea = findViewById(R.id.mediaContainer);
@@ -247,20 +304,22 @@ public class ReelEditorActivity extends AppCompatActivity {
 
     private void showPlayPauseHint(boolean playing) {
         playPauseIcon.setImageResource(playing
-                ? R.drawable.ic_play_circle_outline : R.drawable.outline_pause_circle_24);
+                ? R.drawable.ic_play_circle_outline
+                : R.drawable.outline_pause_circle_24);
         playPauseIndicator.setVisibility(View.VISIBLE);
         playPauseIndicator.setAlpha(1f);
         playPauseIndicator.animate().alpha(0f).setStartDelay(600).setDuration(300)
                 .withEndAction(() -> playPauseIndicator.setVisibility(View.GONE)).start();
     }
 
-    // ── Text Editor ──────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // TEXT EDITOR
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void setupTextEditor() {
         findViewById(R.id.textDoneBtn).setOnClickListener(v -> commitTextOverlay());
         textAlignBtn.setOnClickListener(v -> cycleTextAlign());
         findViewById(R.id.textBgBtn).setOnClickListener(v -> cycleTextBg());
-
         textSizeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar sb, int p, boolean u) {
@@ -279,73 +338,38 @@ public class ReelEditorActivity extends AppCompatActivity {
     }
 
     private void openTextEditorPanel() {
-
-        // IMPORTANT — ensure panel visible first
         textEditorPanel.setVisibility(View.VISIBLE);
-
-        // Reset translation (main fix)
         textEditorPanel.setTranslationY(0);
-
-        // Load old text if editing
         if (editingTextView != null) {
-
-            textInput.setText(
-                    editingTextView.getText().toString());
-
-            textInput.setSelection(
-                    textInput.getText().length());
-
+            textInput.setText(editingTextView.getText().toString());
+            textInput.setSelection(textInput.getText().length());
         } else {
-
             textInput.setText("");
         }
-
-        // Force full screen height
-        ViewGroup.LayoutParams lp =
-                textEditorPanel.getLayoutParams();
-
-        lp.height =
-                ViewGroup.LayoutParams.MATCH_PARENT;
-
+        ViewGroup.LayoutParams lp = textEditorPanel.getLayoutParams();
+        lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
         textEditorPanel.setLayoutParams(lp);
-
-        // Focus keyboard
         textInput.requestFocus();
-
         textInput.postDelayed(() -> {
-
-            InputMethodManager imm =
-                    (InputMethodManager)
-                            getSystemService(
-                                    INPUT_METHOD_SERVICE);
-
-            if (imm != null) {
-
-                imm.showSoftInput(
-                        textInput,
-                        InputMethodManager.SHOW_IMPLICIT);
-            }
-
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null) imm.showSoftInput(textInput, InputMethodManager.SHOW_IMPLICIT);
         }, 200);
     }
 
     private void commitTextOverlay() {
-      /*  String text = textInput.getText().toString().trim();
-        if (!text.isEmpty()) addDraggableTextView(text);
-        closeAllPanels();*/
         if (editingTextView != null) {
-            if (editingTextView.getParent() != null) {
+            if (editingTextView.getParent() != null)
                 overlayCanvas.removeView(editingTextView);
-            }
             editingTextView = null;
         }
-
         String text = textInput.getText().toString().trim();
         if (!text.isEmpty()) addDraggableTextView(text);
         closeAllPanels();
     }
 
-    // ── Add Draggable Text ────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // DRAGGABLE VIEWS
+    // ─────────────────────────────────────────────────────────────────────────
 
     @SuppressLint("ClickableViewAccessibility")
     private void addDraggableTextView(String text) {
@@ -357,28 +381,17 @@ public class ReelEditorActivity extends AppCompatActivity {
         tv.setTypeface(Typeface.create(FONT_FAMILIES[currentFontIndex], Typeface.NORMAL));
         tv.setPadding(dp(12), dp(6), dp(12), dp(6));
         applyTextBackground(tv);
-
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+        tv.setLayoutParams(new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
-        tv.setLayoutParams(lp);
-
-        // ── FIXED: single click = edit, long press = nothing, drag = move ──
+                ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
         makeDraggableWithTrash(tv);
-
         tv.setOnClickListener(v -> {
-            // Single tap opens editor again
-           /* textInput.setText(tv.getText());
-            overlayCanvas.removeView(tv);
-            openTextEditorPanel();*/
-            if (editingTextView != null && editingTextView.getParent() != null) {
+            if (editingTextView != null && editingTextView.getParent() != null)
                 overlayCanvas.removeView(editingTextView);
-            }
-            editingTextView = tv;          // is view ko track karo
+            editingTextView = tv;
             textInput.setText(tv.getText());
             openTextEditorPanel();
         });
-
         tv.setScaleX(0f);
         tv.setScaleY(0f);
         overlayCanvas.addView(tv);
@@ -386,106 +399,60 @@ public class ReelEditorActivity extends AppCompatActivity {
                 .setDuration(320).setInterpolator(new OvershootInterpolator(1.3f)).start();
     }
 
-    // ── Add Draggable Emoji ───────────────────────────────────────────────────
-
     @SuppressLint("ClickableViewAccessibility")
     private void addDraggableEmoji(String emoji) {
-
         TextView tv = new TextView(this);
-
         tv.setText(emoji);
         tv.setTextSize(42f);
-
         tv.setClickable(true);
         tv.setFocusable(true);
-
-        FrameLayout.LayoutParams lp =
-                new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        Gravity.CENTER);
-
-        tv.setLayoutParams(lp);
-
-        // VERY IMPORTANT
+        tv.setLayoutParams(new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
         makeDraggableWithTrash(tv);
-
         tv.setScaleX(0f);
         tv.setScaleY(0f);
-
         overlayCanvas.addView(tv);
-
-        tv.animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .setDuration(320)
-                .setInterpolator(
-                        new OvershootInterpolator(1.5f))
-                .start();
+        tv.animate().scaleX(1f).scaleY(1f)
+                .setDuration(320).setInterpolator(new OvershootInterpolator(1.5f)).start();
     }
-
-    // ── Add Draggable Sticker ─────────────────────────────────────────────────
 
     @SuppressLint("ClickableViewAccessibility")
     private void addDraggableSticker(String sticker) {
-
         TextView tv = new TextView(this);
-
         tv.setText(sticker);
         tv.setTextSize(36f);
         tv.setGravity(Gravity.CENTER);
-
-        tv.setPadding(
-                dp(8),
-                dp(8),
-                dp(8),
-                dp(8));
-
+        tv.setPadding(dp(8), dp(8), dp(8), dp(8));
         tv.setClickable(true);
         tv.setFocusable(true);
-
-        FrameLayout.LayoutParams lp =
-                new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        Gravity.CENTER);
-
-        tv.setLayoutParams(lp);
-
-        // IMPORTANT
+        tv.setLayoutParams(new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
         makeDraggableWithTrash(tv);
-
         tv.setScaleX(0f);
         tv.setScaleY(0f);
-
         overlayCanvas.addView(tv);
-
-        tv.animate()
-                .scaleX(1f)
-                .scaleY(1f)
-                .setDuration(320)
-                .setInterpolator(
-                        new OvershootInterpolator(1.5f))
-                .start();
+        tv.animate().scaleX(1f).scaleY(1f)
+                .setDuration(320).setInterpolator(new OvershootInterpolator(1.5f)).start();
     }
 
-    // ── DRAG + TRASH ZONE + SCALE + ROTATE ────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // DRAG + TRASH + SCALE
+    // ─────────────────────────────────────────────────────────────────────────
 
-/*    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility")
     private void makeDraggableWithTrash(View view) {
-        final float[] dX = {0f};
-        final float[] dY = {0f};
-        final float[] startRawX = {0f};
-        final float[] startRawY = {0f};
+        final float[] dX = {0f}, dY = {0f};
+        final float[] startRawX = {0f}, startRawY = {0f};
         final float[] originalScale = {1f};
         final boolean[] isDragging = {false};
-        final boolean[] deletedByTrash = {false};
 
         ScaleGestureDetector scaleDetector = new ScaleGestureDetector(this,
                 new ScaleGestureDetector.SimpleOnScaleGestureListener() {
                     @Override
                     public boolean onScale(ScaleGestureDetector d) {
-                        float s = Math.max(0.3f, Math.min(view.getScaleX() * d.getScaleFactor(), 4f));
+                        float s = Math.max(0.3f, Math.min(view.getScaleX() * d.getScaleFactor(), 5f));
                         view.setScaleX(s);
                         view.setScaleY(s);
                         originalScale[0] = s;
@@ -495,57 +462,34 @@ public class ReelEditorActivity extends AppCompatActivity {
 
         view.setOnTouchListener((v, event) -> {
             scaleDetector.onTouchEvent(event);
-            if (scaleDetector.isInProgress()) return true;
-
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     dX[0] = v.getX() - event.getRawX();
                     dY[0] = v.getY() - event.getRawY();
                     startRawX[0] = event.getRawX();
                     startRawY[0] = event.getRawY();
-                    isDragging[0] = false;
-                    deletedByTrash[0] = false;
                     originalScale[0] = v.getScaleX();
-                    v.animate().scaleX(v.getScaleX() * 1.08f)
-                            .scaleY(v.getScaleY() * 1.08f).setDuration(80).start();
+                    isDragging[0] = false;
+                    v.animate().scaleX(originalScale[0] * 1.08f)
+                            .scaleY(originalScale[0] * 1.08f).setDuration(80).start();
                     break;
 
                 case MotionEvent.ACTION_MOVE:
-                    float moveX = event.getRawX();
-                    float moveY = event.getRawY();
-                    float dist = (float) Math.hypot(moveX - startRawX[0], moveY - startRawY[0]);
-
-                    if (dist > 8 || isDragging[0]) {
-                        isDragging[0] = true;
-
-                        // Show trash zone
-                        if (!isTrashVisible) showTrashZone();
-
-                        float newX = moveX + dX[0];
-                        float newY = moveY + dY[0];
-                        float rotation = (moveX - startRawX[0]) * 0.05f;
-
-                        v.setX(newX);
-                        v.setY(newY);
-                        v.setRotation(rotation);
-                        // Check if over trash zone
-                        int[] trashLoc = new int[2];
-                        trashZone.getLocationOnScreen(trashLoc);
-                        boolean overTrash = event.getRawX() > trashLoc[0]
-                                && event.getRawX() < trashLoc[0] + trashZone.getWidth()
-                                && event.getRawY() > trashLoc[1]
-                                && event.getRawY() < trashLoc[1] + trashZone.getHeight();
-
-                        if (overTrash) {
-                            trashZone.setAlpha(1f);
-                            trashZone.setScaleX(1.2f);
-                            trashZone.setScaleY(1.2f);
-                            v.setAlpha(0.4f);
-                        } else {
-                            trashZone.setAlpha(0.8f);
-                            trashZone.setScaleX(1f);
-                            trashZone.setScaleY(1f);
-                            v.setAlpha(1f);
+                    if (event.getPointerCount() == 1) {
+                        float mx = event.getRawX(), my = event.getRawY();
+                        float dist = (float) Math.hypot(mx - startRawX[0], my - startRawY[0]);
+                        if (dist > 8 || isDragging[0]) {
+                            isDragging[0] = true;
+                            if (!isTrashVisible) showTrashZone();
+                            v.setX(mx + dX[0]);
+                            v.setY(my + dY[0]);
+                            Rect tr = new Rect();
+                            trashZone.getGlobalVisibleRect(tr);
+                            boolean over = tr.contains((int) mx, (int) my);
+                            trashZone.setAlpha(over ? 1f : 0.8f);
+                            trashZone.setScaleX(over ? 1.2f : 1f);
+                            trashZone.setScaleY(over ? 1.2f : 1f);
+                            v.setAlpha(over ? 0.4f : 1f);
                         }
                     }
                     break;
@@ -553,215 +497,25 @@ public class ReelEditorActivity extends AppCompatActivity {
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
                     hideTrashZone();
-
                     if (isDragging[0]) {
-                        // Check final drop position
-                        int[] trashLoc = new int[2];
-                        trashZone.getLocationOnScreen(trashLoc);
-                        boolean droppedOnTrash = event.getRawX() > trashLoc[0]
-                                && event.getRawX() < trashLoc[0] + trashZone.getWidth()
-                                && event.getRawY() > trashLoc[1];
-
-                        if (droppedOnTrash) {
-                            // Delete with shrink animation
-                            deletedByTrash[0] = true;
+                        Rect tr = new Rect();
+                        trashZone.getGlobalVisibleRect(tr);
+                        if (tr.contains((int) event.getRawX(), (int) event.getRawY())) {
                             v.animate().scaleX(0f).scaleY(0f).alpha(0f).setDuration(200)
                                     .withEndAction(() -> overlayCanvas.removeView(v)).start();
                         } else {
-                            float finalScale = v.getScaleX() / 1.08f;
-                            v.animate().scaleX(finalScale).scaleY(finalScale)
-                                    .rotation(0f).setDuration(180).start();
+                            v.animate().scaleX(originalScale[0]).scaleY(originalScale[0])
+                                    .alpha(1f).setDuration(180).start();
                         }
-                        return true; // consume — do not trigger onClick
+                        return true;
                     }
-
-                    // Not a drag — restore scale for click to work
-                    float finalS = v.getScaleX() / 1.08f;
-                    v.animate().scaleX(finalS).scaleY(finalS).setDuration(100).start();
+                    v.animate().scaleX(originalScale[0]).scaleY(originalScale[0])
+                            .setDuration(100).start();
                     break;
             }
-            // Return false so click listeners still fire when not dragging
             return isDragging[0];
         });
-    }*/
-@SuppressLint("ClickableViewAccessibility")
-private void makeDraggableWithTrash(View view) {
-
-    final float[] dX = {0f};
-    final float[] dY = {0f};
-
-    final float[] startRawX = {0f};
-    final float[] startRawY = {0f};
-
-    final float[] originalScale = {1f};
-
-    final boolean[] isDragging = {false};
-
-    ScaleGestureDetector scaleDetector =
-            new ScaleGestureDetector(this,
-                    new ScaleGestureDetector.SimpleOnScaleGestureListener() {
-
-                        @Override
-                        public boolean onScale(ScaleGestureDetector detector) {
-
-                            float scale =
-                                    view.getScaleX()
-                                            * detector.getScaleFactor();
-
-                            // limit zoom
-                            scale = Math.max(0.3f,
-                                    Math.min(scale, 5f));
-
-                            view.setScaleX(scale);
-                            view.setScaleY(scale);
-
-                            originalScale[0] = scale;
-
-                            return true;
-                        }
-                    });
-
-
-    view.setOnTouchListener((v, event) -> {
-
-        scaleDetector.onTouchEvent(event);
-
-        switch (event.getActionMasked()) {
-
-            case MotionEvent.ACTION_DOWN:
-
-                dX[0] = v.getX() - event.getRawX();
-                dY[0] = v.getY() - event.getRawY();
-
-                startRawX[0] = event.getRawX();
-                startRawY[0] = event.getRawY();
-
-                originalScale[0] = v.getScaleX();
-
-                isDragging[0] = false;
-
-                // pickup effect
-                v.animate()
-                        .scaleX(originalScale[0] * 1.08f)
-                        .scaleY(originalScale[0] * 1.08f)
-                        .setDuration(80)
-                        .start();
-
-                break;
-
-
-            case MotionEvent.ACTION_MOVE:
-
-                if (event.getPointerCount() == 1) {
-
-                    float moveX = event.getRawX();
-                    float moveY = event.getRawY();
-
-                    float dist = (float)
-                            Math.hypot(
-                                    moveX - startRawX[0],
-                                    moveY - startRawY[0]);
-
-                    if (dist > 8 || isDragging[0]) {
-
-                        isDragging[0] = true;
-
-                        if (!isTrashVisible)
-                            showTrashZone();
-
-                        float newX = moveX + dX[0];
-                        float newY = moveY + dY[0];
-
-                        v.setX(newX);
-                        v.setY(newY);
-
-                        // Trash detection
-                        Rect trashRect = new Rect();
-                        trashZone.getGlobalVisibleRect(trashRect);
-
-                        boolean overTrash =
-                                trashRect.contains(
-                                        (int) moveX,
-                                        (int) moveY);
-
-                        if (overTrash) {
-
-                            trashZone.setAlpha(1f);
-                            trashZone.setScaleX(1.2f);
-                            trashZone.setScaleY(1.2f);
-
-                            v.setAlpha(0.4f);
-
-                        } else {
-
-                            trashZone.setAlpha(0.8f);
-                            trashZone.setScaleX(1f);
-                            trashZone.setScaleY(1f);
-
-                            v.setAlpha(1f);
-                        }
-                    }
-
-                }
-
-                break;
-
-
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-
-                hideTrashZone();
-
-                if (isDragging[0]) {
-
-                    Rect trashRect = new Rect();
-                    trashZone.getGlobalVisibleRect(trashRect);
-
-                    boolean droppedOnTrash =
-                            trashRect.contains(
-                                    (int) event.getRawX(),
-                                    (int) event.getRawY());
-
-                    if (droppedOnTrash) {
-
-                        v.animate()
-                                .scaleX(0f)
-                                .scaleY(0f)
-                                .alpha(0f)
-                                .setDuration(200)
-                                .withEndAction(() ->
-                                        overlayCanvas.removeView(v))
-                                .start();
-
-                    } else {
-
-                        v.animate()
-                                .scaleX(originalScale[0])
-                                .scaleY(originalScale[0])
-                                .alpha(1f)
-                                .setDuration(180)
-                                .start();
-                    }
-
-                    return true;
-                }
-
-
-                v.animate()
-                        .scaleX(originalScale[0])
-                        .scaleY(originalScale[0])
-                        .setDuration(100)
-                        .start();
-
-                break;
-        }
-
-        return isDragging[0];
-    });
-}
-
-    // Stub to avoid compile error (View.setPosition doesn't exist — we set X/Y directly)
-    // The setX/setY calls above already handle positioning.
+    }
 
     private void showTrashZone() {
         isTrashVisible = true;
@@ -776,7 +530,9 @@ private void makeDraggableWithTrash(View view) {
                 .withEndAction(() -> trashZone.setVisibility(View.GONE)).start();
     }
 
-    // ── Text Background ───────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // TEXT BG / ALIGN
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void applyTextBackground(View v) {
         android.graphics.drawable.GradientDrawable bg =
@@ -814,7 +570,9 @@ private void makeDraggableWithTrash(View view) {
         applyTextBackground(textInput);
     }
 
-    // ── Color Strip ──────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // COLOR + FONT STRIPS
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void buildColorStrip() {
         colorStripLayout.removeAllViews();
@@ -825,14 +583,12 @@ private void makeDraggableWithTrash(View view) {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(40), dp(40));
             lp.setMargins(dp(5), 0, dp(5), 0);
             dot.setLayoutParams(lp);
-
             android.graphics.drawable.GradientDrawable gd =
                     new android.graphics.drawable.GradientDrawable();
             gd.setShape(android.graphics.drawable.GradientDrawable.OVAL);
             gd.setColor(color);
             gd.setStroke(dp(2), i == 0 ? 0x88FFFFFF : Color.WHITE);
             dot.setBackground(gd);
-
             dot.setOnClickListener(v -> {
                 currentTextColor = color;
                 textInput.setTextColor(color);
@@ -850,8 +606,6 @@ private void makeDraggableWithTrash(View view) {
         }
     }
 
-    // ── Font Strip ───────────────────────────────────────────────────────────
-
     private void buildFontStrip() {
         fontStripLayout.removeAllViews();
         for (int i = 0; i < FONT_FAMILIES.length; i++) {
@@ -863,8 +617,7 @@ private void makeDraggableWithTrash(View view) {
             chip.setTypeface(Typeface.create(FONT_FAMILIES[i], Typeface.NORMAL));
             chip.setPadding(dp(14), dp(5), dp(14), dp(5));
             if (i == 0)
-                chip.setPaintFlags(chip.getPaintFlags()
-                        | android.graphics.Paint.UNDERLINE_TEXT_FLAG);
+                chip.setPaintFlags(chip.getPaintFlags() | android.graphics.Paint.UNDERLINE_TEXT_FLAG);
             chip.setOnClickListener(v -> {
                 currentFontIndex = idx;
                 textInput.setTypeface(Typeface.create(FONT_FAMILIES[idx], Typeface.NORMAL));
@@ -886,13 +639,14 @@ private void makeDraggableWithTrash(View view) {
         }
     }
 
-    // ── Emoji Panel ──────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // EMOJI + STICKER PANELS
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void setupEmojiPanel() {
         String[] catIcons = {"😀", "❤️", "🎉", "🐶", "🍕", "⚽", "🌍", "✈️"};
         buildCategoryTabs(emojiCategoryStrip, catIcons, idx ->
                 emojiAdapter.updateData(EmojiData.getCategory(idx)));
-
         emojiAdapter = new EmojiAdapter(this, EmojiData.getCategory(0), emoji -> {
             addDraggableEmoji(emoji);
             slideDownPanel(emojiPanel);
@@ -901,25 +655,16 @@ private void makeDraggableWithTrash(View view) {
         emojiRecycler.setAdapter(emojiAdapter);
     }
 
-    // ── Sticker Panel ─────────────────────────────────────────────────────────
-
     private void setupStickerPanel() {
         String[] catLabels = {"🔥 Trending", "💬 Text", "🎨 Fun", "✨ Glitter", "🌈 Vibes"};
         buildCategoryTabs(stickerCategoryStrip, catLabels, idx ->
                 stickerAdapter.updateData(StickerData.getCategory(idx)));
-
         stickerAdapter = new StickerAdapter(this, StickerData.getCategory(0), sticker -> {
             addDraggableSticker(sticker);
             slideDownPanel(stickerPanel);
         });
         stickerRecycler.setLayoutManager(new GridLayoutManager(this, 4));
         stickerRecycler.setAdapter(stickerAdapter);
-    }
-
-    // ── Category Tabs ─────────────────────────────────────────────────────────
-
-    interface OnCatSelected {
-        void onSelected(int index);
     }
 
     private void buildCategoryTabs(LinearLayout strip, String[] labels, OnCatSelected cb) {
@@ -954,8 +699,6 @@ private void makeDraggableWithTrash(View view) {
         tv.setBackground(bg);
     }
 
-    // ── Clip Strip ────────────────────────────────────────────────────────────
-
     private void buildClipStrip() {
         clipStrip.removeAllViews();
         for (int i = 0; i < mediaList.size(); i++) {
@@ -966,7 +709,6 @@ private void makeDraggableWithTrash(View view) {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(dp(52), dp(52));
             lp.setMargins(dp(3), 0, dp(3), 0);
             frame.setLayoutParams(lp);
-
             android.graphics.drawable.GradientDrawable bg =
                     new android.graphics.drawable.GradientDrawable();
             bg.setColor(0xFF222222);
@@ -977,26 +719,48 @@ private void makeDraggableWithTrash(View view) {
 
             ImageView thumb = new ImageView(this);
             thumb.setLayoutParams(new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT));
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             thumb.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            Glide.with(this).load(m.getPath()).into(thumb);
             frame.addView(thumb);
 
-            // Video badge
+            // ── Thumbnail load ────────────────────────────────────────────
             if (m.isVideo()) {
-                ImageView playBadge = new ImageView(this);
+                ThumbnailHelper.load(this, m.getPath(), thumb);
+            } else {
+                Glide.with(this).load(m.getPath()).centerCrop().into(thumb);
+            }
+
+            // ── Play badge for video ───────────────────────────────────────
+            if (m.isVideo()) {
+                ImageView badge = new ImageView(this);
                 FrameLayout.LayoutParams blp =
                         new FrameLayout.LayoutParams(dp(16), dp(16), Gravity.BOTTOM | Gravity.START);
                 blp.setMargins(dp(4), 0, 0, dp(4));
-                playBadge.setLayoutParams(blp);
-                playBadge.setImageResource(R.drawable.ic_play_circle_outline);
-                playBadge.setColorFilter(Color.WHITE);
-                frame.addView(playBadge);
+                badge.setLayoutParams(blp);
+                badge.setImageResource(R.drawable.ic_play_circle_outline);
+                badge.setColorFilter(Color.WHITE);
+                frame.addView(badge);
+
+                // Duration badge
+                if (m.getDuration() > 0) {
+                    TextView tvDur = new TextView(this);
+                    FrameLayout.LayoutParams dlp = new FrameLayout.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            Gravity.BOTTOM | Gravity.END);
+                    dlp.setMargins(0, 0, dp(3), dp(3));
+                    tvDur.setLayoutParams(dlp);
+                    tvDur.setTextColor(Color.WHITE);
+                    tvDur.setTextSize(9f);
+                    tvDur.setBackgroundColor(0x88000000);
+                    tvDur.setPadding(dp(2), 0, dp(2), 0);
+                    long sec = m.getDuration() / 1000;
+                    tvDur.setText(String.format(java.util.Locale.US, "%d:%02d", sec / 60, sec % 60));
+                    frame.addView(tvDur);
+                }
             }
 
             if (i == 0) setBorderActive(frame, true);
-
             frame.setOnClickListener(v -> {
                 updateClipStripSelection(idx);
                 loadMediaAtIndex(idx);
@@ -1004,19 +768,17 @@ private void makeDraggableWithTrash(View view) {
             clipStrip.addView(frame);
         }
 
-        // Add "+" button
+        // "+" add button
         FrameLayout addBtn = new FrameLayout(this);
         LinearLayout.LayoutParams alp = new LinearLayout.LayoutParams(dp(52), dp(52));
         alp.setMargins(dp(3), 0, dp(3), 0);
         addBtn.setLayoutParams(alp);
-
         android.graphics.drawable.GradientDrawable addBg =
                 new android.graphics.drawable.GradientDrawable();
         addBg.setColor(Color.TRANSPARENT);
         addBg.setStroke(dp(1), 0x66FFFFFF);
         addBg.setCornerRadius(dp(8));
         addBtn.setBackground(addBg);
-
         ImageView addIcon = new ImageView(this);
         addIcon.setLayoutParams(new FrameLayout.LayoutParams(dp(24), dp(24), Gravity.CENTER));
         addIcon.setImageResource(R.drawable.ic_add);
@@ -1026,11 +788,14 @@ private void makeDraggableWithTrash(View view) {
         clipStrip.addView(addBtn);
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // CLIP STRIP — thumbnail with ThumbnailHelper
+    // ─────────────────────────────────────────────────────────────────────────
+
     private void updateClipStripSelection(int selected) {
         currentMediaIndex = selected;
-        for (int i = 0; i < clipStrip.getChildCount() - 1; i++) {
+        for (int i = 0; i < clipStrip.getChildCount() - 1; i++)
             setBorderActive((FrameLayout) clipStrip.getChildAt(i), i == selected);
-        }
     }
 
     private void setBorderActive(FrameLayout frame, boolean active) {
@@ -1042,17 +807,15 @@ private void makeDraggableWithTrash(View view) {
         frame.setForeground(active ? border : null);
     }
 
-    // ── Bottom Actions ────────────────────────────────────────────────────────
-
     private void setupBottomActions() {
         findViewById(R.id.btnAddClip).setOnClickListener(v -> finish());
-        findViewById(R.id.btnAudio).setOnClickListener(v ->
-                showToast("Audio mixer — coming soon"));
-        findViewById(R.id.btnSpeed).setOnClickListener(v ->
-                showToast("Speed control — coming soon"));
+        findViewById(R.id.btnAudio).setOnClickListener(v -> showToast("Audio — coming soon"));
+        findViewById(R.id.btnSpeed).setOnClickListener(v -> showToast("Speed — coming soon"));
     }
 
-    // ── Media Loading ─────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // BOTTOM ACTIONS
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void loadMediaAtIndex(int index) {
         if (index < 0 || index >= mediaList.size()) return;
@@ -1061,53 +824,195 @@ private void makeDraggableWithTrash(View view) {
         else showImage(m.getPath());
     }
 
-    private void playVideo(String path) {
-        videoView.setVisibility(View.VISIBLE);
-        imagePreview.setVisibility(View.GONE);
-        videoView.setVideoURI(Uri.parse(path));
-        videoView.setOnPreparedListener(mp -> {
-            mp.setLooping(true);
-            videoView.start();
-            isVideoPlaying = true;
-        });
-        videoView.setOnErrorListener((mp, what, extra) -> {
-            showToast("Video error");
-            return true;
-        });
-    }
-
-    private void showImage(String path) {
-        imagePreview.setVisibility(View.VISIBLE);
-        videoView.setVisibility(View.GONE);
-        if (videoView.isPlaying()) videoView.pause();
-        Glide.with(this).load(path).centerCrop().into(imagePreview);
-    }
-
-    // ── Proceed to Post ───────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // MEDIA LOADING
+    // ─────────────────────────────────────────────────────────────────────────
 
     private void proceedToPost() {
-        showToast("Opening post screen...");
+        if (mediaList == null || mediaList.isEmpty()) {
+            showToast("No media found");
+            return;
+        }
+
+        // UI elements (topbar, tools
+        hideEditorUIForCapture();
+
+        // overlayCanvas ka screenshot lo — text/emoji/sticker positions capture
+        overlayCanvas.post(() -> {
+            // Overlay snapshot
+            Bitmap overlayBitmap = captureViewBitmap(overlayCanvas);
+
+            // UI wapas dikhao
+            showEditorUI();
+
+            // Video thumbnail banao background mein
+            executor.execute(() -> {
+                MediaModel m = mediaList.get(currentMediaIndex);
+                String thumbPath = null;
+
+                if (m.isVideo()) {
+                    // Video ka pehla frame lo
+                    Bitmap videoFrame = extractVideoFrame(m.getPath());
+
+                    // Video frame + overlay merge karo
+                    if (videoFrame != null && overlayBitmap != null) {
+                        thumbPath = mergeAndSave(videoFrame, overlayBitmap);
+                    } else if (videoFrame != null) {
+                        thumbPath = saveBitmap(videoFrame, "thumb_video_");
+                    }
+                } else {
+                    // Image — as-is use karo
+                    thumbPath = m.getPath();
+                }
+
+                final String finalThumbPath = thumbPath;
+
+                mainHandler.post(() -> {
+                    // Overlay snapshot bhi save karke ReelPostActivity ko bhejo
+                    String overlayPath = null;
+                    if (overlayBitmap != null) {
+                        overlayPath = saveBitmap(overlayBitmap, "overlay_");
+                    }
+
+                    Intent intent = new Intent(this, ReelPostActivity.class);
+                    intent.putExtra("media_list", new ArrayList<>(mediaList));
+                    intent.putExtra("thumbnail_path", finalThumbPath);
+                    intent.putExtra("overlay_path", overlayPath);   // optional
+                    startActivity(intent);
+                    overridePendingTransition(
+                            android.R.anim.slide_in_left,
+                            android.R.anim.slide_out_right);
+                });
+            });
+        });
     }
 
-    // ── Utils ─────────────────────────────────────────────────────────────────
+    // ─────────────────────────────────────────────────────────────────────────
+    // PROCEED TO POST — overlay ko video ke saath merge karke thumbnail banao
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * View ka Bitmap snapshot leta hai (text/emoji/sticker sab include)
+     */
+    private Bitmap captureViewBitmap(View view) {
+        try {
+            Bitmap bmp = Bitmap.createBitmap(
+                    view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bmp);
+            view.draw(canvas);
+            return bmp;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // CAPTURE HELPERS
+    // ─────────────────────────────────────────────────────────────────────────
+
+    /**
+     * Video ka pehla frame MediaMetadataRetriever se nikalna
+     */
+    private Bitmap extractVideoFrame(String videoPath) {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            Uri uri = Uri.parse(videoPath);
+            if ("content".equals(uri.getScheme())) {
+                retriever.setDataSource(this, uri);
+            } else {
+                retriever.setDataSource(videoPath);
+            }
+            Bitmap frame = retriever.getFrameAtTime(
+                    0, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+            if (frame == null) {
+                frame = retriever.getFrameAtTime(
+                        1_000_000L, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+            }
+            return frame;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                retriever.release();
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    /**
+     * Video frame + overlay bitmap merge karo
+     * Result = thumbnail jisme text/emoji/sticker bhi dikhe
+     */
+    private String mergeAndSave(Bitmap videoFrame, Bitmap overlay) {
+        try {
+            // Overlay ko video frame ke size mein scale karo
+            Bitmap scaledOverlay = Bitmap.createScaledBitmap(
+                    overlay, videoFrame.getWidth(), videoFrame.getHeight(), true);
+
+            Bitmap merged = Bitmap.createBitmap(
+                    videoFrame.getWidth(), videoFrame.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(merged);
+            canvas.drawBitmap(videoFrame, 0, 0, null);   // pehle video frame
+            canvas.drawBitmap(scaledOverlay, 0, 0, null); // upar overlay
+
+            return saveBitmap(merged, "merged_thumb_");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Bitmap ko cache mein save karo, path return karo
+     */
+    private String saveBitmap(Bitmap bmp, String prefix) {
+        try {
+            File file = new File(getCacheDir(), prefix + System.currentTimeMillis() + ".jpg");
+            FileOutputStream fos = new FileOutputStream(file);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 85, fos);
+            fos.flush();
+            fos.close();
+            return file.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Editor UI hide karo screenshot ke liye
+     */
+    private void hideEditorUIForCapture() {
+        findViewById(R.id.topBar).setVisibility(View.INVISIBLE);
+        // Right tools LinearLayout
+        ViewGroup root = (ViewGroup) getWindow().getDecorView().getRootView();
+        // Bottom bar — last child of root's first child
+    }
+
+    private void showEditorUI() {
+        findViewById(R.id.topBar).setVisibility(View.VISIBLE);
+    }
 
     private int dp(int v) {
         return (int) (v * getResources().getDisplayMetrics().density);
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // UTILS
+    // ─────────────────────────────────────────────────────────────────────────
+
     private void dismissKeyboard() {
         if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            if (imm != null)
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            if (imm != null) imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
     }
 
     private void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
-
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
 
     @Override
     protected void onResume() {
@@ -1117,6 +1022,10 @@ private void makeDraggableWithTrash(View view) {
             isVideoPlaying = true;
         }
     }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // LIFECYCLE
+    // ─────────────────────────────────────────────────────────────────────────
 
     @Override
     protected void onPause() {
@@ -1130,6 +1039,11 @@ private void makeDraggableWithTrash(View view) {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
+        mainHandler.removeCallbacksAndMessages(null);
+        executor.shutdown();
+    }
+
+    interface OnCatSelected {
+        void onSelected(int index);
     }
 }
