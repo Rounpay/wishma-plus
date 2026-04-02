@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Folder thumbnail -->
+    <ImageView
+        android:id="@+id/folderThumb"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/rounded_grey_bg"
+        android:contentDescription="Folder"/>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="12dp">
+
+        <TextView
+            android:id="@+id/folderNameTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="#000"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/folderCountTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="11sp"
+            android:textColor="#888"/>
+    </LinearLayout>
+
+    <!-- Active checkmark -->
+    <ImageView
+        android:id="@+id/activeCheck"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/ic_check_green"
+        android:visibility="gone"/>
+
+</LinearLayout>

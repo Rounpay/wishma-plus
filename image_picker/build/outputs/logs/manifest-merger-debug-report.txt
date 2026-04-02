@@ -1,62 +1,62 @@
 -- Merging decision tree log ---
 manifest
-ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:1:1-29:12
-INJECTED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:1:1-29:12
+ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:1:1-29:12
+INJECTED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:1:1-29:12
 	package
-		INJECTED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml
+		INJECTED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml
 	xmlns:tools
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:2:5-51
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:2:5-51
 	xmlns:android
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:1:11-69
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:1:11-69
 uses-permission#android.permission.CAMERA
-ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:4:5-65
+ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:4:5-65
 	android:name
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:4:22-62
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:4:22-62
 uses-permission#android.permission.READ_EXTERNAL_STORAGE
-ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:5:5-80
+ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:5:5-80
 	android:name
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:5:22-77
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:5:22-77
 application
-ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:7:5-28:19
+ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:7:5-28:19
 	android:supportsRtl
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:10:9-35
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:10:9-35
 	android:label
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:9:9-41
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:9:9-41
 	android:allowBackup
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:8:9-36
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:8:9-36
 activity#com.wishmaplus.image.cropper.CropImageActivity
-ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:12:9-15:47
+ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:12:9-15:47
 	android:screenOrientation
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:14:13-49
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:14:13-49
 	android:theme
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:15:13-44
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:15:13-44
 	android:name
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:13:13-74
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:13:13-74
 provider#androidx.core.content.FileProvider
-ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:17:9-27:20
+ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:17:9-27:20
 	android:grantUriPermissions
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:22:13-47
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:22:13-47
 	android:authorities
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:19:13-79
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:19:13-79
 	android:exported
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:20:13-37
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:20:13-37
 	tools:replace
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:21:13-48
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:21:13-48
 	android:name
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:18:13-62
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:18:13-62
 meta-data#android.support.FILE_PROVIDER_PATHS
-ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:23:13-26:58
+ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:23:13-26:58
 	android:resource
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:26:17-55
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:26:17-55
 	tools:replace
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:24:17-49
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:24:17-49
 	android:name
-		ADDED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml:25:17-67
+		ADDED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml:25:17-67
 uses-sdk
-INJECTED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml reason: use-sdk injection requested
-INJECTED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml
-INJECTED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml
+INJECTED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml
+INJECTED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml
 	android:targetSdkVersion
-		INJECTED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml
+		INJECTED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml
 	android:minSdkVersion
-		INJECTED from F:\Shivani\wishma-plus\image_picker\src\main\AndroidManifest.xml
+		INJECTED from D:\KotlinProjects\wishma-plus\image_picker\src\main\AndroidManifest.xml

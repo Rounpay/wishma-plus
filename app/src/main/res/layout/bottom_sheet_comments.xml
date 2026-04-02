@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bottom_sheet_bg"
+    android:orientation="vertical">
+
+    <!-- Drag handle -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="6dp"
+        android:background="@drawable/drag_handle_bg" />
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp">
+
+        <TextView
+            android:id="@+id/commentCountHeader"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Comments"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="@color/grey_1"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="4dp"
+            android:src="@drawable/outline_close_24" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#E0E0E0" />
+
+    <!-- Reply indicator banner -->
+    <TextView
+        android:id="@+id/replyIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="#F0F8FF"
+        android:clickable="true"
+        android:focusable="true"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:text="Replying to @user"
+        android:textColor="#0095F6"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
+    <!-- Comments list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/commentsRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="420dp"
+        android:overScrollMode="never"
+        android:paddingHorizontal="4dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#E0E0E0" />
+
+    <!-- Input row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="10dp"
+        android:paddingBottom="28dp">
+
+        <EditText
+            android:id="@+id/commentInput"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:background="@drawable/comment_input_bg"
+            android:hint="Add a comment..."
+            android:textColorHint="#999"
+            android:imeOptions="actionSend"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLines="3"
+            android:paddingHorizontal="14dp"
+            android:textSize="14sp" />
+
+        <ImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/sendBtn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="10dp"
+            android:alpha="0.4"
+            android:background="@drawable/circle_background"
+            android:backgroundTint="#0095F6"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/ic_send"
+            app:tint="@android:color/white" />
+    </LinearLayout>
+</LinearLayout>

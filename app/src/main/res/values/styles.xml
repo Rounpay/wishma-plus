@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Define a custom style to hide text labels -->
     <style name="BottomNavigationViewStyle" parent="Widget.Design.BottomNavigationView">
@@ -32,6 +32,160 @@
         <item name="android:textSize">13sp</item>
     </style>
 
+    <!-- ════════════════════════════════════════════════
+         STYLES — res/values/styles.xml mein add karo
+         ════════════════════════════════════════════════ -->
 
+    <!-- Tool button style (right panel) -->
+    <style name="ToolButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginVertical" tools:targetApi="26">8dp</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <!-- ══════════════════════════════════════════════════════
+         EDITOR TOOL BUTTON (Right panel in ReelEditorActivity)
+         ══════════════════════════════════════════════════════ -->
+    <style name="EditorTool">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginVertical" tools:ignore="NewApi">6dp</item>
+        <item name="android:paddingVertical" tools:ignore="NewApi">6dp</item>
+        <item name="android:paddingHorizontal" tools:ignore="NewApi">4dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="ToolCircle">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:background">@drawable/circle_bg</item>
+        <item name="android:backgroundTint">@color/colorAccent</item>
+    </style>
+
+    <style name="ToolIcon">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:tint">@android:color/white</item>
+    </style>
+
+    <style name="ToolLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+
+        <item name="android:textColor">@color/colorAccent</item>
+
+        <!-- SHADOW ADD -->
+        <item name="android:shadowColor">@android:color/white</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+
+        <item name="android:textSize">9sp</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- ══════════════════════════════════════════════════════
+         BOTTOM ACTION BUTTONS (Editor bottom row)
+         ══════════════════════════════════════════════════════ -->
+    <style name="BottomAction">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginHorizontal" tools:ignore="NewApi">22dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    </style>
+
+    <style name="BottomActionCircle">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/circle_outline</item>
+        <item name="android:backgroundTint">@color/colorAccent</item>
+    </style>
+
+    <style name="BottomActionIcon">
+        <item name="android:layout_width">22dp</item>
+        <item name="android:layout_height">22dp</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:tint">@android:color/white</item>
+    </style>
+
+    <style name="BottomActionLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#CCFFFFFF</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+    <!-- ══════════════════════════════════════
+     BOTTOM SHEET — Light (Comments)
+     parent MUST be Theme.MaterialComponents
+     ══════════════════════════════════════ -->
+    <style name="BottomSheetStyle"
+        parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetStyle.Inner</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="BottomSheetStyle.Inner"
+        parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_bg</item>
+        <item name="behavior_peekHeight">400dp</item>
+        <item name="behavior_hideable">true</item>
+        <item name="behavior_skipCollapsed">false</item>
+    </style>
+
+    <!-- ══════════════════════════════════════
+         BOTTOM SHEET — Dark (Emoji / Sticker)
+         ══════════════════════════════════════ -->
+    <style name="BottomSheetDarkStyle"
+        parent="Theme.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/BottomSheetDarkStyle.Inner</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="BottomSheetDarkStyle.Inner"
+        parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_dark_bg</item>
+        <item name="behavior_hideable">true</item>
+        <item name="behavior_skipCollapsed">true</item>
+    </style>
+
+    <!-- ══════════════════════════════════════
+         MULTISELECT BOTTOM SHEET
+         ══════════════════════════════════════ -->
+    <style name="MultiSelectSheetStyle"
+        parent="Theme.MaterialComponents.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/MultiSelectSheetStyle.Inner</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
+
+    <style name="MultiSelectSheetStyle.Inner"
+        parent="Widget.MaterialComponents.BottomSheet.Modal">
+        <item name="android:background">@drawable/bottom_sheet_bg</item>
+        <item name="behavior_skipCollapsed">true</item>
+    </style>
 
 </resources>

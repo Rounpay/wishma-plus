@@ -51,8 +51,23 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:icon,theme">
         <activity
-            android:name=".Activity.CreateReelActivity"
+            android:name=".ReelsFeedActivity"
             android:exported="false" />
+        <activity
+            android:name=".CameraRecorderActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ReelEditorActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".Activity.CreateReelActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".zego.PreviewActivity"
             android:exported="false"

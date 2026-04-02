@@ -82,7 +82,6 @@ dependencies {
     implementation (libs.androidx.credentials)
     implementation (libs.credentials.play.services.auth)
     implementation (libs.identity.googleid)
-
     //implementation (platform("com.google.firebase:firebase-bom:33.1.2"))
 
     //implementation ("com.google.firebase:firebase-auth")
@@ -95,8 +94,10 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
     implementation("androidx.fragment:fragment:1.8.9")
     implementation("com.airbnb.android:lottie:6.7.1")
-
-
     implementation(libs.express.video)
     api(libs.permissionx)
+    implementation ("androidx.camera:camera-core:1.6.0")
+    implementation ("androidx.camera:camera-camera2:1.6.0")
+    implementation ("androidx.camera:camera-lifecycle:1.6.0")
+    implementation ("androidx.camera:camera-view:1.6.0")
 }

@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- Video -->
+    <VideoView
+        android:id="@+id/reelVideoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <!-- Thumbnail (shown before video loads) -->
+    <ImageView
+        android:id="@+id/reelThumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"/>
+
+    <!-- Loading spinner -->
+    <ProgressBar
+        android:id="@+id/reelLoadingBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:indeterminateTint="#FFFFFF"
+        android:visibility="gone"/>
+
+    <!-- Video progress bar (thin, bottom) -->
+    <ProgressBar
+        android:id="@+id/videoProgressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="0dp"
+        android:max="1000"
+        android:progress="0"
+        android:progressTint="#FFFFFF"
+        android:progressBackgroundTint="#44FFFFFF"/>
+
+    <!-- Bottom gradient overlay -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/gradient_bottom_fade"/>
+
+    <!-- Double-tap heart overlay -->
+    <ImageView
+        android:id="@+id/heartOverlay"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_favorite_filled"
+        android:visibility="gone"
+        android:scaleX="0"
+        android:scaleY="0"
+        app:tint="#FFFF3B30" />
+
+    <!-- ── BOTTOM LEFT: Author + Description + Music ── -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:orientation="vertical"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="80dp"
+        android:layout_marginBottom="36dp"
+        android:layout_weight="1">
+
+        <!-- Author row -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:id="@+id/authorAvatar"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:src="@drawable/circle_background"/>
+
+            <TextView
+                android:id="@+id/authorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Username"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginHorizontal="8dp"
+                android:fontFamily="sans-serif-medium"/>
+
+            <!-- Follow button -->
+            <TextView
+                android:id="@+id/btnFollow"
+                android:layout_width="wrap_content"
+                android:layout_height="26dp"
+                android:text="Follow"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:background="@drawable/follow_btn_bg"
+                android:clickable="true"
+                android:focusable="true"/>
+        </LinearLayout>
+
+        <!-- Location -->
+        <TextView
+            android:id="@+id/locationTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#CCFFFFFF"
+            android:textSize="12sp"
+            android:layout_marginBottom="6dp"
+            android:visibility="gone"/>
+
+        <!-- Description (expandable) -->
+        <TextView
+            android:id="@+id/descriptionTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#EEFFFFFF"
+            android:textSize="13sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginBottom="12dp"/>
+
+        <!-- Music row -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/music_row_bg"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp">
+
+            <ImageView
+                android:id="@+id/musicDisc"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_music"
+                android:background="@drawable/circle_dark_btn"
+                android:padding="4dp"
+                app:tint="#FFFFFF"
+                android:layout_marginEnd="8dp"/>
+
+            <TextView
+                android:id="@+id/musicName"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="Original Audio"
+                android:textColor="#CCFFFFFF"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ── RIGHT SIDE: Action buttons ── -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="40dp">
+
+        <!-- Like -->
+        <ImageView
+            android:id="@+id/btnLike"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_favorite_border"
+            
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Like"/>
+        <TextView
+            android:id="@+id/likeCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="18dp"/>
+
+        <!-- Comment -->
+        <ImageView
+            android:id="@+id/btnComment"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/outline_chat_bubble_24"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Comment"
+            app:tint="@color/white" />
+        <TextView
+            android:id="@+id/commentCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="18dp"/>
+
+        <!-- Share -->
+        <ImageView
+            android:id="@+id/btnShare"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_share_new"
+            
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Share"/>
+        <TextView
+            android:id="@+id/shareCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="18dp"/>
+
+        <!-- Bookmark -->
+        <ImageView
+            android:id="@+id/btnBookmark"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_bookmark"
+            
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Save"
+            android:layout_marginBottom="18dp"/>
+
+        <!-- More (⋯) -->
+        <ImageView
+            android:id="@+id/btnMore"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_more_vert"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="More"
+            android:layout_marginBottom="18dp"
+            app:tint="@color/white" />
+
+        <!-- Mute/Volume -->
+        <ImageView
+            android:id="@+id/btnMute"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@drawable/ic_volume_up"
+            
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/circle_dark_btn"
+            android:padding="8dp"
+            android:contentDescription="Mute"/>
+    </LinearLayout>
+
+    <!-- TOP: Reels label + mute -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingTop="48dp"
+        android:paddingHorizontal="14dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/gradient_top_fade">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Reels"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:fontFamily="sans-serif-medium"/>
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/ic_camera"
+            app:tint="#FFFFFF"
+            android:contentDescription="Camera"/>
+    </LinearLayout>
+
+</FrameLayout>

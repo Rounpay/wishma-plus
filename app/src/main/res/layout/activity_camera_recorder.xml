@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/main"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <!-- ══════════════════════════════════════════════════════════════
+         CAMERA PREVIEW  (full screen background)
+    ════════════════════════════════════════════════════════════════ -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/cameraPreview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="-14dp"
+        tools:layout_editor_absoluteY="250dp" />
+
+    <!-- ══════════════════════════════════════════════════════════════
+         RECORDING PROGRESS BAR  (top edge, red, grows left→right)
+    ════════════════════════════════════════════════════════════════ -->
+    <View
+        android:id="@+id/recordingProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#FF3B30"
+        android:scaleX="0"
+        android:transformPivotX="0dp"
+        android:visibility="visible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         RECORDING TOP BAR  (REC dot + timer) – hidden by default
+    ════════════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/recordingTopBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="52dp"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="4dp"
+        android:background="#88000000"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Blinking red dot -->
+        <View
+            android:id="@+id/recordingIndicatorDot"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="#FF3B30"
+            android:layout_marginEnd="6dp"/>
+
+        <!-- REC label -->
+        <TextView
+            android:id="@+id/tvRecordingLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REC"
+            android:textColor="#FF3B30"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.15"
+            android:layout_marginEnd="10dp"/>
+
+        <!-- Timer  00:00 -->
+        <TextView
+            android:id="@+id/tvRecordingTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         TOP BAR  (Close | Flash | More)
+    ════════════════════════════════════════════════════════════════ -->
+
+    <!-- Close (X) -->
+    <ImageButton
+        android:id="@+id/btnClose"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_margin="14dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:padding="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/white" />
+
+    <!-- Flash (center-top) -->
+    <ImageButton
+        android:id="@+id/btnFlash"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="14dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/flash_off"
+        android:padding="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/white" />
+
+    <!-- More (⋯) -->
+    <ImageButton
+        android:id="@+id/btnMore"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_margin="14dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_more"
+        android:padding="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/white" />
+
+    <!-- ══════════════════════════════════════════════════════════════
+         RIGHT SIDE MENU  (Add Music | Speed | Effects | Green Screen
+                           | Filter | Timer | Beauty)
+    ════════════════════════════════════════════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/sideMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnMore">
+
+        <!-- Add Music -->
+        <LinearLayout
+            android:id="@+id/btnAddMusic"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@android:drawable/ic_lock_silent_mode_off"
+                app:tint="@android:color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Music"
+                android:textColor="@android:color/white"
+                android:textSize="11sp"/>
+        </LinearLayout>
+
+        <!-- Speed -->
+        <LinearLayout
+            android:id="@+id/btnSpeed"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@android:drawable/ic_media_ff"
+                app:tint="@android:color/white" />
+            <!-- Speed value badge -->
+            <TextView
+                android:id="@+id/tvSpeedValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="1x"
+                android:textColor="@android:color/white"
+                android:textSize="11sp"/>
+        </LinearLayout>
+
+        <!-- Effects -->
+        <LinearLayout
+            android:id="@+id/btnEffects"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@android:drawable/ic_menu_gallery"
+                app:tint="@android:color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Effects"
+                android:textColor="@android:color/white"
+                android:textSize="11sp"/>
+        </LinearLayout>
+
+        <!-- Filter -->
+        <LinearLayout
+            android:id="@+id/btnFilter"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@android:drawable/ic_menu_slideshow"
+                app:tint="@android:color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Filter"
+                android:textColor="@android:color/white"
+                android:textSize="11sp"/>
+        </LinearLayout>
+
+        <!-- Timer -->
+        <LinearLayout
+            android:id="@+id/btnTimer"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@android:drawable/ic_menu_recent_history"
+                app:tint="@android:color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Timer"
+                android:textColor="@android:color/white"
+                android:textSize="11sp"/>
+        </LinearLayout>
+
+        <!-- Beauty -->
+        <LinearLayout
+            android:id="@+id/btnBeauty"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@android:drawable/ic_menu_edit"
+                app:tint="@android:color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Beauty"
+                android:textColor="@android:color/white"
+                android:textSize="11sp"/>
+        </LinearLayout>
+
+        <!-- Green Screen -->
+        <LinearLayout
+            android:id="@+id/btnGreenScreen"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@android:drawable/ic_menu_camera"
+                app:tint="@android:color/white" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Green Screen"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         BOTTOM BAR  (Gallery | Record Button | Flip Camera)
+    ════════════════════════════════════════════════════════════════ -->
+
+    <!-- Gallery Thumbnail -->
+    <ImageButton
+        android:id="@+id/btnGallery"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/rounded_border_bg"
+        android:src="@android:drawable/ic_menu_gallery"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@android:color/white" />
+
+    <!-- Record Button (outer ring + inner circle) -->
+    <FrameLayout
+        android:id="@+id/recordContainer"
+        android:layout_width="84dp"
+        android:layout_height="84dp"
+        android:layout_marginBottom="22dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Outer ring -->
+        <View
+            android:layout_width="84dp"
+            android:layout_height="84dp"
+            android:background="@drawable/record_outer_ring"/>
+
+        <!-- Inner record button -->
+        <ImageButton
+            android:id="@+id/btnRecord"
+            android:layout_width="66dp"
+            android:layout_height="66dp"
+            android:layout_gravity="center"
+            android:background="@drawable/record_inner_circle"
+            android:src="@android:drawable/ic_media_play"
+            android:padding="14dp"
+            app:tint="@android:color/white" />
+
+    </FrameLayout>
+
+    <!-- Flip Camera -->
+    <ImageButton
+        android:id="@+id/btnFlipCamera"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="30dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@android:drawable/ic_menu_rotate"
+        android:padding="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

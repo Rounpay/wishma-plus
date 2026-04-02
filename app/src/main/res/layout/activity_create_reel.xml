@@ -1,321 +1,404 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/rounded_corners_top"
     tools:context=".Activity.CreateReelActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:background="#fff"
+    <!-- Collapsible Top Section using AppBarLayout -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        app:elevation="0dp">
 
-
-        <RelativeLayout
+        <!-- Toolbar (always visible) -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:padding="10dp">
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            app:layout_scrollFlags="noScroll">
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_alignParentStart="true"
                 android:id="@+id/back"
-                android:backgroundTint="@color/black"
-                android:src="@drawable/outline_arrow_back_ios_24"
-                android:layout_height="wrap_content">
-            </ImageView>
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:contentDescription="Back"
+                android:padding="6dp"
+                android:src="@drawable/outline_arrow_back_ios_24" />
 
             <TextView
-                android:text="Create Reel"
-                android:textStyle="bold"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="New Reel"
+                android:textColor="@color/black"
                 android:textSize="18sp"
-                android:id="@+id/reeltxt"
-                android:backgroundTint="@color/black"
-                android:layout_centerInParent="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textStyle="bold" />
+
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:backgroundTint="@color/black"
-                android:src="@drawable/setting_icon"
-                android:layout_height="wrap_content">
-            </ImageView>
+                android:id="@+id/settingIcon"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:contentDescription="Settings"
+                android:padding="6dp"
+                android:src="@drawable/setting_icon" />
+        </LinearLayout>
 
-        </RelativeLayout>
-
-
+        <!-- Scrollable action icons row -->
         <HorizontalScrollView
+            android:id="@+id/horizontalScroll"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:overScrollMode="never"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            android:scrollbars="none"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:layout_height="wrap_content">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-
+                <!-- Camera -->
                 <LinearLayout
+                    android:id="@+id/cameraView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_marginHorizontal="10dp"
                     android:gravity="center"
-                    android:layout_marginHorizontal="12dp">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:gravity="center"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:background="@drawable/circle_background"
-                        android:backgroundTint="@color/grey_2">
+                        android:backgroundTint="@color/grey_1"
+                        android:gravity="center">
 
                         <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:src="@drawable/ic_camera"
-                            android:layout_width="20dp"
-                            app:tint="@color/black"
-                            android:layout_height="20dp"/>
+                            app:tint="@color/black" />
                     </LinearLayout>
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
                         android:text="Camera"
-                        android:layout_marginTop="6dp"
-                        android:gravity="center"
-                        android:textSize="@dimen/dimen_14sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:textColor="#333"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
-
+                <!-- Music -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_marginHorizontal="10dp"
                     android:gravity="center"
-                    android:layout_marginHorizontal="12dp">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:gravity="center"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:background="@drawable/circle_background"
-                        android:backgroundTint="@color/grey_2">
+                        android:backgroundTint="@color/grey_1"
+                        android:gravity="center">
 
                         <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:src="@drawable/ic_music"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            app:tint="@color/black"
-                           />
+                            app:tint="@color/black" />
                     </LinearLayout>
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
                         android:text="Music"
-                        android:layout_marginTop="6dp"
-                        android:gravity="center"  android:textSize="@dimen/dimen_14sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:textColor="#333"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
-
+                <!-- Templates -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_marginHorizontal="10dp"
                     android:gravity="center"
-                    android:layout_marginHorizontal="12dp">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:gravity="center"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:background="@drawable/circle_background"
-                        android:backgroundTint="@color/grey_2">
+                        android:backgroundTint="@color/grey_1"
+                        android:gravity="center">
 
                         <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:src="@drawable/cloud"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
                             app:tint="@color/black" />
                     </LinearLayout>
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
                         android:text="Templates"
-                        android:layout_marginTop="6dp"
-                        android:gravity="center"
-                        android:textSize="@dimen/dimen_14sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:textColor="#333"
+                        android:textSize="11sp" />
                 </LinearLayout>
+
+                <!-- Drafts -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_marginHorizontal="10dp"
                     android:gravity="center"
-                    android:layout_marginHorizontal="12dp">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:gravity="center"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:background="@drawable/circle_background"
-                        android:backgroundTint="@color/grey_2">
+                        android:backgroundTint="@color/grey_1"
+                        android:gravity="center">
 
                         <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:src="@drawable/draft"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
                             app:tint="@color/black" />
                     </LinearLayout>
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
                         android:text="Drafts"
-                        android:layout_marginTop="6dp"
-                        android:gravity="center"
-                        android:textSize="@dimen/dimen_14sp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:textColor="#333"
+                        android:textSize="11sp" />
                 </LinearLayout>
+
+                <!-- Green Screen -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_marginHorizontal="10dp"
                     android:gravity="center"
-                    android:layout_marginHorizontal="12dp">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:gravity="center"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:background="@drawable/circle_background"
-                        android:backgroundTint="@color/grey_2">
+                        android:backgroundTint="@color/grey_1"
+                        android:gravity="center">
 
                         <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:src="@drawable/authentication"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
                             app:tint="@color/black" />
                     </LinearLayout>
 
                     <TextView
-                        android:text="Green Screen"
-                        android:layout_marginTop="6dp"
-                        android:gravity="center"
-                        android:textSize="@dimen/dimen_14sp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="Green Screen"
+                        android:textColor="#333"
+                        android:textSize="11sp" />
                 </LinearLayout>
+
+                <!-- Effects -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_marginHorizontal="10dp"
                     android:gravity="center"
-                    android:layout_marginHorizontal="12dp">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:gravity="center"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:background="@drawable/circle_background"
-                        android:backgroundTint="@color/grey_2">
+                        android:backgroundTint="@color/grey_1"
+                        android:gravity="center">
 
                         <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:src="@drawable/effect"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
                             app:tint="@color/black" />
                     </LinearLayout>
 
                     <TextView
-                        android:text="Effects"
-                        android:layout_marginTop="6dp"
-                        android:gravity="center"
-                        android:textSize="@dimen/dimen_14sp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="Effects"
+                        android:textColor="#333"
+                        android:textSize="11sp" />
                 </LinearLayout>
 
             </LinearLayout>
         </HorizontalScrollView>
 
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:padding="10dp"
+        <!-- Divider -->
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0.8dp"
+            android:background="#E0E0E0"
+            app:layout_scrollFlags="noScroll" />
 
+        <!-- Gallery + Select Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="14dp"
+            app:layout_scrollFlags="noScroll">
+
+            <!-- Custom Folder Dropdown trigger -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/folderDropdownTrigger"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/galleryLayout"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
-                >
-                <Spinner
-                    android:id="@+id/spinnerTxt"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:spinnerMode="dropdown"
-                    android:paddingStart="12dp"
-                    android:visibility="gone"
-                    android:paddingEnd="36dp"/>
+                android:padding="4dp">
+
                 <TextView
-                    android:text="Gallery"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:textColor="@color/black"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-                <ImageView
+                    android:id="@+id/folderName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="Gallery"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/dropdownArrow"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="4dp"
                     android:src="@drawable/ic_arrow_drop_down"
                     app:tint="@color/black" />
             </LinearLayout>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                app:cardCornerRadius="@dimen/dimen_8dp"
+            <!-- Select Multiple Button -->
+            <LinearLayout
                 android:id="@+id/multipleSelectBtn"
-                app:cardBackgroundColor="@color/grey_2"
-                android:layout_height="wrap_content">
-                <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:background="@drawable/rounded_corners"
+                android:backgroundTint="@color/grey_1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginEnd="6dp"
+                    android:src="@drawable/gallery" />
+
+                <TextView
+                    android:id="@+id/selectBtnText"
                     android:layout_width="wrap_content"
-                    android:layout_margin="4dp"
-                    android:layout_height="wrap_content">
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/gallery"
-                        />
-                    <TextView
-                        android:text="Select Multiple"
-                        android:textColor="@color/black"
-                        android:layout_margin="4dp"
-                        android:layout_height="wrap_content"
-                        android:layout_width="100dp"/>
-                </LinearLayout>
-
-
-            </androidx.cardview.widget.CardView>
-
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Select Multiple"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+            </LinearLayout>
 
         </LinearLayout>
 
-        <!-- RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/videoRecycler"
-            android:layout_marginTop="20dp"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+    </com.google.android.material.appbar.AppBarLayout>
 
-    </LinearLayout>
+    <!-- Main Grid -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/videoRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Folder Dropdown Popup Overlay -->
+    <FrameLayout
+        android:id="@+id/dropdownOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#88000000"
+        android:visibility="gone">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/dropdownCard"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="104dp"
+            app:cardBackgroundColor="@color/color_white"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Dropdown header -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="16dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="8dp"
+                    android:text="Choose Folder"
+                    android:textColor="#888"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#E0E0E0" />
+
+                <!-- Folder list -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/folderRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="280dp"
+                    android:overScrollMode="never" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

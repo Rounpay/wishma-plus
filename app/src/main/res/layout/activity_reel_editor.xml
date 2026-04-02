@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:fitsSystemWindows="false">
+
+    <!-- LAYER 1: Media Container (tap to pause) -->
+    <FrameLayout
+        android:id="@+id/mediaContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true">
+
+        <!-- VideoView for video playback -->
+        <VideoView
+            android:id="@+id/videoView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <!-- ImageView for photo -->
+        <ImageView
+            android:id="@+id/imagePreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- LAYER 2: Draggable overlay canvas -->
+    <FrameLayout
+        android:id="@+id/overlayCanvas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- LAYER 3: Play/Pause center indicator -->
+    <FrameLayout
+        android:id="@+id/playPauseIndicator"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_gravity="center"
+        android:background="@drawable/rounded_grey_bg"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/playPauseIcon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_play_circle_outline"
+            app:tint="#FFFFFF" />
+    </FrameLayout>
+
+    <!-- LAYER 4: Top bar with gradient fade -->
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="@drawable/gradient_top_fade"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="14dp"
+        android:paddingTop="44dp"
+        android:paddingBottom="14dp">
+
+        <ImageView
+            android:id="@+id/btnClose"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:background="@drawable/circle_bg"
+            android:backgroundTint="@color/colorAccent"
+            android:clickable="true"
+            android:contentDescription="Close"
+            android:focusable="true"
+            android:padding="8dp"
+            android:src="@drawable/payu_close"
+            app:tint="#FFFFFF" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <!-- Music pill -->
+        <LinearLayout
+            android:id="@+id/btnMusic"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/pill_dark_bg"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp">
+
+            <ImageView
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginEnd="6dp"
+                android:src="@drawable/ic_music"
+                app:tint="#FFFFFF" />
+
+            <TextView
+                android:id="@+id/musicTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:maxWidth="110dp"
+                android:maxLines="1"
+                android:text="Add Music"
+                android:textColor="#FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/btnNext"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:background="@drawable/rounded_blue_bg"
+            android:clickable="true"
+            android:backgroundTint="@color/colorAccent"
+            android:focusable="true"
+            android:gravity="center"
+            android:paddingHorizontal="20dp"
+            android:text="Next"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- LAYER 5: Right tools panel -->
+    <LinearLayout
+        android:layout_width="58dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="6dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/toolText"
+            style="@style/EditorTool">
+
+            <FrameLayout style="@style/ToolCircle">
+
+                <ImageView
+                    style="@style/ToolIcon"
+                    android:src="@drawable/ic_text_fields" />
+            </FrameLayout>
+
+            <TextView
+                style="@style/ToolLabel"
+                android:text="Text" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/toolEmoji"
+            style="@style/EditorTool">
+
+            <FrameLayout style="@style/ToolCircle">
+
+                <ImageView
+                    style="@style/ToolIcon"
+                    android:src="@drawable/ic_emoji" />
+            </FrameLayout>
+
+            <TextView
+                style="@style/ToolLabel"
+                android:text="Emoji" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/toolSticker"
+            style="@style/EditorTool">
+
+            <FrameLayout style="@style/ToolCircle">
+
+                <ImageView
+                    style="@style/ToolIcon"
+                    android:src="@drawable/ic_sticker" />
+            </FrameLayout>
+
+            <TextView
+                style="@style/ToolLabel"
+                android:text="Sticker" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/toolDraw"
+            style="@style/EditorTool">
+
+            <FrameLayout style="@style/ToolCircle">
+
+                <ImageView
+                    style="@style/ToolIcon"
+                    android:src="@drawable/ic_brush" />
+            </FrameLayout>
+
+            <TextView
+                style="@style/ToolLabel"
+                android:text="Draw" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/toolFilter"
+            style="@style/EditorTool">
+
+            <FrameLayout style="@style/ToolCircle">
+
+                <ImageView
+                    style="@style/ToolIcon"
+                    android:src="@drawable/ic_tune" />
+            </FrameLayout>
+
+            <TextView
+                style="@style/ToolLabel"
+                android:text="Filter" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/toolTrim"
+            style="@style/EditorTool">
+
+            <FrameLayout style="@style/ToolCircle">
+
+                <ImageView
+                    style="@style/ToolIcon"
+                    android:src="@drawable/ic_content_cut" />
+            </FrameLayout>
+
+            <TextView
+                style="@style/ToolLabel"
+                android:text="Trim" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- LAYER 6: Bottom panel (clip strip + buttons) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/gradient_bottom_fade"
+        android:orientation="vertical">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:overScrollMode="never"
+            android:paddingHorizontal="12dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="6dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/clipStrip"
+                android:layout_width="wrap_content"
+                android:layout_height="52dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" />
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="8dp"
+            android:paddingBottom="32dp">
+
+            <LinearLayout
+                android:id="@+id/btnAddClip"
+                style="@style/BottomAction">
+
+                <FrameLayout style="@style/BottomActionCircle">
+
+                    <ImageView
+                        style="@style/BottomActionIcon"
+                        android:src="@drawable/ic_add" />
+                </FrameLayout>
+
+                <TextView
+                    style="@style/BottomActionLabel"
+                    android:text="Add" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnAudio"
+                style="@style/BottomAction">
+
+                <FrameLayout style="@style/BottomActionCircle">
+
+                    <ImageView
+                        style="@style/BottomActionIcon"
+                        android:src="@drawable/ic_music" />
+                </FrameLayout>
+
+                <TextView
+                    style="@style/BottomActionLabel"
+                    android:text="Audio" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnSpeed"
+                style="@style/BottomAction">
+
+                <FrameLayout style="@style/BottomActionCircle">
+
+                    <ImageView
+                        style="@style/BottomActionIcon"
+                        android:src="@drawable/ic_speed" />
+                </FrameLayout>
+
+                <TextView
+                    style="@style/BottomActionLabel"
+                    android:text="Speed" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- LAYER 7: TRASH ZONE (drag here to delete) -->
+    <FrameLayout
+        android:id="@+id/trashZone"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="160dp"
+        android:background="@drawable/trash_zone_bg"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_delete"
+            app:tint="#FF4444" />
+    </FrameLayout>
+
+    <!-- LAYER 8: TEXT EDITOR OVERLAY -->
+    <FrameLayout
+        android:id="@+id/textEditorPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#E5000000"
+        android:visibility="gone">
+
+        <!-- Top tools -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:orientation="vertical"
+            android:paddingTop="44dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="14dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/textDoneBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp"
+                    android:text="Done"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/textAlignBtn"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/rounded_blue_bg"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_format_align_center"
+                    app:tint="#FFFFFF" />
+
+                <ImageView
+                    android:id="@+id/textBgBtn"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/rounded_blue_bg"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_text_bg"
+                    app:tint="#FFFFFF" />
+            </LinearLayout>
+
+            <!-- Font strip -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:paddingHorizontal="12dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/fontStyleStrip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <!-- Center text input -->
+        <EditText
+            android:id="@+id/textInput"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center"
+            android:hint="Tap to type..."
+            android:textColorHint="#55FFFFFF"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine|textCapSentences"
+            android:maxLines="5"
+            android:padding="12dp"
+            android:textColor="#FFFFFF"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <!-- Bottom: size + colors -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:paddingBottom="28dp">
+
+            <SeekBar
+                android:id="@+id/textSizeSeek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:max="50"
+                android:paddingHorizontal="20dp"
+                android:progress="14"
+                android:progressTint="#FFFFFF"
+                android:thumbTint="#FFFFFF" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:paddingHorizontal="10dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/colorStrip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="6dp" />
+            </HorizontalScrollView>
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- LAYER 9: EMOJI PANEL -->
+    <FrameLayout
+        android:id="@+id/emojiPanel"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bottom_sheet_dark_bg"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="38dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/drag_handle_bg" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:overScrollMode="never"
+                android:paddingHorizontal="8dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/emojiCategoryStrip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#222222" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/emojiRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:overScrollMode="never"
+                android:paddingHorizontal="4dp"
+                android:paddingVertical="4dp" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <!-- LAYER 10: STICKER PANEL -->
+    <FrameLayout
+        android:id="@+id/stickerPanel"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bottom_sheet_dark_bg"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="38dp"
+                android:layout_height="4dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/drag_handle_bg" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Stickers"
+                    android:textColor="#FFFFFF"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:overScrollMode="never"
+                android:paddingHorizontal="8dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/stickerCategoryStrip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginBottom="4dp"
+                android:background="#222222" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/stickerRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:overScrollMode="never"
+                android:paddingHorizontal="8dp" />
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>
