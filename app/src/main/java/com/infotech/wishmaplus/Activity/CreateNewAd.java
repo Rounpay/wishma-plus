@@ -19,6 +19,7 @@ import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -100,6 +101,7 @@ public class CreateNewAd extends AppCompatActivity {
 
     EstimateResponse estimateResponse = new EstimateResponse();
     String postId = "";
+    int boostStatus;
     RecyclerView rvGoals, rvAudience;
     GoalAdapter adapter;
     AudienceAdapter audienceAdapter;
@@ -114,10 +116,11 @@ public class CreateNewAd extends AppCompatActivity {
     private long mLastClickTime;
     private PreferencesManager tokenManager;
 
-
+    private FrameLayout goalOverlay, postOverlay, placMentOverlay,audienceOverlay;
     private TextView tvDays, tvDate, tvInfo, tvLine1, textView3, textView2, tvSummarySubtitle;
     private ImageButton btnPlus, btnMinus;
     private LinearLayout layoutDate, daysPicker, llInfo, editTextLayout, callNow, bookNow;
+
 
     private int days = 1;
     private Calendar startDate;
@@ -142,12 +145,27 @@ public class CreateNewAd extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_create_new_ad);
         postId = getIntent().getStringExtra("postId");
+        boostStatus = getIntent().getIntExtra("boostStatus", 0);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
         tokenManager = new PreferencesManager(this, 1);
+
+        goalOverlay = findViewById(R.id.goalOverlay);
+        placMentOverlay = findViewById(R.id.placMentOverlay);
+        audienceOverlay = findViewById(R.id.audienceOverlay);
+        if (boostStatus == 2) {
+            goalOverlay.setVisibility(View.VISIBLE);
+            placMentOverlay.setVisibility(View.VISIBLE);
+            audienceOverlay.setVisibility(View.VISIBLE);
+        } else {
+            goalOverlay.setVisibility(View.GONE);
+            placMentOverlay.setVisibility(View.GONE);
+            audienceOverlay.setVisibility(View.GONE);
+        }
+
         rvGoals = findViewById(R.id.rvGoals);
         rvAudience = findViewById(R.id.rvAudience);
         seekBar = findViewById(R.id.budgetSeekBar);
@@ -180,7 +198,7 @@ public class CreateNewAd extends AppCompatActivity {
         etPhone = findViewById(R.id.etPhone);
         etUrl = findViewById(R.id.etUrl);
         btnPromoteNow = findViewById(R.id.btnPromoteNow);
-
+        btnPromoteNow.setText(boostStatus == 2 ? "Extend Boost Budget" : "Promote Now");
         goalTypeLayout.setVisibility(GONE);
 
         textView.setText("₹" + seekBar.getProgress());
@@ -206,7 +224,9 @@ public class CreateNewAd extends AppCompatActivity {
                 getEstimateBoostReach((double) seekBar.getProgress(), days, audienceId);
             }
         });
-        btnPromoteNow.setOnClickListener(view -> getInitiatePostBoost(null, null, null, null));
+        btnPromoteNow.setOnClickListener(view ->
+                getInitiatePostBoost(null, null, null, null)
+        );
 
 
         // RecyclerView setup
@@ -421,6 +441,7 @@ public class CreateNewAd extends AppCompatActivity {
                     Glide.with(CreateNewAd.this).load(postInsights.getProfilePictureUrl()).placeholder(R.drawable.user_icon).into(profile);
                     nameTv.setText(postInsights.getUserName());
                     userNameTitle.setText(postInsights.getUserName());
+                    boostId = postInsights.getBoostId();
                     timeTv.setText("Sponsored");
                     if (postInsights.getCaption() != null) {
                         postTxt.setText(postInsights.getCaption());
@@ -544,10 +565,13 @@ public class CreateNewAd extends AppCompatActivity {
         }
 
         loader.show();
-        InitiateBoostRequest request = new InitiateBoostRequest(tid, hashData, boostId, postId, url, phoneNo, xmlType, budgetGlobal, estimatedCost, subTotal, gstAmount, total, days, endDate, audienceId, minAge, maxAge, genderType, "Wishma Plus"
-
+        InitiateBoostRequest request = new InitiateBoostRequest(tid,
+                hashData, boostId, postId, url, phoneNo,
+                xmlType, budgetGlobal, estimatedCost,
+                subTotal, gstAmount, total, days,
+                endDate, audienceId, minAge, maxAge, genderType, "Wishma Plus"
         );
-        UtilMethods.INSTANCE.initiateBoostPost(request, new UtilMethods.ApiCallBackMulti() {
+        UtilMethods.INSTANCE.initiateBoostPost(request, boostStatus, new UtilMethods.ApiCallBackMulti() {
             @Override
             public void onSuccess(Object object) {
                 if (loader != null) {

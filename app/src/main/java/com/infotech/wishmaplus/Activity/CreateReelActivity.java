@@ -30,7 +30,7 @@ import com.infotech.wishmaplus.Adapter.CreateReelAdapter;
 import com.infotech.wishmaplus.Adapter.FolderDropdownAdapter;
 import com.infotech.wishmaplus.Api.Response.FolderModel;
 import com.infotech.wishmaplus.Api.Response.MediaModel;
-import com.infotech.wishmaplus.CameraRecorderActivity;
+import com.infotech.wishmaplus.reels.ui.CameraRecorderActivity;
 import com.infotech.wishmaplus.MultiSelectBottomSheet;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.ReelEditorActivity;

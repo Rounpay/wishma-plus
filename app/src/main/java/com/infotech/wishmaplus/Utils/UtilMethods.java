@@ -49,7 +49,6 @@ import com.infotech.wishmaplus.Activity.CreateNewProfilePage;
 import com.infotech.wishmaplus.Adapter.DialogListBottomSheetAdapter;
 import com.infotech.wishmaplus.Adapter.DialogReportBottomSheetAdapter;
 import com.infotech.wishmaplus.Adapter.FriendSuggestionResponse;
-import com.infotech.wishmaplus.AddCommentRequest;
 import com.infotech.wishmaplus.Api.Object.CommentResult;
 import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
 import com.infotech.wishmaplus.Api.Request.AddFriendsRequest;
@@ -103,11 +102,15 @@ import com.infotech.wishmaplus.Api.Response.UnfriendResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
+import com.infotech.wishmaplus.ExtendBoostBudget;
 import com.infotech.wishmaplus.GeetReelCommentsResponse;
 import com.infotech.wishmaplus.GetReelResponse;
 import com.infotech.wishmaplus.HashtagResponse;
+import com.infotech.wishmaplus.LikeReelCommentResponse;
 import com.infotech.wishmaplus.R;
 import com.infotech.wishmaplus.SaveReelResponse;
+import com.infotech.wishmaplus.TrackReelViewRequest;
+import com.infotech.wishmaplus.reels.reels_comments.request.AddCommentRequest;
 
 import java.io.IOException;
 import java.net.SocketTimeoutException;
@@ -1102,10 +1105,15 @@ public enum UtilMethods {
         }
     }
 
-    public void initiateBoostPost(InitiateBoostRequest request, ApiCallBackMulti apiCallBack) {
+    public void initiateBoostPost(InitiateBoostRequest request, int boostStatus, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
-            Call<BoostResponse> call = git.initiateBoostPost("Bearer " + tokenManager.getAccessToken(), request);
+            Call<BoostResponse> call ;
+            if (boostStatus == 2) {
+                call = git.extendBoostBudget("Bearer " + tokenManager.getAccessToken(), request);
+            } else {
+                call = git.initiateBoostPost("Bearer " + tokenManager.getAccessToken(), request);
+            }
             call.enqueue(new Callback<BoostResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<BoostResponse> call, @NonNull Response<BoostResponse> response) {
@@ -2732,16 +2740,15 @@ public enum UtilMethods {
     }
 
     // ── GET /GetReelComment ──────────────────────────────────────────────────
-    public void getReelComments(int reelId, int pageNumber, int pageSize, CustomLoader loader, ApiCallBackMulti callback) {
+    public void getReelComments(int reelId, int ParentCommentId, int pageNumber, int pageSize, CustomLoader loader, ApiCallBackMulti callback) {
         try {
             if (loader != null) loader.show();
             EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
-            Call<GeetReelCommentsResponse> call = api.getReelComments("Bearer " + tokenManager.getAccessToken(), reelId, pageNumber, pageSize);
+            Call<GeetReelCommentsResponse> call = api.getReelComments("Bearer " + tokenManager.getAccessToken(), reelId, ParentCommentId, pageNumber, pageSize);
             call.enqueue(new Callback<GeetReelCommentsResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<GeetReelCommentsResponse> call, @NonNull Response<GeetReelCommentsResponse> response) {
                     if (loader != null && loader.isShowing()) loader.dismiss();
-
                     if (response.isSuccessful() && response.body() != null) {
                         callback.onSuccess(response.body());
                     } else {
@@ -2774,7 +2781,6 @@ public enum UtilMethods {
                 @Override
                 public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
                     if (loader != null && loader.isShowing()) loader.dismiss();
-
                     if (response.isSuccessful() && response.body() != null) {
                         callback.onSuccess(response.body());
                     } else {
@@ -2796,6 +2802,7 @@ public enum UtilMethods {
         }
     }
 
+    //DELETE REEL
     // ── DELETE /DeleteReelComment?CommentId=X ───────────────────────────────
     public void deleteReelComment(int commentId, CustomLoader loader, ApiCallBackMulti callback) {
         try {
@@ -2803,7 +2810,6 @@ public enum UtilMethods {
 
             EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
             Call<BasicResponse> call = api.deleteReelComment("Bearer " + tokenManager.getAccessToken(), commentId);
-
             call.enqueue(new Callback<BasicResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
@@ -2830,14 +2836,14 @@ public enum UtilMethods {
         }
     }
 
-    // ── POST /AddReelView?ReelId=X&WatchDurationInSec=Y ─────────────────────
-    public void addReelView(int reelId, int watchDurationInSec, CustomLoader loader, ApiCallBackMulti callback) {
+
+    // ── DELETE /DeleteReelComment?CommentId=X ───────────────────────────────
+    public void deleteReel(int reelId, CustomLoader loader, ApiCallBackMulti callback) {
         try {
             if (loader != null) loader.show();
 
             EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
-            Call<BasicResponse> call = api.addReelView("Bearer " + tokenManager.getAccessToken(), reelId, watchDurationInSec);
-
+            Call<BasicResponse> call = api.deleteReel("Bearer " + tokenManager.getAccessToken(), reelId);
             call.enqueue(new Callback<BasicResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
@@ -2846,7 +2852,7 @@ public enum UtilMethods {
                     if (response.isSuccessful() && response.body() != null) {
                         callback.onSuccess(response.body());
                     } else {
-                        callback.onError("Failed to record view");
+                        callback.onError("Failed to delete comment");
                     }
                 }
 
@@ -2861,6 +2867,96 @@ public enum UtilMethods {
                 callback.onError(e.getMessage());
             }
             e.printStackTrace();
+        }
+    }
+
+    // ── Like / Unlike Reel Comment ───────────────────────────────────────────
+    public void likeUnlikeReelComment(int commentId, ApiCallBackMulti callback) {
+        try {
+            EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
+            Call<LikeReelCommentResponse> call = api.likeUnlikeReelComment("Bearer " + tokenManager.getAccessToken(), commentId);
+            call.enqueue(new Callback<LikeReelCommentResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<LikeReelCommentResponse> call, @NonNull Response<LikeReelCommentResponse> response) {
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            LikeReelCommentResponse body = response.body();
+                            if (body.getStatusCode() == 1) {
+                                if (callback != null) callback.onSuccess(body);
+                            } else {
+                                if (callback != null)
+                                    callback.onError(body.getResponseText() != null ? body.getResponseText() : "Something went wrong");
+                            }
+                        } else {
+                            if (callback != null)
+                                callback.onError("Server Error: " + response.code());
+                        }
+                    } catch (Exception e) {
+                        if (callback != null) callback.onError("Response Error: " + e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<LikeReelCommentResponse> call, @NonNull Throwable t) {
+                    try {
+                        if (callback != null)
+                            callback.onError(t.getMessage() != null ? t.getMessage() : "Network Error");
+                    } catch (Exception e) {
+                        callback.onError("Unknown Error");
+                    }
+                }
+
+            });
+
+        } catch (Exception e) {
+            if (callback != null) callback.onError("API Setup Error: " + e.getMessage());
+        }
+    }
+
+
+    // ── Track Reel View — array send ─────────────────────────────────────────
+    public void trackReelViewBatch(List<TrackReelViewRequest> sessions, ApiCallBackMulti callback) {
+        try {
+            if (sessions == null || sessions.isEmpty()) {
+                if (callback != null) callback.onError("Session list empty");
+                return;
+            }
+            EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BasicResponse> call = api.trackReelView("Bearer " + tokenManager.getAccessToken(), sessions);
+            call.enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            BasicResponse body = response.body();
+                            if (body.getStatusCode() == 1) {
+                                if (callback != null) callback.onSuccess(body);
+                            } else {
+                                if (callback != null)
+                                    callback.onError(body.getResponseText() != null ? body.getResponseText() : "Tracking failed");
+                            }
+                        } else {
+                            if (callback != null)
+                                callback.onError("Server Error: " + response.code());
+                        }
+
+                    } catch (Exception e) {
+                        if (callback != null) callback.onError("Response Error: " + e.getMessage());
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    try {
+                        if (callback != null)
+                            callback.onError(t.getMessage() != null ? t.getMessage() : "Network Error");
+                    } catch (Exception e) {
+                        callback.onError("Unknown Error");
+                    }
+                }
+            });
+        } catch (Exception e) {
+            if (callback != null) callback.onError("API Setup Error: " + e.getMessage());
         }
     }
 }

@@ -24,12 +24,18 @@ android {
         versionCode = 16
         versionName = "1.16"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters += listOf(
+                "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+            )
+        }
 
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+           /* isMinifyEnabled = true
+            isShrinkResources = true*/
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -42,11 +48,15 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     ndkVersion = "29.0.13846066 rc3"
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
 }
 
 
 dependencies {
     implementation(files("libs/mobile-ffmpeg-full-gpl-4.4.aar"))
+  //  implementation("io.github.jamaismagic.ffmpeg:ffmpeg-kit-lts-full-gpl-16kb:6.1.4")
     implementation (libs.appcompat)
     implementation (libs.material)
     implementation (libs.activity)
@@ -100,4 +110,7 @@ dependencies {
     implementation ("androidx.camera:camera-camera2:1.6.0")
     implementation ("androidx.camera:camera-lifecycle:1.6.0")
     implementation ("androidx.camera:camera-view:1.6.0")
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.32.0") {
+        exclude(group = "com.google.accompanist", module = "accompanist-pager")
+    }
 }

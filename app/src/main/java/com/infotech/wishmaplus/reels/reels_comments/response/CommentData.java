@@ -1,9 +1,7 @@
-package com.infotech.wishmaplus;
+package com.infotech.wishmaplus.reels.reels_comments.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-import org.w3c.dom.Comment;
 
 import java.util.List;
 

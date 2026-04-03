@@ -44,7 +44,7 @@ public class HomePageActivity extends AppCompatActivity {
         findViewById(R.id.start_live_streaming).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String roomID = ((EditText)findViewById(R.id.login_room_id)).getText().toString();
+                String roomID = "";/*((EditText)findViewById(R.id.login_room_id)).getText().toString();*/
                 if(roomID.isEmpty()){
                     Toast.makeText(HomePageActivity.this, "Please input the room ID", Toast.LENGTH_LONG).show();
                     return;
@@ -73,7 +73,7 @@ public class HomePageActivity extends AppCompatActivity {
         findViewById(R.id.watch_live_streaming).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String roomID = ((EditText)findViewById(R.id.login_room_id)).getText().toString();
+                String roomID = "";/*((EditText)findViewById(R.id.login_room_id)).getText().toString();*/
                 if(roomID.isEmpty()){
                     Toast.makeText(HomePageActivity.this, "Please input the room ID", Toast.LENGTH_LONG).show();
                     return;

@@ -75,6 +75,7 @@ public class BoostContent extends AppCompatActivity {
                         public void onItemClick(PostItem user, int pos) {
                             Intent intent = new Intent(BoostContent.this, CreateNewAd.class);
                             intent.putExtra("postId", user.getPostId());
+                            intent.putExtra("boostStatus", user.getBoostStatus().getValue());
                             startActivity(intent);
 
                         }

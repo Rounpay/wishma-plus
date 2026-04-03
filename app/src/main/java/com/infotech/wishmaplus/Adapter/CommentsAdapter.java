@@ -128,8 +128,6 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
                 likeBtn.setTextColor(ContextCompat.getColor(context, R.color.grey_5));
             }
             // Set the like count visibility and text
-
-
             Glide.with(context)
                     .load(comment.getProfilePictureUrl())
                     .apply(requestOptionsUserImage)

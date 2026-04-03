@@ -46,6 +46,9 @@ public class GetContentDetailsToBoostResponse {
         @SerializedName("profilePictureUrl")
         private String profilePictureUrl;
 
+        @SerializedName("boostId")
+        private int boostId;
+
         @SerializedName("postId")
         private String postId;
 
@@ -93,6 +96,14 @@ public class GetContentDetailsToBoostResponse {
 
         public String getCreatedDate() { return createdDate; }
         public void setCreatedDate(String createdDate) { this.createdDate = createdDate; }
+
+        public int getBoostId() {
+            return boostId;
+        }
+
+        public void setBoostId(int boostId) {
+            this.boostId = boostId;
+        }
     }
 
     public static class Goal {

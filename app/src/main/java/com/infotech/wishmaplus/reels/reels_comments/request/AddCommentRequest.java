@@ -1,4 +1,4 @@
-package com.infotech.wishmaplus;
+package com.infotech.wishmaplus.reels.reels_comments.request;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

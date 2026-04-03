@@ -59,13 +59,13 @@
 
         <!-- ICON -->
         <ImageView
-            android:id="@+id/actionIcon"
+            
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/circle_bg"
             android:padding="10dp"
             android:src="@drawable/arrow_up"
-            android:tint="#000" />
+            app:tint="#000" />
 
         <!-- TEXT AREA -->
         <LinearLayout
@@ -75,7 +75,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/actionTitle"
+                
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Show more"
@@ -84,7 +84,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/actionSubtitle"
+                
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="More of your notifications will be like this."
@@ -108,13 +108,13 @@
 
         <!-- ICON -->
         <ImageView
-            android:id="@+id/actionIcon"
+            
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/circle_bg"
             android:padding="10dp"
             android:src="@drawable/arrow_downward"
-            android:tint="#000" />
+            app:tint="#000" />
 
         <!-- TEXT AREA -->
         <LinearLayout
@@ -124,7 +124,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/actionTitle"
+                
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Show less"
@@ -133,7 +133,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/actionSubtitle"
+                
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fewer of your notifications will be like this."
@@ -157,13 +157,13 @@
 
         <!-- ICON -->
         <ImageView
-            android:id="@+id/actionIcon"
+            
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/circle_bg"
             android:padding="10dp"
             android:src="@drawable/ic_delete"
-            android:tint="#000" />
+            app:tint="#000" />
 
         <!-- TEXT AREA -->
         <LinearLayout
@@ -173,7 +173,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/actionTitle"
+                
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Delete this notification"
@@ -182,7 +182,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/actionSubtitle"
+                
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fewer of your notifications will be like this."
@@ -206,13 +206,13 @@
 
         <!-- ICON -->
         <ImageView
-            android:id="@+id/actionIcon"
+            
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/circle_bg"
             android:padding="10dp"
             android:src="@drawable/ic_report"
-            android:tint="#000" />
+            app:tint="#000" />
 
         <!-- TEXT AREA -->
         <LinearLayout
@@ -222,7 +222,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/actionTitle"
+                
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Report issue to Notifications Team"
@@ -231,7 +231,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/actionSubtitle"
+                
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Fewer of your notifications will be like this."

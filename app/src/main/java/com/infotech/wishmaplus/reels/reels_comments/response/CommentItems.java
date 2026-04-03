@@ -1,4 +1,4 @@
-package com.infotech.wishmaplus;
+package com.infotech.wishmaplus.reels.reels_comments.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -30,6 +30,18 @@ public class CommentItems implements Serializable {
     @SerializedName("replyCount")
     @Expose
     private int replyCount;
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    @SerializedName("likeCount")
+    @Expose
+    private int likeCount;
     @SerializedName("isLiked")
     @Expose
     private boolean isLiked;

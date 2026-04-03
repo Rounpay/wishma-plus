@@ -3,117 +3,143 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="10dp">
-
-    <ImageView
-        android:id="@+id/commentAvatar"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:src="@drawable/circle_background" />
+    android:orientation="vertical"
+    android:paddingStart="12dp"
+    android:paddingEnd="12dp"
+    android:paddingTop="10dp">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
-        <!-- Name + time -->
+        <!-- Avatar -->
+        <ImageView
+            android:id="@+id/commentAvatar"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:src="@drawable/circle_background" />
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/commentUserName"
-                android:layout_width="wrap_content"
+            <!-- Name + Time -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/black"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/commentUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:textSize="13sp"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/commentTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:textSize="11sp"
+                    android:textColor="#888" />
+
+            </LinearLayout>
+
+            <!-- Comment text -->
+            <TextView
+                android:id="@+id/commentText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
                 android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textColor="#222"
+                android:lineSpacingMultiplier="1.3" />
 
-            <TextView
-                android:id="@+id/commentTime"
-                android:layout_width="wrap_content"
+            <!-- Action row -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:textColor="#888"
-                android:textSize="11sp" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="6dp">
+
+                <!-- Reply button -->
+                <TextView
+                    android:id="@+id/btnReply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reply"
+                    android:textSize="12sp"
+                    android:textColor="#888"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:paddingEnd="16dp" />
+
+                <!-- Spacer -->
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- Like count -->
+                <TextView
+                    android:id="@+id/commentLikeCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="#888"
+                    android:layout_marginEnd="4dp"
+                    android:visibility="gone" />
+
+                <!-- Like button -->
+                <ImageView
+                    android:id="@+id/btnLikeComment"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_favorite_border"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+            </LinearLayout>
+
+            <!-- View Replies + Reply count row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="4dp">
+
+                <TextView
+                    android:id="@+id/showRepliesBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="#0095F6"
+                    android:textStyle="bold"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <!-- Comment text -->
-        <TextView
-            android:id="@+id/commentText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:textColor="#222"
-            android:textSize="13sp" />
-
-        <!-- Like + Reply row -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/btnReply"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:fontFamily="sans-serif-medium"
-                android:paddingEnd="12dp"
-                android:text="Reply"
-                android:textColor="#555"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/commentLikeCount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#888"
-                android:textSize="11sp" />
-        </LinearLayout>
-
-        <!-- Show replies toggle -->
-        <TextView
-            android:id="@+id/showRepliesBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:fontFamily="sans-serif-medium"
-            android:textColor="#0095F6"
-            android:textSize="12sp"
-            android:visibility="gone" />
-
-        <!-- Replies container -->
-        <LinearLayout
-            android:id="@+id/repliesContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:orientation="vertical"
-            android:visibility="gone" />
     </LinearLayout>
 
-    <!-- Like button -->
-    <ImageView
-        android:id="@+id/btnLikeComment"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
-        android:layout_marginStart="8dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_favorite_border"
-        app:tint="@color/colorAccent" />
-</LinearLayout>
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="10dp"
+        android:background="#F0F0F0" />
 
+</LinearLayout>

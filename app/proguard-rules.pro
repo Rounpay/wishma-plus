@@ -24,3 +24,8 @@
 -keep class androidx.credentials.playservices.** {
   *;
 }
+-dontwarn org.conscrypt.**
+
+-keep class retrofit2.** { *; }
+
+-keep class okhttp3.** { *; }

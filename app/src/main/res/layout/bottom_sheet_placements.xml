@@ -181,7 +181,6 @@
                     android:textSize="14sp" />
                 <TextView
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:id="@+id/special_ad_category_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Available placements are determined by your ad type and settings. Not all placements are available for every ad. Learn more about placements and see examples of how ads look to potential customers."

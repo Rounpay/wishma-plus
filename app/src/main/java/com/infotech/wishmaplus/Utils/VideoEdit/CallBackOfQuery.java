@@ -54,7 +54,7 @@ public class CallBackOfQuery {
         }
     }
 
-    void cancelProcess() {
+   public void cancelProcess() {
         FFmpeg.cancel();
     }
 

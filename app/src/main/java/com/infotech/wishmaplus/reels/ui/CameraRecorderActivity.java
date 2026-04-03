@@ -1,4 +1,4 @@
-package com.infotech.wishmaplus;
+package com.infotech.wishmaplus.reels.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -40,6 +40,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.common.util.concurrent.ListenableFuture;
 import com.infotech.wishmaplus.Api.Response.MediaModel;
+import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.ReelEditorActivity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

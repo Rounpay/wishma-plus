@@ -1,7 +1,8 @@
 package com.infotech.wishmaplus.Utils;
 
 import com.infotech.wishmaplus.Adapter.FriendSuggestionResponse;
-import com.infotech.wishmaplus.AddCommentRequest;
+import com.infotech.wishmaplus.ExtendBoostBudget;
+import com.infotech.wishmaplus.reels.reels_comments.request.AddCommentRequest;
 import com.infotech.wishmaplus.Api.Object.BalanceResult;
 import com.infotech.wishmaplus.Api.Object.BankResult;
 import com.infotech.wishmaplus.Api.Object.CityResult;
@@ -72,11 +73,12 @@ import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
-import com.infotech.wishmaplus.CommentData;
 import com.infotech.wishmaplus.GeetReelCommentsResponse;
 import com.infotech.wishmaplus.GetReelResponse;
 import com.infotech.wishmaplus.HashtagResponse;
+import com.infotech.wishmaplus.LikeReelCommentResponse;
 import com.infotech.wishmaplus.SaveReelResponse;
+import com.infotech.wishmaplus.TrackReelViewRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -559,6 +561,7 @@ public interface EndPointInterface {
     Call<GeetReelCommentsResponse> getReelComments(
             @Header("Authorization") String authorization,
             @Query("ReelId") int ReelId,
+            @Query("ParentCommentId") int ParentCommentId,
             @Query("PageNumber") int pageNumber,
             @Query("PageSize") int PageSize
     );
@@ -573,10 +576,29 @@ public interface EndPointInterface {
             @Header("Authorization") String authorization,
             @Query("CommentId") int CommentId);
 
-    @POST("api/Content/AddReelView")
-    Call<BasicResponse>addReelView(
+    @DELETE("api/Content/DeleteReel")
+    Call<BasicResponse>deleteReel(
             @Header("Authorization") String authorization,
-            @Query("ReelId") int ReelId,
-            @Query("WatchDurationInSec") int WatchDurationInSec
+            @Query("ReelId") int ReelId);
+
+    // Like/Unlike comment
+    @POST("api/Content/DoLikeUnLikeReelComment")
+    Call<LikeReelCommentResponse> likeUnlikeReelComment(
+            @Header("Authorization") String authorization,
+            @Query("CommentId") int commentId
+    );
+
+    // Track reel views — array body
+    @POST("api/Content/TrackReelView")
+    Call<BasicResponse>trackReelView(
+            @Header("Authorization") String authorization,
+            @Body List<TrackReelViewRequest> body
+    );
+
+    //ExtendBoostBudget
+    @POST("api/ExtendBoostBudget")
+    Call<BoostResponse>extendBoostBudget(
+            @Header("Authorization") String authorization,
+            @Body InitiateBoostRequest body
     );
 }

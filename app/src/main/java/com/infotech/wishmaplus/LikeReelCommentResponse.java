@@ -2,20 +2,38 @@ package com.infotech.wishmaplus;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.infotech.wishmaplus.reels.reels_comments.response.CommentData;
 
 import java.io.Serializable;
 
-public class GeetReelCommentsResponse implements Serializable {
+public class LikeReelCommentResponse implements Serializable {
+    @SerializedName("isLiked")
+    @Expose
+    private boolean isLiked;
+    @SerializedName("likeCount")
+    @Expose
+    private int likeCount;
     @SerializedName("statusCode")
     @Expose
     private int statusCode;
     @SerializedName("responseText")
     @Expose
     private String responseText;
-    @SerializedName("result")
-    @Expose
-    private CommentData result;
+
+    public boolean getLiked() {
+        return isLiked;
+    }
+
+    public void setLiked(boolean liked) {
+        isLiked = liked;
+    }
+
+    public int getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
 
     public int getStatusCode() {
         return statusCode;
@@ -31,13 +49,5 @@ public class GeetReelCommentsResponse implements Serializable {
 
     public void setResponseText(String responseText) {
         this.responseText = responseText;
-    }
-
-    public CommentData getResult() {
-        return result;
-    }
-
-    public void setResult(CommentData result) {
-        this.result = result;
     }
 }

@@ -56,7 +56,17 @@
                     app:layout_constraintBottom_toBottomOf="@id/logo"
                     app:layout_constraintEnd_toStartOf="@id/search"
                     app:layout_constraintTop_toTopOf="@id/logo" />
-
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/reels"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/_5sdp"
+                    android:paddingVertical="@dimen/_5sdp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/reels"
+                    app:layout_constraintBottom_toBottomOf="@id/logo"
+                    app:layout_constraintEnd_toStartOf="@id/addPost"
+                    app:layout_constraintTop_toTopOf="@id/logo" />
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/search"
                     android:layout_width="wrap_content"

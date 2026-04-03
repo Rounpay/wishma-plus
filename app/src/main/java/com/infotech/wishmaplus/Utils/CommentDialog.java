@@ -120,8 +120,6 @@ public class CommentDialog {
             } else {
                 spannableString = new SpannableString(fullName + " " + inputText);
             }
-
-
             spannableString.setSpan(new StyleSpan(Typeface.BOLD), 0, fullName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             spannableString.setSpan(new BackgroundColorSpan(ContextCompat.getColor(context, R.color.colorAccentLight)), 0, fullName.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE); // Change color if needed
             editTextComment.setText(spannableString);

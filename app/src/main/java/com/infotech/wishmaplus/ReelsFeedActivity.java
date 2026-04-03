@@ -8,8 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -44,14 +47,18 @@ public class ReelsFeedActivity extends AppCompatActivity {
         // Full immersive
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        WindowInsetsControllerCompat ctrl = WindowCompat.getInsetsController(
+  /*      WindowInsetsControllerCompat ctrl = WindowCompat.getInsetsController(
                 getWindow(), getWindow().getDecorView());
         ctrl.hide(WindowInsetsCompat.Type.systemBars());
         ctrl.setSystemBarsBehavior(
-                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-
+                WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);*/
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_reels_feed);
-
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
         loader = new CustomLoader(this,
                 android.R.style.Theme_Translucent_NoTitleBar);
         spinnerSort = findViewById(R.id.spinnerSort);
@@ -69,23 +76,8 @@ public class ReelsFeedActivity extends AppCompatActivity {
         snap.attachToRecyclerView(reelsRecycler);
 
         // Adapter
-        adapter = new ReelsFeedAdapter(this, reelList,loader);
+        adapter = new ReelsFeedAdapter(this, reelList, loader);
         reelsRecycler.setAdapter(adapter);
-
-        // ── Auto-next callback from adapter ─────────────────────────────
- /*       adapter.setOnVideoEndListener(currentPos -> {
-            int nextPos = currentPos + 1;
-            if (nextPos < reelList.size()) {
-                // Smooth scroll to next reel
-                reelsRecycler.smoothScrollToPosition(nextPos);
-                // Play after scroll settles
-                reelsRecycler.postDelayed(() ->
-                        adapter.playPosition(nextPos), 400);
-            } else {
-                // Last reel — load more if available
-                if (!isLastPage) loadReelsFromApi(currentSort);
-            }
-        });*/
 
         // ── Scroll listener ─────────────────────────────────────────────
         reelsRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {

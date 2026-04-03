@@ -59,7 +59,7 @@ public class BoostPostsAdapter extends RecyclerView.Adapter<BoostPostsAdapter.Us
         if (item.getContentTypeId() == 3) {  // IMAGE
             holder.imgPost.setVisibility(View.VISIBLE);
             if(item.getCaption() != null)
-            holder.tvPostTitle.setText(item.getCaption());
+             holder.tvPostTitle.setText(item.getCaption());
             Glide.with(ctx)
                     .load(item.getPostContent())
                     .placeholder(R.drawable.app_logo)

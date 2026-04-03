@@ -1,4 +1,4 @@
-package com.infotech.wishmaplus;
+package com.infotech.wishmaplus.reels.reels_comments.response;
 
 import java.io.Serializable;
 import java.util.List;

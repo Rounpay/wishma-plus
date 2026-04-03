@@ -45,6 +45,7 @@ import com.infotech.wishmaplus.Fragments.MoreFragment;
 import com.infotech.wishmaplus.Fragments.NotificationFragment;
 import com.infotech.wishmaplus.Fragments.VideoFragment;
 import com.infotech.wishmaplus.R;
+import com.infotech.wishmaplus.ReelsFeedActivity;
 import com.infotech.wishmaplus.Utils.ApplicationConstant;
 import com.infotech.wishmaplus.Utils.CustomLoader;
 import com.infotech.wishmaplus.Utils.PreferencesManager;
@@ -78,10 +79,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean isProfileType;
 
     public String postId = "";
-    private long appID = 1481330104 ;
-    private String appSign = "feaffdef861ae4d24300952320aeb17e8e4c14557380c19e1aa64d26d5985200" ;
-    public boolean fromNotification  = false;
-    String roomId="";
+    private long appID = 1481330104;
+    private String appSign = "feaffdef861ae4d24300952320aeb17e8e4c14557380c19e1aa64d26d5985200";
+    public boolean fromNotification = false;
+    String roomId = "";
 
 
     @Override
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
             handleNotificationIntent(getIntent());
         }, 500);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId,isProfileType), "Home").commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId, isProfileType), "Home").commit();
 
         selectedLine = homeLine;
         homeTab.setOnClickListener(view -> {
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 homeLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = homeLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId,isProfileType), "Home").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId, isProfileType), "Home").commit();
             }
         });
 
@@ -162,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 videoLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = videoLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, VideoFragment.newInstance(finalPageId,isProfileType), "Video").commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, VideoFragment.newInstance(finalPageId, isProfileType), "Video").commit();
             }
         });
 
@@ -189,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 menuLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = menuLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, MoreFragment.newInstance(finalPageId,isProfileType)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, MoreFragment.newInstance(finalPageId, isProfileType)).commit();
             }
         });
 
@@ -197,14 +198,19 @@ public class MainActivity extends AppCompatActivity {
             showPopupMenu(view);
 
         });
+        findViewById(R.id.reels).setOnClickListener(v -> {
+            Intent intentR = new Intent(MainActivity.this, ReelsFeedActivity.class);
+            startActivity(intentR);
+        });
         getBalance();
     }
+
     public void navigateToHome() {
         if (selectedLine != homeLine) {
             selectedLine.setBackgroundColor(Color.WHITE);
             homeLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
             selectedLine = homeLine;
-            getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId,isProfileType), "Home").commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId, isProfileType), "Home").commit();
         }
     }
 
@@ -219,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
         profile.application = getApplication();
         ZegoExpressEngine.createEngine(profile, null);
     }
+
     private void destroyEngine() {
         ZegoExpressEngine.destroyEngine(null);
     }
@@ -599,8 +606,8 @@ public class MainActivity extends AppCompatActivity {
             });
         });
 
-        reel.setOnClickListener(v->{
-            Intent intent =new Intent(MainActivity.this, CreateReelActivity.class);
+        reel.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, CreateReelActivity.class);
             intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
 
@@ -619,10 +626,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void endLiveStream(String roomID) {
-        UtilMethods.INSTANCE.endLive(roomID,new UtilMethods.ApiCallBackMulti() {
+        UtilMethods.INSTANCE.endLive(roomID, new UtilMethods.ApiCallBackMulti() {
             @Override
             public void onSuccess(Object object) {
-                if(loader != null && loader.isShowing()){
+                if (loader != null && loader.isShowing()) {
                     loader.dismiss();
                 }
 
@@ -633,7 +640,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(String msg) {
-                if(loader != null && loader.isShowing()){
+                if (loader != null && loader.isShowing()) {
                     loader.dismiss();
                 }
 
@@ -641,19 +648,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void GetRoomId(){
+    public void GetRoomId() {
         loader.show();
         UtilMethods.INSTANCE.getRoomId(new UtilMethods.ApiCallBackMulti() {
-             @Override
+            @Override
             public void onSuccess(Object object) {
-                 if(loader != null && loader.isShowing()){
+                if (loader != null && loader.isShowing()) {
                     loader.dismiss();
-                 }
+                }
 
                 GetRoomIdResponse response = (GetRoomIdResponse) object;
-                if(response.getStatusCode() == 1){
-                    if(response.getResult() != null){
-                         roomId = response.getResult().getRoomId();
+                if (response.getStatusCode() == 1) {
+                    if (response.getResult() != null) {
+                        roomId = response.getResult().getRoomId();
                         Log.d("ROOM_ID", roomId);
 //                        openLiveActivity(roomId);
                     }
@@ -664,7 +671,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onError(String msg) {
-                  if(loader != null && loader.isShowing()){
+                if (loader != null && loader.isShowing()) {
                     loader.dismiss();
                 }
 
@@ -672,7 +679,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void openLiveActivity(String roomId){
+    private void openLiveActivity(String roomId) {
         Intent intent = new Intent(MainActivity.this, PreviewActivity.class);
         intent.putExtra("userID", tokenManager.getUserId());
         intent.putExtra("userName", Utility.INSTANCE.getFullName(tokenManager.getFirstName(), tokenManager.getLastName()));
@@ -690,7 +697,7 @@ public class MainActivity extends AppCompatActivity {
                 selectedLine.setBackgroundColor(Color.WHITE);
                 homeLine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorAccent));
                 selectedLine = homeLine;
-                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId,isProfileType)).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.flFragment, HomeFragment.newInstance(finalPageId, isProfileType)).commit();
             }
             getSupportFragmentManager().popBackStack();
         } else {

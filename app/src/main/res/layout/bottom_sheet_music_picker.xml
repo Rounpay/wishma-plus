@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#111111"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        app:behavior_peekHeight="600dp"
+        app:behavior_hideable="true">
+
+        <!-- Handle bar -->
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:background="#55FFFFFF"/>
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Music"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="10dp"/>
+
+        <!-- ★ TabLayout — Online / Device -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/musicTabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginBottom="10dp"
+            android:background="@android:color/transparent"
+            app:tabBackground="@drawable/bg_tab_selector"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
+            app:tabIndicatorHeight="0dp"
+            app:tabTextAppearance="@style/CustomTabText"
+            app:tabPaddingStart="8dp"
+            app:tabPaddingEnd="8dp"
+            app:tabPaddingTop="6dp"
+            app:tabPaddingBottom="6dp"
+            app:tabRippleColor="@null"
+            app:tabSelectedTextColor="#FFFFFF"
+            app:tabTextColor="@color/white">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Online"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="Device"/>
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <!-- Search bar — online tab ke liye -->
+        <FrameLayout
+            android:id="@+id/searchContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="8dp">
+
+            <EditText
+                android:id="@+id/musicSearchInput"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:autofillHints="search..."
+                android:background="@drawable/bg_search"
+                android:drawableStart="@drawable/ic_search"
+                android:drawablePadding="8dp"
+                android:hint="Search songs..."
+                android:textColor="#FFFFFF"
+                android:textColorHint="#88FFFFFF"
+                android:paddingHorizontal="14dp"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:singleLine="true"/>
+
+        </FrameLayout>
+
+        <!-- Progress bar -->
+        <ProgressBar
+            android:id="@+id/searchProgress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:visibility="gone"
+            android:indeterminate="true"
+            android:progressTint="#1877F2"/>
+
+        <!-- Empty view -->
+        <LinearLayout
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No music found"
+                android:textColor="#88FFFFFF"
+                android:textSize="14sp"/>
+
+        </LinearLayout>
+
+        <!-- Track list -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/musicTrackList"
+            android:layout_width="match_parent"
+            android:layout_height="260dp"
+            android:overScrollMode="never"
+            android:clipToPadding="false"
+            android:paddingBottom="8dp"/>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#22FFFFFF"/>
+
+        <!-- Trim + Apply panel -->
+        <LinearLayout
+            android:id="@+id/trimPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="16dp">
+
+            <!-- Selected track row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_music"
+                    android:layout_marginEnd="10dp"/>
+
+                <TextView
+                    android:id="@+id/tvSelectedTrack"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="No track selected"/>
+
+                <ImageButton
+                    android:id="@+id/btnPlayPreview"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/ic_play_circle_outline"/>
+
+            </LinearLayout>
+
+            <!-- Trim label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trim"
+                android:textColor="#AAFFFFFF"
+                android:textSize="12sp"
+                android:layout_marginBottom="6dp"/>
+
+            <!-- Start row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="6dp">
+
+                <TextView
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:text="Start"
+                    android:textColor="#88FFFFFF"
+                    android:textSize="11sp"/>
+
+                <SeekBar
+                    android:id="@+id/seekTrimStart"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="1000"
+                    android:progress="0"
+                    android:layout_marginHorizontal="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvTrimStart"
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:text="0:00"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:gravity="end"/>
+
+            </LinearLayout>
+
+            <!-- End row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="14dp">
+
+                <TextView
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:text="End"
+                    android:textColor="#88FFFFFF"
+                    android:textSize="11sp"/>
+
+                <SeekBar
+                    android:id="@+id/seekTrimEnd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="1000"
+                    android:progress="1000"
+                    android:layout_marginHorizontal="8dp"/>
+
+                <TextView
+                    android:id="@+id/tvTrimEnd"
+                    android:layout_width="36dp"
+                    android:layout_height="wrap_content"
+                    android:text="0:30"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp"
+                    android:gravity="end"/>
+
+            </LinearLayout>
+
+            <!-- Apply button -->
+            <Button
+                android:id="@+id/btnApplyMusic"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Use this music"
+                android:textColor="#FFFFFF"
+                android:backgroundTint="#1877F2"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

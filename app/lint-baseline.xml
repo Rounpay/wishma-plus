@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.12.3" type="baseline" client="gradle" dependencies="false" name="AGP (8.12.3)" variant="fatal" version="8.12.3">
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/layoutUrl`, already defined earlier in this layout"
+        errorLine1="                        android:id=&quot;@+id/layoutUrl&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_create_new_ad.xml"
+            line="972"
+            column="25"/>
+        <location
+            file="src/main/res/layout/activity_create_new_ad.xml"
+            line="915"
+            column="21"
+            message="Duplicate id `@+id/layoutUrl` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/advantage_description`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/advantage_description&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_budget.xml"
+            line="102"
+            column="21"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_budget.xml"
+            line="86"
+            column="21"
+            message="Duplicate id `@+id/advantage_description` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/create_new_audience_description`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/create_new_audience_description&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_budget.xml"
+            line="133"
+            column="21"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_budget.xml"
+            line="127"
+            column="21"
+            message="Duplicate id `@+id/create_new_audience_description` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/actionIcon`, already defined earlier in this layout"
+        errorLine1="            android:id=&quot;@+id/actionIcon&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="111"
+            column="13"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="62"
+            column="13"
+            message="Duplicate id `@+id/actionIcon` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/actionTitle`, already defined earlier in this layout"
+        errorLine1="                android:id=&quot;@+id/actionTitle&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="127"
+            column="17"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="78"
+            column="17"
+            message="Duplicate id `@+id/actionTitle` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/actionSubtitle`, already defined earlier in this layout"
+        errorLine1="                android:id=&quot;@+id/actionSubtitle&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="136"
+            column="17"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="87"
+            column="17"
+            message="Duplicate id `@+id/actionSubtitle` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/actionIcon`, already defined earlier in this layout"
+        errorLine1="            android:id=&quot;@+id/actionIcon&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="160"
+            column="13"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="62"
+            column="13"
+            message="Duplicate id `@+id/actionIcon` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/actionTitle`, already defined earlier in this layout"
+        errorLine1="                android:id=&quot;@+id/actionTitle&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="176"
+            column="17"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="78"
+            column="17"
+            message="Duplicate id `@+id/actionTitle` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/actionSubtitle`, already defined earlier in this layout"
+        errorLine1="                android:id=&quot;@+id/actionSubtitle&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="185"
+            column="17"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="87"
+            column="17"
+            message="Duplicate id `@+id/actionSubtitle` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/actionIcon`, already defined earlier in this layout"
+        errorLine1="            android:id=&quot;@+id/actionIcon&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="209"
+            column="13"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="62"
+            column="13"
+            message="Duplicate id `@+id/actionIcon` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/actionTitle`, already defined earlier in this layout"
+        errorLine1="                android:id=&quot;@+id/actionTitle&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="225"
+            column="17"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="78"
+            column="17"
+            message="Duplicate id `@+id/actionTitle` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/actionSubtitle`, already defined earlier in this layout"
+        errorLine1="                android:id=&quot;@+id/actionSubtitle&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="234"
+            column="17"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_notification.xml"
+            line="87"
+            column="17"
+            message="Duplicate id `@+id/actionSubtitle` originally defined here"/>
+    </issue>
+
+    <issue
+        id="DuplicateIds"
+        message="Duplicate id `@+id/special_ad_category_description`, already defined earlier in this layout"
+        errorLine1="                    android:id=&quot;@+id/special_ad_category_description&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_placements.xml"
+            line="184"
+            column="21"/>
+        <location
+            file="src/main/res/layout/bottom_sheet_placements.xml"
+            line="177"
+            column="21"
+            message="Duplicate id `@+id/special_ad_category_description` originally defined here"/>
+    </issue>
+
+    <issue
+        id="NotSibling"
+        message="`@id/tvChooseAudience` is not a sibling in the same `ConstraintLayout`"
+        errorLine1="        app:layout_constraintTop_toBottomOf=&quot;@id/tvChooseAudience&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_audience.xml"
+            line="14"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="InvalidSetHasFixedSize"
+        message="When using `setHasFixedSize() in an `RecyclerView`, `wrap_content` cannot be used as a value for `size` in the scrolling direction."
+        errorLine1="        rvGoals.setHasFixedSize(true);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infotech/wishmaplus/Activity/CreateNewAd.java"
+            line="214"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="InvalidSetHasFixedSize"
+        message="When using `setHasFixedSize() in an `RecyclerView`, `wrap_content` cannot be used as a value for `size` in the scrolling direction."
+        errorLine1="        rvGoals.setHasFixedSize(true);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infotech/wishmaplus/Activity/CreateNewAd.java"
+            line="214"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="InvalidSetHasFixedSize"
+        message="When using `setHasFixedSize() in an `RecyclerView`, `wrap_content` cannot be used as a value for `size` in the scrolling direction."
+        errorLine1="        rvAudience.setHasFixedSize(true);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infotech/wishmaplus/Activity/CreateNewAd.java"
+            line="216"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="InvalidSetHasFixedSize"
+        message="When using `setHasFixedSize() in an `RecyclerView`, `wrap_content` cannot be used as a value for `size` in the scrolling direction."
+        errorLine1="        rvAudience.setHasFixedSize(true);"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/infotech/wishmaplus/Activity/CreateNewAd.java"
+            line="216"
+            column="9"/>
+    </issue>
+
+</issues>

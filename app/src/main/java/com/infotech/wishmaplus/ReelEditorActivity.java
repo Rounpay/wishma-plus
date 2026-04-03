@@ -38,6 +38,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.infotech.wishmaplus.Api.Response.MediaModel;
+import com.infotech.wishmaplus.reels.ReelRenderEngine.ReelRenderEngine;
+import com.infotech.wishmaplus.reels.ui.componets.MusicPickerBottomSheet;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -100,7 +102,9 @@ public class ReelEditorActivity extends AppCompatActivity {
     private boolean isVideoPlaying = false;
     private boolean isTrashVisible = false;
     private TextView editingTextView = null;
-
+    private String selectedMusicPath = null;
+    private long musicStartMs = 0, musicEndMs = 0;
+    private ReelRenderEngine renderEngine;
     // ─────────────────────────────────────────────────────────────────────────
     // LIFECYCLE
     // ─────────────────────────────────────────────────────────────────────────
@@ -144,6 +148,7 @@ public class ReelEditorActivity extends AppCompatActivity {
     // ─────────────────────────────────────────────────────────────────────────
 
     private void bindViews() {
+        renderEngine = new ReelRenderEngine(this);
         videoView = findViewById(R.id.videoView);
         imagePreview = findViewById(R.id.imagePreview);
         compositeCanvas = findViewById(R.id.compositeCanvas);   // NEW
@@ -172,8 +177,20 @@ public class ReelEditorActivity extends AppCompatActivity {
 
     private void setupTopBar() {
         findViewById(R.id.btnClose).setOnClickListener(v -> finish());
-        findViewById(R.id.btnMusic).setOnClickListener(v ->
-                showToast("Music picker — coming soon"));
+        findViewById(R.id.btnMusic).setOnClickListener(v -> {
+            MusicPickerBottomSheet sheet = MusicPickerBottomSheet.newInstance(
+                    (path, start, end, title) -> {
+                        selectedMusicPath = path;
+                        musicStartMs      = start;
+                        musicEndMs        = end;
+                        // Music icon blue highlight karo
+                        ((ImageView) findViewById(R.id.musicIcon))
+                                .setColorFilter(0xFF1877F2);
+                        Toast.makeText(this,
+                                "Music: " + title, Toast.LENGTH_SHORT).show();
+                    });
+            sheet.show(getSupportFragmentManager(), "music_picker");
+        });
         findViewById(R.id.btnNext).setOnClickListener(v -> proceedToPost());
     }
 
@@ -828,7 +845,7 @@ public class ReelEditorActivity extends AppCompatActivity {
     // MEDIA LOADING
     // ─────────────────────────────────────────────────────────────────────────
 
-    private void proceedToPost() {
+   /* private void proceedToPost() {
         if (mediaList == null || mediaList.isEmpty()) {
             showToast("No media found");
             return;
@@ -842,18 +859,16 @@ public class ReelEditorActivity extends AppCompatActivity {
             // Overlay snapshot
             Bitmap overlayBitmap = captureViewBitmap(overlayCanvas);
 
-            // UI wapas dikhao
+            // UI
             showEditorUI();
 
-            // Video thumbnail banao background mein
+            // Video thumbnail
             executor.execute(() -> {
                 MediaModel m = mediaList.get(currentMediaIndex);
                 String thumbPath = null;
 
                 if (m.isVideo()) {
-                    // Video ka pehla frame lo
                     Bitmap videoFrame = extractVideoFrame(m.getPath());
-
                     // Video frame + overlay merge karo
                     if (videoFrame != null && overlayBitmap != null) {
                         thumbPath = mergeAndSave(videoFrame, overlayBitmap);
@@ -864,16 +879,13 @@ public class ReelEditorActivity extends AppCompatActivity {
                     // Image — as-is use karo
                     thumbPath = m.getPath();
                 }
-
                 final String finalThumbPath = thumbPath;
-
                 mainHandler.post(() -> {
-                    // Overlay snapshot bhi save karke ReelPostActivity ko bhejo
+                    // Overlay snapshot bhi save
                     String overlayPath = null;
                     if (overlayBitmap != null) {
                         overlayPath = saveBitmap(overlayBitmap, "overlay_");
                     }
-
                     Intent intent = new Intent(this, ReelPostActivity.class);
                     intent.putExtra("media_list", new ArrayList<>(mediaList));
                     intent.putExtra("thumbnail_path", finalThumbPath);
@@ -885,11 +897,101 @@ public class ReelEditorActivity extends AppCompatActivity {
                 });
             });
         });
-    }
+    }*/
+   private void proceedToPost() {
+       if (mediaList == null || mediaList.isEmpty()) {
+           showToast("No media found");
+           return;
+       }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // PROCEED TO POST — overlay ko video ke saath merge karke thumbnail banao
-    // ─────────────────────────────────────────────────────────────────────────
+       hideEditorUIForCapture();
+
+       // Progress dialog
+       android.app.ProgressDialog pd = new android.app.ProgressDialog(this);
+       pd.setTitle("Preparing reel...");
+       pd.setMessage("Starting...");
+       pd.setProgressStyle(android.app.ProgressDialog.STYLE_HORIZONTAL);
+       pd.setMax(100);
+       pd.setCancelable(false);
+       pd.show();
+
+       MediaModel m      = mediaList.get(currentMediaIndex);
+       boolean isImage   = !m.isVideo();
+       int durationSec   = isImage ? 15 : (int)(m.getDuration() / 1000);
+
+       renderEngine.render(
+               m.getPath(),
+               isImage,
+               overlayCanvas,
+               selectedMusicPath,
+               musicStartMs,
+               musicEndMs,
+               durationSec,
+               new ReelRenderEngine.RenderCallback() {
+
+                   @Override
+                   public void onProgress(int percent, String message) {
+                       runOnUiThread(() -> {
+                           pd.setProgress(percent);
+                           pd.setMessage(message);
+                       });
+                   }
+
+                   @Override
+                   public void onComplete(String outputPath) {
+                       runOnUiThread(() -> {
+                           pd.dismiss();
+                           showEditorUI();
+
+                           // Thumbnail extract
+                           String thumbPath = extractThumbFromVideo(outputPath);
+
+                           // ★ Intent — rendered_video_path
+                           Intent intent = new Intent(
+                                   ReelEditorActivity.this, ReelPostActivity.class);
+                           intent.putExtra("rendered_video_path", outputPath);
+                           intent.putExtra("thumbnail_path", thumbPath);
+                           intent.putExtra("media_list", new ArrayList<>(mediaList));
+                           startActivity(intent);
+                           overridePendingTransition(
+                                   android.R.anim.slide_in_left,
+                                   android.R.anim.slide_out_right);
+                       });
+                   }
+
+                   @Override
+                   public void onError(String error) {
+                       runOnUiThread(() -> {
+                           pd.dismiss();
+                           showEditorUI();
+                           showToast("Failed: " + error);
+                       });
+                   }
+               }
+       );
+   }
+    // ── Thumbnail extract helper ──────────────────────────────────────────────────
+    private String extractThumbFromVideo(String videoPath) {
+        android.media.MediaMetadataRetriever mmr =
+                new android.media.MediaMetadataRetriever();
+        try {
+            mmr.setDataSource(videoPath);
+            Bitmap frame = mmr.getFrameAtTime(
+                    0, android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+            if (frame == null) return null;
+            File tf = new File(getCacheDir(),
+                    "thumb_final_" + System.currentTimeMillis() + ".jpg");
+            FileOutputStream fos = new FileOutputStream(tf);
+            frame.compress(Bitmap.CompressFormat.JPEG, 85, fos);
+            fos.close();
+            return tf.getAbsolutePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            try { mmr.release(); } catch (Exception ignored) {}
+        }
+    }
 
     /**
      * View ka Bitmap snapshot leta hai (text/emoji/sticker sab include)
@@ -1041,6 +1143,7 @@ public class ReelEditorActivity extends AppCompatActivity {
         super.onDestroy();
         mainHandler.removeCallbacksAndMessages(null);
         executor.shutdown();
+        if (renderEngine != null) renderEngine.cancel();
     }
 
     interface OnCatSelected {
