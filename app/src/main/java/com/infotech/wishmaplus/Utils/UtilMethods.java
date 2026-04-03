@@ -49,6 +49,7 @@ import com.infotech.wishmaplus.Activity.CreateNewProfilePage;
 import com.infotech.wishmaplus.Adapter.DialogListBottomSheetAdapter;
 import com.infotech.wishmaplus.Adapter.DialogReportBottomSheetAdapter;
 import com.infotech.wishmaplus.Adapter.FriendSuggestionResponse;
+import com.infotech.wishmaplus.AddCommentRequest;
 import com.infotech.wishmaplus.Api.Object.CommentResult;
 import com.infotech.wishmaplus.Api.Object.ReportReasonResult;
 import com.infotech.wishmaplus.Api.Request.AddFriendsRequest;
@@ -102,6 +103,7 @@ import com.infotech.wishmaplus.Api.Response.UnfriendResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
+import com.infotech.wishmaplus.GeetReelCommentsResponse;
 import com.infotech.wishmaplus.GetReelResponse;
 import com.infotech.wishmaplus.HashtagResponse;
 import com.infotech.wishmaplus.R;
@@ -140,8 +142,7 @@ public enum UtilMethods {
     private PreferencesManager tokenManager;
     private Gson gson;
     public DownloadManager downloadManager;
-    public BottomSheetDialog bottomSheetDialogList,
-            personalInformation, bottomDateDialogDateRange, bottomSheetInsights;
+    public BottomSheetDialog bottomSheetDialogList, personalInformation, bottomDateDialogDateRange, bottomSheetInsights;
     public BottomSheetDialog bottomSheetDialogReport, AcceptRequestDialog;
     public static BottomSheetDialog bottomSheetUser;
     int selectedDateRange = 28;
@@ -189,16 +190,11 @@ public enum UtilMethods {
     }
 
     public void NetworkError(final Activity context, String title, final String message) {
-        new SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
-                .setTitleText(title)
-                .setContentText(message)
-                .setCustomImage(R.drawable.ic_connection_lost_24dp)
-                .show();
+        new SweetAlertDialog(context, SweetAlertDialog.CUSTOM_IMAGE_TYPE).setTitleText(title).setContentText(message).setCustomImage(R.drawable.ic_connection_lost_24dp).show();
     }
 
     public boolean isNetworkAvialable(Activity context) {
-        ConnectivityManager cm =
-                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
@@ -220,9 +216,7 @@ public enum UtilMethods {
         if (requestOptionsUserIcon != null) {
             return requestOptionsUserIcon;
         } else {
-            requestOptionsUserIcon = new RequestOptions()
-                    .placeholder(R.drawable.user_icon)
-                    .error(R.drawable.user_icon)
+            requestOptionsUserIcon = new RequestOptions().placeholder(R.drawable.user_icon).error(R.drawable.user_icon)
                     //.diskCacheStrategy(DiskCacheStrategy.NONE)
                     //.skipMemoryCache(true)
                     .transform(new CircleCrop());
@@ -234,9 +228,7 @@ public enum UtilMethods {
         if (requestOptionsUserIconSquare != null) {
             return requestOptionsUserIconSquare;
         } else {
-            requestOptionsUserIconSquare = new RequestOptions()
-                    .placeholder(R.drawable.user_icon)
-                    .error(R.drawable.user_icon);
+            requestOptionsUserIconSquare = new RequestOptions().placeholder(R.drawable.user_icon).error(R.drawable.user_icon);
             //.diskCacheStrategy(DiskCacheStrategy.NONE)
             //.skipMemoryCache(true)
             return requestOptionsUserIconSquare;
@@ -247,9 +239,7 @@ public enum UtilMethods {
         if (requestOptionsCoverImage != null) {
             return requestOptionsCoverImage;
         } else {
-            requestOptionsCoverImage = new RequestOptions()
-                    .placeholder(R.drawable.dog_cover)
-                    .error(R.drawable.dog_cover);
+            requestOptionsCoverImage = new RequestOptions().placeholder(R.drawable.dog_cover).error(R.drawable.dog_cover);
             //.diskCacheStrategy(DiskCacheStrategy.NONE)
             //.skipMemoryCache(true)
             return requestOptionsCoverImage;
@@ -260,10 +250,7 @@ public enum UtilMethods {
         if (requestOptionsPlaceHolder != null) {
             return requestOptionsPlaceHolder;
         } else {
-            requestOptionsPlaceHolder = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .error(R.drawable.app_logo)
-                    .placeholder(R.drawable.app_logo);
+            requestOptionsPlaceHolder = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL).error(R.drawable.app_logo).placeholder(R.drawable.app_logo);
             return requestOptionsPlaceHolder;
         }
     }
@@ -272,8 +259,7 @@ public enum UtilMethods {
         if (requestOptions != null) {
             return requestOptions;
         } else {
-            requestOptions = new RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL);
+            requestOptions = new RequestOptions().diskCacheStrategy(DiskCacheStrategy.ALL);
             return requestOptions;
         }
     }
@@ -1716,9 +1702,7 @@ public enum UtilMethods {
     }
 
     @SuppressLint("SetTextI18n")
-    public void openUserBottomSheetDialog(Activity activity,
-                                          UserDetailResponse userDetailResponse,
-                                          ActivityResultLauncher<Intent> launcher) {
+    public void openUserBottomSheetDialog(Activity activity, UserDetailResponse userDetailResponse, ActivityResultLauncher<Intent> launcher) {
 
 
         if (bottomSheetUser != null && bottomSheetUser.isShowing()) {
@@ -1733,11 +1717,7 @@ public enum UtilMethods {
         AppCompatImageView userImage = sheetView.findViewById(R.id.userImage);
         if (userDetailResponse != null) {
             userName.setText(userDetailResponse.getFisrtName() + userDetailResponse.getLastName());
-            Glide.with(activity)
-                    .load(userDetailResponse.getProfilePictureUrl())
-                    .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                    .apply(UtilMethods.INSTANCE.getRequestOption_With_UserIcon())
-                    .into(userImage);
+            Glide.with(activity).load(userDetailResponse.getProfilePictureUrl()).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL).apply(UtilMethods.INSTANCE.getRequestOption_With_UserIcon()).into(userImage);
         }
         createUser.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1748,9 +1728,7 @@ public enum UtilMethods {
         });
         bottomSheetUser.setCancelable(true);
         bottomSheetUser.setContentView(sheetView);
-        BottomSheetBehavior
-                .from(bottomSheetUser.findViewById(com.google.android.material.R.id.design_bottom_sheet))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(bottomSheetUser.findViewById(com.google.android.material.R.id.design_bottom_sheet)).setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetUser.show();
 
     }
@@ -1770,9 +1748,7 @@ public enum UtilMethods {
         closeBtn.setOnClickListener(v -> personalInformation.dismiss());
         personalInformation.setCancelable(true);
         personalInformation.setContentView(sheetView);
-        BottomSheetBehavior
-                .from(Objects.requireNonNull(personalInformation.findViewById(com.google.android.material.R.id.design_bottom_sheet)))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(Objects.requireNonNull(personalInformation.findViewById(com.google.android.material.R.id.design_bottom_sheet))).setState(BottomSheetBehavior.STATE_EXPANDED);
         personalInformation.show();
 
     }
@@ -1792,9 +1768,7 @@ public enum UtilMethods {
         nextButton.setOnClickListener(v -> personalInformation.dismiss());
         personalInformation.setCancelable(true);
         personalInformation.setContentView(sheetView);
-        BottomSheetBehavior
-                .from(Objects.requireNonNull(personalInformation.findViewById(com.google.android.material.R.id.design_bottom_sheet)))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(Objects.requireNonNull(personalInformation.findViewById(com.google.android.material.R.id.design_bottom_sheet))).setState(BottomSheetBehavior.STATE_EXPANDED);
         personalInformation.show();
 
     }
@@ -1802,8 +1776,7 @@ public enum UtilMethods {
     @SuppressLint("SetTextI18n")
     public void openAcceptRequestBottomSheetDialog(Activity context, String userId, String name, ApiCallBackMulti apiCallBack, int type) {
 
-        if (AcceptRequestDialog != null && AcceptRequestDialog.isShowing())
-            return;
+        if (AcceptRequestDialog != null && AcceptRequestDialog.isShowing()) return;
 
         AcceptRequestDialog = new BottomSheetDialog(context, R.style.DialogStyle);
         Objects.requireNonNull(AcceptRequestDialog.getWindow()).setBackgroundDrawableResource(android.R.color.transparent);
@@ -1858,9 +1831,7 @@ public enum UtilMethods {
         AcceptRequestDialog.setCancelable(true);
         AcceptRequestDialog.setContentView(sheetView);
 
-        BottomSheetBehavior.from(
-                AcceptRequestDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet)
-        ).setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(AcceptRequestDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet)).setState(BottomSheetBehavior.STATE_EXPANDED);
 
         AcceptRequestDialog.show();
     }
@@ -1944,12 +1915,10 @@ public enum UtilMethods {
 
     public void selectDateRangeBottomSheet(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback, boolean showLifetime) {
 
-        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
-            return;
+        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing()) return;
 
         bottomDateDialogDateRange = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.bottom_sheet_date_range, null);
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_date_range, null);
         if (showLifetime) {
             sheetView.findViewById(R.id.option_last_lifetime).setVisibility(View.VISIBLE);
         }
@@ -2037,12 +2006,10 @@ public enum UtilMethods {
 
     public void selectDateRangeBottomSheetNew(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback, boolean showLifetime) {
 
-        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
-            return;
+        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing()) return;
 
         bottomDateDialogDateRange = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.bottom_sheet_date_range, null);
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_date_range, null);
         if (showLifetime) {
             sheetView.findViewById(R.id.option_last_lifetime).setVisibility(View.VISIBLE);
         }
@@ -2130,12 +2097,10 @@ public enum UtilMethods {
 
     public void selectMetricBottomSheet(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback) {
 
-        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
-            return;
+        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing()) return;
 
         bottomDateDialogDateRange = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.bottom_sheet_metric, null);
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_metric, null);
 
         RadioButton rToday = sheetView.findViewById(R.id.rbToday);
         RadioButton r7 = sheetView.findViewById(R.id.rbLast7);
@@ -2200,12 +2165,10 @@ public enum UtilMethods {
 
     public void selectPostTypeBottomSheet(Activity context, AppCompatTextView tvDropdownText, OnDateRangeSelected callback) {
 
-        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing())
-            return;
+        if (bottomDateDialogDateRange != null && bottomDateDialogDateRange.isShowing()) return;
 
         bottomDateDialogDateRange = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.bottom_sheet_post, null);
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.bottom_sheet_post, null);
 
         RadioButton rToday = sheetView.findViewById(R.id.rbToday);
         RadioButton r7 = sheetView.findViewById(R.id.rbLast7);
@@ -2284,11 +2247,9 @@ public enum UtilMethods {
     }
 
     public void InsightsBottomSheetDialog(Activity context) {
-        if (bottomSheetInsights != null && bottomSheetInsights.isShowing())
-            return;
+        if (bottomSheetInsights != null && bottomSheetInsights.isShowing()) return;
         bottomSheetInsights = new BottomSheetDialog(context, R.style.DialogStyle);
-        View sheetView = LayoutInflater.from(context)
-                .inflate(R.layout.dialog_insights_bottom_sheet, null);
+        View sheetView = LayoutInflater.from(context).inflate(R.layout.dialog_insights_bottom_sheet, null);
         ImageButton closeBtn = sheetView.findViewById(R.id.closeBtn);
         closeBtn.setOnClickListener(v -> bottomSheetInsights.dismiss());
         AppCompatTextView description = sheetView.findViewById(R.id.description1);
@@ -2301,9 +2262,7 @@ public enum UtilMethods {
 
         bottomSheetInsights.setCancelable(true);
         bottomSheetInsights.setContentView(sheetView);
-        BottomSheetBehavior
-                .from(Objects.requireNonNull(bottomSheetInsights.findViewById(com.google.android.material.R.id.design_bottom_sheet)))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(Objects.requireNonNull(bottomSheetInsights.findViewById(com.google.android.material.R.id.design_bottom_sheet))).setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetInsights.show();
     }
 
@@ -2454,9 +2413,7 @@ public enum UtilMethods {
 
         bottomSheetDialogList.setCancelable(false);
         bottomSheetDialogList.setContentView(sheetView);
-        BottomSheetBehavior
-                .from(bottomSheetDialogList.findViewById(com.google.android.material.R.id.design_bottom_sheet))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(bottomSheetDialogList.findViewById(com.google.android.material.R.id.design_bottom_sheet)).setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetDialogList.show();
 
     }
@@ -2515,9 +2472,7 @@ public enum UtilMethods {
 
         bottomSheetDialogReport.setCancelable(false);
         bottomSheetDialogReport.setContentView(sheetView);
-        BottomSheetBehavior
-                .from(bottomSheetDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet))
-                .setState(BottomSheetBehavior.STATE_EXPANDED);
+        BottomSheetBehavior.from(bottomSheetDialogReport.findViewById(com.google.android.material.R.id.design_bottom_sheet)).setState(BottomSheetBehavior.STATE_EXPANDED);
         bottomSheetDialogReport.show();
 
     }
@@ -2644,9 +2599,7 @@ public enum UtilMethods {
     }
 
     // ─── Save Reel ─────────────────────────────────────────────────────────────
-    public void saveReel(CustomLoader loader, String caption, int duration, String hashtags,
-                         MultipartBody.Part video, MultipartBody.Part thumbnail,
-                         ApiCallBackMulti apiCallBack) {
+    public void saveReel(CustomLoader loader, String caption, int duration, String hashtags, MultipartBody.Part video, MultipartBody.Part thumbnail, ApiCallBackMulti apiCallBack) {
         try {
             EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
             Call<SaveReelResponse> call = api.saveReel("Bearer " + tokenManager.getAccessToken(), caption, duration, hashtags, video, thumbnail);
@@ -2691,51 +2644,223 @@ public enum UtilMethods {
         }
     }
 
-    public void getReels(
-            CustomLoader loader,
-            int page,
-            int size,
-            String sortBy,
-            ApiCallBackMulti callBack) {
-        EndPointInterface apiService = ApiClient.getClient().create(EndPointInterface.class);
-        apiService.getReels("Bearer " + tokenManager.getAccessToken(), page, size, sortBy)
-                .enqueue(new Callback<GetReelResponse>() {
-                    @Override
-                    public void onResponse(
-                            @NonNull Call<GetReelResponse> call,
-                            @NonNull Response<GetReelResponse> response) {
+    public void getReels(CustomLoader loader, int page, int size, String sortBy, ApiCallBackMulti callBack) {
+        try {
+            EndPointInterface apiService = ApiClient.getClient().create(EndPointInterface.class);
+            apiService.getReels("Bearer " + tokenManager.getAccessToken(), page, size, sortBy).enqueue(new Callback<GetReelResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<GetReelResponse> call, @NonNull Response<GetReelResponse> response) {
 
-                        if (response.isSuccessful()
-                                && response.body() != null
-                                && response.body().statusCode == 1) {
-                            if (loader != null) {
-                                if (loader.isShowing()) {
-                                    loader.dismiss();
-                                }
-                            }
-                            callBack.onSuccess(response.body());
-
-                        } else {
-                            if (loader != null) {
-                                if (loader.isShowing()) {
-                                    loader.dismiss();
-                                }
-                            }
-                            callBack.onError("Failed to load reels");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(
-                            @NonNull Call<GetReelResponse> call,
-                            @NonNull Throwable t) {
+                    if (response.isSuccessful() && response.body() != null && response.body().statusCode == 1) {
                         if (loader != null) {
                             if (loader.isShowing()) {
                                 loader.dismiss();
                             }
                         }
-                        callBack.onError(t.getMessage());
+                        callBack.onSuccess(response.body());
+
+                    } else {
+                        if (loader != null) {
+                            if (loader.isShowing()) {
+                                loader.dismiss();
+                            }
+                        }
+                        callBack.onError("Failed to load reels");
                     }
-                });
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<GetReelResponse> call, @NonNull Throwable t) {
+                    if (loader != null) {
+                        if (loader.isShowing()) {
+                            loader.dismiss();
+                        }
+                    }
+                    callBack.onError(t.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            if (callBack != null) {
+                callBack.onError(e.getMessage());
+            }
+            e.printStackTrace();
+        }
+    }
+
+    public void doLikeUnLikeReel(Activity activity, int ReelID, ApiCallBackMulti apiCallBack) {
+        try {
+            EndPointInterface git = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BasicResponse> call = git.DoLikeUnLikeReel("Bearer " + tokenManager.getAccessToken(), ReelID);
+            call.enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        if (response.body().getStatusCode() == 1) {
+                            if (apiCallBack != null) {
+                                apiCallBack.onSuccess(response.body());
+                            }
+                        } else {
+                            if (apiCallBack != null) {
+                                apiCallBack.onError(response.body().getResponseText());
+                            }
+                            Toast.makeText(activity, response.body().getResponseText(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        if (apiCallBack != null) {
+                            apiCallBack.onError("Failed to like ");
+                        }
+                        Toast.makeText(activity, "Failed to like ", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    if (apiCallBack != null) {
+                        apiCallBack.onError(t.getMessage());
+                    }
+                    Toast.makeText(activity, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            if (apiCallBack != null) {
+                apiCallBack.onError(e.getMessage());
+            }
+            e.printStackTrace();
+        }
+    }
+
+    // ── GET /GetReelComment ──────────────────────────────────────────────────
+    public void getReelComments(int reelId, int pageNumber, int pageSize, CustomLoader loader, ApiCallBackMulti callback) {
+        try {
+            if (loader != null) loader.show();
+            EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
+            Call<GeetReelCommentsResponse> call = api.getReelComments("Bearer " + tokenManager.getAccessToken(), reelId, pageNumber, pageSize);
+            call.enqueue(new Callback<GeetReelCommentsResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<GeetReelCommentsResponse> call, @NonNull Response<GeetReelCommentsResponse> response) {
+                    if (loader != null && loader.isShowing()) loader.dismiss();
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        callback.onSuccess(response.body());
+                    } else {
+                        callback.onError("Failed to load comments");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<GeetReelCommentsResponse> call, @NonNull Throwable t) {
+                    if (loader != null && loader.isShowing()) loader.dismiss();
+                    callback.onError(t.getMessage() != null ? t.getMessage() : "Error");
+                }
+            });
+        } catch (Exception e) {
+            if (callback != null) {
+                callback.onError(e.getMessage());
+            }
+            e.printStackTrace();
+        }
+    }
+
+    // ── POST /AddReelComment ─────────────────────────────────────────────────
+    public void addReelComment(int reelId, String commentText, int parentCommentId, CustomLoader loader, ApiCallBackMulti callback) {
+        try {
+            if (loader != null) loader.show();
+            AddCommentRequest body = new AddCommentRequest(reelId, commentText, parentCommentId);
+            EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BasicResponse> call = api.addReelComment("Bearer " + tokenManager.getAccessToken(), body);
+            call.enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
+                    if (loader != null && loader.isShowing()) loader.dismiss();
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        callback.onSuccess(response.body());
+                    } else {
+                        callback.onError("Failed to post comment");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    if (loader != null && loader.isShowing()) loader.dismiss();
+                    callback.onError(t.getMessage() != null ? t.getMessage() : "Error");
+                }
+            });
+        } catch (Exception e) {
+            if (callback != null) {
+                callback.onError(e.getMessage());
+            }
+            e.printStackTrace();
+        }
+    }
+
+    // ── DELETE /DeleteReelComment?CommentId=X ───────────────────────────────
+    public void deleteReelComment(int commentId, CustomLoader loader, ApiCallBackMulti callback) {
+        try {
+            if (loader != null) loader.show();
+
+            EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BasicResponse> call = api.deleteReelComment("Bearer " + tokenManager.getAccessToken(), commentId);
+
+            call.enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
+                    if (loader != null && loader.isShowing()) loader.dismiss();
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        callback.onSuccess(response.body());
+                    } else {
+                        callback.onError("Failed to delete comment");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    if (loader != null && loader.isShowing()) loader.dismiss();
+                    callback.onError(t.getMessage() != null ? t.getMessage() : "Error");
+                }
+            });
+        } catch (Exception e) {
+            if (callback != null) {
+                callback.onError(e.getMessage());
+            }
+            e.printStackTrace();
+        }
+    }
+
+    // ── POST /AddReelView?ReelId=X&WatchDurationInSec=Y ─────────────────────
+    public void addReelView(int reelId, int watchDurationInSec, CustomLoader loader, ApiCallBackMulti callback) {
+        try {
+            if (loader != null) loader.show();
+
+            EndPointInterface api = ApiClient.getClient().create(EndPointInterface.class);
+            Call<BasicResponse> call = api.addReelView("Bearer " + tokenManager.getAccessToken(), reelId, watchDurationInSec);
+
+            call.enqueue(new Callback<BasicResponse>() {
+                @Override
+                public void onResponse(@NonNull Call<BasicResponse> call, @NonNull Response<BasicResponse> response) {
+                    if (loader != null && loader.isShowing()) loader.dismiss();
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        callback.onSuccess(response.body());
+                    } else {
+                        callback.onError("Failed to record view");
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<BasicResponse> call, @NonNull Throwable t) {
+                    if (loader != null && loader.isShowing()) loader.dismiss();
+                    callback.onError(t.getMessage() != null ? t.getMessage() : "Error");
+                }
+            });
+        } catch (Exception e) {
+            if (callback != null) {
+                callback.onError(e.getMessage());
+            }
+            e.printStackTrace();
+        }
     }
 }

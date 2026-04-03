@@ -1,6 +1,7 @@
 package com.infotech.wishmaplus.Utils;
 
 import com.infotech.wishmaplus.Adapter.FriendSuggestionResponse;
+import com.infotech.wishmaplus.AddCommentRequest;
 import com.infotech.wishmaplus.Api.Object.BalanceResult;
 import com.infotech.wishmaplus.Api.Object.BankResult;
 import com.infotech.wishmaplus.Api.Object.CityResult;
@@ -71,6 +72,8 @@ import com.infotech.wishmaplus.Api.Response.UpgradePackageResponse;
 import com.infotech.wishmaplus.Api.Response.UploadGroupCoverResponse;
 import com.infotech.wishmaplus.Api.Response.UserDetailResponse;
 import com.infotech.wishmaplus.Api.Response.UserListFriends;
+import com.infotech.wishmaplus.CommentData;
+import com.infotech.wishmaplus.GeetReelCommentsResponse;
 import com.infotech.wishmaplus.GetReelResponse;
 import com.infotech.wishmaplus.HashtagResponse;
 import com.infotech.wishmaplus.SaveReelResponse;
@@ -151,7 +154,7 @@ public interface EndPointInterface {
                                      @Query("PageId") String PageId,
                                      @Query("GroupId") String GroupId,
                                      @Query("ContentTypeID") int contentTypeID,
-                                     @Query("IsFromNotification") boolean IsFromNotification );
+                                     @Query("IsFromNotification") boolean IsFromNotification);
 
     @GET("api/Content/GetStory")
     Call<BasicListResponse<StoryResult>> getStory(@Header("Authorization") String token);
@@ -160,6 +163,7 @@ public interface EndPointInterface {
     @POST("api/Like/Do")
     Call<LikeResponse> likePost(@Header("Authorization") String token,
                                 @Body LikeRequest likeRequest);
+
     @Headers("Content-Type: application/json")
     @POST("api/AddInsight")
     Call<InsightResponse> addInsight(@Header("Authorization") String token,
@@ -191,7 +195,7 @@ public interface EndPointInterface {
     Call<UserDetailResponse> getUserDetail(@Header("Authorization") String token,
                                            @Query("UserId") String UserId,
                                            @Query("GroupId") String GroupId
-                                           );
+    );
 
 
     @POST("api/DoFollow")
@@ -304,6 +308,7 @@ public interface EndPointInterface {
 
     @POST("api/UserProfile/CheckProfessionalDashboardEligibility")
     Call<EligibilityModel> checkEligibilityForProfessional(@Header("Authorization") String authorization);
+
     @POST("api/UserProfile/EnableProfessionalDashBoard")
     Call<EnableDashboardResponse> enableProfessionalDashBoard(@Header("Authorization") String authorization);
 
@@ -345,11 +350,13 @@ public interface EndPointInterface {
             @Query("ContentType") int ContentType,
             @Header("Authorization") String token
     );
+
     @GET("api/UserProfile/IsReadContentNotification")
     Call<ReadNotificationResponse> getMarkNotificationRead(
             @Query("NotificationId") int NotificationId,
             @Header("Authorization") String token
     );
+
     @GET("api/GetContentDetailsToBoost")
     Call<GetContentDetailsToBoostResponse> getContentDetailsToBoost(
             @Query("PostId") String PostId,
@@ -395,6 +402,7 @@ public interface EndPointInterface {
     Call<GetUserListResponse> getUsersList(
             @Header("Authorization") String token
     );
+
     @GET("api/Group/GetGroupById")
     Call<GroupDetailsResponse> getGroupById(
             @Header("Authorization") String token,
@@ -436,24 +444,29 @@ public interface EndPointInterface {
             @Query("PostId") String PostId,
             @Query("DateRange") int DateRange
     );
+
     @GET("api/GetBoostBillingInfo")
     Call<BoostBillingResponse> getBoostBillingInfo(
             @Header("Authorization") String token,
             @Query("PostId") String PostId
     );
+
     @GET("api/Support/GetComplaintCategory")
     Call<SupportCategoryResponse> getComplaintCategory(
             @Header("Authorization") String token
     );
+
     @GET("api/DownloadBillingPdf")
     Call<ResponseBody> getDownloadBillingPdf(
             @Header("Authorization") String token,
             @Query("BoostId") int BoostId
     );
+
     @GET("api/Support/GetMyComplaint")
     Call<ComplaintResponse> getMyComplaint(
             @Header("Authorization") String token
     );
+
     @GET("api/UserReport/ProfessionalDahboardAnalytic")
     Call<AnalyticsResponse> getProfessionalDahboardAnalytic(
             @Header("Authorization") String token,
@@ -470,13 +483,16 @@ public interface EndPointInterface {
     Call<GroupMembersUpdateResponse> updateGroupMembers(
             @Header("Authorization") String authorization,
             @Body UpdateGroupMemberRequest request);
+
     @POST("api/UserProfile/BlockedUserList")
     Call<BlockedUserListResponse> getBlockedUserList(
             @Header("Authorization") String authorization);
+
     @POST("api/Support/SubmitComplaint")
     Call<ComplaintSubmitResponse> submitComplaint(
             @Header("Authorization") String authorization,
             @Body ComplaintRequest request);
+
     @POST("api/UserProfile/UnFriendUser/{ToUserId}")
     Call<UnfriendResponse> unFriendUser(
             @Header("Authorization") String authorization,
@@ -503,6 +519,7 @@ public interface EndPointInterface {
             @Header("Authorization") String authorization,
             @Query("RoomId") String RoomId
     );
+
     // ─── Hashtag Suggestions ───────────────────────────────────────────────────
     @GET("api/Content/GetReelHasTagSuggestions")
     Call<HashtagResponse> getHashtagSuggestions(
@@ -530,5 +547,36 @@ public interface EndPointInterface {
             @Query("PageNumber") int page,
             @Query("PageSize") int size,
             @Query("SortBy") String sortBy
+    );
+
+    @POST("api/Content/DoLikeUnLikeReel")
+    Call<BasicResponse> DoLikeUnLikeReel(
+            @Header("Authorization") String authorization,
+            @Query("ReelId") int ReelId
+    );
+
+    @GET("api/Content/GetReelComment")
+    Call<GeetReelCommentsResponse> getReelComments(
+            @Header("Authorization") String authorization,
+            @Query("ReelId") int ReelId,
+            @Query("PageNumber") int pageNumber,
+            @Query("PageSize") int PageSize
+    );
+
+    @POST("api/Content/AddReelComment")
+    Call<BasicResponse> addReelComment(
+            @Header("Authorization") String authorization,
+            @Body AddCommentRequest request);
+
+    @DELETE("api/Content/DeleteReelComment")
+    Call<BasicResponse>deleteReelComment(
+            @Header("Authorization") String authorization,
+            @Query("CommentId") int CommentId);
+
+    @POST("api/Content/AddReelView")
+    Call<BasicResponse>addReelView(
+            @Header("Authorization") String authorization,
+            @Query("ReelId") int ReelId,
+            @Query("WatchDurationInSec") int WatchDurationInSec
     );
 }

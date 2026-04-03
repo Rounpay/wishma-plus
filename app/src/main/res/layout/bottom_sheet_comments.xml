@@ -32,6 +32,15 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
+        <!-- Loader inline with header — shows when loading -->
+        <ProgressBar
+            android:id="@+id/commentsLoader"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
+            android:indeterminateTint="@color/grey_1"
+            android:visibility="gone" />
+
         <ImageView
             android:layout_width="28dp"
             android:layout_height="28dp"
@@ -41,6 +50,7 @@
             android:focusable="true"
             android:padding="4dp"
             android:src="@drawable/outline_close_24" />
+
     </LinearLayout>
 
     <View
@@ -58,18 +68,64 @@
         android:focusable="true"
         android:gravity="center_vertical"
         android:paddingHorizontal="16dp"
+        android:drawableEnd="@drawable/outline_close_24"
+        android:drawablePadding="4dp"
         android:text="Replying to @user"
         android:textColor="#0095F6"
         android:textSize="12sp"
         android:visibility="gone" />
 
+    <!-- Empty state — shown when no comments -->
+    <LinearLayout
+        android:id="@+id/emptyView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_comment"
+            android:alpha="0.3" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="No comments yet"
+            android:textColor="#999"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Be the first to comment"
+            android:textColor="#bbb"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
     <!-- Comments list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/commentsRecycler"
         android:layout_width="match_parent"
-        android:layout_height="420dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:overScrollMode="never"
-        android:paddingHorizontal="4dp" />
+        android:paddingHorizontal="4dp"
+        android:clipToPadding="false" />
+
+    <!-- Pagination loader — bottom of list -->
+    <ProgressBar
+        android:id="@+id/paginationLoader"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_gravity="center_horizontal"
+        android:indeterminateTint="#0095F6"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"
@@ -83,7 +139,7 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="10dp"
+        android:paddingTop="10dp"
         android:paddingBottom="28dp">
 
         <EditText
@@ -100,7 +156,8 @@
             android:paddingHorizontal="14dp"
             android:textSize="14sp" />
 
-        <ImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+        <ImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/sendBtn"
             android:layout_width="36dp"
             android:layout_height="36dp"
@@ -113,5 +170,7 @@
             android:padding="8dp"
             android:src="@drawable/ic_send"
             app:tint="@android:color/white" />
+
     </LinearLayout>
+
 </LinearLayout>

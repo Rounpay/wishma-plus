@@ -14,8 +14,6 @@ public class BasicListResponse<T> extends BasicResponse{
     @Expose
     private ArrayList<T> result;
 
-
-
     public ArrayList<T> getResult() {
         return result;
     }

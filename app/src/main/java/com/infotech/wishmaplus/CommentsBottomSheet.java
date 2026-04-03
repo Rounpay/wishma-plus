@@ -11,7 +11,9 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,93 +24,133 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.infotech.wishmaplus.Api.Object.PackageResult;
+import com.infotech.wishmaplus.Api.Response.BasicListResponse;
+import com.infotech.wishmaplus.Utils.CustomLoader;
+import com.infotech.wishmaplus.Utils.UtilMethods;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CommentsBottomSheet extends BottomSheetDialogFragment {
 
-    private String reelId;
+    private int reelId;
     private RecyclerView commentsRecycler;
     private EditText commentInput;
     private ImageView sendBtn;
     private TextView commentCountHeader;
     private CommentsAdapter commentsAdapter;
-    private List<CommentModel> commentList = new ArrayList<>();
-    private CommentModel replyingTo = null;
+    private List<CommentItems> commentList = new ArrayList<>();
     private TextView replyIndicator;
+    private CommentItems replyingTo = null;
+    private ProgressBar commentsLoader;
 
-    public static CommentsBottomSheet newInstance(String reelId) {
-        CommentsBottomSheet sheet = new CommentsBottomSheet();
-        Bundle args = new Bundle();
-        args.putString("reel_id", reelId);
-        sheet.setArguments(args);
-        return sheet;
+    // Pagination
+    private int pageNumber = 1;
+    private final int pageSize = 10;
+    private boolean isLoading = false;
+    private boolean hasMore = true;
+    ProgressBar paginationLoader;
+    LinearLayout emptyView;
+
+    CustomLoader customLoader;
+    public static CommentsBottomSheet newInstance(int reelId) {
+        CommentsBottomSheet s = new CommentsBottomSheet();
+        Bundle b = new Bundle();
+        b.putInt("reel_id", reelId);
+        s.setArguments(b);
+        return s;
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onCreate(@Nullable Bundle saved) {
+        super.onCreate(saved);
         setStyle(STYLE_NORMAL, R.style.BottomSheetStyle);
-        if (getArguments() != null) reelId = getArguments().getString("reel_id");
+        if (getArguments() != null)
+            reelId = getArguments().getInt("reel_id");
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inf, @Nullable ViewGroup container,
-                             @Nullable Bundle saved) {
+    public View onCreateView(@NonNull LayoutInflater inf,
+                             @Nullable ViewGroup container, @Nullable Bundle saved) {
         return inf.inflate(R.layout.bottom_sheet_comments, container, false);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        customLoader = new CustomLoader(requireActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         commentsRecycler = view.findViewById(R.id.commentsRecycler);
         commentInput = view.findViewById(R.id.commentInput);
         sendBtn = view.findViewById(R.id.sendBtn);
         commentCountHeader = view.findViewById(R.id.commentCountHeader);
         replyIndicator = view.findViewById(R.id.replyIndicator);
-
-        // Expand to full height
+        commentsLoader = view.findViewById(R.id.commentsLoader);
+        paginationLoader = view.findViewById(R.id.paginationLoader);
+        emptyView = view.findViewById(R.id.emptyView);
+        // Expand fully
         if (getDialog() != null) {
             getDialog().setOnShowListener(d -> {
                 FrameLayout bs = getDialog().findViewById(
                         com.google.android.material.R.id.design_bottom_sheet);
                 if (bs != null) {
-                    BottomSheetBehavior<FrameLayout> b = BottomSheetBehavior.from(bs);
+                    BottomSheetBehavior<FrameLayout> b =
+                            BottomSheetBehavior.from(bs);
                     b.setState(BottomSheetBehavior.STATE_EXPANDED);
                     b.setSkipCollapsed(true);
                 }
             });
         }
+        commentsAdapter = new CommentsAdapter(commentList,
+                comment -> {
+                    replyingTo = comment;
+                    replyIndicator.setVisibility(View.VISIBLE);
+                    replyIndicator.setText(
+                            "Replying to @" + comment.getFullName());
+                    commentInput.setHint(
+                            "Reply to " + comment.getFullName() + "...");
+                    commentInput.requestFocus();
+                },
+                this::deleteComment // long press delete
+        );
 
-        loadDummyComments();
-
-        commentsAdapter = new CommentsAdapter(commentList, comment -> {
-            // Reply clicked
-            replyingTo = comment;
-            replyIndicator.setVisibility(View.VISIBLE);
-            replyIndicator.setText("Replying to @" + comment.getUserName());
-            commentInput.setHint("Reply to @" + comment.getUserName() + "...");
-            commentInput.requestFocus();
-        });
-        commentsRecycler.setLayoutManager(new LinearLayoutManager(requireContext()));
+        commentsRecycler.setLayoutManager(
+                new LinearLayoutManager(requireContext()));
         commentsRecycler.setAdapter(commentsAdapter);
 
-        // Cancel reply
+        // Pagination on scroll
+        commentsRecycler.addOnScrollListener(
+                new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(@NonNull RecyclerView rv, int dx, int dy) {
+                        LinearLayoutManager lm =
+                                (LinearLayoutManager) rv.getLayoutManager();
+                        if (lm == null) return;
+                        if (!isLoading && hasMore
+                                && lm.findLastVisibleItemPosition()
+                                >= lm.getItemCount() - 2) {
+                            loadComments();
+                        }
+                    }
+                });
+
         replyIndicator.setOnClickListener(v -> cancelReply());
 
-        // Send button enable/disable
         commentInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int st, int c, int a) {
+            public void beforeTextChanged(
+                    CharSequence s, int st, int c, int a) {
             }
 
+            @SuppressLint("NewApi")
             @Override
-            public void onTextChanged(CharSequence s, int st, int b, int c) {
-                sendBtn.setAlpha(s.length() > 0 ? 1f : 0.4f);
-                sendBtn.setClickable(s.length() > 0);
+            public void onTextChanged(
+                    CharSequence s, int st, int b, int c) {
+                sendBtn.setAlpha(!s.isEmpty() ? 1f : 0.4f);
+                sendBtn.setClickable(!s.isEmpty());
             }
 
             @Override
@@ -120,47 +162,111 @@ public class CommentsBottomSheet extends BottomSheetDialogFragment {
         sendBtn.setClickable(false);
         sendBtn.setOnClickListener(v -> submitComment());
 
-        updateHeader();
+        loadComments(); // initial load
     }
 
-    private void loadDummyComments() {
-        List<CommentModel> r1 = new ArrayList<>();
-        r1.add(new CommentModel("r1", "user_meena", null,
-                "Haha so relatable! 😂", "2m", 5, false));
+    // ── GET /GetReelComment ──────────────────────────────────────────────
+    private void loadComments() {
+        if (isLoading || !hasMore) return;
+        isLoading = true;
 
-        commentList.add(new CommentModel("c1", "Rahul_99", null,
-                "This is absolutely amazing! 🔥🔥🔥", "2h", 245, true, r1));
-        commentList.add(new CommentModel("c2", "priya.dance", null,
-                "Love this so much! Keep it up ✨", "1h", 89, false, new ArrayList<>()));
-        commentList.add(new CommentModel("c3", "arjun_fit", null,
-                "Bhai kitna talent hai yaar 😍", "45m", 32, false, new ArrayList<>()));
-        commentList.add(new CommentModel("c4", "shreya_art", null,
-                "Dropped everything to watch this 💙", "30m", 18, false, new ArrayList<>()));
-        commentList.add(new CommentModel("c5", "rohit.official", null,
-                "First! 🎉 Been following you for years", "10m", 4, false, new ArrayList<>()));
+        // First page = header loader, next pages = bottom pagination loader
+        if (pageNumber == 1) {
+            commentsLoader.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        } else {
+            paginationLoader.setVisibility(View.VISIBLE);
+        }
+        commentsLoader.setVisibility(View.VISIBLE);
+        UtilMethods.INSTANCE.getReelComments(
+                reelId, pageNumber, pageSize,customLoader,
+                new UtilMethods.ApiCallBackMulti() {
+                    @SuppressLint("NotifyDataSetChanged")
+                    @Override
+                    public void onSuccess(Object response) {
+                        GeetReelCommentsResponse data =
+                               (GeetReelCommentsResponse)response;
+                        requireActivity().runOnUiThread(() -> {
+                            isLoading = false;
+                            commentsLoader.setVisibility(View.GONE);
+                            if (data.getResult()!= null
+                                    && data.getResult().getComments() != null) {
+                                commentList.addAll(data.getResult().getComments());
+                                commentsAdapter.notifyDataSetChanged();
+                                hasMore = data.getResult().isHasMore();
+                                pageNumber++;
+                                updateHeader(data.getResult().getTotalCount());
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(String e) {
+                        requireActivity().runOnUiThread(() -> {
+                            isLoading = false;
+                            commentsLoader.setVisibility(View.GONE);
+                        });
+                    }
+                });
     }
 
+    // ── POST /AddReelComment ─────────────────────────────────────────────
     @SuppressLint("NotifyDataSetChanged")
     private void submitComment() {
         String text = commentInput.getText().toString().trim();
         if (text.isEmpty()) return;
+        int parentId = replyingTo != null
+                ? replyingTo.getCommentId() : 0;
+        UtilMethods.INSTANCE.addReelComment(
+                reelId, text, parentId,customLoader,
+                new UtilMethods.ApiCallBackMulti() {
+                    @Override
+                    public void onSuccess(Object response) {
+                        requireActivity().runOnUiThread(() -> {
+                            commentList.clear();
+                            pageNumber = 1;
+                            hasMore = true;
+                            loadComments();
+                            commentInput.setText("");
+                            cancelReply();
+                        });
+                    }
 
-        CommentModel newComment = new CommentModel(
-                "new_" + System.currentTimeMillis(),
-                "You", null, text, "Just now", 0, false, new ArrayList<>()
-        );
+                    @Override
+                    public void onError(String e) {
+                        Toast.makeText(requireContext(), e,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
-        if (replyingTo != null) {
-            replyingTo.getReplies().add(newComment);
-            cancelReply();
-        } else {
-            commentList.add(0, newComment);
-        }
+    // ── DELETE /DeleteReelComment ────────────────────────────────────────
+    @SuppressLint("NotifyDataSetChanged")
+    private void deleteComment(CommentItems comment) {
+        new androidx.appcompat.app.AlertDialog.Builder(requireContext())
+                .setTitle("Delete Comment")
+                .setMessage("Are you sure?")
+                .setPositiveButton("Delete", (d, w) -> {
+                    UtilMethods.INSTANCE.deleteReelComment(
+                            comment.getCommentId(),customLoader,
+                            new UtilMethods.ApiCallBackMulti() {
+                                @Override
+                                public void onSuccess(Object r) {
+                                    requireActivity().runOnUiThread(() -> {
+                                        commentList.remove(comment);
+                                        commentsAdapter.notifyDataSetChanged();
+                                        updateHeader(commentList.size());
+                                    });
+                                }
 
-        commentsAdapter.notifyDataSetChanged();
-        commentsRecycler.scrollToPosition(0);
-        commentInput.setText("");
-        updateHeader();
+                                @Override
+                                public void onError(String e) {
+                                    Toast.makeText(requireContext(), e,
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                })
+                .setNegativeButton("Cancel", null).show();
     }
 
     private void cancelReply() {
@@ -169,51 +275,58 @@ public class CommentsBottomSheet extends BottomSheetDialogFragment {
         commentInput.setHint("Add a comment...");
     }
 
-    private void updateHeader() {
-        commentCountHeader.setText(commentList.size() + " Comments");
+    @SuppressLint("SetTextI18n")
+    private void updateHeader(int count) {
+        commentCountHeader.setText(count + " Comments");
     }
 
-    // ════════════════════════════════════════════════════════════════════════
-    // Comments RecyclerView Adapter
-    // ════════════════════════════════════════════════════════════════════════
-
-    static class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.CVH> {
+    // ════════════════════════════════════════════════════════════════════
+    // Adapter
+    // ════════════════════════════════════════════════════════════════════
+    static class CommentsAdapter extends
+            RecyclerView.Adapter<CommentsAdapter.CVH> {
 
         interface OnReplyClick {
-            void onReply(CommentModel comment);
+            void onReply(CommentItems c);
         }
 
-        private final List<CommentModel> comments;
-        private final OnReplyClick replyListener;
+        interface OnDeleteClick {
+            void onDelete(CommentItems c);
+        }
 
-        CommentsAdapter(List<CommentModel> comments, OnReplyClick replyListener) {
-            this.comments = comments;
-            this.replyListener = replyListener;
+        private final List<CommentItems> list;
+        private final OnReplyClick replyL;
+        private final OnDeleteClick deleteL;
+
+        CommentsAdapter(List<CommentItems> list,
+                        OnReplyClick r, OnDeleteClick d) {
+            this.list = list;
+            this.replyL = r;
+            this.deleteL = d;
         }
 
         @NonNull
         @Override
-        public CVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_comment, parent, false);
-            return new CVH(v);
+        public CVH onCreateViewHolder(@NonNull ViewGroup p, int vt) {
+            return new CVH(LayoutInflater.from(p.getContext())
+                    .inflate(R.layout.item_comment, p, false));
         }
 
         @Override
-        public void onBindViewHolder(@NonNull CVH holder, int position) {
-            holder.bind(comments.get(position), replyListener);
+        public void onBindViewHolder(
+                @NonNull CVH h, int pos) {
+            h.bind(list.get(pos), replyL, deleteL);
         }
 
         @Override
         public int getItemCount() {
-            return comments.size();
+            return list.size();
         }
 
         static class CVH extends RecyclerView.ViewHolder {
             ImageView avatar;
-            TextView userName, commentText, timeAgo, likeCount, replyBtn, showRepliesBtn;
+            TextView userName, commentText, timeAgo, replyBtn;
             ImageView btnLikeComment;
-            LinearLayout repliesContainer;
 
             CVH(View v) {
                 super(v);
@@ -221,84 +334,49 @@ public class CommentsBottomSheet extends BottomSheetDialogFragment {
                 userName = v.findViewById(R.id.commentUserName);
                 commentText = v.findViewById(R.id.commentText);
                 timeAgo = v.findViewById(R.id.commentTime);
-                likeCount = v.findViewById(R.id.commentLikeCount);
                 btnLikeComment = v.findViewById(R.id.btnLikeComment);
                 replyBtn = v.findViewById(R.id.btnReply);
-                showRepliesBtn = v.findViewById(R.id.showRepliesBtn);
-                repliesContainer = v.findViewById(R.id.repliesContainer);
+
             }
 
-            @SuppressLint("SetTextI18n")
-            void bind(CommentModel c, OnReplyClick replyListener) {
-                userName.setText(c.getUserName());
-                commentText.setText(c.getText());
-                timeAgo.setText(c.getTimeAgo());
-                likeCount.setText(c.getLikes() > 0 ? String.valueOf(c.getLikes()) : "");
+            void bind(CommentItems c,
+                      OnReplyClick replyL, OnDeleteClick deleteL) {
+                userName.setText(c.getFullName());
+                commentText.setText(c.getCommentText());
+                timeAgo.setText(c.getCreatedAt());
 
                 Glide.with(itemView.getContext())
-                        .load(c.getAvatarUrl())
+                        .load(c.getProfilePictureUrl())
                         .transform(new CircleCrop())
                         .placeholder(R.drawable.circle_background)
                         .into(avatar);
 
-                // Like comment
-                updateLikeState(c);
+                // Like state
+                updateLike(c);
                 btnLikeComment.setOnClickListener(v -> {
                     c.setLiked(!c.isLiked());
-                    c.setLikes(c.isLiked() ? c.getLikes() + 1 : c.getLikes() - 1);
-                    updateLikeState(c);
-                    likeCount.setText(c.getLikes() > 0 ? String.valueOf(c.getLikes()) : "");
+                    updateLike(c);
                 });
 
                 // Reply
-                replyBtn.setOnClickListener(v -> replyListener.onReply(c));
+                replyBtn.setOnClickListener(v -> replyL.onReply(c));
 
-                // Show/hide replies
-                if (c.getReplies() != null && !c.getReplies().isEmpty()) {
-                    showRepliesBtn.setVisibility(View.VISIBLE);
-                    showRepliesBtn.setText("View " + c.getReplies().size() + " replies");
-                    showRepliesBtn.setOnClickListener(v -> {
-                        if (repliesContainer.getVisibility() == View.VISIBLE) {
-                            repliesContainer.setVisibility(View.GONE);
-                            showRepliesBtn.setText("View " + c.getReplies().size() + " replies");
-                        } else {
-                            repliesContainer.setVisibility(View.VISIBLE);
-                            showRepliesBtn.setText("Hide replies");
-                            buildReplies(c.getReplies());
-                        }
-                    });
-                } else {
-                    showRepliesBtn.setVisibility(View.GONE);
-                    repliesContainer.setVisibility(View.GONE);
-                }
+                // Long press = delete (only if isOwner)
+                itemView.setOnLongClickListener(v -> {
+                    if (c.isOwner()) {
+                        deleteL.onDelete(c);
+                        return true;
+                    }
+                    return false;
+                });
             }
 
-            private void updateLikeState(CommentModel c) {
+            private void updateLike(CommentItems c) {
                 btnLikeComment.setImageResource(c.isLiked()
-                        ? R.drawable.ic_favorite_filled : R.drawable.ic_favorite_border);
-                btnLikeComment.setColorFilter(c.isLiked() ? 0xFFFF3B30 : 0xFF888888);
-            }
-
-            private void buildReplies(List<CommentModel> replies) {
-                repliesContainer.removeAllViews();
-                for (CommentModel reply : replies) {
-                    View rv = LayoutInflater.from(itemView.getContext())
-                            .inflate(R.layout.item_comment_reply, repliesContainer, false);
-
-                    TextView rName = rv.findViewById(R.id.replyUserName);
-                    TextView rText = rv.findViewById(R.id.replyText);
-                    TextView rTime = rv.findViewById(R.id.replyTime);
-                    ImageView rAvatar = rv.findViewById(R.id.replyAvatar);
-
-                    rName.setText(reply.getUserName());
-                    rText.setText(reply.getText());
-                    rTime.setText(reply.getTimeAgo());
-                    Glide.with(itemView.getContext())
-                            .load(reply.getAvatarUrl()).transform(new CircleCrop())
-                            .placeholder(R.drawable.circle_background).into(rAvatar);
-
-                    repliesContainer.addView(rv);
-                }
+                        ? R.drawable.ic_favorite_filled
+                        : R.drawable.ic_favorite_border);
+                btnLikeComment.setColorFilter(
+                        c.isLiked() ? 0xFFFF3B30 : 0xFF888888);
             }
         }
     }

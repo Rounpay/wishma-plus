@@ -3,312 +3,319 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="@android:color/black">
 
-    <!-- Video -->
-    <VideoView
-        android:id="@+id/reelVideoView"
+    <!-- ExoPlayer View — fullscreen -->
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/reelPlayerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        app:use_controller="false"
+        app:surface_type="surface_view"
+        app:resize_mode="zoom"
+        />
 
-    <!-- Thumbnail (shown before video loads) -->
+    <!-- Thumbnail shown before video loads -->
     <ImageView
         android:id="@+id/reelThumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:visibility="visible" />
 
-    <!-- Loading spinner -->
+    <!-- Buffering spinner -->
     <ProgressBar
         android:id="@+id/reelLoadingBar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
         android:layout_gravity="center"
-        android:indeterminateTint="#FFFFFF"
-        android:visibility="gone"/>
+        android:indeterminateTint="@android:color/white"
+        android:visibility="gone" />
 
-    <!-- Video progress bar (thin, bottom) -->
-    <ProgressBar
-        android:id="@+id/videoProgressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="0dp"
-        android:max="1000"
-        android:progress="0"
-        android:progressTint="#FFFFFF"
-        android:progressBackgroundTint="#44FFFFFF"/>
-
-    <!-- Bottom gradient overlay -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="280dp"
-        android:layout_gravity="bottom"
-        android:background="@drawable/gradient_bottom_fade"/>
-
-    <!-- Double-tap heart overlay -->
+    <!-- Heart animation -->
     <ImageView
         android:id="@+id/heartOverlay"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_gravity="center"
         android:src="@drawable/ic_favorite_filled"
         android:visibility="gone"
-        android:scaleX="0"
-        android:scaleY="0"
         app:tint="#FFFF3B30" />
 
-    <!-- ── BOTTOM LEFT: Author + Description + Music ── -->
+    <!-- Play/Pause centre icon -->
+    <ImageView
+        android:id="@+id/playPauseOverlay"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_play_circle_outline"
+        android:alpha="0.0"
+        android:visibility="visible"
+        app:tint="@android:color/white" />
+
+    <!-- Seek Back 5s — left zone (tap area large) -->
+    <FrameLayout
+        android:id="@+id/seekBackZone"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start">
+
+        <ImageView
+            android:id="@+id/btnSeekBack"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:src="@drawable/replay_5_24dp"
+            android:alpha="0.0"
+            android:padding="8dp"
+            app:tint="@android:color/white" />
+    </FrameLayout>
+
+    <!-- Seek Forward 5s — right zone -->
+    <FrameLayout
+        android:id="@+id/seekForwardZone"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end">
+
+        <ImageView
+            android:id="@+id/btnSeekForward"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:src="@drawable/forward_5_24dp"
+            android:alpha="0.0"
+            android:padding="8dp"
+            app:tint="@android:color/white" />
+    </FrameLayout>
+
+    <!-- Bottom gradient -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/gradient_bottom_reel" />
+
+    <!-- Bottom-left info -->
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|start"
         android:orientation="vertical"
         android:layout_marginStart="14dp"
         android:layout_marginEnd="80dp"
-        android:layout_marginBottom="36dp"
-        android:layout_weight="1">
+        android:layout_marginBottom="20dp">
 
-        <!-- Author row -->
+        <!-- Author -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="8dp">
+            android:gravity="center_vertical">
 
             <ImageView
                 android:id="@+id/authorAvatar"
-                android:layout_width="38dp"
-                android:layout_height="38dp"
-                android:src="@drawable/circle_background"/>
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/circle_background" />
 
             <TextView
                 android:id="@+id/authorName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Username"
-                android:textColor="#FFFFFF"
+                android:layout_marginStart="8dp"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:textSize="14sp"
-                android:layout_marginHorizontal="8dp"
-                android:fontFamily="sans-serif-medium"/>
+                android:textSize="15sp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Author Name" />
 
-            <!-- Follow button -->
             <TextView
                 android:id="@+id/btnFollow"
                 android:layout_width="wrap_content"
-                android:layout_height="26dp"
-                android:text="Follow"
-                android:textColor="#FFFFFF"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="+ Follow"
+                android:textColor="@android:color/white"
                 android:textSize="12sp"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center"
-                android:paddingHorizontal="12dp"
-                android:background="@drawable/follow_btn_bg"
-                android:clickable="true"
-                android:focusable="true"/>
+                android:textStyle="bold"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:background="@drawable/rounded_border_bg" />
+
         </LinearLayout>
 
-        <!-- Location -->
-        <TextView
-            android:id="@+id/locationTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#CCFFFFFF"
-            android:textSize="12sp"
-            android:layout_marginBottom="6dp"
-            android:visibility="gone"/>
-
-        <!-- Description (expandable) -->
+        <!-- Caption -->
         <TextView
             android:id="@+id/descriptionTxt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#EEFFFFFF"
+            android:layout_marginTop="6dp"
+            android:textColor="@android:color/white"
             android:textSize="13sp"
             android:maxLines="2"
             android:ellipsize="end"
-            android:layout_marginBottom="12dp"/>
+            android:lineSpacingMultiplier="1.2" />
 
-        <!-- Music row -->
+        <!-- Music -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:background="@drawable/music_row_bg"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp">
+            android:layout_marginTop="8dp">
 
             <ImageView
                 android:id="@+id/musicDisc"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:src="@drawable/ic_music"
-                android:background="@drawable/circle_dark_btn"
-                android:padding="4dp"
-                app:tint="#FFFFFF"
-                android:layout_marginEnd="8dp"/>
+                app:tint="@android:color/white" />
 
             <TextView
                 android:id="@+id/musicName"
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Original Audio"
-                android:textColor="#CCFFFFFF"
+                android:layout_marginStart="6dp"
+                android:textColor="@android:color/white"
                 android:textSize="12sp"
-                android:maxLines="1"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                />
+                android:text="Original Sound" />
+
         </LinearLayout>
+
+        <!-- Duration row -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="6dp">
+
+            <TextView
+                android:id="@+id/tvCurrentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textSize="11sp"
+                android:text="0:00" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#99FFFFFF"
+                android:textSize="11sp"
+                android:text=" / " />
+
+            <TextView
+                android:id="@+id/tvTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#99FFFFFF"
+                android:textSize="11sp"
+                android:text="0:00" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
-    <!-- ── RIGHT SIDE: Action buttons ── -->
+    <!-- Right side actions -->
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="56dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="end|bottom"
         android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="40dp">
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center_horizontal">
 
         <!-- Like -->
         <ImageView
             android:id="@+id/btnLike"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/ic_favorite_border"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Like"/>
+            app:tint="@android:color/white" />
+
         <TextView
             android:id="@+id/likeCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:textColor="#FFFFFF"
+            android:textColor="@android:color/white"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="18dp"/>
+            android:layout_marginBottom="20dp"
+            android:text="0" />
 
         <!-- Comment -->
         <ImageView
             android:id="@+id/btnComment"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/outline_chat_bubble_24"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Comment"
-            app:tint="@color/white" />
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_comment"
+            app:tint="@android:color/white" />
+
         <TextView
             android:id="@+id/commentCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:textColor="#FFFFFF"
+            android:textColor="@android:color/white"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="18dp"/>
+            android:layout_marginBottom="20dp"
+            android:text="0" />
 
         <!-- Share -->
         <ImageView
             android:id="@+id/btnShare"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_share_new"
-            
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Share"/>
-        <TextView
-            android:id="@+id/shareCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textColor="#FFFFFF"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="18dp"/>
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_share"
+            android:layout_marginBottom="20dp"
+            app:tint="@android:color/white" />
 
         <!-- Bookmark -->
         <ImageView
             android:id="@+id/btnBookmark"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/ic_bookmark"
-            
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Save"
-            android:layout_marginBottom="18dp"/>
+            android:layout_marginBottom="20dp"
+            app:tint="@android:color/white" />
 
-        <!-- More (⋯) -->
+        <!-- More -->
         <ImageView
             android:id="@+id/btnMore"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:src="@drawable/ic_more_vert"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="More"
-            android:layout_marginBottom="18dp"
-            app:tint="@color/white" />
+            android:layout_marginBottom="20dp"
+            app:tint="@android:color/white" />
 
-        <!-- Mute/Volume -->
+        <!-- Mute -->
         <ImageView
             android:id="@+id/btnMute"
-            android:layout_width="38dp"
-            android:layout_height="38dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@drawable/ic_volume_up"
-            
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@drawable/circle_dark_btn"
-            android:padding="8dp"
-            android:contentDescription="Mute"/>
+            app:tint="@android:color/white" />
+
     </LinearLayout>
 
-    <!-- TOP: Reels label + mute -->
-    <LinearLayout
+    <!-- Bottom SeekBar -->
+    <SeekBar
+        android:id="@+id/videoSeekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:paddingTop="48dp"
-        android:paddingHorizontal="14dp"
-        android:paddingBottom="10dp"
-        android:background="@drawable/gradient_top_fade">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Reels"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:fontFamily="sans-serif-medium"/>
-
-        <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:src="@drawable/ic_camera"
-            app:tint="#FFFFFF"
-            android:contentDescription="Camera"/>
-    </LinearLayout>
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="2dp"
+        android:max="1000"
+        android:progress="0"
+        android:progressTint="@android:color/white"
+        android:thumbTint="@android:color/white"
+        android:progressBackgroundTint="#44FFFFFF"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        android:minHeight="2dp" />
 
 </FrameLayout>
